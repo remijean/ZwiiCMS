@@ -1,0 +1,132 @@
+body {
+	font-family: "Lato", sans-serif;
+	font-size: 0.9em;
+	color: #444;
+	background: #EEE;
+	margin: 0;
+}
+
+/* Container  */
+#container {
+	margin: auto;
+	max-width: 1200px;
+	background-color: white;
+}
+
+/* Titre du site */
+header > h1 {
+	color: #333;
+	padding: 40px;
+	margin: 0;
+}
+
+/* Navigation */
+nav {
+	background: #008DAB;
+}
+
+nav > ul {
+	padding: 0;
+	margin: 0;
+}
+
+nav > ul > li {
+	display: inline;
+	list-style: none;
+}
+
+nav > ul > li > a {
+	color: #FFF;
+	display: inline-block;
+	padding: 10px;
+	text-decoration: none;
+}
+
+nav > ul > li > a:hover {
+	color: #FFF;
+	background: #077E9C;
+}
+
+nav > ul > li > a.current {
+	background: #007A98;
+}
+
+/* Corps */
+article {
+	word-wrap: break-word;
+	margin: 20px;
+}
+
+/* Bas de page */
+footer {
+	color: #7A7A7A;
+	text-align: center;
+	font-size: 0.8em;
+	clear: both;
+	padding-bottom: 20px;
+}
+
+footer > a {
+	text-decoration: none;
+}
+
+footer > #scroll {
+	padding-top: 4px;
+	font-size: 1.1em;
+}
+
+/* Hn */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: "Oswald", sans-serif;
+	font-weight: normal;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+h1,
+h2 {
+	margin-top: 0;
+}
+h1,
+h3,
+h5 {
+	color: #00A4FF;
+}
+h1 {
+	font-size: 1.8em;
+}
+
+/* Liens */
+a {
+	color: #00A4FF;
+	text-decoration: none;
+	-webkit-transition: all .25s ease-in-out;
+	-o-transition: all .25s ease-in-out;
+	transition: all .25s ease-in-out;
+}
+a:hover,
+a:active {
+	color: #444;
+}
+
+/* Listes */
+ul {
+	list-style: square;
+}
+ul.nav {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+ul.nav > li {
+	margin: auto;
+	border-top: 1px solid #DDD;
+}
+ul.nav > li > a {
+	display: inline-block;
+	padding: 10px;
+}

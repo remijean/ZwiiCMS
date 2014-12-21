@@ -1,0 +1,263 @@
+/**
+ * Grille
+ */
+
+*,
+*:before,
+*:after {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.row {
+	margin: 0 -10px;
+}
+.row:before,
+.row:after {
+	content: "";
+	display: table;
+}
+.row:after {
+	clear: both;
+}
+.col1,
+.col2,
+.col3,
+.col4,
+.col5,
+.col6,
+.col7,
+.col8,
+.col9,
+.col10,
+.col11,
+.col12 {
+	float: left;
+	position: relative;
+	min-height: 1px;
+	padding: 10px;
+	width: 100%;
+}
+@media (min-width: 768px)
+{
+	.col1 {
+		width: 8.33333333%;
+	}
+	.col2 {
+		width: 16.66666667%;
+	}
+	.col3 {
+		width: 25%;
+	}
+	.col4 {
+		width: 33.33333333%;
+	}
+	.col5 {
+		width: 41.66666667%;
+	}
+	.col6 {
+		width: 50%;
+	}
+	.col7 {
+		width: 58.33333333%;
+	}
+	.col8 {
+		width: 66.66666667%;
+	}
+	.col9 {
+		width: 75%;
+	}
+	.col10 {
+		width: 83.33333333%;
+	}
+	.col11 {
+		width: 91.66666667%;
+	}
+	.col12 {
+		width: 100%;
+	}
+	.offset0 {
+		margin-left: 0;
+	}
+	.offset1 {
+		margin-left: 8.33333333%;
+	}
+	.offset2 {
+		margin-left: 16.66666667%;
+	}
+	.offset3 {
+		margin-left: 25%;
+	}
+	.offset4 {
+		margin-left: 33.33333333%;
+	}
+	.offset5 {
+		margin-left: 41.66666667%;
+	}
+	.offset6 {
+		margin-left: 50%;
+	}
+	.offset7 {
+		margin-left: 58.33333333%;
+	}
+	.offset8 {
+		margin-left: 66.66666667%;
+	}
+	.offset9 {
+		margin-left: 75%;
+	}
+	.offset10 {
+		margin-left: 83.33333333%;
+	}
+	.offset11 {
+		margin-left: 91.66666667%;
+	}
+}
+
+/**
+ * Inputs génériques
+ */
+
+form,
+fieldset {
+	margin: 15px 0;
+}
+input[type="text"],
+input[type="password"],
+input[type="file"],
+select,
+textarea,
+fieldset,
+legend {
+	padding: 9px; /* -1px à cause des bordures */
+	background: whitesmoke;
+	border: 1px solid #DDD;
+	-webkit-transition: all .25s ease-in-out;
+	-o-transition: all .25s ease-in-out;
+	transition: all .25s ease-in-out;
+}
+input[type="text"],
+input[type="password"],
+input[type="file"],
+select,
+textarea {
+	width: 100%;
+}
+input[type="text"]:hover,
+input[type="password"]:hover,
+input[type="file"]:hover,
+select:hover,
+textarea:hover {
+	border: 1px solid #CCC;
+}
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="file"]:focus,
+select:focus,
+textarea:focus {
+	border: 1px solid #00A4FF;
+}
+input[type="submit"] {
+	width: 100%;
+	padding: 10px;
+	background: #00A4FF;
+	color: white;
+	border: 0;
+	-webkit-transition: all .25s ease-in-out;
+	-o-transition: all .25s ease-in-out;
+	transition: all .25s ease-in-out;
+}
+input[type="submit"]:hover {
+	background: #0094FF;
+}
+input[type="submit"]:active {
+	background: #0084FF;
+}
+legend {
+	padding: 2px;
+}
+textarea {
+	resize: none;
+	height: 200px;
+}
+label {
+	display: block;
+	margin-bottom: 2px;
+}
+
+/**
+ * Inputs spécifiques
+ */
+
+/* Bouton */
+a.button {
+	width: 100%;
+	display: inline-block;
+	padding: 10px;
+	text-decoration: none;
+	text-align: center;
+	background: #00A4FF;
+	color: white;
+	-webkit-transition: all .25s ease-in-out;
+	-o-transition: all .25s ease-in-out;
+	transition: all .25s ease-in-out;
+}
+a.button:hover {
+	color: white;
+	background: #0094FF;
+}
+a.button:active {
+	background: #0084FF;
+}
+
+/* Cases à cocher */
+input[type="checkbox"],
+input[type="radio"] {
+	display: none;
+}
+input[type="checkbox"] + label,
+input[type="radio"] + label {
+	display: inline-block;
+	margin-right: 10px;
+	cursor: pointer;
+}
+input[type="checkbox"] + label::before,
+input[type="radio"] + label::before {
+	content: "✓";
+	display: inline-block;
+	text-align: center;
+	color: transparent;
+	margin-right: 5px;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	font-size: 10px;
+	font-weight: bold;
+	background: #DDD;
+	-webkit-transition: all .25s ease-in-out;
+	-o-transition: all .25s ease-in-out;
+	transition: all .25s ease-in-out;
+}
+input[type="checkbox"] + label::before {
+	border-radius: 3px;
+}
+input[type="radio"] + label::before {
+	border-radius: 50%;
+}
+input[type="checkbox"]:checked + label::before,
+input[type="radio"]:checked + label::before {
+	color: white;
+	background: #00A4FF;
+}
+input[type="checkbox"]:hover + label::before,
+input[type="checkbox"]:checked:active + label::before,
+input[type="radio"]:hover + label::before {
+	color: white;
+	background: #CCC;
+}
+input[type="checkbox"]:not(:active):checked:hover + label::before,
+input[type="checkbox"]:active + label::before,
+input[type="radio"]:checked:hover + label::before,
+input[type="radio"]:not(:checked):active + label::before {
+	background: #0094FF;
+}
