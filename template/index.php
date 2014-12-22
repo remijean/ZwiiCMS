@@ -2,9 +2,9 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title><?= $system->getTitle(); ?> - <?= $system->getData('settings', 'title'); ?></title>
-	<meta name="description" content="<?= $system->getData('settings', 'description'); ?>">
-	<meta name="keywords" content="<?= $system->getData('settings', 'keywords'); ?>">
+	<title><?= $core->getTitle(); ?> - <?= $core->getData('config', 'title'); ?></title>
+	<meta name="description" content="<?= $core->getData('config', 'description'); ?>">
+	<meta name="keywords" content="<?= $core->getData('config', 'keywords'); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato">
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Oswald">
@@ -14,17 +14,18 @@
 	<link rel="stylesheet" href="template/main.css">
 </head>
 <body>
+<?= $core->adminPanel(); ?>
 <div id="container">
 	<header>
-		<h1><?= $system->getData('settings', 'title'); ?></h1>
+		<h1><?= $core->getData('config', 'title'); ?></h1>
 	</header>
 	<nav>
 	</nav>
 	<article>
-		<?= $system->getContent(); ?>
+		<?= $core->getContent(); ?>
 	</article>
 	<footer>
-		<?= $system->getData('settings', 'footer'); ?>
+		<?= $core->getData('config', 'footer'); ?>
 		<div id="scroll"><a href="#">Haut de page</a></div>
 	</footer>
 </div>

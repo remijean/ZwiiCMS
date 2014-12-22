@@ -7,22 +7,22 @@ body {
 }
 
 /* Container  */
-#container {
-	margin: auto;
-	max-width: 1200px;
-	background-color: white;
+div#container {
+	margin: 20px auto;
+	max-width: 960px;
+	background: #FFF;
 }
 
 /* Titre du site */
 header > h1 {
 	color: #333;
-	padding: 40px;
+	padding: 50px;
 	margin: 0;
 }
 
 /* Navigation */
 nav {
-	background: #008DAB;
+	background: #0070FF;
 }
 
 nav > ul {
@@ -44,11 +44,12 @@ nav > ul > li > a {
 
 nav > ul > li > a:hover {
 	color: #FFF;
-	background: #077E9C;
+	background: #0060FF;
 }
 
+nav > ul > li > a:active,
 nav > ul > li > a.current {
-	background: #007A98;
+	background: #0050FF;
 }
 
 /* Corps */
@@ -104,9 +105,6 @@ h1 {
 a {
 	color: #00A4FF;
 	text-decoration: none;
-	-webkit-transition: all .25s ease-in-out;
-	-o-transition: all .25s ease-in-out;
-	transition: all .25s ease-in-out;
 }
 a:hover,
 a:active {

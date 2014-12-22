@@ -1,32 +1,15 @@
-/*
-	Cacher la popup après 5 secondes
-*/
-
-window.onload = function()
-{
-	var element = document.getElementById('popup');
-	if(element)
-	{
-		setTimeout(function()
-		{
-			element.style.display = 'none';
-		}, 5000);
+/**
+ * Cache la notification après 4 secondes
+ */
+$(function() {
+	var notification = $("div#notification");
+	if(notification.length) {
+		setTimeout(function() {
+			notification.slideUp();
+		}, 4000);
 	}
-}
+});
 
-/*
-	Afficher/cacher un élément
-*/
-
-function showHide(id)
-{
-	var element = document.getElementById(id);
-	if (element.style.display == 'inline')
-	{
-		element.style.display = 'none';
-	}
-	else
-	{
-		element.style.display = 'inline';
-	}
-}
+$("select#list").change(function() {
+	$(location).attr("href", $(this).val());
+});

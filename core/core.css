@@ -1,4 +1,201 @@
 /**
+ * Éléments spécifiques
+ */
+
+/* Notification */
+div#notification {
+	background: #0070FF;
+	color: #FFF;
+	line-height: 50px;
+	text-align: center;
+}
+
+/* Panneau d'administration */
+div#panel {
+	background: #444;
+	line-height: 45px;
+}
+
+div#panel:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+div#panel > ul {
+	padding-left: 5px;
+	margin: 0;
+	list-style: none;
+}
+
+div#panel > ul > li {
+	display: inline;
+}
+
+div#panel > ul > li > a {
+	color: #FFF;
+	padding: 0 10px;
+	display: inline-block;
+	text-decoration: none;
+}
+
+div#panel > ul > li > a:hover {
+	background: #333;
+}
+
+div#panel > ul > li > a:active {
+	background: #222;
+}
+
+div#panel > ul > li > select {
+	padding: 5px;
+	border: 0;
+	width: 250px;
+}
+
+div#panel > ul#left {
+	float: left;
+}
+div#panel > ul#right {
+	float: right;
+}
+
+/**
+ * Inputs génériques
+ */
+
+form,
+fieldset {
+	margin: 15px 0;
+}
+input[type="text"],
+input[type="password"],
+input[type="file"],
+select,
+textarea,
+fieldset,
+legend {
+	padding: 9px; /* -1px à cause des bordures */
+	background: #FFF;
+	border: 1px solid #DDD;
+}
+input[type="text"],
+input[type="password"],
+input[type="file"],
+select,
+textarea {
+	width: 100%;
+}
+input[type="text"]:hover,
+input[type="password"]:hover,
+input[type="file"]:hover,
+select:hover,
+textarea:hover {
+	border: 1px solid #CCC;
+}
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="file"]:focus,
+select:focus,
+textarea:focus {
+	border: 1px solid #0070FF;
+}
+input[type="submit"] {
+	width: 100%;
+	padding: 10px;
+	background: #CCC;
+	color: #FFF;
+	border: 0;
+}
+input[type="submit"]:hover {
+	background: #BBB;
+}
+input[type="submit"]:active {
+	background: #AAA;
+}
+legend {
+	padding: 2px;
+}
+textarea {
+	height: 200px;
+}
+label {
+	display: block;
+	margin-bottom: 2px;
+}
+
+/**
+ * Inputs spécifiques
+ */
+
+/* Bouton */
+a.button {
+	width: 100%;
+	display: inline-block;
+	padding: 10px;
+	text-decoration: none;
+	text-align: center;
+	background: #CCC;
+	color: #FFF;
+}
+a.button:hover {
+	color: #FFF;
+	background: #BBB;
+}
+a.button:active {
+	background: #AAA;
+}
+
+/* Cases à cocher */
+input[type="checkbox"],
+input[type="radio"] {
+	display: none;
+}
+input[type="checkbox"] + label,
+input[type="radio"] + label {
+	display: inline-block;
+	margin-right: 10px;
+	cursor: pointer;
+}
+input[type="checkbox"] + label::before,
+input[type="radio"] + label::before {
+	content: "✓";
+	display: inline-block;
+	text-align: center;
+	color: transparent;
+	margin-right: 5px;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	font-size: 10px;
+	font-weight: bold;
+	background: #DDD;
+}
+input[type="checkbox"] + label::before {
+	border-radius: 3px;
+}
+input[type="radio"] + label::before {
+	border-radius: 50%;
+}
+input[type="checkbox"]:checked + label::before,
+input[type="radio"]:checked + label::before {
+	color: #FFF;
+	background: #BBB;
+}
+input[type="checkbox"]:hover + label::before,
+input[type="checkbox"]:checked:active + label::before,
+input[type="radio"]:hover + label::before {
+	color: #FFF;
+	background: #CCC;
+}
+input[type="checkbox"]:not(:active):checked:hover + label::before,
+input[type="checkbox"]:active + label::before,
+input[type="radio"]:checked:hover + label::before,
+input[type="radio"]:not(:checked):active + label::before {
+	background: #AAA;
+}
+
+/**
  * Grille
  */
 
@@ -112,152 +309,4 @@
 	.offset11 {
 		margin-left: 91.66666667%;
 	}
-}
-
-/**
- * Inputs génériques
- */
-
-form,
-fieldset {
-	margin: 15px 0;
-}
-input[type="text"],
-input[type="password"],
-input[type="file"],
-select,
-textarea,
-fieldset,
-legend {
-	padding: 9px; /* -1px à cause des bordures */
-	background: whitesmoke;
-	border: 1px solid #DDD;
-	-webkit-transition: all .25s ease-in-out;
-	-o-transition: all .25s ease-in-out;
-	transition: all .25s ease-in-out;
-}
-input[type="text"],
-input[type="password"],
-input[type="file"],
-select,
-textarea {
-	width: 100%;
-}
-input[type="text"]:hover,
-input[type="password"]:hover,
-input[type="file"]:hover,
-select:hover,
-textarea:hover {
-	border: 1px solid #CCC;
-}
-input[type="text"]:focus,
-input[type="password"]:focus,
-input[type="file"]:focus,
-select:focus,
-textarea:focus {
-	border: 1px solid #00A4FF;
-}
-input[type="submit"] {
-	width: 100%;
-	padding: 10px;
-	background: #00A4FF;
-	color: white;
-	border: 0;
-	-webkit-transition: all .25s ease-in-out;
-	-o-transition: all .25s ease-in-out;
-	transition: all .25s ease-in-out;
-}
-input[type="submit"]:hover {
-	background: #0094FF;
-}
-input[type="submit"]:active {
-	background: #0084FF;
-}
-legend {
-	padding: 2px;
-}
-textarea {
-	resize: none;
-	height: 200px;
-}
-label {
-	display: block;
-	margin-bottom: 2px;
-}
-
-/**
- * Inputs spécifiques
- */
-
-/* Bouton */
-a.button {
-	width: 100%;
-	display: inline-block;
-	padding: 10px;
-	text-decoration: none;
-	text-align: center;
-	background: #00A4FF;
-	color: white;
-	-webkit-transition: all .25s ease-in-out;
-	-o-transition: all .25s ease-in-out;
-	transition: all .25s ease-in-out;
-}
-a.button:hover {
-	color: white;
-	background: #0094FF;
-}
-a.button:active {
-	background: #0084FF;
-}
-
-/* Cases à cocher */
-input[type="checkbox"],
-input[type="radio"] {
-	display: none;
-}
-input[type="checkbox"] + label,
-input[type="radio"] + label {
-	display: inline-block;
-	margin-right: 10px;
-	cursor: pointer;
-}
-input[type="checkbox"] + label::before,
-input[type="radio"] + label::before {
-	content: "✓";
-	display: inline-block;
-	text-align: center;
-	color: transparent;
-	margin-right: 5px;
-	width: 20px;
-	height: 20px;
-	line-height: 20px;
-	font-size: 10px;
-	font-weight: bold;
-	background: #DDD;
-	-webkit-transition: all .25s ease-in-out;
-	-o-transition: all .25s ease-in-out;
-	transition: all .25s ease-in-out;
-}
-input[type="checkbox"] + label::before {
-	border-radius: 3px;
-}
-input[type="radio"] + label::before {
-	border-radius: 50%;
-}
-input[type="checkbox"]:checked + label::before,
-input[type="radio"]:checked + label::before {
-	color: white;
-	background: #00A4FF;
-}
-input[type="checkbox"]:hover + label::before,
-input[type="checkbox"]:checked:active + label::before,
-input[type="radio"]:hover + label::before {
-	color: white;
-	background: #CCC;
-}
-input[type="checkbox"]:not(:active):checked:hover + label::before,
-input[type="checkbox"]:active + label::before,
-input[type="radio"]:checked:hover + label::before,
-input[type="radio"]:not(:checked):active + label::before {
-	background: #0094FF;
 }

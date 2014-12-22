@@ -22,7 +22,7 @@ class setting extends system
 		if($this->getPost('submit')) {
 			$this->newPluginsSettings();
 			$this->setData('settings', $this->newSettings());
-			$this->jsonPutContents($this->_settingsPath, $this->getData('settings'));
+			$this->jsonPutContents($this->_settingsPath, $this->getData('config'));
 			$_SESSION['POPUP'] = 'Paramètres enregistrés avec succès !';
 			return $this->redirect($this->getUrl());
 
@@ -88,7 +88,7 @@ class setting extends system
 
 	private function newSettings()
 	{
-		foreach($this->getData('settings') as $key => $value) {
+		foreach($this->getData('config') as $key => $value) {
 			if($key == 'password') {
 				$array[$key] = $this->getPost($key) ? sha1($this->getPost($key)) : $this->getSetting($key);
 			} else {
