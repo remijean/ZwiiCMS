@@ -1,10 +1,5 @@
 <?php
 
-require 'core/core.php';
-
-$core = new core;
-$core->router();
-
 function autoloader($className)
 {
 	$classPath = 'plugins/' . $className . '.php';
@@ -13,5 +8,10 @@ function autoloader($className)
 	}
 }
 spl_autoload_register('autoloader', true, true);
+
+require 'core/core.php';
+
+$core = new core;
+$core->router();
 
 require 'template/index.php';

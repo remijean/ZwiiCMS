@@ -28,7 +28,12 @@ class core
 	public $config = 'core/data/config.json';
 
 	/**
-	 * Enregistre le niveau d'accès des plugins
+	 * Contient les vues des plugins
+	 */
+	public $views = [];
+
+	/**
+	 * Contient le niveau d'accès des plugins
 	 */
 	public static $private = false;
 
@@ -42,7 +47,7 @@ class core
 	/**
 	 * Version du Zwii
 	 */
-	const VERSION = '0.2.0';
+	const VERSION = '0.3.0';
 
 	public function __construct()
 	{
@@ -242,10 +247,9 @@ class core
 	public function adminPanel()
 	{
 		if($this->getCookie() === $this->getData('config', 'password')) {
-			$panel = '<div id="panel">';
-			$panel .= '<ul id="left">';
+			$panel = '<ul id="panel">';
 			$panel .= '<li>';
-			$panel .= '<select id="list">';
+			$panel .= '<select>';
 			foreach($this->getData('pages') as $key => $value) {
 				$current = ($key === $this->getUrl(1) OR $key === $this->getUrl(2)) ? ' selected' : false;
 				$panel .= '<option value="?page/edit/' . $key . '"' . $current . '>' . $value['title'] . '</option>';
@@ -254,25 +258,21 @@ class core
 			$panel .= '</li>';
 			if($this->getUrl(0) === 'page') {
 				$panel .= '<li><a href="?page/add">Créer</a></li>';
-				$panel .= '<li><a href="?page/delete/' . $this->getUrl(2) . '">Supprimer</a></li>';
 				$panel .= '<li>';
-				if($this->getUrl(1) === 'edit') {
-					if(!$this->getData('pages', $this->getUrl(2), 'link')) {
-						$panel .= '<a href="?page/' . $this->getUrl(2) . '">Visualiser la page</a>';
+				if(!$this->getData('pages', $this->getUrl(2), 'link')) {
+					if($this->getUrl(1) === 'edit') {
+						$panel .= '<a href="?page/' . $this->getUrl(2) . '">Visualiser</a>';
+					}
+					else {
+						$panel .= '<a href="?page/edit/' . $this->getUrl(1) . '">Éditer</a>';
 					}
 				}
-				else {
-					$panel .= '<a href="?page/edit/' . $this->getUrl(1) . '">Retour à l\'éditeur</a>';
-				}
 				$panel .= '</li>';
+				$panel .= '<li><a href="?page/delete/' . $this->getUrl(2) . '">Supprimer</a></li>';
 			}
-			$panel .= '</ul>';
-			$panel .= '<ul id="right">';
-			$panel .= '<li><a href="?config">Paramètres</a></li>';
 			$panel .= '<li><a href="?plugins">Plugins</a></li>';
 			$panel .= '<li><a href="?user/logout">Déconnexion</a></li>';
 			$panel .= '</ul>';
-			$panel .= '</div>';
 
 			return $panel . $this->getNotification();
 		}
@@ -1014,6 +1014,7 @@ class template
 			'name' => $nameId,
 			'value' => 'Bouton',
 			'href' => 'javascript:void(0);',
+			'target' => '',
 			'onclick' => '',
 			'label' => '',
 			'class' => '',

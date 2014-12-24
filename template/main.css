@@ -1,6 +1,5 @@
 body {
 	font-family: "Lato", sans-serif;
-	font-size: 0.9em;
 	color: #444;
 	background: #EEE;
 	margin: 0;
@@ -14,66 +13,99 @@ div#container {
 }
 
 /* Titre du site */
-header > h1 {
-	color: #333;
-	padding: 50px;
+h1#header {
 	margin: 0;
+	padding: 50px;
+	font-size: 1.8em;
+}
+
+/* Afficher la navigation */
+label.toggle {
+	margin: 0;
+	cursor: pointer;
+	background: #00A4FF;
+	padding: 13px 20px;
+	text-align: right;
+}
+label.toggle:hover {
+	background: #0094FF;
+}
+label.toggle:active {
+	background: #0084FF;
+}
+label.toggle > img {
+	vertical-align: middle;
+}
+input#toggle {
+	display: none;
+}
+input#toggle:checked ~ ul#nav {
+	display: block;
 }
 
 /* Navigation */
-nav {
-	background: #0070FF;
-}
-
-nav > ul {
+ul#nav {
+	background: #00A4FF;
 	padding: 0;
 	margin: 0;
-}
-
-nav > ul > li {
-	display: inline;
 	list-style: none;
+	display: none;
+	text-align: center;
 }
-
-nav > ul > li > a {
+ul#nav > li {
+	display: block;
+}
+ul#nav > li > a {
+	display: inherit;
 	color: #FFF;
-	display: inline-block;
-	padding: 10px;
+	padding: 15px 10px;
 	text-decoration: none;
 }
-
-nav > ul > li > a:hover {
-	color: #FFF;
-	background: #0060FF;
+ul#nav > li > a:hover {
+	background: #0094FF;
+}
+ul#nav > li > a:active {
+	background: #0084FF;
+}
+ul#nav > li > select {
+	margin: 0 10px;
+	width: 95%;
 }
 
-nav > ul > li > a:active,
-nav > ul > li > a.current {
-	background: #0050FF;
+/* Affichage desktop */
+@media (min-width: 768px)
+{
+	/* Afficher la navigation */
+	label.toggle {
+		display: none;
+	}
+
+	/* Navigation */
+	ul#nav {
+		display: block;
+		text-align: left;
+	}
+	ul#nav > li {
+		display: inline-block;
+	}
 }
 
 /* Corps */
-article {
+div#content {
 	word-wrap: break-word;
 	margin: 20px;
 }
 
 /* Bas de page */
-footer {
+div#footer {
 	color: #7A7A7A;
 	text-align: center;
 	font-size: 0.8em;
 	clear: both;
 	padding-bottom: 20px;
 }
-
-footer > a {
+div#footer > a {
 	text-decoration: none;
-}
-
-footer > #scroll {
-	padding-top: 4px;
-	font-size: 1.1em;
 }
 
 /* Hn */
@@ -88,17 +120,10 @@ h6 {
 	text-transform: uppercase;
 	letter-spacing: 1px;
 }
-h1,
-h2 {
-	margin-top: 0;
-}
-h1,
-h3,
-h5 {
+h2,
+h4,
+h6 {
 	color: #00A4FF;
-}
-h1 {
-	font-size: 1.8em;
 }
 
 /* Liens */
@@ -115,16 +140,27 @@ a:active {
 ul {
 	list-style: square;
 }
-ul.nav {
-	padding: 0;
-	margin: 0;
-	list-style: none;
+
+/* Input */
+input[type="submit"],
+a.button {
+	background: #00A4FF;
 }
-ul.nav > li {
-	margin: auto;
-	border-top: 1px solid #DDD;
+input[type="submit"]:hover,
+a.button:hover {
+	background: #0094FF;
 }
-ul.nav > li > a {
-	display: inline-block;
-	padding: 10px;
+input[type="submit"]:active,
+a.button:active {
+	background: #0084FF;
+}
+input[type="checkbox"]:checked + label::before,
+input[type="radio"]:checked + label::before {
+	background: #00A4FF;
+}
+input[type="checkbox"]:not(:active):checked:hover + label::before,
+input[type="checkbox"]:active + label::before,
+input[type="radio"]:checked:hover + label::before,
+input[type="radio"]:not(:checked):active + label::before {
+	background: #0094FF;
 }

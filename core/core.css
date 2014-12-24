@@ -6,75 +6,60 @@
 div#notification {
 	background: #0070FF;
 	color: #FFF;
-	line-height: 50px;
 	text-align: center;
+	padding: 15px
 }
 
-/* Panneau d'administration */
-div#panel {
-	background: #444;
-	line-height: 45px;
-}
-
-div#panel:after {
-	content: "";
-	display: table;
-	clear: both;
-}
-
-div#panel > ul {
-	padding-left: 5px;
+/* Panneau */
+ul#panel {
+	background: #333;
+	padding: 0;
 	margin: 0;
 	list-style: none;
 }
-
-div#panel > ul > li {
+ul#panel > li {
 	display: inline;
 }
-
-div#panel > ul > li > a {
-	color: #FFF;
-	padding: 0 10px;
+ul#panel > li > a {
 	display: inline-block;
+	color: #FFF;
+	padding: 15px 10px;
 	text-decoration: none;
 }
-
-div#panel > ul > li > a:hover {
-	background: #333;
-}
-
-div#panel > ul > li > a:active {
+ul#panel > li > a:hover {
 	background: #222;
 }
-
-div#panel > ul > li > select {
-	padding: 5px;
-	border: 0;
-	width: 250px;
+ul#panel > li > a:active {
+	background: #111;
 }
-
-div#panel > ul#left {
-	float: left;
+ul#panel > li > select {
+	margin: 0 10px;
+	width: 300px;
 }
-div#panel > ul#right {
-	float: right;
+@media (max-width: 768px)
+{
+	ul#panel {
+		text-align: center;
+	}
+	ul#panel > li > select {
+		width: 95%;
+		margin: 10px 0 0 0;
+		display: inline-block;
+	}
 }
 
 /**
  * Inputs génériques
  */
 
-form,
-fieldset {
+form {
 	margin: 15px 0;
 }
 input[type="text"],
 input[type="password"],
 input[type="file"],
 select,
-textarea,
-fieldset,
-legend {
+textarea {
 	padding: 9px; /* -1px à cause des bordures */
 	background: #FFF;
 	border: 1px solid #DDD;
@@ -112,9 +97,6 @@ input[type="submit"]:hover {
 }
 input[type="submit"]:active {
 	background: #AAA;
-}
-legend {
-	padding: 2px;
 }
 textarea {
 	height: 200px;
@@ -170,9 +152,9 @@ input[type="radio"] + label::before {
 	font-size: 10px;
 	font-weight: bold;
 	background: #DDD;
+	vertical-align: top;
 }
 input[type="checkbox"] + label::before {
-	border-radius: 3px;
 }
 input[type="radio"] + label::before {
 	border-radius: 50%;

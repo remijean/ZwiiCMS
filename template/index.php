@@ -16,18 +16,18 @@
 <body>
 <?= $core->adminPanel(); ?>
 <div id="container">
-	<header>
-		<h1><?= $core->getData('config', 'title'); ?></h1>
-	</header>
-	<nav>
-	</nav>
-	<article>
+	<h1 id="header"><?= $core->getData('config', 'title'); ?></h1>
+	<label for="toggle" class="toggle"><img src="template/menu.png"></label>
+	<input type="checkbox" id="toggle">
+	<ul id="nav">
+		<li><a href="">Demo</a></li>
+		<li><a href="">Demo</a></li>
+		<li><a href="">Demo</a></li>
+	</ul>
+	<div id="content">
 		<?= $core->getContent(); ?>
-	</article>
-	<footer>
-		<?= $core->getData('config', 'footer'); ?>
-		<div id="scroll"><a href="#">Haut de page</a></div>
-	</footer>
+	</div>
+	<div id="footer">Thème Flat | <?= $core->getData('config', 'footer'); ?></div>
 </div>
 <script src="core/libs/jquery.min.js"></script>
 <script src="core/libs/trumbowyg/trumbowyg.min.js"></script>
