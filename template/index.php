@@ -8,8 +8,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato">
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Oswald">
-	<link rel="stylesheet" href="core/libs/normalize.min.css">
-	<link rel="stylesheet" href="core/libs/trumbowyg/ui/trumbowyg.min.css">
+	<link rel="stylesheet" href="core/vendor/normalize.min.css">
+	<link rel="stylesheet" href="core/vendor/trumbowyg/ui/trumbowyg.min.css">
 	<link rel="stylesheet" href="core/core.css">
 	<link rel="stylesheet" href="template/main.css">
 </head>
@@ -17,7 +17,7 @@
 <?= $core->adminPanel(); ?>
 <div id="container">
 	<h1 id="header"><?= $core->getData('config', 'title'); ?></h1>
-	<label for="toggle" class="toggle"><img src="template/menu.png"></label>
+	<label for="toggle" class="toggle"><div class="img"></div></label>
 	<input type="checkbox" id="toggle">
 	<ul id="nav">
 		<li><a href="">Demo</a></li>
@@ -29,9 +29,9 @@
 	</div>
 	<div id="footer">Thème Flat | <?= $core->getData('config', 'footer'); ?></div>
 </div>
-<script src="core/libs/jquery.min.js"></script>
-<script src="core/libs/trumbowyg/trumbowyg.min.js"></script>
-<script src="core/libs/trumbowyg/langs/fr.min.js"></script>
+<script src="core/vendor/jquery.min.js"></script>
+<script src="core/vendor/trumbowyg/trumbowyg.min.js"></script>
+<script src="core/vendor/trumbowyg/langs/fr.min.js"></script>
 <script src="core/core.js"></script>
 <script>
 	$('.editor').trumbowyg({

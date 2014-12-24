@@ -33,8 +33,12 @@ label.toggle:hover {
 label.toggle:active {
 	background: #0084FF;
 }
-label.toggle > img {
+label.toggle > div.img {
+	display: inline-block;
 	vertical-align: middle;
+	width: 24px;
+	height: 24px;
+	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QAQQBpAOEM2+jHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gsFFgYloRu63wAAACxJREFUSMdjYBgFo4BSwIjM+f///3+qGMrICDeXaTSMRyN5FIxG8igYBfQAAKEtDAplk4dlAAAAAElFTkSuQmCC');
 }
 input#toggle {
 	display: none;
@@ -71,8 +75,6 @@ ul#nav > li > select {
 	margin: 0 10px;
 	width: 95%;
 }
-
-/* Affichage desktop */
 @media (min-width: 768px)
 {
 	/* Afficher la navigation */

@@ -13,7 +13,7 @@ div#notification {
 /* Panneau */
 ul#panel {
 	background: #333;
-	padding: 0;
+	padding: 0 5px;
 	margin: 0;
 	list-style: none;
 }
@@ -33,7 +33,6 @@ ul#panel > li > a:active {
 	background: #111;
 }
 ul#panel > li > select {
-	margin: 0 10px;
 	width: 300px;
 }
 @media (max-width: 768px)
@@ -42,8 +41,8 @@ ul#panel > li > select {
 		text-align: center;
 	}
 	ul#panel > li > select {
-		width: 95%;
-		margin: 10px 0 0 0;
+		width: 100%;
+		margin: 5px 0 0 0;
 		display: inline-block;
 	}
 }

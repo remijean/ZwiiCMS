@@ -45,14 +45,14 @@ class core
 	private $content;
 
 	/**
-	 * Version du Zwii
+	 * Version de ZwiiCMS
 	 */
-	const VERSION = '0.3.0';
+	const VERSION = '0.3.1';
 
 	public function __construct()
 	{
 		$this->data = $this->listFiles('core/data/', '.json');
-		$this->plugins = array_merge($this->listFiles('plugins/', '.php'), ['config', 'page', 'user']);
+		$this->plugins = array_merge($this->listFiles('plugins/', '.php'), ['page', 'user', 'plugins']);
 		$this->url = empty($_SERVER['QUERY_STRING']) ? 'page/' . $this->getData('config', 'index') : $_SERVER['QUERY_STRING'];
 		$this->url = helpers::filter($this->url, helpers::URL);
 		$this->url = explode('/', $this->url);
@@ -531,6 +531,23 @@ class user extends core
 		return helpers::redirect('./');
 	}
 
+}
+
+class plugins extends core
+{
+	/**
+	 * PAGE : Plugins
+	 * @return bool Retourne false en cas d'erreur, sinon true
+	 */
+	public function index()
+	{
+		$this->setTitle('Plugins');
+		$this->setContent(
+			''
+		);
+
+		return true;
+	}
 }
 
 class helpers
