@@ -14,4 +14,4 @@ require 'core/core.php';
 $core = new core;
 $core->router();
 
-require 'template/index.php';
+require 'core/core.html';

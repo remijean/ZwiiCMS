@@ -22,37 +22,18 @@ session_start();
 
 class core
 {
-	/**
-	 * Fichier de données global contenant la configuration du site et des plugins
-	 */
-	public $config = 'core/data/config.json';
-
-	/**
-	 * Contient les vues des plugins
-	 */
-	public $views = [];
-
-	/**
-	 * Contient le niveau d'accès des plugins
-	 */
-	public static $private = false;
-
 	private $data;
-	private $plugins;
 	private $url;
 	private $notification;
 	private $title;
 	private $content;
+	public $views = [];
 
-	/**
-	 * Version de ZwiiCMS
-	 */
-	const VERSION = '0.3.1';
+	const VERSION = '0.4.0';
 
 	public function __construct()
 	{
-		$this->data = $this->listFiles('core/data/', '.json');
-		$this->plugins = array_merge($this->listFiles('plugins/', '.php'), ['page', 'user', 'plugins']);
+		$this->data = json_decode(file_get_contents('core/data.json'), true);
 		$this->url = empty($_SERVER['QUERY_STRING']) ? 'page/' . $this->getData('config', 'index') : $_SERVER['QUERY_STRING'];
 		$this->url = helpers::filter($this->url, helpers::URL);
 		$this->url = explode('/', $this->url);
@@ -61,115 +42,145 @@ class core
 
 	/**
 	 * Accède au contenu d'un tableau de données
-	 * @param string $file Nom du tableau cible (correspond au nom du fichier)
+	 * @param mixed $array Tableau cible
 	 * @param mixed $key Clé du tableau
 	 * @param mixed $subKey Sous clé du tableau
-	 * @return mixed
+	 * @return mixed Contenu du tableau de données
 	 */
-	public function getData($file, $key = null, $subKey = null)
+	public function getData($array = null, $key = null, $subKey = null)
 	{
 		if($subKey !== null) {
-			return empty($this->data[$file][$key][$subKey]) ? false : $this->data[$file][$key][$subKey];
+			return empty($this->data[$array][$key][$subKey]) ? false : $this->data[$array][$key][$subKey];
 		}
-		if($key !== null) {
-			return empty($this->data[$file][$key]) ? false : $this->data[$file][$key];
+		elseif($key !== null) {
+			return empty($this->data[$array][$key]) ? false : $this->data[$array][$key];
+		}
+		elseif($array !== null) {
+			return empty($this->data[$array]) ? false : $this->data[$array];
 		}
 		else {
-			return empty($this->data[$file]) ? false : $this->data[$file];
+			return $this->data;
 		}
 	}
 
 	/**
 	 * Insert une ligne dans un tableau de données
-	 * @param string $file Nom du tableau cible (correspond au nom du fichier)
+	 * @param string $array Tableau cible
 	 * @param mixed $key Clé du tableau
 	 * @param mixed $value Valeur de la clé du tableau
 	 */
-	public function setData($file, $key, $value = null)
+	public function setData($array, $key, $value = null)
 	{
 		if($value !== null) {
-			$this->data[$file][$key] = $value;
+			$this->data[$array][$key] = $value;
 		}
 		else {
-			$this->data[$file] = $key;
+			$this->data[$array] = $key;
 		}
 	}
 
 	/**
 	 * Supprime une ligne dans un tableau de données
-	 * @param string $file Nom du tableau cible (correspond au nom du fichier)
+	 * @param string $array Tableau cible
 	 * @param mixed $key Clé du tableau
 	 */
-	public function removeData($file, $key)
+	public function removeData($array, $key)
 	{
-		unset($this->data[$file][$key]);
+		unset($this->data[$array][$key]);
 	}
 
 	/**
-	 * Liste les plugins disponibles|Vérifie l'existence d'un plugin
-	 * @param string $plugin Nom du plugin à vérifier
-	 * @return array|bool Liste des plugins|true si plugin existe, sinon false
+	 * Enregistre les données
+	 * @return mixed Nombre de bytes du fichier ou false en cas d'erreur
 	 */
-	public function getPlugins($plugin = null)
+	public function saveData()
 	{
-		if($plugin !== null) {
-			return in_array($plugin, $this->plugins);
-		}
-		else {
-			return empty($this->plugins) ? false : $this->plugins;
-		}
+		return file_put_contents('core/data.json', json_encode($this->getData()));
 	}
 
-	public function setPlugins($plugin, $key, $value)
+	/**
+	 * Accède à une valeur de l'URL ou à l'URL complète sous forme de chaîne
+	 * @param int $key Clé de l'URL
+	 * @return bool|string Valeur de l'URL|URL complète
+	 */
+	public function getUrl($key = null)
 	{
-		$this->plugins[$plugin][$key] = $value;
-	}
-
-	public function getUrl($value = null)
-	{
-		if($value !== null) {
-			return empty($this->url[$value]) ? false : $this->url[$value];
+		if($key !== null) {
+			return empty($this->url[$key]) ? false : $this->url[$key];
 		}
 		else {
 			return implode('/', $this->url);
 		}
 	}
 
+	/**
+	 * Accède au titre de la page
+	 * @return string Titre de la page
+	 */
 	public function getTitle()
 	{
 		return isset($this->title) ? $this->title : 'Erreur 404';
 	}
 
+	/**
+	 * Modifie le titre de la page
+	 * @param string $value Titre de la page
+	 */
 	public function setTitle($value)
 	{
 		$this->title = $value;
 	}
 
+	/**
+	 * Accède au contenu de la page
+	 * @return string Contenu de la page
+	 */
 	public function getContent()
 	{
-		return isset($this->content) ? $this->content : '<p>Page introuvable</p>';
+		$content = isset($this->content) ? $this->content : '<p>Page introuvable</p>';
+		return '<h2>' . $this->getTitle() . '</h2>' . $content;
 	}
 
+	/**
+	 * Modifie le contenu de la page
+	 * @param string $value Contenu de la page
+	 */
 	public function setContent($value)
 	{
 		$this->content = $value;
 	}
 
+	/**
+	 * Accès au cookie contenant le mot de passe
+	 * @return string|bool Cookie contenant le mot de passe
+	 */
 	public function getCookie()
 	{
 		return isset($_COOKIE['PASSWORD']) ? $_COOKIE['PASSWORD'] : false;
 	}
 
+	/**
+	 * Modifie le mot de passe contenu dans le cookie
+	 * @param string $password Mot de passe
+	 * @param int $time Temps de vie du cookie
+	 */
 	public function setCookie($password, $time)
 	{
 		setcookie('PASSWORD', helpers::filter($password, helpers::PASSWORD), $time);
 	}
 
+	/**
+	 * Supprime le cookie contenant le mot de passe
+	 */
 	public function removeCookie()
 	{
 		setcookie('PASSWORD');
 	}
 
+	/**
+	 * Accède à la notification
+	 * @return bool|string Retourne notification mise en forme si elle existe, sinon false
+	 */
 	private function getNotification()
 	{
 		if($this->notification) {
@@ -182,11 +193,21 @@ class core
 		}
 	}
 
+	/**
+	 * Modifie la notification
+	 * @param string $notification Notification
+	 */
 	public function setNotification($notification)
 	{
 		$_SESSION['NOTIFICATION'] = $notification;
 	}
 
+	/**
+	 * Accède à une valeur de la variable HTTP POST et applique un filtre
+	 * @param string $key Clé de la valeur
+	 * @param string $filter Filtre à appliquer
+	 * @return bool|string Retourne la valeur POST si la clé existe, sinon false
+	 */
 	public function getPost($key, $filter = null)
 	{
 		if(isset($_POST[$key])) {
@@ -203,174 +224,98 @@ class core
 	 */
 	public function router()
 	{
-		$plugin = $this->getUrl(0);
-		if($this->getPlugins($plugin)) {
-			$plugin = new $plugin;
-			$method = in_array($this->getUrl(1), $plugin->views) ? $this->getUrl(1) : 'index';
-			$plugin->$method();
-			if($plugin::$private AND $this->getData('config', 'password') !== $this->getCookie()) {
-				$plugin = new user;
-				$plugin->index();
+		// Module système
+		if(in_array($this->getUrl(0), ['config', 'logout', 'add', 'edit', 'delete'])) {
+			if($this->getData('config', 'password') !== $this->getCookie()) {
+				$this->login();
 			}
-			$this->setTitle($plugin->getTitle());
-			$this->setContent($plugin->getContent());
-		}
-		// Page d'erreur
-		$this->setContent('<h2>' . $this->getTitle() . '</h2>' . $this->getContent());
-	}
-
-	/**
-	 * Liste les fichiers d'un dossier
-	 * @param string $dir Dossier cible
-	 * @param string $extension Extension des fichiers à lister
-	 * @return array Liste des fichiers
-	 */
-	private function listFiles($dir, $extension)
-	{
-		$files = [];
-		$it = new FilesystemIterator($dir);
-		foreach($it as $file) {
-			if($file->isFile() AND $file->getExtension() == substr($extension, 1)) {
-				if(helpers::jsonGetContents($file->getPathname())) {
-					$files[$file->getBasename($extension)] = helpers::jsonGetContents($file->getPathname());
-					ksort($files[$file->getBasename($extension)]);
-				}
-				else {
-					$files[] = $file->getBasename($extension);
-				}
+			else {
+				$method = $this->getUrl(0);
+				$this->$method();
 			}
 		}
-
-		return $files;
-	}
-
-	public function adminPanel()
-	{
-		if($this->getCookie() === $this->getData('config', 'password')) {
-			$panel = '<ul id="panel">';
-			$panel .= '<li>';
-			$panel .= '<select>';
-			foreach($this->getData('pages') as $key => $value) {
-				$current = ($key === $this->getUrl(1) OR $key === $this->getUrl(2)) ? ' selected' : false;
-				$panel .= '<option value="?page/edit/' . $key . '"' . $current . '>' . $value['title'] . '</option>';
-			}
-			$panel .= '</select>';
-			$panel .= '</li>';
-			if($this->getUrl(0) === 'page') {
-				$panel .= '<li><a href="?page/add">Créer</a></li>';
-				$panel .= '<li>';
-				if(!$this->getData('pages', $this->getUrl(2), 'link')) {
-					if($this->getUrl(1) === 'edit') {
-						$panel .= '<a href="?page/' . $this->getUrl(2) . '">Visualiser</a>';
-					}
-					else {
-						$panel .= '<a href="?page/edit/' . $this->getUrl(1) . '">Éditer</a>';
-					}
-				}
-				$panel .= '</li>';
-				$panel .= '<li><a href="?page/delete/' . $this->getUrl(2) . '">Supprimer</a></li>';
-			}
-			$panel .= '<li><a href="?plugins">Plugins</a></li>';
-			$panel .= '<li><a href="?user/logout">Déconnexion</a></li>';
-			$panel .= '</ul>';
-
-			return $panel . $this->getNotification();
+		// Module
+		elseif($this->getData('pages', $this->getUrl(0), 'module')) {
+			$module = $this->getData('pages', $this->getUrl(0), 'module');
+			$module = new $module;
+			$method = in_array($this->getUrl(1), $module->views) ? $this->getUrl(1) : 'index';
+			$module->$method();
 		}
-		else {
-			return false;
-		}
-	}
-}
-
-class page extends core
-{
-	/**
-	 * Fichier de données
-	 */
-	private $data = 'core/data/pages.json';
-
-	/**
-	 * Liste des vues
-	 */
-	public $views = ['add', 'edit', 'delete'];
-
-	/**
-	 * Colonnes du fichier de données
-	 */
-	private $title = 'Nouvelle page';
-	private $position = 0;
-	private $blank = false;
-	private $link = '';
-	private $content = '';
-
-	/**
-	 * PAGE : Page
-	 * @return bool Retourne false en cas d'erreur, sinon true
-	 */
-	public function index()
-	{
-		// Erreur
-		if(!$this->getData('pages', $this->getUrl(1))) {
-			return false;
-		}
-		// Page externe
-		elseif($this->getData('pages', $this->getUrl(1), 'link')) {
-			return helpers::redirect($this->getData('pages', $this->getUrl(1), 'link'), false);
+		// Redirection
+		elseif($this->getData('pages', $this->getUrl(0), 'link')) {
+			helpers::redirect($this->getData('pages', $this->getUrl(0), 'link'), false);
 		}
 		// Page
-		else {
-			$this->setTitle($this->getData('pages', $this->getUrl(1), 'title'));
-			if($this->getData('config', 'password') === $this->getCookie()) {
-				$this->setContent($this->getData('pages', $this->getUrl(1), 'content'));
-			}
-
-			return true;
+		elseif($this->getData('pages', $this->getUrl(0))) {
+			$this->setTitle($this->getData('pages', $this->getUrl(0), 'title'));
+			$this->setContent($this->getData('pages', $this->getUrl(0), 'content'));
 		}
 	}
 
 	/**
-	 * PAGE : Ajout de page
-	 * @return bool Retourne true
+	 * Met en forme le panneau d'administration
+	 * @return bool|string Retourne le panneau d'administration si l'utilisateur est connecté, sinon false
+	 */
+	public function panel()
+	{
+		if($this->getCookie() !== $this->getData('config', 'password')) {
+			return false;
+		}
+		else {
+			$select = '<select>';
+			foreach($this->getData('pages') as $key => $value) {
+				$current = ($key === $this->getUrl(1)) ? ' selected' : false;
+				$select .= '<option value="?edit/' . $key . '"' . $current . '>' . $value['title'] . '</option>';
+			}
+			$select .= '</select>';
+
+			return '<ul id="panel"><li>' . $select . '</li><li><a href="?add">Créer une page</a></li><li><a href="?config">Configuration du site</a></li><li><a href="?logout">Quitter l\'administration</a></li></ul>' . $this->getNotification();
+		}
+	}
+
+	/**
+	 * Met en forme le panneau d'administration
+	 * @return bool|string Retourne le panneau d'administration si l'utilisateur est connecté, sinon false
+	 */
+	public function menu()
+	{
+		$pages = false;
+		foreach($this->getData('pages') as $key => $value) {
+			$pages .= '<li><a href="test">' . $value['title'] . '</a></li>';
+		}
+		return $pages;
+	}
+
+	/**
+	 * Ajout de page
 	 */
 	public function add()
 	{
-		self::$private = true;
-
-		$key = helpers::increment(helpers::filter($this->title, helpers::URL), $this->getData('pages'));
+		$key = helpers::increment('nouvelle-page', $this->getData('pages'));
 		$this->setData('pages', $key, [
-			'title' => $this->title,
-			'position' => $this->position,
-			'blank' => $this->blank,
-			'link' => $this->link,
-			'content' => $this->content
+			'title' => 'Nouvelle page',
+			'position' => 0,
+			'blank' => false,
+			'link' => '',
+			'content' => ''
 		]);
-		helpers::jsonPutContents($this->data, $this->getData('pages'));
 		$this->setNotification('Nouvelle page créée avec succès !');
-
-		return helpers::redirect('page/' . $key);
+		$this->saveData();
+		return helpers::redirect('edit/' . $key);
 	}
 
 	/**
-	 * PAGE : Édition de page
-	 * @return bool Retourne false en cas d'erreur, sinon true
+	 * Édition de page
 	 */
 	public function edit()
 	{
-		self::$private = true;
-
-		// Erreur
-		if(!$this->getData('pages', $this->getUrl(2))) {
+		if(!$this->getData('pages', $this->getUrl(1))) {
 			return false;
 		}
-		// Formulaire validé
 		elseif($this->getPost('submit')) {
-			if($this->getPost('title', helpers::URL) === $this->getUrl(2)) {
-				$key = $this->getUrl(2);
-			}
-			else {
-				$key = helpers::increment($this->getPost('title', helpers::URL), $this->getData('pages'));
-				$this->removeData('pages', $this->getUrl(2));
-			}
+			$key = $this->getPost('title', helpers::URL);
+			$key = ($key === $this->getUrl(1)) ? $key : helpers::increment($key, $this->getData('pages'));
+			$this->removeData('pages', $this->getUrl(1));
 			$this->setData('pages', $key, [
 				'title' => $this->getPost('title', helpers::STRING),
 				'position' => $this->getPost('position', helpers::NUMBER_INT),
@@ -378,176 +323,181 @@ class page extends core
 				'link' => $this->getPost('link', helpers::URL),
 				'content' => $this->getPost('content')
 			]);
-			helpers::jsonPutContents($this->data, $this->getData('pages'));
-			if($this->getData('config', 'index') === $this->getUrl(2)) {
+			if($this->getData('config', 'index') === $this->getUrl(1)) {
 				$this->setData('settings', 'index', $key);
-				helpers::jsonPutContents($this->config, $this->getData('config'));
 			}
 			$this->setNotification('Page modifiée avec succès !');
-
-			return helpers::redirect('page/edit/' . $key);
+			$this->saveData();
+			helpers::redirect('edit/' . $key);
 		}
-		// Page d'édition
 		else {
-			$this->setTitle($this->getData('pages', $this->getUrl(2), 'title'));
+			$this->setTitle($this->getData('pages', $this->getUrl(1), 'title'));
 			$this->setContent(
 				template::openForm() .
-					template::openRow() .
-						template::text('title', [
-							'label' => 'Titre de la page',
-							'value' => $this->getData('pages', $this->getUrl(2), 'title'),
-						]) .
-					template::closeRow() .
-					template::openRow() .
-						template::textarea('content', [
-							'value' => $this->getData('pages', $this->getUrl(2), 'content'),
-							'class' => 'editor'
-						]) .
-					template::closeRow() .
-					template::openRow() .
-						template::text('position', [
-							'label' => 'Position dans le menu',
-							'value' => $this->getData('pages', $this->getUrl(2), 'position'),
-							'col' => 6
-						]) .
-						template::text('link', [
-							'label' => 'Lien de redirection',
-							'value' => $this->getData('pages', $this->getUrl(2), 'link'),
-							'col' => 6
-						]) .
-					template::closeRow() .
-					template::openRow() .
-						template::checkbox('blank', true, 'Ouvrir dans un nouvel onglet', [
-							'checked' => $this->getData('pages', $this->getUrl(2), 'blank')
-						]) .
-					template::closeRow() .
-					template::openRow() .
-						template::submit('submit', [
-							'col' => 2,
-							'offset' => 10
-						]) .
-					template::closeRow() .
+				template::openRow() .
+				template::text('title', [
+					'label' => 'Titre de la page',
+					'value' => $this->getData('pages', $this->getUrl(1), 'title'),
+				]) .
+				template::closeRow() .
+				template::openRow() .
+				template::textarea('content', [
+					'value' => $this->getData('pages', $this->getUrl(1), 'content'),
+					'class' => 'editor'
+				]) .
+				template::closeRow() .
+				template::openRow() .
+				template::text('position', [
+					'label' => 'Position dans le menu',
+					'value' => $this->getData('pages', $this->getUrl(1), 'position'),
+					'col' => 4
+				]) .
+				template::text('module', [
+					'label' => 'Inclure un module à la page',
+					'value' => $this->getData('pages', $this->getUrl(1), 'module'),
+					'col' => 4
+				]) .
+				template::text('link', [
+					'label' => 'Rediriger la page vers',
+					'value' => $this->getData('pages', $this->getUrl(1), 'link'),
+					'placeholder' => 'http://',
+					'col' => 4
+				]) .
+				template::closeRow() .
+				template::openRow() .
+				template::checkbox('blank', true, 'Ouvrir dans un nouvel onglet', [
+					'checked' => $this->getData('pages', $this->getUrl(1), 'blank')
+				]) .
+				template::closeRow() .
+				template::openRow() .
+				template::button('delete', [
+					'value' => 'Supprimer',
+					'href' => '?delete/' . $this->getUrl(1),
+					'col' => 2,
+					'offset' => 8
+				]) .
+				template::submit('submit', [
+					'col' => 2
+				]) .
+				template::closeRow() .
 				template::closeForm()
 			);
-
-			return true;
 		}
 	}
 
 	/**
-	 * PAGE : Page
-	 * @return bool Retourne false en cas d'erreur, sinon true
+	 * Suppression de page
 	 */
 	public function delete()
 	{
-		self::$private = true;
-
-		// Erreur
-		if(!$this->getData('pages', $this->getUrl(2))) {
+		if(!$this->getData('pages', $this->getUrl(1))) {
 			return false;
 		}
-		// Supprime la page
-		else {
-			if($this->getUrl(2) === $this->getData('config', 'index')) {
-				$this->setNotification('Impossible de supprimer la page d\'accueil !');
-			}
-			else {
-				$this->removeData('pages', $this->getUrl(2));
-				helpers::jsonPutContents($this->data, $this->getData('pages'));
-				$this->setNotification('Page supprimée avec succès !');
-			}
+		elseif($this->getUrl(1) !== $this->getData('config', 'index')) {
+			$this->removeData('pages', $this->getUrl(1));
+			$this->setNotification('Page supprimée avec succès !');
+			$this->saveData();
+			helpers::redirect('edit/' . $this->getData('config', 'index'));
 
-			return helpers::redirect('page/' . $this->getData('config', 'index'));
 		}
 	}
 
-	public static function menu()
+	/**
+	 * Configuration
+	 */
+	public function config()
 	{
-
+		if($this->getPost('submit')) {
+			$this->setNotification('Paramètres enregistrés avec succès !');
+			$this->setData('settings', $this->newSettings());
+			$this->saveData();
+			helpers::redirect($this->getUrl());
+		}
+		else {
+			$this->setTitle('Paramètres');
+			$this->setContent(
+				template::openForm() .
+				template::openRow() .
+				template::text('title', [
+					'label' => 'Titre du site',
+					'value' => $this->getData('config', 'title'),
+				]) .
+				template::closeRow() .
+				template::openRow() .
+				template::text('description', [
+					'label' => 'Description du site',
+					'value' => $this->getData('config', 'description'),
+				]) .
+				template::closeRow() .
+				template::openRow() .
+				template::text('password', [
+					'label' => 'Nouveau mot de passe',
+					'col' => 6
+				]) .
+				template::text('confirm', [
+					'label' => 'Confirmation du mot de passe',
+					'col' => 6
+				]) .
+				template::closeRow() .
+				template::openRow() .
+				template::submit('submit', [
+					'col' => 2,
+					'offset' => 10
+				]) .
+				template::closeRow() .
+				template::closeForm()
+			);
+		}
 	}
-}
-
-class user extends core
-{
-	/**
-	 * Liste des vues
-	 */
-	public $views = ['logout'];
 
 	/**
-	 * PAGE : Connexion
-	 * @return bool Retourne false en cas d'erreur, sinon true
+	 * Connexion
 	 */
-	public function index()
+	public function login()
 	{
 		if($this->getPost('submit')) {
 			if($this->getPost('password', helpers::PASSWORD) === $this->getData('config', 'password')) {
 				$time = $this->getPost('time') ? 0 : time() + 10 * 365 * 24 * 60 * 60;
 				$this->setcookie($this->getPost('password'), $time);
-
-				return helpers::redirect($this->getUrl());
+				helpers::redirect($this->getUrl());
 			}
 			else {
 				$this->setNotification('Mot de passe incorrect !');
-
-				return helpers::redirect($this->getUrl());
+				helpers::redirect($this->getUrl());
 			}
 		}
 		else {
 			$this->setTitle('Connexion');
 			$this->setContent(
 				template::openForm() .
-					template::openRow() .
-						template::password('password', [
-							'col' => 4
-						]) .
-					template::closeRow() .
-					template::openRow() .
-						template::checkbox('time', true, 'Me connecter automatiquement lors de mes prochaines visites.').
-					template::closeRow() .
-					template::openRow() .
-						template::submit('submit', [
-							'value' => 'Me connecter',
-							'col' => 2
-						]) .
-					template::closeRow() .
+				template::openRow() .
+				template::password('password', [
+					'col' => 4
+				]) .
+				template::closeRow() .
+				template::openRow() .
+				template::checkbox('time', true, 'Me connecter automatiquement lors de mes prochaines visites.').
+				template::closeRow() .
+				template::openRow() .
+				template::submit('submit', [
+					'value' => 'Me connecter',
+					'col' => 2
+				]) .
+				template::closeRow() .
 				template::closeForm()
 			);
-
-			return true;
 		}
 	}
 
 	/**
-	 * PAGE : Déconnexion
-	 * @return bool Retourne true
+	 * Déconnexion
 	 */
 	public function logout()
 	{
-		self::$private = true;
-
 		$this->removeCookie();
-
-		return helpers::redirect('./');
+		helpers::redirect('./');
 	}
 
-}
-
-class plugins extends core
-{
-	/**
-	 * PAGE : Plugins
-	 * @return bool Retourne false en cas d'erreur, sinon true
-	 */
-	public function index()
-	{
-		$this->setTitle('Plugins');
-		$this->setContent(
-			''
-		);
-
-		return true;
-	}
 }
 
 class helpers
@@ -558,14 +508,12 @@ class helpers
 	const PASSWORD = 'FILTER_SANITIZE_PASSWORD';
 	const BOOLEAN = 'FILTER_SANITIZE_BOOLEAN';
 	const EMAIL = FILTER_SANITIZE_EMAIL;
-	const ENCODED = FILTER_SANITIZE_ENCODED;
 	const MAGIC_QUOTES = FILTER_SANITIZE_MAGIC_QUOTES;
 	const NUMBER_FLOAT = FILTER_SANITIZE_NUMBER_FLOAT;
 	const NUMBER_INT = FILTER_SANITIZE_NUMBER_INT;
 	const SPECIAL_CHARS = FILTER_SANITIZE_SPECIAL_CHARS;
 	const STRING = FILTER_SANITIZE_STRING;
 	const URL = FILTER_SANITIZE_URL;
-	const UNSAFE_RAW = FILTER_UNSAFE_RAW;
 
 	/**
 	 * Filtre et incrémente une chaîne en fonction d'un tableau de données
@@ -614,41 +562,15 @@ class helpers
 	}
 
 	/**
-	 * Lit un fichier .json
-	 * @param string $file Le fichier à lire
-	 * @return mixed Contenu du fichier ou false en cas d'erreur
-	 */
-	public static function jsonGetContents($file)
-	{
-		return json_decode(file_get_contents($file), true);
-	}
-
-	/**
-	 * Enregistre un tableau dans un fichier .json
-	 * @param string $file Le fichier à enregistrer
-	 * @param array $data Tableau à enregistrer
-	 * @return mixed Nombre de bytes du fichier ou false en cas d'erreur
-	 */
-	public static function jsonPutContents($file, array $data = [])
-	{
-		if(file_exists($file)) {
-			unlink($file);
-		}
-
-		return file_put_contents($file, json_encode($data));
-	}
-
-	/**
 	 * Redirige vers une page du site ou une page externe
-	 * @param string $url Url de destination
+	 * @param string $url Url de destination²
 	 * @param string $suffix Ajoute ou non un suffixe à l'url
 	 * @return bool Retourne true
 	 */
 	public static function redirect($url, $suffix = '?')
 	{
 		header('location:' . $suffix . $url);
-
-		return true;
+		exit();
 	}
 }
 

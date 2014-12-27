@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<title><?= $core->getTitle(); ?> - <?= $core->getData('config', 'title'); ?></title>
-	<meta name="description" content="<?= $core->getData('config', 'description'); ?>">
+	<meta name&="description" content="<?= $core->getData('config', 'description'); ?>">
 	<meta name="keywords" content="<?= $core->getData('config', 'keywords'); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato">
@@ -11,18 +11,16 @@
 	<link rel="stylesheet" href="core/vendor/normalize.min.css">
 	<link rel="stylesheet" href="core/vendor/trumbowyg/ui/trumbowyg.min.css">
 	<link rel="stylesheet" href="core/core.css">
-	<link rel="stylesheet" href="template/main.css">
+	<link rel="stylesheet" href="templates/flat.css">
 </head>
 <body>
-<?= $core->adminPanel(); ?>
+<?= $core->panel(); ?>
 <div id="container">
 	<h1 id="header"><?= $core->getData('config', 'title'); ?></h1>
 	<label for="toggle" class="toggle"><div class="img"></div></label>
 	<input type="checkbox" id="toggle">
 	<ul id="nav">
-		<li><a href="">Demo</a></li>
-		<li><a href="">Demo</a></li>
-		<li><a href="">Demo</a></li>
+		<?= $core->menu(); ?>
 	</ul>
 	<div id="content">
 		<?= $core->getContent(); ?>
