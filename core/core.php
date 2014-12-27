@@ -29,7 +29,7 @@ class core
 	private $content;
 	public $views = [];
 
-	const VERSION = '0.4.1';
+	const VERSION = '0.4.2';
 
 	public function __construct()
 	{
@@ -210,7 +210,7 @@ class core
 	 */
 	public function getPost($key, $filter = null)
 	{
-		if(isset($_POST[$key])) {
+		if(!empty($_POST[$key])) {
 			return ($filter !== null) ? helpers::filter($_POST[$key], $filter) : $_POST[$key];
 		}
 		else {
@@ -408,13 +408,34 @@ class core
 	public function config()
 	{
 		if($this->getPost('submit')) {
-			$this->setNotification('Paramètres enregistrés avec succès !');
-			$this->setData('settings', $this->newSettings());
+			$inputs = ['title', 'description', 'password', 'index', 'theme'];
+			foreach($inputs as $value) {
+				if($value === 'password') {
+					if($this->getPost($value) AND $this->getPost($value) === $this->getPost('confirm')) {
+						$this->setData('config', $value, $this->getPost($value));
+					}
+				}
+				else {
+					$this->setData('config', $value, $this->getPost($value));
+				}
+			}
 			$this->saveData();
+			$this->setNotification('Paramètres enregistrés avec succès !');
 			helpers::redirect($this->getUrl());
 		}
 		else {
-			$this->setTitle('Paramètres');
+			$pages = [];
+			foreach($this->getData('pages') as $key => $value) {
+				$pages[$key] = $value['title'];
+			}
+			$themes = [];
+			$it = new DirectoryIterator('themes/');
+			foreach($it as $file) {
+				if($file->isFile()) {
+					$themes[$file->getBasename()] = $file->getBasename('.css');
+				}
+			}
+			$this->setTitle('Configuration du site');
 			$this->setContent(
 				template::openForm() .
 				template::openRow() .
@@ -437,6 +458,18 @@ class core
 				template::text('confirm', [
 					'label' => 'Confirmation du mot de passe',
 					'col' => 6
+				]) .
+				template::closeRow() .
+				template::openRow() .
+				template::select('index', $pages, [
+					'label' => 'Page d\'accueil',
+					'selected' => $this->getData('config', 'index')
+				]) .
+				template::closeRow() .
+				template::openRow() .
+				template::select('theme', $themes, [
+					'label' => 'Thème par défaut',
+					'selected' => $this->getData('config', 'theme')
 				]) .
 				template::closeRow() .
 				template::openRow() .
@@ -802,7 +835,7 @@ class template
 	 * @param array $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
 	 * @return string La balise et ses attributs au bon format
 	 */
-	public static function select($nameId, array $options = [], array $attributes = [])
+	public static function select($nameId, array $options, array $attributes = [])
 	{
 		$attributes = array_merge([
 			'id' => $nameId,
