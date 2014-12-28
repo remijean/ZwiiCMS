@@ -1,22 +1,22 @@
 <?php
 
-/*
-	Copyright (C) 2008-2015, Rémi Jean (remi-jean@outlook.com)
-	<http://zwiicms.com/>
-
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General License for more details.
-
-	You should have received a copy of the GNU General License
-	along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+/**
+ * Copyright (C) 2008-2015, Rémi Jean (remi-jean@outlook.com)
+ * <http://remijean.github.io/ZwiiCMS/>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General License for more details.
+ *
+ * You should have received a copy of the GNU General License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 session_start();
 
@@ -29,7 +29,7 @@ class core
 	private $content;
 	public $views = [];
 
-	const VERSION = '0.4.2';
+	const VERSION = '0.4.3';
 
 	public function __construct()
 	{
@@ -219,7 +219,7 @@ class core
 	}
 
 	/**
-	 * Crée la connexion entre les plugins et le système afin d'afficher le contenu de la page
+	 * Crée la connexion entre les modules et le système afin d'afficher le contenu de la page
 	 * @return string Contenu de la page à afficher
 	 */
 	public function router()
@@ -262,14 +262,13 @@ class core
 			return false;
 		}
 		else {
-			$select = '<select>';
+			$options = false;
 			foreach($this->getData('pages') as $key => $value) {
 				$current = ($key === $this->getUrl(1)) ? ' selected' : false;
-				$select .= '<option value="?edit/' . $key . '"' . $current . '>' . $value['title'] . '</option>';
+				$options .= '<option value="?edit/' . $key . '"' . $current . '>' . $value['title'] . '</option>';
 			}
-			$select .= '</select>';
 
-			return '<ul id="panel"><li>' . $select . '</li><li><a href="?add">Créer une page</a></li><li><a href="?config">Configuration du site</a></li><li><a href="?logout">Quitter l\'administration</a></li></ul>' . $this->getNotification();
+			return '<ul id="panel"><li><select>' . $options . '</select></li><li><a href="?add">Créer une page</a></li><li><a href="?config">Configuration</a></li><li><a href="?logout">Déconnexion</a></li></ul>' . $this->getNotification();
 		}
 	}
 
@@ -283,7 +282,8 @@ class core
 		foreach($this->getData('pages') as $key => $value) {
 			$pages .= '<li><a href="test">' . $value['title'] . '</a></li>';
 		}
-		return $pages;
+
+		return '<ul id="nav">' . $pages . '</ul>';
 	}
 
 	/**
@@ -296,6 +296,7 @@ class core
 			'title' => 'Nouvelle page',
 			'position' => 0,
 			'blank' => false,
+			'module' => '',
 			'link' => '',
 			'content' => ''
 		]);
@@ -320,6 +321,7 @@ class core
 				'title' => $this->getPost('title', helpers::STRING),
 				'position' => $this->getPost('position', helpers::NUMBER_INT),
 				'blank' => $this->getPost('blank', helpers::BOOLEAN),
+				'module' => $this->getPost('module', helpers::STRING),
 				'link' => $this->getPost('link', helpers::URL),
 				'content' => $this->getPost('content')
 			]);
@@ -331,13 +333,22 @@ class core
 			helpers::redirect('edit/' . $key);
 		}
 		else {
+			$modules[''] = 'Aucun module';
+			$it = new DirectoryIterator('modules/');
+			foreach($it as $file) {
+				if($file->isFile()) {
+					$module = $file->getBasename('.php');
+					$module = new $module;
+					$modules[$file->getBasename()] = $module::$title;
+				}
+			}
 			$this->setTitle($this->getData('pages', $this->getUrl(1), 'title'));
 			$this->setContent(
 				template::openForm() .
 				template::openRow() .
 				template::text('title', [
 					'label' => 'Titre de la page',
-					'value' => $this->getData('pages', $this->getUrl(1), 'title'),
+					'value' => $this->getData('pages', $this->getUrl(1), 'title')
 				]) .
 				template::closeRow() .
 				template::openRow() .
@@ -347,26 +358,27 @@ class core
 				]) .
 				template::closeRow() .
 				template::openRow() .
+				template::checkbox('blank', true, 'Ouvrir la page dans un nouvel onglet', [
+					'checked' => $this->getData('pages', $this->getUrl(1), 'blank')
+				]) .
+				template::closeRow() .
+				template::openRow() .
 				template::text('position', [
 					'label' => 'Position dans le menu',
-					'value' => $this->getData('pages', $this->getUrl(1), 'position'),
-					'col' => 4
+					'value' => $this->getData('pages', $this->getUrl(1), 'position')
 				]) .
-				template::text('module', [
+				template::closeRow() .
+				template::openRow() .
+				template::select('module', $modules, [
 					'label' => 'Inclure un module à la page',
-					'value' => $this->getData('pages', $this->getUrl(1), 'module'),
-					'col' => 4
+					'selected' => $this->getData('pages', $this->getUrl(1), 'module'),
+					'col' => 6
 				]) .
 				template::text('link', [
 					'label' => 'Rediriger la page vers',
 					'value' => $this->getData('pages', $this->getUrl(1), 'link'),
 					'placeholder' => 'http://',
-					'col' => 4
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::checkbox('blank', true, 'Ouvrir dans un nouvel onglet', [
-					'checked' => $this->getData('pages', $this->getUrl(1), 'blank')
+					'col' => 6
 				]) .
 				template::closeRow() .
 				template::openRow() .
@@ -408,15 +420,15 @@ class core
 	public function config()
 	{
 		if($this->getPost('submit')) {
-			$inputs = ['title', 'description', 'password', 'index', 'theme'];
+			$inputs = ['title', 'description', 'keywords', 'password', 'index', 'theme'];
 			foreach($inputs as $value) {
 				if($value === 'password') {
 					if($this->getPost($value) AND $this->getPost($value) === $this->getPost('confirm')) {
-						$this->setData('config', $value, $this->getPost($value));
+						$this->setData('config', $value, $this->getPost($value, helpers::STRING));
 					}
 				}
 				else {
-					$this->setData('config', $value, $this->getPost($value));
+					$this->setData('config', $value, $this->getPost($value, helpers::STRING));
 				}
 			}
 			$this->saveData();
@@ -435,7 +447,7 @@ class core
 					$themes[$file->getBasename()] = $file->getBasename('.css');
 				}
 			}
-			$this->setTitle('Configuration du site');
+			$this->setTitle('Configuration');
 			$this->setContent(
 				template::openForm() .
 				template::openRow() .
@@ -445,9 +457,15 @@ class core
 				]) .
 				template::closeRow() .
 				template::openRow() .
-				template::text('description', [
+				template::textarea('description', [
 					'label' => 'Description du site',
 					'value' => $this->getData('config', 'description'),
+				]) .
+				template::closeRow() .
+				template::openRow() .
+				template::text('keywords', [
+					'label' => 'Mots clés du site',
+					'value' => $this->getData('config', 'keywords'),
 				]) .
 				template::closeRow() .
 				template::openRow() .

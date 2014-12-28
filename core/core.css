@@ -4,7 +4,7 @@
 
 /* Notification */
 div#notification {
-	background: #0070FF;
+	background: #0080FF;
 	color: #FFF;
 	text-align: center;
 	padding: 15px
@@ -62,13 +62,14 @@ textarea {
 	padding: 9px; /* -1px à cause des bordures */
 	background: #FFF;
 	border: 1px solid #DDD;
-}
-input[type="text"],
-input[type="password"],
-input[type="file"],
-select,
-textarea {
 	width: 100%;
+}
+input[type="text"]:disabled,
+input[type="password"]:disabled,
+input[type="file"]:disabled,
+select:disabled,
+textarea:disabled {
+	background: #EEE;
 }
 input[type="text"]:hover,
 input[type="password"]:hover,
@@ -82,7 +83,7 @@ input[type="password"]:focus,
 input[type="file"]:focus,
 select:focus,
 textarea:focus {
-	border: 1px solid #0070FF;
+	border: 1px solid #0080FF;
 }
 input[type="submit"] {
 	width: 100%;
@@ -98,7 +99,8 @@ input[type="submit"]:active {
 	background: #AAA;
 }
 textarea {
-	height: 200px;
+	height: 150px;
+	resize: none;
 }
 label {
 	display: block;

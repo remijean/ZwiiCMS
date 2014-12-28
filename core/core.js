@@ -26,3 +26,27 @@ $(window).on('beforeunload', function() {
 form.submit(function() {
 	$(window).unbind('beforeunload');
 });
+
+/**
+ *
+ */
+var module = $('#module');
+var link = $('#link');
+
+module.change(function() {
+	if($(this).val()) {
+		link.prop('disabled', true);
+	}
+	else {
+		link.prop('disabled', false);
+	}
+}).trigger('change');
+
+link.keyup(function() {
+	if($(this).val()) {
+		module.prop('disabled', true);
+	}
+	else {
+		module.prop('disabled', false);
+	}
+}).trigger('keyup');

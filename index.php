@@ -2,7 +2,7 @@
 
 function autoloader($className)
 {
-	$classPath = 'plugins/' . $className . '.php';
+	$classPath = 'modules/' . $className . '.php';
 	if(is_readable($classPath)) {
 		require $classPath;
 	}
