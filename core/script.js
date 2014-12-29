@@ -28,25 +28,29 @@ form.submit(function() {
 });
 
 /**
- *
+ * Prévisualisation de la page
  */
-var module = $('#module');
-var link = $('#link');
+$('#preview').click(function() {
+	$('.preview-frame').html('<h2>' + $('#title').val() + '</h2>' + $('#content').val());
+});
 
-module.change(function() {
-	if($(this).val()) {
-		link.prop('disabled', true);
-	}
-	else {
-		link.prop('disabled', false);
-	}
-}).trigger('change');
-
-link.keyup(function() {
-	if($(this).val()) {
-		module.prop('disabled', true);
-	}
-	else {
-		module.prop('disabled', false);
-	}
-}).trigger('keyup');
+//var module = $('#module');
+//var link = $('#link');
+//
+//module.change(function() {
+//	if($(this).val()) {
+//		link.prop('disabled', true);
+//	}
+//	else {
+//		link.prop('disabled', false);
+//	}
+//}).trigger('change');
+//
+//link.keyup(function() {
+//	if($(this).val()) {
+//		module.prop('disabled', true);
+//	}
+//	else {
+//		module.prop('disabled', false);
+//	}
+//}).trigger('keyup');

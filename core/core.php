@@ -27,13 +27,17 @@ class core
 	private $notification;
 	private $title;
 	private $content;
-	public $views = [];
 
-	const VERSION = '0.4.3';
+	public $views = [];
+	public static $modules = ['config', 'logout', 'add', 'edit', 'delete'];
+
+	const VERSION = '0.4.4';
 
 	public function __construct()
 	{
 		$this->data = json_decode(file_get_contents('core/data.json'), true);
+		ksort($this->data['pages']);
+		asort($this->data['menu']);
 		$this->url = empty($_SERVER['QUERY_STRING']) ? 'page/' . $this->getData('config', 'index') : $_SERVER['QUERY_STRING'];
 		$this->url = helpers::filter($this->url, helpers::URL);
 		$this->url = explode('/', $this->url);
@@ -210,11 +214,11 @@ class core
 	 */
 	public function getPost($key, $filter = null)
 	{
-		if(!empty($_POST[$key])) {
-			return ($filter !== null) ? helpers::filter($_POST[$key], $filter) : $_POST[$key];
+		if(empty($_POST[$key])) {
+			return false;
 		}
 		else {
-			return false;
+			return ($filter !== null) ? helpers::filter($_POST[$key], $filter) : $_POST[$key];
 		}
 	}
 
@@ -225,7 +229,7 @@ class core
 	public function router()
 	{
 		// Module système
-		if(in_array($this->getUrl(0), ['config', 'logout', 'add', 'edit', 'delete'])) {
+		if(in_array($this->getUrl(0), self::$modules)) {
 			if($this->getData('config', 'password') !== $this->getCookie()) {
 				$this->login();
 			}
@@ -262,7 +266,7 @@ class core
 			return false;
 		}
 		else {
-			$options = false;
+			$options = $this->getData('pages', $this->getUrl(1)) ? false : '<option value="">Choisissez une page</option>';
 			foreach($this->getData('pages') as $key => $value) {
 				$current = ($key === $this->getUrl(1)) ? ' selected' : false;
 				$options .= '<option value="?edit/' . $key . '"' . $current . '>' . $value['title'] . '</option>';
@@ -273,14 +277,18 @@ class core
 	}
 
 	/**
-	 * Met en forme le panneau d'administration
-	 * @return bool|string Retourne le panneau d'administration si l'utilisateur est connecté, sinon false
+	 * Met en forme le menu
+	 * @return string Retourne le menu
 	 */
 	public function menu()
 	{
+		$edit = ($this->getCookie() === $this->getData('config', 'password')) ? 'edit/' : false;
 		$pages = false;
-		foreach($this->getData('pages') as $key => $value) {
-			$pages .= '<li><a href="test">' . $value['title'] . '</a></li>';
+		foreach($this->getData('menu') as $key => $value) {
+			if($value) {
+				$current = ($key === $this->getUrl(0) OR $key === $this->getUrl(1)) ? ' class="current"' : false;
+				$pages .= '<li><a href="?' . $edit . $key . '"' . $current . '>' . $this->getData('pages', $key, 'title') . '</a></li>';
+			}
 		}
 
 		return '<ul id="nav">' . $pages . '</ul>';
@@ -294,15 +302,16 @@ class core
 		$key = helpers::increment('nouvelle-page', $this->getData('pages'));
 		$this->setData('pages', $key, [
 			'title' => 'Nouvelle page',
-			'position' => 0,
+			'position' => '0',
 			'blank' => false,
 			'module' => '',
 			'link' => '',
-			'content' => ''
+			'content' => 'Contenu de la page.'
 		]);
-		$this->setNotification('Nouvelle page créée avec succès !');
+		$this->setData('menu', $key, '0');
 		$this->saveData();
-		return helpers::redirect('edit/' . $key);
+		$this->setNotification('Nouvelle page créée avec succès !');
+		helpers::redirect('edit/' . $key);
 	}
 
 	/**
@@ -314,22 +323,31 @@ class core
 			return false;
 		}
 		elseif($this->getPost('submit')) {
-			$key = $this->getPost('title', helpers::URL);
-			$key = ($key === $this->getUrl(1)) ? $key : helpers::increment($key, $this->getData('pages'));
-			$this->removeData('pages', $this->getUrl(1));
+			if($this->getPost('title', helpers::URL) === $this->getUrl(1)) {
+				$title = $this->getPost('title', helpers::STRING);
+				$key = helpers::filter($title, helpers::URL);
+			}
+			else {
+				$title = $this->getPost('title', helpers::STRING) ? $this->getPost('title', helpers::STRING) : 'Sans titre';
+				$key = helpers::filter($title, helpers::URL);
+				$key = helpers::increment($key, $this->getData('pages'));
+				$key = helpers::increment($key, self::$modules);
+				$this->removeData('pages', $this->getUrl(1));
+				$this->removeData('menu', $this->getUrl(1));
+				if($this->getData('config', 'index') === $this->getUrl(1)) {
+					$this->setData('settings', 'index', $key);
+				}
+			}
 			$this->setData('pages', $key, [
-				'title' => $this->getPost('title', helpers::STRING),
-				'position' => $this->getPost('position', helpers::NUMBER_INT),
+				'title' => $title,
 				'blank' => $this->getPost('blank', helpers::BOOLEAN),
 				'module' => $this->getPost('module', helpers::STRING),
 				'link' => $this->getPost('link', helpers::URL),
 				'content' => $this->getPost('content')
 			]);
-			if($this->getData('config', 'index') === $this->getUrl(1)) {
-				$this->setData('settings', 'index', $key);
-			}
-			$this->setNotification('Page modifiée avec succès !');
+			$this->setData('menu', $key, $this->getPost('position', helpers::NUMBER_INT));
 			$this->saveData();
+			$this->setNotification('Page modifiée avec succès !');
 			helpers::redirect('edit/' . $key);
 		}
 		else {
@@ -364,35 +382,35 @@ class core
 				template::closeRow() .
 				template::openRow() .
 				template::text('position', [
-					'label' => 'Position dans le menu',
-					'value' => $this->getData('pages', $this->getUrl(1), 'position')
+					'label' => 'Position de la page dans le menu',
+					'value' => $this->getData('menu', $this->getUrl(1))
 				]) .
 				template::closeRow() .
 				template::openRow() .
 				template::select('module', $modules, [
 					'label' => 'Inclure un module à la page',
-					'selected' => $this->getData('pages', $this->getUrl(1), 'module'),
-					'col' => 6
-				]) .
-				template::text('link', [
-					'label' => 'Rediriger la page vers',
-					'value' => $this->getData('pages', $this->getUrl(1), 'link'),
-					'placeholder' => 'http://',
-					'col' => 6
+					'selected' => $this->getData('pages', $this->getUrl(1), 'module')
 				]) .
 				template::closeRow() .
 				template::openRow() .
 				template::button('delete', [
 					'value' => 'Supprimer',
 					'href' => '?delete/' . $this->getUrl(1),
+					'onclick' => 'confirm(\'Êtes-vous certain de vouloir supprimer cette page ?\')',
 					'col' => 2,
-					'offset' => 8
+					'offset' => 6
+				]) .
+				template::button('preview', [
+					'value' => 'Visualiser',
+					'data-featherlight' => '.preview-frame',
+					'col' => 2
 				]) .
 				template::submit('submit', [
 					'col' => 2
 				]) .
 				template::closeRow() .
-				template::closeForm()
+				template::closeForm() .
+				'<div class="preview-frame"></div>'
 			);
 		}
 	}
@@ -405,13 +423,16 @@ class core
 		if(!$this->getData('pages', $this->getUrl(1))) {
 			return false;
 		}
-		elseif($this->getUrl(1) !== $this->getData('config', 'index')) {
-			$this->removeData('pages', $this->getUrl(1));
-			$this->setNotification('Page supprimée avec succès !');
-			$this->saveData();
-			helpers::redirect('edit/' . $this->getData('config', 'index'));
-
+		elseif($this->getUrl(1) === $this->getData('config', 'index')) {
+			$this->setNotification('Impossible de supprimer la page d\'accueil !');
 		}
+		else {
+			$this->removeData('pages', $this->getUrl(1));
+			$this->removeData('menu', $this->getUrl(1));
+			$this->saveData();
+			$this->setNotification('Page supprimée avec succès !');
+		}
+		helpers::redirect('edit/' . $this->getData('config', 'index'));
 	}
 
 	/**
@@ -578,14 +599,14 @@ class helpers
 			case self::PASSWORD:
 				$str = sha1($str);
 				break;
+			case self::BOOLEAN:
+				$str = empty($str) ? false : true;
+				break;
 			case self::URL:
 				$search = explode(',', 'á,à,â,ä,ã,å,ç,é,è,ê,ë,í,ì,î,ï,ñ,ó,ò,ô,ö,õ,ú,ù,û,ü,ý,ÿ, ');
 				$replace = explode(',', 'a,a,a,a,a,a,c,e,e,e,e,i,i,i,i,n,o,o,o,o,o,u,u,u,u,y,y,-');
 				$str = str_replace($search, $replace, strtolower($str));
 				$str = filter_var($str, self::URL);
-				break;
-			case self::BOOLEAN:
-				$str = empty($str) ? false : true;
 				break;
 			default:
 				$str = filter_var($str, $filter);
@@ -595,26 +616,26 @@ class helpers
 	}
 
 	/**
-	 * Incrément une clé en fonction des clés d'un tableau de données
+	 * Incrément une clé en fonction des clés ou des valeurs d'un tableau
 	 * @param string $key Clé à incrémenter
-	 * @param array $data Tableau de données
+	 * @param array $array Tableau à vérifier
 	 * @return string Clé incrémentée
 	 */
-	public static function increment($key, $data)
+	public static function increment($key, $array)
 	{
 		$i = 2;
-		$newKay = $key;
-		while(array_key_exists($newKay, $data)) {
-			$newKay = $key . '-' . $i;
+		$newKey = $key;
+		while(array_key_exists($newKey, $array) OR in_array($newKey, $array)) {
+			$newKey = $key . '-' . $i;
 			$i++;
 		}
 
-		return $newKay;
+		return $newKey;
 	}
 
 	/**
 	 * Redirige vers une page du site ou une page externe
-	 * @param string $url Url de destination²
+	 * @param string $url Url de destination
 	 * @param string $suffix Ajoute ou non un suffixe à l'url
 	 * @return bool Retourne true
 	 */
@@ -1006,6 +1027,7 @@ class template
 			'href' => 'javascript:void(0);',
 			'target' => '',
 			'onclick' => '',
+			'data-featherlight' => '',
 			'label' => '',
 			'class' => '',
 			'col' => 12,

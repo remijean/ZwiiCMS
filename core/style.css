@@ -2,6 +2,15 @@
  * Éléments spécifiques
  */
 
+.preview-frame {
+	display: none;
+}
+
+/* Image */
+img {
+	max-width: 100%;
+}
+
 /* Notification */
 div#notification {
 	background: #0080FF;

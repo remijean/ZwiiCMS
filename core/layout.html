@@ -8,7 +8,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="core/vendor/normalize.min.css">
 	<link rel="stylesheet" href="core/vendor/trumbowyg/trumbowyg.min.css">
-	<link rel="stylesheet" href="core/core.css">
+	<link rel="stylesheet" href="core/vendor/featherlight/featherlight.min.css">
+	<link rel="stylesheet" href="core/style.css">
 	<link rel="stylesheet" href="themes/<?= $core->getData('config', 'theme'); ?>">
 </head>
 <body>
@@ -18,14 +19,15 @@
 	<label for="toggle" class="toggle"><div class="img"></div></label>
 	<input type="checkbox" id="toggle">
 	<?= $core->menu(); ?>
-	<div id="content">
+	<div id="section">
 		<?= $core->getContent(); ?>
 	</div>
 	<div id="footer"><?= $core->getData('config', 'footer'); ?> | Administration</div>
 </div>
 <script src="core/vendor/jquery.min.js"></script>
 <script src="core/vendor/trumbowyg/trumbowyg.min.js"></script>
-<script src="core/core.js"></script>
+<script src="core/vendor/featherlight/featherlight.min.js"></script>
+<script src="core/script.js"></script>
 <script>
 	$('.editor').trumbowyg();
 </script>

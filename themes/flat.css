@@ -71,7 +71,8 @@ ul#nav > li > a {
 ul#nav > li > a:hover {
 	background: #0094FF;
 }
-ul#nav > li > a:active {
+ul#nav > li > a:active,
+ul#nav > li > a.current {
 	background: #0084FF;
 }
 ul#nav > li > select {
@@ -96,7 +97,7 @@ ul#nav > li > select {
 }
 
 /* Corps */
-div#content {
+div#section {
 	word-wrap: break-word;
 	margin: 20px;
 }
