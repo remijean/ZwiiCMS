@@ -29,19 +29,19 @@ class core
 	private $content;
 
 	public $views = [];
-	public static $modules = ['config', 'logout', 'add', 'edit', 'delete'];
+	public static $modules = ['add', 'edit', 'delete', 'mode', 'config', 'logout'];
 
-	const VERSION = '0.4.4';
+	const VERSION = '0.4.5';
 
 	public function __construct()
 	{
 		$this->data = json_decode(file_get_contents('core/data.json'), true);
 		ksort($this->data['pages']);
 		asort($this->data['menu']);
-		$this->url = empty($_SERVER['QUERY_STRING']) ? 'page/' . $this->getData('config', 'index') : $_SERVER['QUERY_STRING'];
+		$this->url = empty($_SERVER['QUERY_STRING']) ? $this->getData('config', 'index') : $_SERVER['QUERY_STRING'];
 		$this->url = helpers::filter($this->url, helpers::URL);
 		$this->url = explode('/', $this->url);
-		$this->notification = isset($_SESSION['NOTIFICATION']) ? $_SESSION['NOTIFICATION'] : false;
+		$this->notification = empty($_SESSION['NOTIFICATION']) ? false : $_SESSION['NOTIFICATION'];
 	}
 
 	/**
@@ -185,7 +185,7 @@ class core
 	 * Accède à la notification
 	 * @return bool|string Retourne notification mise en forme si elle existe, sinon false
 	 */
-	private function getNotification()
+	public function getNotification()
 	{
 		if($this->notification) {
 			unset($_SESSION['NOTIFICATION']);
@@ -204,6 +204,24 @@ class core
 	public function setNotification($notification)
 	{
 		$_SESSION['NOTIFICATION'] = $notification;
+	}
+
+	/**
+	 * Accède au mode d'affichage
+	 * @return string|bool Retourne "edit/" si mode édition, false si mode public
+	 */
+	public function getMode()
+	{
+		return empty($_SESSION['MODE']) ? false : 'edit/';
+	}
+
+	/**
+	 * Modifie le mode d'affichage
+	 * @param bool $mode True mode édition, false mode public
+	 */
+	public function setMode($mode)
+	{
+		$_SESSION['MODE'] = $mode;
 	}
 
 	/**
@@ -230,12 +248,12 @@ class core
 	{
 		// Module système
 		if(in_array($this->getUrl(0), self::$modules)) {
-			if($this->getData('config', 'password') !== $this->getCookie()) {
-				$this->login();
-			}
-			else {
+			if($this->getData('config', 'password') === $this->getCookie()) {
 				$method = $this->getUrl(0);
 				$this->$method();
+			}
+			else {
+				$this->login();
 			}
 		}
 		// Module
@@ -251,6 +269,7 @@ class core
 		}
 		// Page
 		elseif($this->getData('pages', $this->getUrl(0))) {
+			$this->setMode(false);
 			$this->setTitle($this->getData('pages', $this->getUrl(0), 'title'));
 			$this->setContent($this->getData('pages', $this->getUrl(0), 'content'));
 		}
@@ -262,17 +281,27 @@ class core
 	 */
 	public function panel()
 	{
+		// N'affiche rien si l'utilisateur n'est pas connecté
 		if($this->getCookie() !== $this->getData('config', 'password')) {
 			return false;
 		}
+		// Sinon affiche le panneau d'administration
 		else {
-			$options = $this->getData('pages', $this->getUrl(1)) ? false : '<option value="">Choisissez une page</option>';
+			$panel = '<ul id="panel">';
+			$panel .= '<li><select>';
+			$panel .= ($this->getUrl(0) === 'config') ? '<option value="">Choisissez une page</option>' : false;
 			foreach($this->getData('pages') as $key => $value) {
-				$current = ($key === $this->getUrl(1)) ? ' selected' : false;
-				$options .= '<option value="?edit/' . $key . '"' . $current . '>' . $value['title'] . '</option>';
+				$current = ($key === $this->getUrl(0) OR $key === $this->getUrl(1)) ? ' selected' : false;
+				$panel .= '<option value="?' . $this->getMode() . $key . '"' . $current . '>' . $value['title'] . '</option>';
 			}
+			$panel .= '</select></li>';
+			$panel .= '<li><a href="?add">Créer une page</a></li>';
+			$panel .= '<li><a href="?mode/' . $this->getUrl() . '">Mode ' . ($this->getMode() ? 'public' : 'édition') . '</a></li>';
+			$panel .= '<li><a href="?config">Configuration</a></li>';
+			$panel .= '<li><a href="?logout">Déconnexion</a></li>';
+			$panel .= '</ul>';
 
-			return '<ul id="panel"><li><select>' . $options . '</select></li><li><a href="?add">Créer une page</a></li><li><a href="?config">Configuration</a></li><li><a href="?logout">Déconnexion</a></li></ul>' . $this->getNotification();
+			return $panel;
 		}
 	}
 
@@ -280,9 +309,9 @@ class core
 	 * Met en forme le menu
 	 * @return string Retourne le menu
 	 */
-	public function menu()
+	public function nav()
 	{
-		$edit = ($this->getCookie() === $this->getData('config', 'password')) ? 'edit/' : false;
+		$edit = ($this->getCookie() === $this->getData('config', 'password')) ? $this->getMode() : false;
 		$pages = false;
 		foreach($this->getData('menu') as $key => $value) {
 			if($value) {
@@ -291,7 +320,7 @@ class core
 			}
 		}
 
-		return '<ul id="nav">' . $pages . '</ul>';
+		return $pages;
 	}
 
 	/**
@@ -319,9 +348,11 @@ class core
 	 */
 	public function edit()
 	{
+		// Erreur 404
 		if(!$this->getData('pages', $this->getUrl(1))) {
 			return false;
 		}
+		// Enregistre la page
 		elseif($this->getPost('submit')) {
 			if($this->getPost('title', helpers::URL) === $this->getUrl(1)) {
 				$title = $this->getPost('title', helpers::STRING);
@@ -350,6 +381,7 @@ class core
 			$this->setNotification('Page modifiée avec succès !');
 			helpers::redirect('edit/' . $key);
 		}
+		// Interface d'édition
 		else {
 			$modules[''] = 'Aucun module';
 			$it = new DirectoryIterator('modules/');
@@ -360,6 +392,7 @@ class core
 					$modules[$file->getBasename()] = $module::$title;
 				}
 			}
+			$this->setMode(true);
 			$this->setTitle($this->getData('pages', $this->getUrl(1), 'title'));
 			$this->setContent(
 				template::openForm() .
@@ -398,19 +431,13 @@ class core
 					'href' => '?delete/' . $this->getUrl(1),
 					'onclick' => 'confirm(\'Êtes-vous certain de vouloir supprimer cette page ?\')',
 					'col' => 2,
-					'offset' => 6
-				]) .
-				template::button('preview', [
-					'value' => 'Visualiser',
-					'data-featherlight' => '.preview-frame',
-					'col' => 2
+					'offset' => 8
 				]) .
 				template::submit('submit', [
 					'col' => 2
 				]) .
 				template::closeRow() .
-				template::closeForm() .
-				'<div class="preview-frame"></div>'
+				template::closeForm()
 			);
 		}
 	}
@@ -420,12 +447,15 @@ class core
 	 */
 	public function delete()
 	{
+		// Erreur 404
 		if(!$this->getData('pages', $this->getUrl(1))) {
 			return false;
 		}
+		// Erreur page d'accueil
 		elseif($this->getUrl(1) === $this->getData('config', 'index')) {
 			$this->setNotification('Impossible de supprimer la page d\'accueil !');
 		}
+		// Suppression
 		else {
 			$this->removeData('pages', $this->getUrl(1));
 			$this->removeData('menu', $this->getUrl(1));
@@ -436,10 +466,33 @@ class core
 	}
 
 	/**
+	 * Change le mode d'administration
+	 */
+	public function mode()
+	{
+		// Redirection vers mode édition dans le module page
+		if($this->getData('pages', $this->getUrl(1))) {
+			$url = 'edit/' . $this->getUrl(1);
+		}
+		// Redirection vers mode public dans le module d'édition
+		elseif($this->getUrl(1) === 'edit') {
+			$url = $this->getUrl(2);
+		}
+		// Switch mode public/édition sans redirection pour les autres modules
+		else {
+			$switch = $this->getMode() ? false : true;
+			$this->setMode($switch);
+			$url = $this->getUrl(1);
+		}
+		helpers::redirect($url);
+	}
+
+	/**
 	 * Configuration
 	 */
 	public function config()
 	{
+		// Enregistre la configuration
 		if($this->getPost('submit')) {
 			$inputs = ['title', 'description', 'keywords', 'password', 'index', 'theme'];
 			foreach($inputs as $value) {
@@ -453,9 +506,10 @@ class core
 				}
 			}
 			$this->saveData();
-			$this->setNotification('Paramètres enregistrés avec succès !');
+			$this->setNotification('Configuration enregistrée avec succès !');
 			helpers::redirect($this->getUrl());
 		}
+		// Interface de configuration
 		else {
 			$pages = [];
 			foreach($this->getData('pages') as $key => $value) {
@@ -527,17 +581,21 @@ class core
 	 */
 	public function login()
 	{
+		// Connexion
 		if($this->getPost('submit')) {
+			// Bon mot de passe
 			if($this->getPost('password', helpers::PASSWORD) === $this->getData('config', 'password')) {
 				$time = $this->getPost('time') ? 0 : time() + 10 * 365 * 24 * 60 * 60;
-				$this->setcookie($this->getPost('password'), $time);
+				$this->setCookie($this->getPost('password'), $time);
 				helpers::redirect($this->getUrl());
 			}
+			// Mot de passe incorrect
 			else {
 				$this->setNotification('Mot de passe incorrect !');
 				helpers::redirect($this->getUrl());
 			}
 		}
+		// Interface de connexion
 		else {
 			$this->setTitle('Connexion');
 			$this->setContent(
@@ -567,7 +625,7 @@ class core
 	public function logout()
 	{
 		$this->removeCookie();
-		helpers::redirect('./');
+		helpers::redirect('./', false);
 	}
 
 }
@@ -636,12 +694,11 @@ class helpers
 	/**
 	 * Redirige vers une page du site ou une page externe
 	 * @param string $url Url de destination
-	 * @param string $suffix Ajoute ou non un suffixe à l'url
-	 * @return bool Retourne true
+	 * @param string $prefix Ajoute ou non un préfixe à l'url
 	 */
-	public static function redirect($url, $suffix = '?')
+	public static function redirect($url, $prefix = '?')
 	{
-		header('location:' . $suffix . $url);
+		header('location:' . $prefix . $url);
 		exit();
 	}
 }
@@ -1027,7 +1084,6 @@ class template
 			'href' => 'javascript:void(0);',
 			'target' => '',
 			'onclick' => '',
-			'data-featherlight' => '',
 			'label' => '',
 			'class' => '',
 			'col' => 12,

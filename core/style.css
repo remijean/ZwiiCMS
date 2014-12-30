@@ -73,13 +73,6 @@ textarea {
 	border: 1px solid #DDD;
 	width: 100%;
 }
-input[type="text"]:disabled,
-input[type="password"]:disabled,
-input[type="file"]:disabled,
-select:disabled,
-textarea:disabled {
-	background: #EEE;
-}
 input[type="text"]:hover,
 input[type="password"]:hover,
 input[type="file"]:hover,
@@ -93,6 +86,11 @@ input[type="file"]:focus,
 select:focus,
 textarea:focus {
 	border: 1px solid #0080FF;
+}
+input:disabled,
+select:disabled,
+textarea:disabled {
+	background: #EEE;
 }
 input[type="submit"] {
 	width: 100%;

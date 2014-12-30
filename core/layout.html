@@ -3,22 +3,24 @@
 <head>
 	<meta charset="utf-8">
 	<title><?= $core->getTitle(); ?> - <?= $core->getData('config', 'title'); ?></title>
-	<meta name&="description" content="<?= $core->getData('config', 'description'); ?>">
+	<meta name="description" content="<?= $core->getData('config', 'description'); ?>">
 	<meta name="keywords" content="<?= $core->getData('config', 'keywords'); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="core/vendor/normalize.min.css">
 	<link rel="stylesheet" href="core/vendor/trumbowyg/trumbowyg.min.css">
-	<link rel="stylesheet" href="core/vendor/featherlight/featherlight.min.css">
 	<link rel="stylesheet" href="core/style.css">
 	<link rel="stylesheet" href="themes/<?= $core->getData('config', 'theme'); ?>">
 </head>
 <body>
 <?= $core->panel(); ?>
+<?= $core->getNotification(); ?>
 <div id="container">
 	<h1 id="header"><?= $core->getData('config', 'title'); ?></h1>
 	<label for="toggle" class="toggle"><div class="img"></div></label>
 	<input type="checkbox" id="toggle">
-	<?= $core->menu(); ?>
+	<ul id="nav">
+		<?= $core->nav(); ?>
+	</ul>
 	<div id="section">
 		<?= $core->getContent(); ?>
 	</div>
@@ -26,7 +28,6 @@
 </div>
 <script src="core/vendor/jquery.min.js"></script>
 <script src="core/vendor/trumbowyg/trumbowyg.min.js"></script>
-<script src="core/vendor/featherlight/featherlight.min.js"></script>
 <script src="core/script.js"></script>
 <script>
 	$('.editor').trumbowyg();

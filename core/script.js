@@ -27,13 +27,6 @@ form.submit(function() {
 	$(window).unbind('beforeunload');
 });
 
-/**
- * Prévisualisation de la page
- */
-$('#preview').click(function() {
-	$('.preview-frame').html('<h2>' + $('#title').val() + '</h2>' + $('#content').val());
-});
-
 //var module = $('#module');
 //var link = $('#link');
 //
