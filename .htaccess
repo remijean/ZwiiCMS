@@ -1,2 +1,8 @@
 # Bloque l'accès à la liste des fichiers
 Options -Indexes
+
+# Bloque l'accès au fichier de données
+<FilesMatch "\.json$">
+	Order allow,deny
+	Deny from all
+</FilesMatch>
