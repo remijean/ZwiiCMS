@@ -1,0 +1,154 @@
+@import url(http://fonts.googleapis.com/css?family=Lato);
+@import url(http://fonts.googleapis.com/css?family=Oswald);
+
+body {
+	font-family: "Lato", sans-serif;
+	background: #EEE;
+}
+
+/**
+ * Notification
+ */
+
+div#notification {
+	background: #00A4FF;
+	color: #FFF;
+}
+
+/**
+ * Container
+ */
+
+div#container {
+	margin: 20px auto;
+	background: #FFF;
+}
+
+/**
+ * Titre du site
+ */
+
+h1#header {
+	padding: 50px 0;
+	font-size: 1.8em;
+	background: #00A4FF;
+	color: #FFF;
+	text-align: center;
+}
+
+/**
+ * Menu
+ */
+
+/* Menu */
+div#toggle,
+ul#menu {
+	background: #0094FF;
+}
+
+/* Icône du menu en mode responsive */
+div#toggle > span {
+	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gweDQQTedwN2wAAACxJREFUSMdjYBgFo4BSwIjM+f///3+qGMrICDeXaTSMRyN5FIxG8igYBfQAAKEtDAplk4dlAAAAAElFTkSuQmCC');
+}
+
+/* Liens du menu */
+ul#menu > li > a {
+	color: #FFF;
+}
+
+/* Liens du menu survolés */
+div#toggle:hover,
+ul#menu > li > a:hover {
+	background: #0084FF;
+}
+
+/* Liens du menu appuyés et lien courant */
+div#toggle:active,
+ul#menu > li > a:active,
+ul#menu > li > a.current {
+	background: #0074FF;
+}
+
+/**
+ * Corps
+ */
+
+div#section {
+	margin: 20px;
+}
+
+/**
+ * Bas de page
+ */
+
+div#footer {
+	text-align: center;
+	font-size: 0.8em;
+	padding-bottom: 20px;
+}
+
+/**
+ * Titres
+ */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: "Oswald", sans-serif;
+	font-weight: normal;
+	text-transform: uppercase;
+}
+h2,
+h4,
+h6 {
+	color: #00A4FF;
+}
+
+/**
+ * Liens
+ */
+
+/* Liens */
+a {
+	color: #00A4FF;
+}
+
+/**
+ * Inputs
+ */
+
+/* Boutons */
+input[type="submit"],
+a.button {
+	background: #00A4FF;
+	color: #FFF;
+}
+
+/* Boutons survolés */
+input[type="submit"]:hover,
+a.button:hover {
+	background: #0094FF;
+}
+
+/* Boutons appuyés */
+input[type="submit"]:active,
+a.button:active {
+	background: #0084FF;
+}
+
+/* Cases à cocher non cochées */
+input[type="checkbox"]:checked + label::before,
+input[type="radio"]:checked + label::before {
+	background: #00A4FF;
+}
+
+/* Cases à cocher cochées */
+input[type="checkbox"]:not(:active):checked:hover + label::before,
+input[type="checkbox"]:active + label::before,
+input[type="radio"]:checked:hover + label::before,
+input[type="radio"]:not(:checked):active + label::before {
+	background: #0094FF;
+}

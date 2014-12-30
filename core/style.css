@@ -2,19 +2,13 @@
  * Éléments spécifiques
  */
 
-.preview-frame {
-	display: none;
-}
-
-/* Image */
-img {
-	max-width: 100%;
+body {
+	color: #444;
 }
 
 /* Notification */
 div#notification {
-	background: #0080FF;
-	color: #FFF;
+	background: #EEE;
 	text-align: center;
 	padding: 15px
 }
@@ -32,17 +26,19 @@ ul#panel > li {
 ul#panel > li > a {
 	display: inline-block;
 	color: #FFF;
-	padding: 15px 10px;
-	text-decoration: none;
+	padding: 10px;
 }
 ul#panel > li > a:hover {
 	background: #222;
+	text-decoration: none;
 }
 ul#panel > li > a:active {
 	background: #111;
 }
 ul#panel > li > select {
-	width: 300px;
+	width: 250px;
+	padding: 5px;
+	border: 0;
 }
 @media (max-width: 768px)
 {
@@ -51,9 +47,97 @@ ul#panel > li > select {
 	}
 	ul#panel > li > select {
 		width: 100%;
-		margin: 5px 0 0 0;
+		margin-top: 5px;
 		display: inline-block;
 	}
+}
+
+/* Titre du site */
+h1#header {
+	margin: 0;
+}
+
+/* Menu */
+div#toggle {
+	cursor: pointer;
+	background: #EEE;
+	padding: 13px 10px; /* -2px à cause de l'image */
+	text-align: right;
+	display: none;
+}
+ul#menu {
+	display: block;
+}
+div#toggle:hover {
+	background: #DDD;
+}
+div#toggle:active {
+	background: #CCC;
+}
+div#toggle > span {
+	display: inline-block;
+	vertical-align: middle;
+	width: 24px;
+	height: 24px;
+	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gweDREk9tROwAAAAC1JREFUSMdjYBgFo4BSwIjMcXFx+U8NQ/fs2QM3l2k0jEcjeRSMRvIoGAX0AADHtwwK/qaMdgAAAABJRU5ErkJggg==');
+}
+ul#menu {
+	background: #EEE;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+ul#menu > li {
+	display: inline-block;
+}
+ul#menu > li > a {
+	display: inherit;
+	padding: 15px 10px;
+}
+ul#menu > li > a:hover {
+	background: #DDD;
+	text-decoration: none;
+}
+ul#menu > li > a:active,
+ul#menu > li > a.current {
+	background: #CCC;
+}
+@media (max-width: 768px) {
+	div#toggle {
+		display: block;
+	}
+	ul#menu {
+		display: none;
+		text-align: center;
+	}
+	ul#menu > li {
+		display: block;
+	}
+}
+
+/* Corps */
+div#section img {
+	max-width: 100%;
+}
+
+/* Liens */
+a {
+	text-decoration: none;
+	color: #444;
+}
+a:hover {
+	text-decoration: underline;
+}
+
+/* Listes */
+ul {
+	list-style: square;
+}
+
+/* Séparateur */
+hr {
+	border: 0;
+	border-top: 1px solid #DDD;
 }
 
 /**
@@ -80,13 +164,6 @@ select:hover,
 textarea:hover {
 	border: 1px solid #CCC;
 }
-input[type="text"]:focus,
-input[type="password"]:focus,
-input[type="file"]:focus,
-select:focus,
-textarea:focus {
-	border: 1px solid #0080FF;
-}
 input:disabled,
 select:disabled,
 textarea:disabled {
@@ -95,15 +172,14 @@ textarea:disabled {
 input[type="submit"] {
 	width: 100%;
 	padding: 10px;
-	background: #CCC;
-	color: #FFF;
+	background: #EEE;
 	border: 0;
 }
 input[type="submit"]:hover {
-	background: #BBB;
+	background: #DDD;
 }
 input[type="submit"]:active {
-	background: #AAA;
+	background: #CCC;
 }
 textarea {
 	height: 150px;
@@ -123,17 +199,15 @@ a.button {
 	width: 100%;
 	display: inline-block;
 	padding: 10px;
-	text-decoration: none;
 	text-align: center;
-	background: #CCC;
-	color: #FFF;
+	background: #EEE;
 }
 a.button:hover {
-	color: #FFF;
-	background: #BBB;
+	background: #DDD;
+	text-decoration: none;
 }
 a.button:active {
-	background: #AAA;
+	background: #CCC;
 }
 
 /* Cases à cocher */
@@ -159,7 +233,7 @@ input[type="radio"] + label::before {
 	line-height: 20px;
 	font-size: 10px;
 	font-weight: bold;
-	background: #DDD;
+	background: #EEE;
 	vertical-align: top;
 }
 input[type="checkbox"] + label::before {
@@ -170,19 +244,19 @@ input[type="radio"] + label::before {
 input[type="checkbox"]:checked + label::before,
 input[type="radio"]:checked + label::before {
 	color: #FFF;
-	background: #BBB;
+	background: #CCC;
 }
 input[type="checkbox"]:hover + label::before,
 input[type="checkbox"]:checked:active + label::before,
 input[type="radio"]:hover + label::before {
 	color: #FFF;
-	background: #CCC;
+	background: #DDD;
 }
 input[type="checkbox"]:not(:active):checked:hover + label::before,
 input[type="checkbox"]:active + label::before,
 input[type="radio"]:checked:hover + label::before,
 input[type="radio"]:not(:checked):active + label::before {
-	background: #AAA;
+	background: #BBB;
 }
 
 /**
@@ -196,107 +270,116 @@ input[type="radio"]:not(:checked):active + label::before {
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
-.row {
+div.row {
 	margin: 0 -10px;
 }
-.row:before,
-.row:after {
-	content: "";
-	display: table;
-}
-.row:after {
-	clear: both;
-}
-.col1,
-.col2,
-.col3,
-.col4,
-.col5,
-.col6,
-.col7,
-.col8,
-.col9,
-.col10,
-.col11,
-.col12 {
-	float: left;
+div.col1,
+div.col2,
+div.col3,
+div.col4,
+div.col5,
+div.col6,
+div.col7,
+div.col8,
+div.col9,
+div.col10,
+div.col11,
+div.col12 {
+	display: inline-block;
+	vertical-align: bottom;
 	position: relative;
 	min-height: 1px;
 	padding: 10px;
 	width: 100%;
 }
-@media (min-width: 768px)
-{
-	.col1 {
+div#container {
+	margin-left: auto;
+	margin-right: auto;
+}
+@media (min-width: 768px) {
+	div.col1 {
 		width: 8.33333333%;
 	}
-	.col2 {
+	div.col2 {
 		width: 16.66666667%;
 	}
-	.col3 {
+	div.col3 {
 		width: 25%;
 	}
-	.col4 {
+	div.col4 {
 		width: 33.33333333%;
 	}
-	.col5 {
+	div.col5 {
 		width: 41.66666667%;
 	}
-	.col6 {
+	div.col6 {
 		width: 50%;
 	}
-	.col7 {
+	div.col7 {
 		width: 58.33333333%;
 	}
-	.col8 {
+	div.col8 {
 		width: 66.66666667%;
 	}
-	.col9 {
+	div.col9 {
 		width: 75%;
 	}
-	.col10 {
+	div.col10 {
 		width: 83.33333333%;
 	}
-	.col11 {
+	div.col11 {
 		width: 91.66666667%;
 	}
-	.col12 {
+	div.col12 {
 		width: 100%;
 	}
-	.offset0 {
+	div.offset0 {
 		margin-left: 0;
 	}
-	.offset1 {
+	div.offset1 {
 		margin-left: 8.33333333%;
 	}
-	.offset2 {
+	div.offset2 {
 		margin-left: 16.66666667%;
 	}
-	.offset3 {
+	div.offset3 {
 		margin-left: 25%;
 	}
-	.offset4 {
+	div.offset4 {
 		margin-left: 33.33333333%;
 	}
-	.offset5 {
+	div.offset5 {
 		margin-left: 41.66666667%;
 	}
-	.offset6 {
+	div.offset6 {
 		margin-left: 50%;
 	}
-	.offset7 {
+	div.offset7 {
 		margin-left: 58.33333333%;
 	}
-	.offset8 {
+	div.offset8 {
 		margin-left: 66.66666667%;
 	}
-	.offset9 {
+	div.offset9 {
 		margin-left: 75%;
 	}
-	.offset10 {
+	div.offset10 {
 		margin-left: 83.33333333%;
 	}
-	.offset11 {
+	div.offset11 {
 		margin-left: 91.66666667%;
+	}
+	div#container {
+		width: 750px;
+	}
+}
+@media (min-width: 992px) {
+	div#container {
+		width: 970px;
+	}
+}
+@media (min-width: 1200px) {
+	div#container {
+		width: 1170px;
 	}
 }

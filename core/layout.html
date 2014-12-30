@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title><?= $core->getTitle(); ?> - <?= $core->getData('config', 'title'); ?></title>
+	<title><?= $core::$title; ?> - <?= $core->getData('config', 'title'); ?></title>
 	<meta name="description" content="<?= $core->getData('config', 'description'); ?>">
 	<meta name="keywords" content="<?= $core->getData('config', 'keywords'); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,21 +17,17 @@
 <?= $core->getNotification(); ?>
 <div id="container">
 	<h1 id="header"><?= $core->getData('config', 'title'); ?></h1>
-	<label for="toggle" class="toggle"><div class="img"></div></label>
-	<input type="checkbox" id="toggle">
-	<ul id="nav">
-		<?= $core->nav(); ?>
-	</ul>
+	<div id="toggle"><span></span></div>
+	<ul id="menu"><?= $core->menu(); ?></ul>
 	<div id="section">
-		<?= $core->getContent(); ?>
+		<h2><?= $core::$title; ?></h2>
+		<?= $core::$content; ?>
 	</div>
-	<div id="footer"><?= $core->getData('config', 'footer'); ?> | Administration</div>
+	<div id="footer"><?= $core->getData('config', 'footer'); ?> | <a href="?config">Administration</a></div>
 </div>
 <script src="core/vendor/jquery.min.js"></script>
 <script src="core/vendor/trumbowyg/trumbowyg.min.js"></script>
 <script src="core/script.js"></script>
-<script>
-	$('.editor').trumbowyg();
-</script>
+<script>$('textarea.editor').trumbowyg();</script>
 </body>
 </html>

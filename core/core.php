@@ -25,13 +25,14 @@ class core
 	private $data;
 	private $url;
 	private $notification;
-	private $title;
-	private $content;
 
-	public $views = [];
-	public static $modules = ['add', 'edit', 'delete', 'mode', 'config', 'logout'];
+	private static $modules = ['create', 'edit', 'delete', 'export', 'mode', 'config', 'logout'];
+	public static $title = 'Erreur 404';
+	public static $content = '<p>Page introuvable !</p>';
+	public static $views = [];
+	public static $inputs = [];
 
-	const VERSION = '0.4.5';
+	const VERSION = '0.5.0';
 
 	public function __construct()
 	{
@@ -47,17 +48,17 @@ class core
 	/**
 	 * Accède au contenu d'un tableau de données
 	 * @param mixed $array Tableau cible
-	 * @param mixed $key Clé du tableau
-	 * @param mixed $subKey Sous clé du tableau
+	 * @param mixed $key1 Clé de niveau 1 du tableau
+	 * @param mixed $key2 Clé de niveau 2 du tableau
 	 * @return mixed Contenu du tableau de données
 	 */
-	public function getData($array = null, $key = null, $subKey = null)
+	public function getData($array = null, $key1 = null, $key2 = null)
 	{
-		if($subKey !== null) {
-			return empty($this->data[$array][$key][$subKey]) ? false : $this->data[$array][$key][$subKey];
+		if($key2 !== null) {
+			return empty($this->data[$array][$key1][$key2]) ? false : $this->data[$array][$key1][$key2];
 		}
-		elseif($key !== null) {
-			return empty($this->data[$array][$key]) ? false : $this->data[$array][$key];
+		elseif($key1 !== null) {
+			return empty($this->data[$array][$key1]) ? false : $this->data[$array][$key1];
 		}
 		elseif($array !== null) {
 			return empty($this->data[$array]) ? false : $this->data[$array];
@@ -70,16 +71,16 @@ class core
 	/**
 	 * Insert une ligne dans un tableau de données
 	 * @param string $array Tableau cible
-	 * @param mixed $key Clé du tableau
-	 * @param mixed $value Valeur de la clé du tableau
+	 * @param mixed $key1 Clé de niveau 1 du tableau
+	 * @param mixed $key2 Clé de niveau 2 du tableau
 	 */
-	public function setData($array, $key, $value = null)
+	public function setData($array, $key1, $key2 = null)
 	{
-		if($value !== null) {
-			$this->data[$array][$key] = $value;
+		if($key2 !== null) {
+			$this->data[$array][$key1] = $key2;
 		}
 		else {
-			$this->data[$array] = $key;
+			$this->data[$array] = $key1;
 		}
 	}
 
@@ -115,43 +116,6 @@ class core
 		else {
 			return implode('/', $this->url);
 		}
-	}
-
-	/**
-	 * Accède au titre de la page
-	 * @return string Titre de la page
-	 */
-	public function getTitle()
-	{
-		return isset($this->title) ? $this->title : 'Erreur 404';
-	}
-
-	/**
-	 * Modifie le titre de la page
-	 * @param string $value Titre de la page
-	 */
-	public function setTitle($value)
-	{
-		$this->title = $value;
-	}
-
-	/**
-	 * Accède au contenu de la page
-	 * @return string Contenu de la page
-	 */
-	public function getContent()
-	{
-		$content = isset($this->content) ? $this->content : '<p>Page introuvable</p>';
-		return '<h2>' . $this->getTitle() . '</h2>' . $content;
-	}
-
-	/**
-	 * Modifie le contenu de la page
-	 * @param string $value Contenu de la page
-	 */
-	public function setContent($value)
-	{
-		$this->content = $value;
 	}
 
 	/**
@@ -256,22 +220,25 @@ class core
 				$this->login();
 			}
 		}
-		// Module
-		elseif($this->getData('pages', $this->getUrl(0), 'module')) {
-			$module = $this->getData('pages', $this->getUrl(0), 'module');
-			$module = new $module;
-			$method = in_array($this->getUrl(1), $module->views) ? $this->getUrl(1) : 'index';
-			$module->$method();
-		}
-		// Redirection
-		elseif($this->getData('pages', $this->getUrl(0), 'link')) {
-			helpers::redirect($this->getData('pages', $this->getUrl(0), 'link'), false);
-		}
-		// Page
+		// Page et module
 		elseif($this->getData('pages', $this->getUrl(0))) {
+			$module = $this->getData('pages', $this->getUrl(0), 'module');
+			if($module) {
+				$module = new $module;
+				$method = in_array($this->getUrl(1), $module::$views) ? $this->getUrl(1) : 'index';
+				$module->$method();
+				$content = self::$content;
+			}
+			else {
+				$content = false;
+			}
+			$theme = $this->getData('pages', $this->getUrl(0), 'theme');
+			if($theme) {
+				$this->setData('config', 'theme', $theme);
+			}
 			$this->setMode(false);
-			$this->setTitle($this->getData('pages', $this->getUrl(0), 'title'));
-			$this->setContent($this->getData('pages', $this->getUrl(0), 'content'));
+			self::$title = $this->getData('pages', $this->getUrl(0), 'title');
+			self::$content = $this->getData('pages', $this->getUrl(0), 'content') . $content;
 		}
 	}
 
@@ -288,14 +255,14 @@ class core
 		// Sinon affiche le panneau d'administration
 		else {
 			$panel = '<ul id="panel">';
-			$panel .= '<li><select>';
+			$panel .= '<li><select onchange="$(location).attr(\'href\', $(this).val());">';
 			$panel .= ($this->getUrl(0) === 'config') ? '<option value="">Choisissez une page</option>' : false;
 			foreach($this->getData('pages') as $key => $value) {
 				$current = ($key === $this->getUrl(0) OR $key === $this->getUrl(1)) ? ' selected' : false;
 				$panel .= '<option value="?' . $this->getMode() . $key . '"' . $current . '>' . $value['title'] . '</option>';
 			}
 			$panel .= '</select></li>';
-			$panel .= '<li><a href="?add">Créer une page</a></li>';
+			$panel .= '<li><a href="?create">Créer une page</a></li>';
 			$panel .= '<li><a href="?mode/' . $this->getUrl() . '">Mode ' . ($this->getMode() ? 'public' : 'édition') . '</a></li>';
 			$panel .= '<li><a href="?config">Configuration</a></li>';
 			$panel .= '<li><a href="?logout" onclick="return confirm(\'Êtes-vous certain de vouloir vous déconnecter ?\');">Déconnexion</a></li>';
@@ -309,14 +276,15 @@ class core
 	 * Met en forme le menu
 	 * @return string Retourne le menu
 	 */
-	public function nav()
+	public function menu()
 	{
 		$edit = ($this->getCookie() === $this->getData('config', 'password')) ? $this->getMode() : false;
 		$pages = false;
 		foreach($this->getData('menu') as $key => $value) {
 			if($value) {
 				$current = ($key === $this->getUrl(0) OR $key === $this->getUrl(1)) ? ' class="current"' : false;
-				$pages .= '<li><a href="?' . $edit . $key . '"' . $current . '>' . $this->getData('pages', $key, 'title') . '</a></li>';
+				$blank = ($this->getData('pages', $key, 'blank') AND !$this->getMode()) ? ' target="_blank"' : false;
+				$pages .= '<li><a href="?' . $edit . $key . '"' . $current . $blank . '>' . $this->getData('pages', $key, 'title') . '</a></li>';
 			}
 		}
 
@@ -324,17 +292,16 @@ class core
 	}
 
 	/**
-	 * Ajout de page
+	 * Création d'une page
 	 */
-	public function add()
+	public function create()
 	{
 		$key = helpers::increment('nouvelle-page', $this->getData('pages'));
 		$this->setData('pages', $key, [
 			'title' => 'Nouvelle page',
-			'position' => '0',
+			'position' => false,
 			'blank' => false,
-			'module' => '',
-			'link' => '',
+			'module' => false,
 			'content' => 'Contenu de la page.'
 		]);
 		$this->setData('menu', $key, '0');
@@ -354,52 +321,98 @@ class core
 		}
 		// Enregistre la page
 		elseif($this->getPost('submit')) {
+			// Vérifie que le nom de la page n'a pas changé
 			if($this->getPost('title', helpers::URL) === $this->getUrl(1)) {
-				$title = $this->getPost('title', helpers::STRING);
+				$title = $this->getPost('title');
 				$key = helpers::filter($title, helpers::URL);
 			}
+			// Sinon supprime les anciennes données
 			else {
-				$title = $this->getPost('title', helpers::STRING) ? $this->getPost('title', helpers::STRING) : 'Sans titre';
+				$title = $this->getPost('title', helpers::STRING) ? $this->getPost('title') : 'Sans titre';
 				$key = helpers::filter($title, helpers::URL);
 				$key = helpers::increment($key, $this->getData('pages'));
 				$key = helpers::increment($key, self::$modules);
 				$this->removeData('pages', $this->getUrl(1));
+				$this->removeData('modules', $this->getUrl(1));
 				$this->removeData('menu', $this->getUrl(1));
 				if($this->getData('config', 'index') === $this->getUrl(1)) {
 					$this->setData('settings', 'index', $key);
 				}
 			}
+			// Modifie la page
 			$this->setData('pages', $key, [
-				'title' => $title,
+				'title' => helpers::filter($title, helpers::STRING),
 				'blank' => $this->getPost('blank', helpers::BOOLEAN),
+				'theme' => $this->getPost('theme', helpers::STRING),
 				'module' => $this->getPost('module', helpers::STRING),
-				'link' => $this->getPost('link', helpers::URL),
 				'content' => $this->getPost('content')
 			]);
+			// Modifie le module
+			if($this->getPost('module')) {
+				$module = $this->getPost('module', helpers::STRING);
+				$module = new $module;
+				$config = [];
+				foreach($module::$inputs as $input => $filter) {
+					$config[$input] = $this->getPost($input, $filter);
+				}
+				$this->setData('modules', $key, $config);
+			}
+			else {
+				$this->removeData('modules', $key);
+			}
+			// Modifie le menu
 			$this->setData('menu', $key, $this->getPost('position', helpers::NUMBER_INT));
+			// Sauvegarde & co
 			$this->saveData();
 			$this->setNotification('Page modifiée avec succès !');
 			helpers::redirect('edit/' . $key);
 		}
 		// Interface d'édition
 		else {
-			$modules[''] = 'Aucun module';
+			// Liste les thèmes
+			$themes[] = 'Thème par défaut';
+			$it = new DirectoryIterator('themes/');
+			foreach($it as $file) {
+				if($file->isFile()) {
+					$themes[$file->getBasename()] = $file->getBasename('.css');
+				}
+			}
+			// Liste les modules
+			$modules[] = 'Aucun module';
 			$it = new DirectoryIterator('modules/');
 			foreach($it as $file) {
 				if($file->isFile()) {
-					$module = $file->getBasename('.php');
-					$module = new $module;
-					$modules[$file->getBasename()] = $module::$title;
+					$basename = $file->getBasename('.php');
+					$module = new $basename;
+					$modules[$basename] = $module::$name;
 				}
 			}
+			// Importe la configuration du module
+			$module = $this->getData('pages', $this->getUrl(1), 'module');
+			if($module) {
+				$config = new $module;
+				if(method_exists($config, 'config')) {
+					$config = '<h3>Configuration du module</h3>' . $config->config();
+				}
+			}
+			else {
+				$config = false;
+			}
+			// Interface
 			$this->setMode(true);
-			$this->setTitle($this->getData('pages', $this->getUrl(1), 'title'));
-			$this->setContent(
+			self::$title = $this->getData('pages', $this->getUrl(1), 'title');
+			self::$content =
 				template::openForm() .
 				template::openRow() .
 				template::text('title', [
 					'label' => 'Titre de la page',
 					'value' => $this->getData('pages', $this->getUrl(1), 'title')
+				]) .
+				template::closeRow() .
+				template::openRow() .
+				template::text('position', [
+					'label' => 'Position dans le menu',
+					'value' => $this->getData('menu', $this->getUrl(1))
 				]) .
 				template::closeRow() .
 				template::openRow() .
@@ -409,22 +422,23 @@ class core
 				]) .
 				template::closeRow() .
 				template::openRow() .
-				template::checkbox('blank', true, 'Ouvrir la page dans un nouvel onglet', [
+				template::checkbox('blank', true, 'Ouvrir dans un nouvel onglet en mode public', [
 					'checked' => $this->getData('pages', $this->getUrl(1), 'blank')
 				]) .
 				template::closeRow() .
 				template::openRow() .
-				template::text('position', [
-					'label' => 'Position de la page dans le menu',
-					'value' => $this->getData('menu', $this->getUrl(1))
+				template::select('theme', $themes, [
+					'label' => 'Thème en mode public',
+					'selected' => $this->getData('pages', $this->getUrl(1), 'theme')
 				]) .
 				template::closeRow() .
 				template::openRow() .
 				template::select('module', $modules, [
-					'label' => 'Inclure un module à la page',
+					'label' => 'Inclure un module <small>(en cas de changement de module, les données rattachées au module précédant seront supprimées)</small>',
 					'selected' => $this->getData('pages', $this->getUrl(1), 'module')
 				]) .
 				template::closeRow() .
+				$config .
 				template::openRow() .
 				template::button('delete', [
 					'value' => 'Supprimer',
@@ -437,8 +451,7 @@ class core
 					'col' => 2
 				]) .
 				template::closeRow() .
-				template::closeForm()
-			);
+				template::closeForm();
 		}
 	}
 
@@ -458,11 +471,23 @@ class core
 		// Suppression
 		else {
 			$this->removeData('pages', $this->getUrl(1));
+			$this->removeData('modules', $this->getUrl(1));
 			$this->removeData('menu', $this->getUrl(1));
 			$this->saveData();
 			$this->setNotification('Page supprimée avec succès !');
 		}
 		helpers::redirect('edit/' . $this->getData('config', 'index'));
+	}
+
+	/**
+	 * Exporte le fichier de données
+	 */
+	public function export()
+	{
+		header('Content-disposition: attachment; filename=core/data.json');
+		header('Content-type: application/json');
+		echo json_encode($this->getData());
+		exit;
 	}
 
 	/**
@@ -494,7 +519,7 @@ class core
 	{
 		// Enregistre la configuration
 		if($this->getPost('submit')) {
-			$inputs = ['title', 'description', 'keywords', 'password', 'index', 'theme'];
+			$inputs = ['title', 'description', 'password', 'index', 'theme', 'keywords'];
 			foreach($inputs as $value) {
 				if($value === 'password') {
 					if($this->getPost($value) AND $this->getPost($value) === $this->getPost('confirm')) {
@@ -522,25 +547,19 @@ class core
 					$themes[$file->getBasename()] = $file->getBasename('.css');
 				}
 			}
-			$this->setTitle('Configuration');
-			$this->setContent(
+			self::$title = 'Configuration';
+			self::$content =
 				template::openForm() .
 				template::openRow() .
 				template::text('title', [
 					'label' => 'Titre du site',
-					'value' => $this->getData('config', 'title'),
+					'value' => $this->getData('config', 'title')
 				]) .
 				template::closeRow() .
 				template::openRow() .
 				template::textarea('description', [
 					'label' => 'Description du site',
-					'value' => $this->getData('config', 'description'),
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::text('keywords', [
-					'label' => 'Mots clés du site',
-					'value' => $this->getData('config', 'keywords'),
+					'value' => $this->getData('config', 'description')
 				]) .
 				template::closeRow() .
 				template::openRow() .
@@ -566,13 +585,23 @@ class core
 				]) .
 				template::closeRow() .
 				template::openRow() .
-				template::submit('submit', [
-					'col' => 2,
-					'offset' => 10
+				template::text('keywords', [
+					'label' => 'Mots clés du site',
+					'value' => $this->getData('config', 'keywords')
 				]) .
 				template::closeRow() .
-				template::closeForm()
-			);
+				template::openRow() .
+				template::button('export', [
+					'value' => 'Exporter',
+					'href' => '?export',
+					'col' => 2,
+					'offset' => 8
+				]) .
+				template::submit('submit', [
+					'col' => 2
+				]) .
+				template::closeRow() .
+				template::closeForm();
 		}
 	}
 
@@ -597,8 +626,8 @@ class core
 		}
 		// Interface de connexion
 		else {
-			$this->setTitle('Connexion');
-			$this->setContent(
+			self::$title = 'Connexion';
+			self::$content =
 				template::openForm() .
 				template::openRow() .
 				template::password('password', [
@@ -614,8 +643,7 @@ class core
 					'col' => 2
 				]) .
 				template::closeRow() .
-				template::closeForm()
-			);
+				template::closeForm();
 		}
 	}
 
@@ -637,13 +665,13 @@ class helpers
 	 */
 	const PASSWORD = 'FILTER_SANITIZE_PASSWORD';
 	const BOOLEAN = 'FILTER_SANITIZE_BOOLEAN';
+	const URL = 'FILTER_SANITIZE_URL';
 	const EMAIL = FILTER_SANITIZE_EMAIL;
 	const MAGIC_QUOTES = FILTER_SANITIZE_MAGIC_QUOTES;
 	const NUMBER_FLOAT = FILTER_SANITIZE_NUMBER_FLOAT;
 	const NUMBER_INT = FILTER_SANITIZE_NUMBER_INT;
 	const SPECIAL_CHARS = FILTER_SANITIZE_SPECIAL_CHARS;
 	const STRING = FILTER_SANITIZE_STRING;
-	const URL = FILTER_SANITIZE_URL;
 
 	/**
 	 * Filtre et incrémente une chaîne en fonction d'un tableau de données
@@ -663,8 +691,8 @@ class helpers
 			case self::URL:
 				$search = explode(',', 'á,à,â,ä,ã,å,ç,é,è,ê,ë,í,ì,î,ï,ñ,ó,ò,ô,ö,õ,ú,ù,û,ü,ý,ÿ, ');
 				$replace = explode(',', 'a,a,a,a,a,a,c,e,e,e,e,i,i,i,i,n,o,o,o,o,o,u,u,u,u,y,y,-');
-				$str = str_replace($search, $replace, strtolower($str));
-				$str = filter_var($str, self::URL);
+				$str = str_replace($search, $replace, mb_strtolower($str, 'UTF-8'));
+				$str = filter_var($str, FILTER_SANITIZE_URL);
 				break;
 			default:
 				$str = filter_var($str, $filter);
@@ -968,7 +996,7 @@ class template
 	}
 
 	/**
-	 * Crée une case à cocher à sélection multiple
+	 * Crée  à sélection multiple
 	 * @param string $nameId Nom & id de la case à cocher à sélection multiple
 	 * @param string $value Valeur de la case à cocher à sélection multiple
 	 * @param string $label Label de la case à cocher à sélection multiple

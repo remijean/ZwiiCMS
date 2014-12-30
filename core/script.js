@@ -6,13 +6,6 @@ setTimeout(function() {
 }, 4000);
 
 /**
- * Redirection du champ de sélection
- */
-$('ul#panel > li > select').change(function() {
-	$(location).attr('href', $(this).val());
-});
-
-/**
  * Modifications non enregistrées du formulaire
  */
 var form = $('form');
@@ -27,23 +20,14 @@ form.submit(function() {
 	$(window).unbind('beforeunload');
 });
 
-//var module = $('#module');
-//var link = $('#link');
-//
-//module.change(function() {
-//	if($(this).val()) {
-//		link.prop('disabled', true);
-//	}
-//	else {
-//		link.prop('disabled', false);
-//	}
-//}).trigger('change');
-//
-//link.keyup(function() {
-//	if($(this).val()) {
-//		module.prop('disabled', true);
-//	}
-//	else {
-//		module.prop('disabled', false);
-//	}
-//}).trigger('keyup');
+/**
+ * Affiche/cache le menu en mode responsive
+ */
+$('div#toggle').click(function() {
+	$('ul#menu').slideToggle();
+});
+$(window).on('resize', function() {
+	if($(window).width() > 768) {
+		$('ul#menu').css('display','');
+	}
+});
