@@ -298,7 +298,7 @@ class core
 			$panel .= '<li><a href="?add">Créer une page</a></li>';
 			$panel .= '<li><a href="?mode/' . $this->getUrl() . '">Mode ' . ($this->getMode() ? 'public' : 'édition') . '</a></li>';
 			$panel .= '<li><a href="?config">Configuration</a></li>';
-			$panel .= '<li><a href="?logout">Déconnexion</a></li>';
+			$panel .= '<li><a href="?logout" onclick="return confirm(\'Êtes-vous certain de vouloir vous déconnecter ?\');">Déconnexion</a></li>';
 			$panel .= '</ul>';
 
 			return $panel;
@@ -429,7 +429,7 @@ class core
 				template::button('delete', [
 					'value' => 'Supprimer',
 					'href' => '?delete/' . $this->getUrl(1),
-					'onclick' => 'confirm(\'Êtes-vous certain de vouloir supprimer cette page ?\')',
+					'onclick' => 'return confirm(\'Êtes-vous certain de vouloir supprimer cette page ?\');',
 					'col' => 2,
 					'offset' => 8
 				]) .
