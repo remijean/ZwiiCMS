@@ -18,44 +18,66 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class contactConfig extends core
+class newsConfig extends core
 {
-	public static $name = 'Formulaire de contact';
+	public static $name = 'Gestionnaire de news';
 
 	public function index()
 	{
-		if($this->getPost('submit')) {
-			self::$content = 'test';
-			$this->setData('modules', $this->getUrl(1), [
-				'mail' => $this->getPost('mail', helpers::EMAIL)
-			]);
+		if($this->getData('modules', $this->getUrl(1))) {
+			foreach($this->getData('modules', $this->getUrl(1)) as $value) {
+				self::$content =
+					template::openDiv() .
+					template::openDiv('col8') .
+					$value['newsTitle'] .
+					template::closeDiv() .
+					template::button('newsToggle[]', [
+						'value' => 'Modifier',
+						'col' => 2
+					]) .
+					template::checkbox('newsDelete[' . $value . ']', true, 'supprimer', [
+						'col' => 2
+					]) .
+					template::closeDiv();
+			}
 		}
 		else {
-			self::$content =
-				template::openForm() .
-				template::openDiv() .
-				template::text('contact_mail', [
-					'label' => 'Adresse de réception des mails',
-					'value' => $this->getData('modules', $this->getUrl(1), 'contact_mail')
-				]) .
-				template::closeDiv() .
-				template::openDiv() .
-				template::button('back', [
-					'value' => 'Retour',
-					'href' => '?edit/' . $this->getUrl(1),
-					'col' => 2
-				]) .
-				template::submit('submit', [
-					'col' => 2,
-					'offset' => 8
-				]) .
-				template::closeDiv() .
-				template::closeForm();
+			self::$content = '<p>Aucune news</p>';
 		}
+		self::$content =
+			template::openDiv() .
+			template::button('newsCreate[]', [
+				'value' => '+',
+				'onclick' => '$(\'div.create\').slideToggle();',
+				'col' => 1,
+				'offset' => 11
+			]) .
+			template::closeDiv() .
+			template::openDiv('create none') .
+			template::openDiv() .
+			template::text('newsTitle', [
+				'label' => 'Titre de la news'
+			]) .
+			template::closeDiv() .
+			template::openDiv() .
+			template::textarea('newsContent', [
+				'class' => 'editor'
+			]) .
+			template::closeDiv() .
+			template::closeDiv() .
+			'<h3>Liste des news</h3>' .
+			self::$content;
+	}
+
+	public function create() {
+		$module = $this->getData('modules', $this->getUrl(1)) ? $this->getData('modules', $this->getUrl(1)) : [];
+		$key = helpers::increment($this->getPost('newsTitle'), $module);
+		$this->saveData();
+		echo $key;
 	}
 }
 
-class contactPublic extends core
+class newsPublic extends core
 {
 	public function index()
 	{

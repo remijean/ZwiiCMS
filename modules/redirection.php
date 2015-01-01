@@ -18,32 +18,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class redirection extends core
+class redirectionConfig extends core
 {
 	public static $name = 'URL de redirection';
-	public static $inputs = [
-		'redirection_url' => helpers::URL
-	];
 
-	public function config()
+	public function index()
 	{
 		return
-			template::openRow() .
+			template::openDiv() .
 			template::text('redirection_url', [
 				'label' => 'URL de redirection',
 				'value' => $this->getData('modules', $this->getUrl(1), 'redirection_url')
 			]) .
-			template::closeRow();
+			template::closeDiv();
 	}
+}
 
+class redirectionPublic extends core
+{
 	public function index()
 	{
 		$url = $this->getData('modules', $this->getUrl(0), 'redirection_url');
 		if($url) {
 			helpers::redirect($url, false);
-		}
-		else {
-			self::$content = false;
 		}
 	}
 }

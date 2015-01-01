@@ -23,11 +23,13 @@ form.submit(function() {
 /**
  * Affiche/cache le menu en mode responsive
  */
+var menu = $('ul#menu');
+
 $('div#toggle').click(function() {
-	$('ul#menu').slideToggle();
+	menu.slideToggle();
 });
 $(window).on('resize', function() {
 	if($(window).width() > 768) {
-		$('ul#menu').css('display','');
+		menu.css('display','');
 	}
 });

@@ -26,13 +26,12 @@ class core
 	private $url;
 	private $notification;
 
-	private static $modules = ['create', 'edit', 'delete', 'export', 'mode', 'config', 'logout'];
-	public static $title = 'Erreur 404';
-	public static $content = '<p>Page introuvable !</p>';
+	private static $modules = ['create', 'edit', 'module', 'delete', 'export', 'mode', 'config', 'logout'];
+	public static $title = false;
+	public static $content = false;
 	public static $views = [];
-	public static $inputs = [];
 
-	const VERSION = '0.5.0';
+	const VERSION = '0.6.0';
 
 	public function __construct()
 	{
@@ -46,7 +45,7 @@ class core
 	}
 
 	/**
-	 * Accède au contenu d'un tableau de données
+	 * Accède au contenu du tableau de données
 	 * @param mixed $array Tableau cible
 	 * @param mixed $key1 Clé de niveau 1 du tableau
 	 * @param mixed $key2 Clé de niveau 2 du tableau
@@ -69,23 +68,17 @@ class core
 	}
 
 	/**
-	 * Insert une ligne dans un tableau de données
-	 * @param string $array Tableau cible
-	 * @param mixed $key1 Clé de niveau 1 du tableau
-	 * @param mixed $key2 Clé de niveau 2 du tableau
+	 * Insert des données dans le tableau de données
+	 * @param string $key Clé du tableau de donnée
+	 * @param array $array Tableau à enregistrer
 	 */
-	public function setData($array, $key1, $key2 = null)
+	public function setData($key, $array)
 	{
-		if($key2 !== null) {
-			$this->data[$array][$key1] = $key2;
-		}
-		else {
-			$this->data[$array] = $key1;
-		}
+		$this->data[$key] = $array;
 	}
 
 	/**
-	 * Supprime une ligne dans un tableau de données
+	 * Supprime une ligne dans le tableau de données
 	 * @param string $array Tableau cible
 	 * @param mixed $key Clé du tableau
 	 */
@@ -222,23 +215,24 @@ class core
 		}
 		// Page et module
 		elseif($this->getData('pages', $this->getUrl(0))) {
-			$module = $this->getData('pages', $this->getUrl(0), 'module');
-			if($module) {
+			if($this->getData('pages', $this->getUrl(0), 'module')) {
+				$module = $this->getData('pages', $this->getUrl(0), 'module') . 'Public';
 				$module = new $module;
 				$method = in_array($this->getUrl(1), $module::$views) ? $this->getUrl(1) : 'index';
 				$module->$method();
-				$content = self::$content;
-			}
-			else {
-				$content = false;
 			}
 			$theme = $this->getData('pages', $this->getUrl(0), 'theme');
 			if($theme) {
-				$this->setData('config', 'theme', $theme);
+				$this->setData('config', ['theme' => $theme]);
 			}
 			$this->setMode(false);
 			self::$title = $this->getData('pages', $this->getUrl(0), 'title');
-			self::$content = $this->getData('pages', $this->getUrl(0), 'content') . $content;
+			self::$content = $this->getData('pages', $this->getUrl(0), 'content') . self::$content;
+		}
+		// Erreur 404
+		if(!self::$content) {
+			self::$title = 'Erreur 404';
+			self::$content = '<p>Page introuvable !</p>';
 		}
 	}
 
@@ -292,26 +286,28 @@ class core
 	}
 
 	/**
-	 * Création d'une page
+	 * MODULE : Création d'une page
 	 */
 	public function create()
 	{
 		$key = helpers::increment('nouvelle-page', $this->getData('pages'));
-		$this->setData('pages', $key, [
-			'title' => 'Nouvelle page',
-			'position' => false,
-			'blank' => false,
-			'module' => false,
-			'content' => 'Contenu de la page.'
+		$this->setData('pages', [
+			$key => [
+				'title' => 'Nouvelle page',
+				'position' => false,
+				'blank' => false,
+				'module' => false,
+				'content' => 'Contenu de la page.'
+			]
 		]);
-		$this->setData('menu', $key, '0');
+		$this->setData('menu', [$key => '0']);
 		$this->saveData();
 		$this->setNotification('Nouvelle page créée avec succès !');
 		helpers::redirect('edit/' . $key);
 	}
 
 	/**
-	 * Édition de page
+	 * MODULE : Édition de page
 	 */
 	public function edit()
 	{
@@ -321,125 +317,86 @@ class core
 		}
 		// Enregistre la page
 		elseif($this->getPost('submit')) {
-			// Vérifie que le nom de la page n'a pas changé
 			if($this->getPost('title', helpers::URL) === $this->getUrl(1)) {
 				$title = $this->getPost('title');
 				$key = helpers::filter($title, helpers::URL);
 			}
-			// Sinon supprime les anciennes données
 			else {
 				$title = $this->getPost('title', helpers::STRING) ? $this->getPost('title') : 'Sans titre';
 				$key = helpers::filter($title, helpers::URL);
 				$key = helpers::increment($key, $this->getData('pages'));
 				$key = helpers::increment($key, self::$modules);
 				$this->removeData('pages', $this->getUrl(1));
+				$this->setData('modules', [$key => $this->getData('modules', $this->getUrl(1))]);
 				$this->removeData('modules', $this->getUrl(1));
 				$this->removeData('menu', $this->getUrl(1));
 				if($this->getData('config', 'index') === $this->getUrl(1)) {
-					$this->setData('settings', 'index', $key);
+					$this->setData('config', ['index' => $key]);
 				}
 			}
-			// Modifie la page
-			$this->setData('pages', $key, [
-				'title' => helpers::filter($title, helpers::STRING),
-				'blank' => $this->getPost('blank', helpers::BOOLEAN),
-				'theme' => $this->getPost('theme', helpers::STRING),
-				'module' => $this->getPost('module', helpers::STRING),
-				'content' => $this->getPost('content')
+			$this->setData('menu', [$key => $this->getPost('position', helpers::NUMBER_INT)]);
+			$this->setData('pages', [
+				$key => [
+					'title' => helpers::filter($title, helpers::STRING),
+					'blank' => $this->getPost('blank', helpers::BOOLEAN),
+					'theme' => $this->getPost('theme', helpers::STRING),
+					'module' => $this->getPost('module', helpers::STRING),
+					'content' => $this->getPost('content')
+				]
 			]);
-			// Modifie le module
-			if($this->getPost('module')) {
-				$module = $this->getPost('module', helpers::STRING);
-				$module = new $module;
-				$config = [];
-				foreach($module::$inputs as $input => $filter) {
-					$config[$input] = $this->getPost($input, $filter);
-				}
-				$this->setData('modules', $key, $config);
-			}
-			else {
-				$this->removeData('modules', $key);
-			}
-			// Modifie le menu
-			$this->setData('menu', $key, $this->getPost('position', helpers::NUMBER_INT));
-			// Sauvegarde & co
 			$this->saveData();
 			$this->setNotification('Page modifiée avec succès !');
 			helpers::redirect('edit/' . $key);
 		}
 		// Interface d'édition
 		else {
-			// Liste les thèmes
-			$themes[] = 'Thème par défaut';
-			$it = new DirectoryIterator('themes/');
-			foreach($it as $file) {
-				if($file->isFile()) {
-					$themes[$file->getBasename()] = $file->getBasename('.css');
-				}
-			}
-			// Liste les modules
-			$modules[] = 'Aucun module';
-			$it = new DirectoryIterator('modules/');
-			foreach($it as $file) {
-				if($file->isFile()) {
-					$basename = $file->getBasename('.php');
-					$module = new $basename;
-					$modules[$basename] = $module::$name;
-				}
-			}
-			// Importe la configuration du module
-			$module = $this->getData('pages', $this->getUrl(1), 'module');
-			if($module) {
-				$config = new $module;
-				if(method_exists($config, 'config')) {
-					$config = '<h3>Configuration du module</h3>' . $config->config();
-				}
-			}
-			else {
-				$config = false;
-			}
-			// Interface
 			$this->setMode(true);
 			self::$title = $this->getData('pages', $this->getUrl(1), 'title');
 			self::$content =
 				template::openForm() .
-				template::openRow() .
+				template::openDiv() .
 				template::text('title', [
 					'label' => 'Titre de la page',
 					'value' => $this->getData('pages', $this->getUrl(1), 'title')
 				]) .
-				template::closeRow() .
-				template::openRow() .
+				template::closeDiv() .
+				template::openDiv() .
 				template::text('position', [
 					'label' => 'Position dans le menu',
 					'value' => $this->getData('menu', $this->getUrl(1))
 				]) .
-				template::closeRow() .
-				template::openRow() .
+				template::closeDiv() .
+				template::openDiv() .
 				template::textarea('content', [
 					'value' => $this->getData('pages', $this->getUrl(1), 'content'),
 					'class' => 'editor'
 				]) .
-				template::closeRow() .
-				template::openRow() .
+				template::closeDiv() .
+				template::openDiv() .
 				template::checkbox('blank', true, 'Ouvrir dans un nouvel onglet en mode public', [
 					'checked' => $this->getData('pages', $this->getUrl(1), 'blank')
 				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::select('theme', $themes, [
+				template::closeDiv() .
+				template::openDiv() .
+				template::select('module', helpers::listModules('Aucun module'), [
+					'label' => 'Inclure un module <small>(en cas de changement de module, les données rattachées au module précédant seront supprimées)</small>',
+					'selected' => $this->getData('pages', $this->getUrl(1), 'module'),
+					'col' => 10
+				]) .
+				template::button('config', [
+					'value' => 'Configurer',
+					'href' => '?module/' . $this->getUrl(1),
+					'disabled' => $this->getData('pages', $this->getUrl(1), 'module') ? false : true,
+					'col' => 2
+				]) .
+				template::closeDiv() .
+				template::openDiv() .
+				template::select('theme', helpers::listThemes('Thème par défaut'), [
 					'label' => 'Thème en mode public',
 					'selected' => $this->getData('pages', $this->getUrl(1), 'theme')
 				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::select('module', $modules, [
-					'label' => 'Inclure un module <small>(en cas de changement de module, les données rattachées au module précédant seront supprimées)</small>',
-					'selected' => $this->getData('pages', $this->getUrl(1), 'module')
-				]) .
-				template::closeRow() .
-				$config .
-				template::openRow() .
+				template::closeDiv() .
+				template::openDiv() .
 				template::button('delete', [
 					'value' => 'Supprimer',
 					'href' => '?delete/' . $this->getUrl(1),
@@ -450,13 +407,31 @@ class core
 				template::submit('submit', [
 					'col' => 2
 				]) .
-				template::closeRow() .
+				template::closeDiv() .
 				template::closeForm();
 		}
 	}
 
 	/**
-	 * Suppression de page
+	 * MODULE : Configuration du module
+	 */
+	public function module()
+	{
+		// Erreur 404
+		if(!$this->getData('pages', $this->getUrl(1))) {
+			return false;
+		}
+		else {
+			$module = $this->getData('pages', $this->getUrl(1), 'module') . 'Config';
+			$module = new $module;
+			$method = in_array($this->getUrl(2), $module::$views) ? $this->getUrl(2) : 'index';
+			$module->$method();
+			self::$title = $this->getData('pages', $this->getUrl(1), 'title');
+		}
+	}
+
+	/**
+	 * MODULE : Suppression de page
 	 */
 	public function delete()
 	{
@@ -480,7 +455,7 @@ class core
 	}
 
 	/**
-	 * Exporte le fichier de données
+	 * MODULE : Exporte le fichier de données
 	 */
 	public function export()
 	{
@@ -491,7 +466,7 @@ class core
 	}
 
 	/**
-	 * Change le mode d'administration
+	 * MODULE : Change le mode d'administration
 	 */
 	public function mode()
 	{
@@ -500,7 +475,7 @@ class core
 			$url = 'edit/' . $this->getUrl(1);
 		}
 		// Redirection vers mode public dans le module d'édition
-		elseif($this->getUrl(1) === 'edit') {
+		elseif(in_array($this->getUrl(1), ['edit', 'module'])) {
 			$url = $this->getUrl(2);
 		}
 		// Switch mode public/édition sans redirection pour les autres modules
@@ -513,56 +488,49 @@ class core
 	}
 
 	/**
-	 * Configuration
+	 * MODULE : Configuration
 	 */
 	public function config()
 	{
 		// Enregistre la configuration
 		if($this->getPost('submit')) {
-			$inputs = ['title', 'description', 'password', 'index', 'theme', 'keywords'];
-			foreach($inputs as $value) {
-				if($value === 'password') {
-					if($this->getPost($value) AND $this->getPost($value) === $this->getPost('confirm')) {
-						$this->setData('config', $value, $this->getPost($value, helpers::STRING));
-					}
-				}
-				else {
-					$this->setData('config', $value, $this->getPost($value, helpers::STRING));
-				}
+			if($this->getPost('password') AND $this->getPost('password') === $this->getPost('confirm')) {
+				$password = $this->getPost('password', helpers::PASSWORD);
 			}
+			else {
+				$password = $this->getData('config', 'password');
+
+			}
+			$this->setData('config', [
+				'title' => $this->getPost('title', helpers::STRING),
+				'description' => $this->getPost('description', helpers::STRING),
+				'password' => $password,
+				'index' => $this->getPost('index', helpers::STRING),
+				'theme' => $this->getPost('theme', helpers::STRING),
+				'keywords' =>$this->getPost('keywords', helpers::STRING)
+			]);
 			$this->saveData();
 			$this->setNotification('Configuration enregistrée avec succès !');
 			helpers::redirect($this->getUrl());
 		}
 		// Interface de configuration
 		else {
-			$pages = [];
-			foreach($this->getData('pages') as $key => $value) {
-				$pages[$key] = $value['title'];
-			}
-			$themes = [];
-			$it = new DirectoryIterator('themes/');
-			foreach($it as $file) {
-				if($file->isFile()) {
-					$themes[$file->getBasename()] = $file->getBasename('.css');
-				}
-			}
 			self::$title = 'Configuration';
 			self::$content =
 				template::openForm() .
-				template::openRow() .
+				template::openDiv() .
 				template::text('title', [
 					'label' => 'Titre du site',
 					'value' => $this->getData('config', 'title')
 				]) .
-				template::closeRow() .
-				template::openRow() .
+				template::closeDiv() .
+				template::openDiv() .
 				template::textarea('description', [
 					'label' => 'Description du site',
 					'value' => $this->getData('config', 'description')
 				]) .
-				template::closeRow() .
-				template::openRow() .
+				template::closeDiv() .
+				template::openDiv() .
 				template::text('password', [
 					'label' => 'Nouveau mot de passe',
 					'col' => 6
@@ -571,26 +539,26 @@ class core
 					'label' => 'Confirmation du mot de passe',
 					'col' => 6
 				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::select('index', $pages, [
+				template::closeDiv() .
+				template::openDiv() .
+				template::select('index', $this->getData('pages'), [
 					'label' => 'Page d\'accueil',
 					'selected' => $this->getData('config', 'index')
 				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::select('theme', $themes, [
+				template::closeDiv() .
+				template::openDiv() .
+				template::select('theme', helpers::listThemes(), [
 					'label' => 'Thème par défaut',
 					'selected' => $this->getData('config', 'theme')
 				]) .
-				template::closeRow() .
-				template::openRow() .
+				template::closeDiv() .
+				template::openDiv() .
 				template::text('keywords', [
 					'label' => 'Mots clés du site',
 					'value' => $this->getData('config', 'keywords')
 				]) .
-				template::closeRow() .
-				template::openRow() .
+				template::closeDiv() .
+				template::openDiv() .
 				template::button('export', [
 					'value' => 'Exporter',
 					'href' => '?export',
@@ -600,13 +568,13 @@ class core
 				template::submit('submit', [
 					'col' => 2
 				]) .
-				template::closeRow() .
+				template::closeDiv() .
 				template::closeForm();
 		}
 	}
 
 	/**
-	 * Connexion
+	 * MODULE : Connexion
 	 */
 	public function login()
 	{
@@ -629,26 +597,26 @@ class core
 			self::$title = 'Connexion';
 			self::$content =
 				template::openForm() .
-				template::openRow() .
+				template::openDiv() .
 				template::password('password', [
 					'col' => 4
 				]) .
-				template::closeRow() .
-				template::openRow() .
+				template::closeDiv() .
+				template::openDiv() .
 				template::checkbox('time', true, 'Me connecter automatiquement lors de mes prochaines visites.').
-				template::closeRow() .
-				template::openRow() .
+				template::closeDiv() .
+				template::openDiv() .
 				template::submit('submit', [
 					'value' => 'Me connecter',
 					'col' => 2
 				]) .
-				template::closeRow() .
+				template::closeDiv() .
 				template::closeForm();
 		}
 	}
 
 	/**
-	 * Déconnexion
+	 * MODULE : Déconnexion
 	 */
 	public function logout()
 	{
@@ -720,6 +688,50 @@ class helpers
 	}
 
 	/**
+	 * Crée une liste des thèmes
+	 * @param mixed $default Valeur par défaut
+	 * @return array Liste (format : fichier.css => fichier)
+	 */
+	public static function listThemes($default = false)
+	{
+		$themes = [];
+		if($default) {
+			$themes[''] = $default;
+		}
+		$it = new DirectoryIterator('themes/');
+		foreach($it as $file) {
+			if($file->isFile()) {
+				$themes[$file->getBasename()] = $file->getBasename('.css');
+			}
+		}
+
+		return $themes;
+	}
+
+	/**
+	 * Crée une liste des modules
+	 * @param mixed $default Valeur par défaut
+	 * @return array Liste (format : fichier => nom du module)
+	 */
+	public static function listModules($default = false)
+	{
+		$modules = [];
+		if($default) {
+			$modules[''] = $default;
+		}
+		$it = new DirectoryIterator('modules/');
+		foreach($it as $file) {
+			if($file->isFile()) {
+				$module = $file->getBasename('.php') . 'Config';
+				$module = new $module;
+				$modules[$file->getBasename('.php')] = $module::$name;
+			}
+		}
+
+		return $modules;
+	}
+
+	/**
 	 * Redirige vers une page du site ou une page externe
 	 * @param string $url Url de destination
 	 * @param string $prefix Ajoute ou non un préfixe à l'url
@@ -741,7 +753,7 @@ class template
 	 */
 	private static function sprintAttributes(array $array = [], array $exclude = [])
 	{
-		$exclude = array_merge(['col', 'label'], $exclude);
+		$exclude = array_merge(['col', 'offset', 'label', 'disabled'], $exclude);
 		$attributes = [];
 		foreach($array as $key => $value) {
 			if($value AND !in_array($key, $exclude)) {
@@ -753,19 +765,20 @@ class template
 	}
 
 	/**
-	 * Ouvre une nouvelle ligne
+	 * Ouvre une div
+	 * @param string $class La ou les classes de la div
 	 * @return string La balise
 	 */
-	public static function openRow()
+	public static function openDiv($class = 'row')
 	{
-		return '<div class="row">';
+		return '<div class="' . $class . '">';
 	}
 
 	/**
-	 * Ferme la ligne ouverte
+	 * Ferme une div
 	 * @return string La balise
 	 */
-	public static function closeRow()
+	public static function closeDiv()
 	{
 		return '</div>';
 	}
@@ -814,7 +827,8 @@ class template
 			'class' => ''
 		], $attributes);
 
-		return sprintf('<label %s>%s</label>',
+		return sprintf(
+			'<label %s>%s</label>',
 			self::sprintAttributes($attributes),
 			$str
 		);
@@ -833,6 +847,7 @@ class template
 			'name' => $nameId,
 			'value' => '',
 			'placeholder' => '',
+			'disabled' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
@@ -846,7 +861,11 @@ class template
 			$html .= self::label($nameId, $attributes['label']);
 		}
 		// <input>
-		$html .= sprintf('<input type="text" %s>', self::sprintAttributes($attributes));
+		$html .= sprintf(
+			'<input type="text" %s%s>',
+			self::sprintAttributes($attributes),
+			$attributes['disabled'] ? ' disabled' : false
+		);
 		// </div>
 		$html .= '</div>';
 
@@ -865,6 +884,7 @@ class template
 			'id' => $nameId,
 			'name' => $nameId,
 			'value' => '',
+			'disabled' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
@@ -878,8 +898,10 @@ class template
 			$html .= self::label($nameId, $attributes['label']);
 		}
 		// <input>
-		$html .= sprintf('<textarea %s>%s</textarea>',
+		$html .= sprintf(
+			'<textarea %s%s>%s</textarea>',
 			self::sprintAttributes($attributes, ['value']),
+			$attributes['disabled'] ? ' disabled' : false,
 			$attributes['value']
 		);
 		// </div>
@@ -900,6 +922,7 @@ class template
 			'id' => $nameId,
 			'name' => $nameId,
 			'placeholder' => '',
+			'disabled' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
@@ -913,39 +936,11 @@ class template
 			$html .= self::label($nameId, $attributes['label']);
 		}
 		// <input>
-		$html .= sprintf('<input type="password" %s>', self::sprintAttributes($attributes));
-		// </div>
-		$html .= '</div>';
-
-		return $html;
-	}
-
-	/**
-	 * Crée un champ mot de passe
-	 * @param string $nameId Nom & id du champ mot de passe
-	 * @param array $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
-	 * @return string La balise et ses attributs au bon format
-	 */
-	public static function integer($nameId, array $attributes = [])
-	{
-		$attributes = array_merge([
-			'id' => $nameId,
-			'name' => $nameId,
-			'placeholder' => '',
-			'label' => '',
-			'class' => '',
-			'col' => 12,
-			'offset' => 0
-		], $attributes);
-
-		// <div>
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
-		// <label>
-		if($attributes['label']) {
-			$html .= self::label($nameId, $attributes['label']);
-		}
-		// <input>
-		$html .= sprintf('<input type="text" class="integer %s" %s>', $attributes['class'], self::sprintAttributes($attributes, ['class']));
+		$html .= sprintf(
+			'<input type="password" %s%s>',
+			self::sprintAttributes($attributes),
+			$attributes['disabled'] ? ' disabled' : false
+		);
 		// </div>
 		$html .= '</div>';
 
@@ -965,6 +960,7 @@ class template
 			'id' => $nameId,
 			'name' => $nameId,
 			'selected' => '',
+			'disabled' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
@@ -981,9 +977,14 @@ class template
 		$html .= sprintf('<select %s>', self::sprintAttributes($attributes, ['selected']));
 		// <option>
 		foreach($options as $value => $str) {
-			$html .= sprintf('<option value="%s"%s>%s</option>',
+			if(is_array($str)) {
+				$str = array_shift($str);
+			}
+			$html .= sprintf(
+				'<option value="%s"%s%s>%s</option>',
 				$value,
 				$attributes['selected'] === $value ? ' selected' : false,
+				$attributes['disabled'] ? ' disabled' : false,
 				$str
 			);
 		}
@@ -1007,6 +1008,7 @@ class template
 	{
 		$attributes = array_merge([
 			'checked' => false,
+			'disabled' => false,
 			'class' => '',
 			'col' => 12,
 			'offset' => 0
@@ -1015,12 +1017,14 @@ class template
 		// <div>
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// <input>
-		$html .= sprintf('<input type="checkbox" id="%s" name="%s" value="%s" %s%s>',
+		$html .= sprintf(
+			'<input type="checkbox" id="%s" name="%s" value="%s" %s%s%s>',
 			$nameId . '_' . $value,
 			$nameId . '[]',
 			$value,
 			self::sprintAttributes($attributes, ['checked']),
-			$attributes['checked'] ? ' checked' : false
+			$attributes['checked'] ? ' checked' : false,
+			$attributes['disabled'] ? ' disabled' : false
 		);
 		// <label>
 		$html .= self::label($nameId . '_' . $value, $label);
@@ -1042,6 +1046,7 @@ class template
 	{
 		$attributes = array_merge([
 			'checked' => false,
+			'disabled' => false,
 			'class' => '',
 			'col' => 12,
 			'offset' => 0
@@ -1050,12 +1055,14 @@ class template
 		// <div>
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// <input>
-		$html .= sprintf('<input type="radio" id="%s" name="%s" value="%s" %s%s>',
+		$html .= sprintf(
+			'<input type="radio" id="%s" name="%s" value="%s" %s%s%s>',
 			$nameId . '_' . $value,
 			$nameId . '[]',
 			$value,
 			self::sprintAttributes($attributes, ['checked']),
-			$attributes['checked'] ? ' checked' : false
+			$attributes['checked'] ? ' checked' : false,
+			$attributes['disabled'] ? ' disabled' : false
 		);
 		// <label>
 		$html .= self::label($nameId . '_' . $value, $label);
@@ -1077,6 +1084,7 @@ class template
 			'id' => $nameId,
 			'name' => $nameId,
 			'value' => 'Enregistrer',
+			'disabled' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
@@ -1090,7 +1098,11 @@ class template
 			$html .= self::label($nameId, $attributes['label']);
 		}
 		// <input>
-		$html .= sprintf('<input type="submit" %s>', self::sprintAttributes($attributes));
+		$html .= sprintf(
+			'<input type="submit" %s%s>',
+			self::sprintAttributes($attributes),
+			$attributes['disabled'] ? ' disabled' : false
+		);
 		// </div>
 		$html .= '</div>';
 
@@ -1112,6 +1124,7 @@ class template
 			'href' => 'javascript:void(0);',
 			'target' => '',
 			'onclick' => '',
+			'disabled' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
@@ -1125,7 +1138,13 @@ class template
 			$html .= self::label($nameId, $attributes['label']);
 		}
 		// <input>
-		$html .= sprintf('<a %s class="button %s">%s</a>', self::sprintAttributes($attributes, ['value', 'class']), $attributes['class'], $attributes['value']);
+		$html .= sprintf(
+			'<a %s class="button %s%s">%s</a>',
+			self::sprintAttributes($attributes, ['value', 'class']),
+			$attributes['class'],
+			$attributes['disabled'] ? ' disabled' : false,
+			$attributes['value']
+		);
 		// </div>
 		$html .= '</div>';
 
