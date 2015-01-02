@@ -31,13 +31,13 @@ class core
 	public static $content = false;
 	public static $views = [];
 
-	const VERSION = '0.6.2';
+	const VERSION = '0.6.3';
 
 	public function __construct()
 	{
 		$this->data = json_decode(file_get_contents('core/data.json'), true);
-		ksort($this->data['pages']);
-		asort($this->data['menu']);
+		$this->sortData('pages', 'ksort');
+		$this->sortData('menu', 'asort');
 		$this->url = empty($_SERVER['QUERY_STRING']) ? $this->getData('config', 'index') : $_SERVER['QUERY_STRING'];
 		$this->url = helpers::filter($this->url, helpers::URL);
 		$this->url = explode('/', $this->url);
@@ -58,7 +58,7 @@ class core
 		if($key5 !== null) {
 			return empty($this->data[$key1][$key2][$key3][$key4][$key5]) ? false : $this->data[$key1][$key2][$key3][$key4][$key5];
 		}
-		if($key4 !== null) {
+		elseif($key4 !== null) {
 			return empty($this->data[$key1][$key2][$key3][$key4]) ? false : $this->data[$key1][$key2][$key3][$key4];
 		}
 		elseif($key3 !== null) {
@@ -101,17 +101,57 @@ class core
 
 	/**
 	 * Supprime des données dans le tableau de données
-	 * @param string $array Tableau cible
 	 * @param string $key1 Clé de niveau 1
 	 * @param string $key2 Clé de niveau 2
+	 * @param string $key3 Clé de niveau 3
+	 * @param string $key4 Clé de niveau 4
+	 * @param string $key5 Clé de niveau 5
 	 */
-	public function removeData($array, $key1, $key2 = null)
+	public function removeData($key1, $key2 = null, $key3 = null, $key4 = null, $key5 = null)
 	{
-		if($key2 !== null) {
-			unset($this->data[$array][$key1][$key2]);
+		if($key5 !== null) {
+			unset($this->data[$key1][$key2][$key3][$key4][$key5]);
+		}
+		elseif($key4 !== null) {
+			unset($this->data[$key1][$key2][$key3][$key4]);
+		}
+		elseif($key3 !== null) {
+			unset($this->data[$key1][$key2][$key3]);
+		}
+		elseif($key2 !== null) {
+			unset($this->data[$key1][$key2]);
 		}
 		else {
-			unset($this->data[$array][$key1]);
+			unset($this->data[$key1]);
+		}
+	}
+
+	/**
+	 * Tri des données dans le tableau de données
+	 * @param string $key Clé du tableau
+	 * @param string $sort Ordre de tri
+	 */
+	public function sortData($key, $sort = 'sort')
+	{
+		switch($sort) {
+			case 'sort':
+				sort($this->data[$key]);
+				break;
+			case 'rsort':
+				rsort($this->data[$key]);
+				break;
+			case 'kort':
+				ksort($this->data[$key]);
+				break;
+			case 'krsort':
+				krsort($this->data[$key]);
+				break;
+			case 'asort':
+				asort($this->data[$key]);
+				break;
+			case 'arsort':
+				arsort($this->data[$key]);
+				break;
 		}
 	}
 
@@ -341,19 +381,19 @@ class core
 		elseif($this->getPost('submit')) {
 			$title = $this->getPost('title') ? $this->getPost('title', helpers::STRING) : 'Sans titre';
 			$key = helpers::filter($title, helpers::URL);
-			if($this->getPost('title', helpers::URL) !== $this->getUrl(1)) {
+			if($key !== $this->getUrl(1)) {
 				$key = helpers::increment($key, $this->getData('pages'));
 				$key = helpers::increment($key, self::$modules);
 				$this->removeData('pages', $this->getUrl(1));
-				$this->setData('modules', $key, $this->getData('modules', $this->getUrl(1)));
-				$this->removeData('modules', $this->getUrl(1));
+				$this->setData($key, $this->getData($this->getUrl(1)));
+				$this->removeData($this->getUrl(1));
 				$this->removeData('menu', $this->getUrl(1));
 				if($this->getData('config', 'index') === $this->getUrl(1)) {
 					$this->setData('config', 'index', $key);
 				}
 			}
 			if($this->getPost('module') !== $this->setData('pages', $key, 'module')) {
-				$this->removeData('modules', $key);
+				$this->removeData($key);
 			}
 			$this->setData('menu', $key, $this->getPost('position', helpers::NUMBER_INT));
 			$this->setData('pages', $key, [
@@ -460,7 +500,7 @@ class core
 		}
 		else {
 			$this->removeData('pages', $this->getUrl(1));
-			$this->removeData('modules', $this->getUrl(1));
+			$this->removeData($this->getUrl(1));
 			$this->removeData('menu', $this->getUrl(1));
 			$this->saveData();
 			$this->setNotification('Page supprimée avec succès !');
@@ -665,7 +705,6 @@ class helpers
 				$search = explode(',', 'á,à,â,ä,ã,å,ç,é,è,ê,ë,í,ì,î,ï,ñ,ó,ò,ô,ö,õ,ú,ù,û,ü,ý,ÿ, ');
 				$replace = explode(',', 'a,a,a,a,a,a,c,e,e,e,e,i,i,i,i,n,o,o,o,o,o,u,u,u,u,y,y,-');
 				$str = str_replace($search, $replace, mb_strtolower($str, 'UTF-8'));
-				$str = filter_var($str, FILTER_SANITIZE_URL);
 				break;
 			default:
 				$str = filter_var($str, $filter);
@@ -690,6 +729,18 @@ class helpers
 		}
 
 		return $newKey;
+	}
+
+	public static function arrayCollumn($array, $columnKey)
+	{
+		$row = [];
+		if(!empty($array)) {
+			foreach($array as $key => $value) {
+				$row[$key] = $value[$columnKey];
+			}
+		}
+
+		return $row;
 	}
 
 	public static function pagination($array, $urlCurrent, $urlPagination)

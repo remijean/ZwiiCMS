@@ -25,9 +25,7 @@ class redirectionAdm extends core
 	public function index()
 	{
 		if($this->getPost('submit')) {
-			$this->setData('modules', $this->getUrl(1), [
-				'url' => $this->getPost('url', helpers::URL)
-			]);
+			$this->setData($this->getUrl(1), 'url', $this->getPost('url', helpers::URL));
 			$this->saveData();
 			$this->setNotification('Configuration du module enregistrée avec succès !');
 			helpers::redirect($this->getUrl());
@@ -38,7 +36,7 @@ class redirectionAdm extends core
 				template::openRow() .
 				template::text('url', [
 					'label' => 'URL de redirection',
-					'value' => $this->getData('modules', $this->getUrl(1), 'url')
+					'value' => $this->getData($this->getUrl(1), 'url')
 				]) .
 				template::closeRow() .
 				template::openRow() .
@@ -61,7 +59,7 @@ class redirectionMod extends core
 {
 	public function index()
 	{
-		$url = $this->getData('modules', $this->getUrl(0), 'url');
+		$url = $this->getData($this->getUrl(0), 'url');
 		if($url) {
 			helpers::redirect($url, false);
 		}

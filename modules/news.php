@@ -30,8 +30,8 @@ class newsAdm extends core
 	{
 		if($this->getPost('submit')) {
 			$title = $this->getPost('title') ? $this->getPost('title', helpers::STRING) : 'sans-titre';
-			$key = helpers::increment(helpers::filter($title, helpers::URL), $this->getData('modules', $this->getUrl(1)));
-			$this->setData('modules', $this->getUrl(1), $key, [
+			$key = helpers::increment(helpers::filter($title, helpers::URL), $this->getData($this->getUrl(1)));
+			$this->setData($this->getUrl(1), $key, [
 				'title' => $title,
 				'date' => time(),
 				'content' => $this->getPost('content'),
@@ -41,7 +41,8 @@ class newsAdm extends core
 			helpers::redirect('module/' . $this->getUrl(1));
 		}
 		else {
-			$news = $this->getData('modules', $this->getUrl(1));
+			$news = helpers::arrayCollumn($this->getData($this->getUrl(1)), 'date');
+			arsort($news);
 			if($news) {
 				self::$content = '<h3>Liste des news</h3>';
 				$pagination = helpers::pagination($news, $this->getUrl(0) . '/' . $this->getUrl(1), $this->getUrl(2));
@@ -51,7 +52,7 @@ class newsAdm extends core
 						self::$content .=
 							template::openRow() .
 							template::text('news[]', [
-								'value' => $value['title'],
+								'value' => $this->getData($this->getUrl(1), $key, 'title'),
 								'readonly' => true,
 								'col' => 8
 							]) .
@@ -112,20 +113,21 @@ class newsAdm extends core
 	 */
 	public function edit()
 	{
-		if(!$this->getData('modules', $this->getUrl(1), $this->getUrl(3))) {
+		if(!$this->getData($this->getUrl(1), $this->getUrl(3))) {
 			return false;
 		}
 		elseif($this->getPost('submit')) {
 			$title = $this->getPost('title') ? $this->getPost('title', helpers::STRING) : 'sans-titre';
-			$key = $this->getData('modules', $this->getUrl(3));
-			if($this->getPost('title', helpers::URL) !== $this->getUrl(3)) {
-				$key = helpers::increment($key, $this->getData('pages'));
-				$this->removeData('modules', $this->getUrl(1), $this->getUrl(3));
+			$date = $this->getData($this->getUrl(1), $this->getUrl(3), 'date');
+			$key = helpers::filter($title, helpers::URL);
+			if($key !== $this->getUrl(3)) {
+				$key = helpers::increment($key, $this->getData($this->getUrl(1)));
+				$this->removeData($this->getUrl(1), $this->getUrl(3));
 			}
-			$this->setData('modules', $this->getUrl(1), $key, [
+			$this->setData($this->getUrl(1), $key, [
 				'title' => $title,
-				'date' => time(),
-				'content' => $this->getPost('content'),
+				'date' => $date,
+				'content' => $this->getPost('content')
 			]);
 			$this->saveData();
 			$this->setNotification('Nouvelle news créée avec succès !');
@@ -137,13 +139,13 @@ class newsAdm extends core
 				template::openRow() .
 				template::text('title', [
 					'label' => 'Titre de la news',
-					'value' => $this->getData('modules', $this->getUrl(1), $this->getUrl(3), 'title')
+					'value' => $this->getData($this->getUrl(1) .'News', $this->getUrl(3), 'title')
 				]) .
 				template::closeRow() .
 				template::openRow() .
 				template::textarea('content', [
 					'class' => 'editor',
-					'value' => $this->getData('modules', $this->getUrl(1), $this->getUrl(3), 'content')
+					'value' => $this->getData($this->getUrl(1), $this->getUrl(3), 'content')
 				]) .
 				template::closeRow() .
 				template::openRow() .
@@ -166,11 +168,11 @@ class newsAdm extends core
 	 */
 	public function delete()
 	{
-		if(!$this->getData('modules', $this->getUrl(1), $this->getUrl(3))) {
+		if(!$this->getData($this->getUrl(1), $this->getUrl(3))) {
 			return false;
 		}
 		else {
-			$this->removeData('modules', $this->getUrl(1), $this->getUrl(3));
+			$this->removeData($this->getUrl(1), $this->getUrl(3));
 			$this->saveData();
 			$this->setNotification('News supprimée avec succès !');
 		}
@@ -182,13 +184,17 @@ class newsMod extends core
 {
 	public function index()
 	{
-		$news = $this->getData('modules', $this->getUrl(0));
+		$news = helpers::arrayCollumn($this->getData($this->getUrl(0)), 'date');
+		arsort($news);
 		if($news) {
 			$pagination = helpers::pagination($news, $this->getUrl(0), $this->getUrl(1));
 			$i = 0;
 			foreach($news as $key => $value) {
 				if($i >= $pagination['first'] AND $i < $pagination['last']) {
-					self::$content .= '<h3>' . $value['title'] . '</h3><h4>' . date('d/m/Y - H:i', $value['date']) . '</h4>' . $value['content'];
+					self::$content .=
+						'<h3>' . $this->getData($this->getUrl(1), $this->getUrl(1), 'title') . '</h3>' .
+						'<h4>' . date('d/m/Y - H:i', $value) . '</h4>' .
+						$this->getData($this->getUrl(1), $this->getUrl(1), 'content');
 					if($i === $pagination['last'] - 1) {
 						break;
 					}

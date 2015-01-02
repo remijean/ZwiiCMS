@@ -25,9 +25,7 @@ class contactAdm extends core
 	public function index()
 	{
 		if($this->getPost('submit')) {
-			$this->setData('modules', $this->getUrl(1), [
-				'mail' => $this->getPost('mail', helpers::EMAIL)
-			]);
+			$this->setData($this->getUrl(1), 'mail', $this->getPost('mail', helpers::EMAIL));
 			$this->saveData();
 			$this->setNotification('Configuration du module enregistrée avec succès !');
 			helpers::redirect($this->getUrl());
@@ -63,7 +61,7 @@ class contactMod extends core
 	{
 		// Envoi du mail
 		if($this->getPost('submit')) {
-			$mail = $this->getData('modules', $this->getUrl(0), 'contact_mail');
+			$mail = $this->getData($this->getUrl(0), 'mail');
 			$n = preg_match("#@(hotmail|live|msn|outlook).[a-z]{2,4}$#", $mail) ? "\n" : "\r\n";
 			$boundary = '-----=' . md5(rand());
 			$html = '<html><head></head><body>' . $this->getPost('message', helpers::STRING) . '</body></html>';
