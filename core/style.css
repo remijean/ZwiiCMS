@@ -140,6 +140,21 @@ hr {
 	border-top: 1px solid #DDD;
 }
 
+/* Égalisation des margins */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+hr,
+ul,
+ol,
+form {
+	margin: 15px 0;
+}
+
 /**
  * Inputs génériques
  */

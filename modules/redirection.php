@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class redirectionConfig extends core
+class redirectionAdm extends core
 {
 	public static $name = 'URL de redirection';
 
@@ -26,7 +26,7 @@ class redirectionConfig extends core
 	{
 		if($this->getPost('submit')) {
 			$this->setData('modules', $this->getUrl(1), [
-				'url' => $this->getPost('url', helpers::EMAIL)
+				'url' => $this->getPost('url', helpers::URL)
 			]);
 			$this->saveData();
 			$this->setNotification('Configuration du module enregistrée avec succès !');
@@ -57,11 +57,11 @@ class redirectionConfig extends core
 	}
 }
 
-class redirectionPublic extends core
+class redirectionMod extends core
 {
 	public function index()
 	{
-		$url = $this->getData('modules', $this->getUrl(0), 'redirectionUrl');
+		$url = $this->getData('modules', $this->getUrl(0), 'url');
 		if($url) {
 			helpers::redirect($url, false);
 		}

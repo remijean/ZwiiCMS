@@ -31,7 +31,7 @@ class core
 	public static $content = false;
 	public static $views = [];
 
-	const VERSION = '0.6.1';
+	const VERSION = '0.6.2';
 
 	public function __construct()
 	{
@@ -45,15 +45,19 @@ class core
 	}
 
 	/**
-	 * Accède au contenu du tableau de données
+	 * Accède aux données du tableau de données
 	 * @param mixed $key1 Clé de niveau 1
 	 * @param mixed $key2 Clé de niveau 2
 	 * @param mixed $key3 Clé de niveau 3
 	 * @param mixed $key4 Clé de niveau 4
+	 * @param mixed $key5 Clé de niveau 5
 	 * @return mixed Contenu du tableau de données
 	 */
-	public function getData($key1 = null, $key2 = null, $key3 = null, $key4 = null)
+	public function getData($key1 = null, $key2 = null, $key3 = null, $key4 = null, $key5 = null)
 	{
+		if($key5 !== null) {
+			return empty($this->data[$key1][$key2][$key3][$key4][$key5]) ? false : $this->data[$key1][$key2][$key3][$key4][$key5];
+		}
 		if($key4 !== null) {
 			return empty($this->data[$key1][$key2][$key3][$key4]) ? false : $this->data[$key1][$key2][$key3][$key4];
 		}
@@ -77,10 +81,14 @@ class core
 	 * @param string $key2 Clé de niveau 2
 	 * @param string $key3 Clé de niveau 3
 	 * @param string $key4 Clé de niveau 4
+	 * @param string $key5 Clé de niveau 5
 	 */
-	public function setData($key1, $key2, $key3 = null, $key4 = null)
+	public function setData($key1, $key2, $key3 = null, $key4 = null, $key5 = null)
 	{
-		if($key4 !== null) {
+		if($key5 !== null) {
+			$this->data[$key1][$key2][$key3][$key4] = $key5;
+		}
+		elseif($key4 !== null) {
 			$this->data[$key1][$key2][$key3] = $key4;
 		}
 		elseif($key3 !== null) {
@@ -92,13 +100,19 @@ class core
 	}
 
 	/**
-	 * Supprime une ligne dans le tableau de données
+	 * Supprime des données dans le tableau de données
 	 * @param string $array Tableau cible
-	 * @param mixed $key Clé du tableau
+	 * @param string $key1 Clé de niveau 1
+	 * @param string $key2 Clé de niveau 2
 	 */
-	public function removeData($array, $key)
+	public function removeData($array, $key1, $key2 = null)
 	{
-		unset($this->data[$array][$key]);
+		if($key2 !== null) {
+			unset($this->data[$array][$key1][$key2]);
+		}
+		else {
+			unset($this->data[$array][$key1]);
+		}
 	}
 
 	/**
@@ -118,7 +132,7 @@ class core
 	public function getUrl($key = null)
 	{
 		if($key !== null) {
-			return empty($this->url[$key]) ? false : $this->url[$key];
+			return empty($this->url[$key]) ? false : helpers::filter($this->url[$key], helpers::URL);
 		}
 		else {
 			return implode('/', $this->url);
@@ -230,7 +244,7 @@ class core
 		// Page et module
 		elseif($this->getData('pages', $this->getUrl(0))) {
 			if($this->getData('pages', $this->getUrl(0), 'module')) {
-				$module = $this->getData('pages', $this->getUrl(0), 'module') . 'Public';
+				$module = $this->getData('pages', $this->getUrl(0), 'module') . 'Mod';
 				$module = new $module;
 				$method = in_array($this->getUrl(1), $module::$views) ? $this->getUrl(1) : 'index';
 				$module->$method();
@@ -256,11 +270,9 @@ class core
 	 */
 	public function panel()
 	{
-		// N'affiche rien si l'utilisateur n'est pas connecté
 		if($this->getCookie() !== $this->getData('config', 'password')) {
 			return false;
 		}
-		// Sinon affiche le panneau d'administration
 		else {
 			$panel = '<ul id="panel">';
 			$panel .= '<li><select onchange="$(location).attr(\'href\', $(this).val());">';
@@ -323,25 +335,25 @@ class core
 	 */
 	public function edit()
 	{
-		// Erreur 404
 		if(!$this->getData('pages', $this->getUrl(1))) {
 			return false;
 		}
-		// Enregistre la page
 		elseif($this->getPost('submit')) {
 			$title = $this->getPost('title') ? $this->getPost('title', helpers::STRING) : 'Sans titre';
 			$key = helpers::filter($title, helpers::URL);
-			$key = helpers::increment($key, $this->getData('pages'));
-			$key = helpers::increment($key, self::$modules);
-			$this->removeData('pages', $this->getUrl(1));
-			$this->setData('modules', $key, $this->getData('modules', $this->getUrl(1)));
-			$this->removeData('modules', $this->getUrl(1));
-			$this->removeData('menu', $this->getUrl(1));
-			if($this->getData('config', 'index') === $this->getUrl(1)) {
-				$this->setData('config', 'index', $key);
-			}
-			if($this->getPost('module') !== $this->setData('pages', $this->getUrl(1), 'module')) {
+			if($this->getPost('title', helpers::URL) !== $this->getUrl(1)) {
+				$key = helpers::increment($key, $this->getData('pages'));
+				$key = helpers::increment($key, self::$modules);
+				$this->removeData('pages', $this->getUrl(1));
+				$this->setData('modules', $key, $this->getData('modules', $this->getUrl(1)));
 				$this->removeData('modules', $this->getUrl(1));
+				$this->removeData('menu', $this->getUrl(1));
+				if($this->getData('config', 'index') === $this->getUrl(1)) {
+					$this->setData('config', 'index', $key);
+				}
+			}
+			if($this->getPost('module') !== $this->setData('pages', $key, 'module')) {
+				$this->removeData('modules', $key);
 			}
 			$this->setData('menu', $key, $this->getPost('position', helpers::NUMBER_INT));
 			$this->setData('pages', $key, [
@@ -355,7 +367,6 @@ class core
 			$this->setNotification('Page modifiée avec succès !');
 			helpers::redirect('edit/' . $key);
 		}
-		// Interface d'édition
 		else {
 			$this->setMode(true);
 			self::$title = $this->getData('pages', $this->getUrl(1), 'title');
@@ -391,7 +402,7 @@ class core
 					'col' => 10
 				]) .
 				template::button('config', [
-					'value' => 'Configurer',
+					'value' => 'Administrer',
 					'href' => '?module/' . $this->getUrl(1),
 					'disabled' => $this->getData('pages', $this->getUrl(1), 'module') ? false : true,
 					'col' => 2
@@ -424,12 +435,11 @@ class core
 	 */
 	public function module()
 	{
-		// Erreur 404
 		if(!$this->getData('pages', $this->getUrl(1))) {
 			return false;
 		}
 		else {
-			$module = $this->getData('pages', $this->getUrl(1), 'module') . 'Config';
+			$module = $this->getData('pages', $this->getUrl(1), 'module') . 'Adm';
 			$module = new $module;
 			$method = in_array($this->getUrl(2), $module::$views) ? $this->getUrl(2) : 'index';
 			$module->$method();
@@ -442,15 +452,12 @@ class core
 	 */
 	public function delete()
 	{
-		// Erreur 404
 		if(!$this->getData('pages', $this->getUrl(1))) {
 			return false;
 		}
-		// Erreur page d'accueil
 		elseif($this->getUrl(1) === $this->getData('config', 'index')) {
 			$this->setNotification('Impossible de supprimer la page d\'accueil !');
 		}
-		// Suppression
 		else {
 			$this->removeData('pages', $this->getUrl(1));
 			$this->removeData('modules', $this->getUrl(1));
@@ -477,15 +484,12 @@ class core
 	 */
 	public function mode()
 	{
-		// Redirection vers mode édition dans le module page
 		if($this->getData('pages', $this->getUrl(1))) {
 			$url = 'edit/' . $this->getUrl(1);
 		}
-		// Redirection vers mode public dans le module d'édition
 		elseif(in_array($this->getUrl(1), ['edit', 'module'])) {
 			$url = $this->getUrl(2);
 		}
-		// Switch mode public/édition sans redirection pour les autres modules
 		else {
 			$switch = $this->getMode() ? false : true;
 			$this->setMode($switch);
@@ -499,7 +503,6 @@ class core
 	 */
 	public function config()
 	{
-		// Enregistre la configuration
 		if($this->getPost('submit')) {
 			if($this->getPost('password') AND $this->getPost('password') === $this->getPost('confirm')) {
 				$password = $this->getPost('password', helpers::PASSWORD);
@@ -520,7 +523,6 @@ class core
 			$this->setNotification('Configuration enregistrée avec succès !');
 			helpers::redirect($this->getUrl());
 		}
-		// Interface de configuration
 		else {
 			self::$title = 'Configuration';
 			self::$content =
@@ -585,21 +587,17 @@ class core
 	 */
 	public function login()
 	{
-		// Connexion
 		if($this->getPost('submit')) {
-			// Bon mot de passe
 			if($this->getPost('password', helpers::PASSWORD) === $this->getData('config', 'password')) {
 				$time = $this->getPost('time') ? 0 : time() + 10 * 365 * 24 * 60 * 60;
 				$this->setCookie($this->getPost('password'), $time);
 				helpers::redirect($this->getUrl());
 			}
-			// Mot de passe incorrect
 			else {
 				$this->setNotification('Mot de passe incorrect !');
 				helpers::redirect($this->getUrl());
 			}
 		}
-		// Interface de connexion
 		else {
 			self::$title = 'Connexion';
 			self::$content =
@@ -694,6 +692,22 @@ class helpers
 		return $newKey;
 	}
 
+	public static function pagination($array, $urlCurrent, $urlPagination)
+	{
+		$nbElements = count($array);
+		$nbPage = ceil($nbElements / 10);
+		$currentPage = $urlPagination ? (int) $urlPagination : 1;
+		$firstElement = ($currentPage - 1) * 10;
+		$lastElement = $firstElement + 10;
+		$pages = false;
+		for($i = 1; $i <= $nbPage; $i++)
+		{
+			$pages .= ($i === $currentPage) ? ' ' . $i . ' ' : ' <a href="?' . $urlCurrent . '/' . $i . '">' . $i . '</a> ';
+		}
+
+		return ['first' => $firstElement, 'last' => $lastElement, 'pages' => '<p>Pages : ' . $pages . '</p>'];
+	}
+
 	/**
 	 * Crée une liste des thèmes
 	 * @param mixed $default Valeur par défaut
@@ -729,7 +743,7 @@ class helpers
 		$it = new DirectoryIterator('modules/');
 		foreach($it as $file) {
 			if($file->isFile()) {
-				$module = $file->getBasename('.php') . 'Config';
+				$module = $file->getBasename('.php') . 'Adm';
 				$module = new $module;
 				$modules[$file->getBasename('.php')] = $module::$name;
 			}

@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class newsConfig extends core
+class newsAdm extends core
 {
 	public static $name = 'Gestionnaire de news';
 	public static $views = ['delete', 'edit'];
@@ -29,8 +29,8 @@ class newsConfig extends core
 	public function index()
 	{
 		if($this->getPost('submit')) {
-			$title = $this->getPost('title', helpers::STRING);
-			$key = helpers::increment($title, $this->getData('modules', $this->getUrl(1)));
+			$title = $this->getPost('title') ? $this->getPost('title', helpers::STRING) : 'sans-titre';
+			$key = helpers::increment(helpers::filter($title, helpers::URL), $this->getData('modules', $this->getUrl(1)));
 			$this->setData('modules', $this->getUrl(1), $key, [
 				'title' => $title,
 				'date' => time(),
@@ -41,29 +41,39 @@ class newsConfig extends core
 			helpers::redirect('module/' . $this->getUrl(1));
 		}
 		else {
-			if($this->getData('modules', $this->getUrl(1))) {
+			$news = $this->getData('modules', $this->getUrl(1));
+			if($news) {
 				self::$content = '<h3>Liste des news</h3>';
-				foreach($this->getData('modules', $this->getUrl(1)) as $key => $value) {
-					self::$content .=
-						template::openRow() .
-						template::text('news[]', [
-							'value' => $value['title'],
-							'readonly' => true,
-							'col' => 8
-						]) .
-						template::button('edit[]', [
-							'value' => 'Modifier',
-							'href' => '?' . $this->getUrl() . '/edit/' . $key,
-							'col' => 2
-						]) .
-						template::button('delete[]', [
-							'value' => 'Supprimer',
-							'href' => '?' . $this->getUrl() . '/delete/' . $key,
-							'onclick' => 'return confirm(\'Êtes-vous certain de vouloir supprimer cette news ?\');',
-							'col' => 2
-						]) .
-						template::closeRow();
+				$pagination = helpers::pagination($news, $this->getUrl(0) . '/' . $this->getUrl(1), $this->getUrl(2));
+				$i = 0;
+				foreach($news as $key => $value) {
+					if($i >= $pagination['first'] AND $i < $pagination['last']) {
+						self::$content .=
+							template::openRow() .
+							template::text('news[]', [
+								'value' => $value['title'],
+								'readonly' => true,
+								'col' => 8
+							]) .
+							template::button('edit[]', [
+								'value' => 'Modifier',
+								'href' => '?' . $this->getUrl(0) . '/' . $this->getUrl(1) . '/edit/' . $key,
+								'col' => 2
+							]) .
+							template::button('delete[]', [
+								'value' => 'Supprimer',
+								'href' => '?' . $this->getUrl(0) . '/' . $this->getUrl(1) . '/delete/' . $key,
+								'onclick' => 'return confirm(\'Êtes-vous certain de vouloir supprimer cette news ?\');',
+								'col' => 2
+							]) .
+							template::closeRow();
+						if($i === $pagination['last'] - 1) {
+							break;
+						}
+					}
+					$i++;
 				}
+				self::$content .= $pagination['pages'];
 			}
 			self::$content =
 				'<h3>Nouvelle news</h3>' .
@@ -106,8 +116,12 @@ class newsConfig extends core
 			return false;
 		}
 		elseif($this->getPost('submit')) {
-			$title = $this->getPost('title', helpers::STRING);
-			$key = helpers::increment($title, $this->getData('modules', $this->getUrl(1)));
+			$title = $this->getPost('title') ? $this->getPost('title', helpers::STRING) : 'sans-titre';
+			$key = $this->getData('modules', $this->getUrl(3));
+			if($this->getPost('title', helpers::URL) !== $this->getUrl(3)) {
+				$key = helpers::increment($key, $this->getData('pages'));
+				$this->removeData('modules', $this->getUrl(1), $this->getUrl(3));
+			}
 			$this->setData('modules', $this->getUrl(1), $key, [
 				'title' => $title,
 				'date' => time(),
@@ -152,11 +166,9 @@ class newsConfig extends core
 	 */
 	public function delete()
 	{
-		// Erreur 404
 		if(!$this->getData('modules', $this->getUrl(1), $this->getUrl(3))) {
 			return false;
 		}
-		// Suppression
 		else {
 			$this->removeData('modules', $this->getUrl(1), $this->getUrl(3));
 			$this->saveData();
@@ -166,14 +178,24 @@ class newsConfig extends core
 	}
 }
 
-class newsPublic extends core
+class newsMod extends core
 {
 	public function index()
 	{
-		if($this->getData('modules', $this->getUrl(0))) {
-			foreach($this->getData('modules', $this->getUrl(0)) as $key => $value) {
-				self::$content .= '<h3>' . $value['title'] . '</h3><h4>' . date('d/m/Y - H:i', $value['date']) .'</h4>' . $value['content'];
+		$news = $this->getData('modules', $this->getUrl(0));
+		if($news) {
+			$pagination = helpers::pagination($news, $this->getUrl(0), $this->getUrl(1));
+			$i = 0;
+			foreach($news as $key => $value) {
+				if($i >= $pagination['first'] AND $i < $pagination['last']) {
+					self::$content .= '<h3>' . $value['title'] . '</h3><h4>' . date('d/m/Y - H:i', $value['date']) . '</h4>' . $value['content'];
+					if($i === $pagination['last'] - 1) {
+						break;
+					}
+				}
+				$i++;
 			}
+			self::$content .= $pagination['pages'];
 		}
 	}
 }

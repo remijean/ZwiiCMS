@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class contactConfig extends core
+class contactAdm extends core
 {
 	public static $name = 'Formulaire de contact';
 
@@ -57,7 +57,7 @@ class contactConfig extends core
 	}
 }
 
-class contactPublic extends core
+class contactMod extends core
 {
 	public function index()
 	{

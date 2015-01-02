@@ -6,7 +6,7 @@ if(version_compare(PHP_VERSION, '5.4.0', '<')) {
 
 function autoloader($className)
 {
-	$className = substr($className, 0, -6);
+	$className = substr($className, 0, -3);
 	$classPath = 'modules/' . $className . '.php';
 	if(is_readable($classPath)) {
 		require $classPath;
