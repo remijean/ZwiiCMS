@@ -21,59 +21,148 @@
 class newsConfig extends core
 {
 	public static $name = 'Gestionnaire de news';
+	public static $views = ['delete', 'edit'];
 
+	/**
+	 * MODULE : Liste des news
+	 */
 	public function index()
 	{
-		if($this->getData('modules', $this->getUrl(1))) {
-			foreach($this->getData('modules', $this->getUrl(1)) as $value) {
-				self::$content =
-					template::openDiv() .
-					template::openDiv('col8') .
-					$value['newsTitle'] .
-					template::closeDiv() .
-					template::button('newsToggle[]', [
-						'value' => 'Modifier',
-						'col' => 2
-					]) .
-					template::checkbox('newsDelete[' . $value . ']', true, 'supprimer', [
-						'col' => 2
-					]) .
-					template::closeDiv();
-			}
+		if($this->getPost('submit')) {
+			$title = $this->getPost('title', helpers::STRING);
+			$key = helpers::increment($title, $this->getData('modules', $this->getUrl(1)));
+			$this->setData('modules', $this->getUrl(1), $key, [
+				'title' => $title,
+				'date' => time(),
+				'content' => $this->getPost('content'),
+			]);
+			$this->saveData();
+			$this->setNotification('Nouvelle news créée avec succès !');
+			helpers::redirect('module/' . $this->getUrl(1));
 		}
 		else {
-			self::$content = '<p>Aucune news</p>';
+			if($this->getData('modules', $this->getUrl(1))) {
+				self::$content = '<h3>Liste des news</h3>';
+				foreach($this->getData('modules', $this->getUrl(1)) as $key => $value) {
+					self::$content .=
+						template::openRow() .
+						template::text('news[]', [
+							'value' => $value['title'],
+							'readonly' => true,
+							'col' => 8
+						]) .
+						template::button('edit[]', [
+							'value' => 'Modifier',
+							'href' => '?' . $this->getUrl() . '/edit/' . $key,
+							'col' => 2
+						]) .
+						template::button('delete[]', [
+							'value' => 'Supprimer',
+							'href' => '?' . $this->getUrl() . '/delete/' . $key,
+							'onclick' => 'return confirm(\'Êtes-vous certain de vouloir supprimer cette news ?\');',
+							'col' => 2
+						]) .
+						template::closeRow();
+				}
+			}
+			self::$content =
+				'<h3>Nouvelle news</h3>' .
+				template::openForm() .
+				template::openRow() .
+				template::text('title', [
+					'label' => 'Titre de la news'
+				]) .
+				template::closeRow() .
+				template::openRow() .
+				template::textarea('content', [
+					'class' => 'editor'
+				]) .
+				template::closeRow() .
+				template::openRow() .
+				template::submit('submit', [
+					'value' => 'Créer',
+					'col' => 2,
+					'offset' => 10
+				]) .
+				template::closeRow() .
+				template::closeForm() .
+				self::$content .
+				template::openRow() .
+				template::button('back', [
+					'value' => 'Retour',
+					'href' => '?edit/' . $this->getUrl(1),
+					'col' => 2
+				]) .
+				template::closeRow();
 		}
-		self::$content =
-			template::openDiv() .
-			template::button('newsCreate[]', [
-				'value' => '+',
-				'onclick' => '$(\'div.create\').slideToggle();',
-				'col' => 1,
-				'offset' => 11
-			]) .
-			template::closeDiv() .
-			template::openDiv('create none') .
-			template::openDiv() .
-			template::text('newsTitle', [
-				'label' => 'Titre de la news'
-			]) .
-			template::closeDiv() .
-			template::openDiv() .
-			template::textarea('newsContent', [
-				'class' => 'editor'
-			]) .
-			template::closeDiv() .
-			template::closeDiv() .
-			'<h3>Liste des news</h3>' .
-			self::$content;
 	}
 
-	public function create() {
-		$module = $this->getData('modules', $this->getUrl(1)) ? $this->getData('modules', $this->getUrl(1)) : [];
-		$key = helpers::increment($this->getPost('newsTitle'), $module);
-		$this->saveData();
-		echo $key;
+	/**
+	 * MODULE : Édition d'une news
+	 */
+	public function edit()
+	{
+		if(!$this->getData('modules', $this->getUrl(1), $this->getUrl(3))) {
+			return false;
+		}
+		elseif($this->getPost('submit')) {
+			$title = $this->getPost('title', helpers::STRING);
+			$key = helpers::increment($title, $this->getData('modules', $this->getUrl(1)));
+			$this->setData('modules', $this->getUrl(1), $key, [
+				'title' => $title,
+				'date' => time(),
+				'content' => $this->getPost('content'),
+			]);
+			$this->saveData();
+			$this->setNotification('Nouvelle news créée avec succès !');
+			helpers::redirect('module/' . $this->getUrl(1));
+		}
+		else {
+			self::$content =
+				template::openForm() .
+				template::openRow() .
+				template::text('title', [
+					'label' => 'Titre de la news',
+					'value' => $this->getData('modules', $this->getUrl(1), $this->getUrl(3), 'title')
+				]) .
+				template::closeRow() .
+				template::openRow() .
+				template::textarea('content', [
+					'class' => 'editor',
+					'value' => $this->getData('modules', $this->getUrl(1), $this->getUrl(3), 'content')
+				]) .
+				template::closeRow() .
+				template::openRow() .
+				template::button('back', [
+					'value' => 'Retour',
+					'href' => '?module/' . $this->getUrl(1),
+					'col' => 2
+				]) .
+				template::submit('submit', [
+					'col' => 2,
+					'offset' => 8
+				]) .
+				template::closeRow();
+				template::closeForm();
+		}
+	}
+
+	/**
+	 * MODULE : Suppression d'une news
+	 */
+	public function delete()
+	{
+		// Erreur 404
+		if(!$this->getData('modules', $this->getUrl(1), $this->getUrl(3))) {
+			return false;
+		}
+		// Suppression
+		else {
+			$this->removeData('modules', $this->getUrl(1), $this->getUrl(3));
+			$this->saveData();
+			$this->setNotification('News supprimée avec succès !');
+		}
+		helpers::redirect('module/' . $this->getUrl(1));
 	}
 }
 
@@ -81,63 +170,10 @@ class newsPublic extends core
 {
 	public function index()
 	{
-		// Envoi du mail
-		if($this->getPost('submit')) {
-			$mail = $this->getData('modules', $this->getUrl(0), 'contact_mail');
-			$n = preg_match("#@(hotmail|live|msn|outlook).[a-z]{2,4}$#", $mail) ? "\n" : "\r\n";
-			$boundary = '-----=' . md5(rand());
-			$html = '<html><head></head><body>' . $this->getPost('message', helpers::STRING) . '</body></html>';
-			$txt = strip_tags($html);
-			$header = 'From: ' . $this->getPost('mail', helpers::EMAIL) . $n;
-			$header .= 'Reply-To: ' . $mail . $n;
-			$header .= 'MIME-Version: 1.0' . $n;
-			$header .= 'Content-Type: multipart/alternative;' . $n . ' boundary="' . $boundary . '"' . $n;
-			$message = $n . $boundary . $n;
-			$message .= 'Content-Type: text/plain; charset="utf-8"' . $n;
-			$message .= 'Content-Transfer-Encoding: 8bit' . $n;
-			$message .= $n . $txt . $n;
-			$message .= $n . '--' . $boundary . $n;
-			$message .= 'Content-Type: text/html; charset="utf-8"' . $n;
-			$message .= 'Content-Transfer-Encoding: 8bit' . $n;
-			$message .= $n . $html . $n;
-			$message .= $n . '--' . $boundary . '--' . $n;
-			$message .= $n . '--' . $boundary . '--' . $n;
-			if($mail AND @mail($mail, $this->getPost('subject', helpers::STRING), $message, $header)) {
-				$this->setNotification('Mail envoyé avec succès !');
+		if($this->getData('modules', $this->getUrl(0))) {
+			foreach($this->getData('modules', $this->getUrl(0)) as $key => $value) {
+				self::$content .= '<h3>' . $value['title'] . '</h3><h4>' . date('d/m/Y - H:i', $value['date']) .'</h4>' . $value['content'];
 			}
-			else {
-				$this->setNotification('Impossible d\'envoyer le mail !');
-			}
-			helpers::redirect($this->getUrl());
-		}
-		// Interface d'écriture de mail
-		else {
-			self::$content =
-				template::openForm() .
-				template::openDiv() .
-				template::text('mail', [
-					'label' => 'Adresse mail',
-					'col' => 6
-				]) .
-				template::closeDiv() .
-				template::openDiv() .
-				template::text('subject', [
-					'label' => 'Sujet',
-					'col' => 6
-				]) .
-				template::closeDiv() .
-				template::openDiv() .
-				template::textarea('message', [
-					'label' => 'Sujet',
-					'col' => 7
-				]) .
-				template::closeDiv() .
-				template::openDiv() .
-				template::submit('submit', [
-					'col' => 2
-				]) .
-				template::closeDiv() .
-				template::closeForm();
 		}
 	}
 }

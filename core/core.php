@@ -31,7 +31,7 @@ class core
 	public static $content = false;
 	public static $views = [];
 
-	const VERSION = '0.6.0';
+	const VERSION = '0.6.1';
 
 	public function __construct()
 	{
@@ -46,21 +46,25 @@ class core
 
 	/**
 	 * Accède au contenu du tableau de données
-	 * @param mixed $array Tableau cible
-	 * @param mixed $key1 Clé de niveau 1 du tableau
-	 * @param mixed $key2 Clé de niveau 2 du tableau
+	 * @param mixed $key1 Clé de niveau 1
+	 * @param mixed $key2 Clé de niveau 2
+	 * @param mixed $key3 Clé de niveau 3
+	 * @param mixed $key4 Clé de niveau 4
 	 * @return mixed Contenu du tableau de données
 	 */
-	public function getData($array = null, $key1 = null, $key2 = null)
+	public function getData($key1 = null, $key2 = null, $key3 = null, $key4 = null)
 	{
-		if($key2 !== null) {
-			return empty($this->data[$array][$key1][$key2]) ? false : $this->data[$array][$key1][$key2];
+		if($key4 !== null) {
+			return empty($this->data[$key1][$key2][$key3][$key4]) ? false : $this->data[$key1][$key2][$key3][$key4];
+		}
+		elseif($key3 !== null) {
+			return empty($this->data[$key1][$key2][$key3]) ? false : $this->data[$key1][$key2][$key3];
+		}
+		elseif($key2 !== null) {
+			return empty($this->data[$key1][$key2]) ? false : $this->data[$key1][$key2];
 		}
 		elseif($key1 !== null) {
-			return empty($this->data[$array][$key1]) ? false : $this->data[$array][$key1];
-		}
-		elseif($array !== null) {
-			return empty($this->data[$array]) ? false : $this->data[$array];
+			return empty($this->data[$key1]) ? false : $this->data[$key1];
 		}
 		else {
 			return $this->data;
@@ -69,12 +73,22 @@ class core
 
 	/**
 	 * Insert des données dans le tableau de données
-	 * @param string $key Clé du tableau de donnée
-	 * @param array $array Tableau à enregistrer
+	 * @param string $key1 Clé de niveau 1
+	 * @param string $key2 Clé de niveau 2
+	 * @param string $key3 Clé de niveau 3
+	 * @param string $key4 Clé de niveau 4
 	 */
-	public function setData($key, $array)
+	public function setData($key1, $key2, $key3 = null, $key4 = null)
 	{
-		$this->data[$key] = $array;
+		if($key4 !== null) {
+			$this->data[$key1][$key2][$key3] = $key4;
+		}
+		elseif($key3 !== null) {
+			$this->data[$key1][$key2] = $key3;
+		}
+		else {
+			$this->data[$key1] = $key2;
+		}
 	}
 
 	/**
@@ -223,7 +237,7 @@ class core
 			}
 			$theme = $this->getData('pages', $this->getUrl(0), 'theme');
 			if($theme) {
-				$this->setData('config', ['theme' => $theme]);
+				$this->setData('config', 'theme', $theme);
 			}
 			$this->setMode(false);
 			self::$title = $this->getData('pages', $this->getUrl(0), 'title');
@@ -291,16 +305,14 @@ class core
 	public function create()
 	{
 		$key = helpers::increment('nouvelle-page', $this->getData('pages'));
-		$this->setData('pages', [
-			$key => [
-				'title' => 'Nouvelle page',
-				'position' => false,
-				'blank' => false,
-				'module' => false,
-				'content' => 'Contenu de la page.'
-			]
+		$this->setData('pages', $key, [
+			'title' => 'Nouvelle page',
+			'position' => false,
+			'blank' => false,
+			'module' => false,
+			'content' => 'Contenu de la page.'
 		]);
-		$this->setData('menu', [$key => '0']);
+		$this->setData('menu', $key, '0');
 		$this->saveData();
 		$this->setNotification('Nouvelle page créée avec succès !');
 		helpers::redirect('edit/' . $key);
@@ -317,32 +329,27 @@ class core
 		}
 		// Enregistre la page
 		elseif($this->getPost('submit')) {
-			if($this->getPost('title', helpers::URL) === $this->getUrl(1)) {
-				$title = $this->getPost('title');
-				$key = helpers::filter($title, helpers::URL);
+			$title = $this->getPost('title') ? $this->getPost('title', helpers::STRING) : 'Sans titre';
+			$key = helpers::filter($title, helpers::URL);
+			$key = helpers::increment($key, $this->getData('pages'));
+			$key = helpers::increment($key, self::$modules);
+			$this->removeData('pages', $this->getUrl(1));
+			$this->setData('modules', $key, $this->getData('modules', $this->getUrl(1)));
+			$this->removeData('modules', $this->getUrl(1));
+			$this->removeData('menu', $this->getUrl(1));
+			if($this->getData('config', 'index') === $this->getUrl(1)) {
+				$this->setData('config', 'index', $key);
 			}
-			else {
-				$title = $this->getPost('title', helpers::STRING) ? $this->getPost('title') : 'Sans titre';
-				$key = helpers::filter($title, helpers::URL);
-				$key = helpers::increment($key, $this->getData('pages'));
-				$key = helpers::increment($key, self::$modules);
-				$this->removeData('pages', $this->getUrl(1));
-				$this->setData('modules', [$key => $this->getData('modules', $this->getUrl(1))]);
+			if($this->getPost('module') !== $this->setData('pages', $this->getUrl(1), 'module')) {
 				$this->removeData('modules', $this->getUrl(1));
-				$this->removeData('menu', $this->getUrl(1));
-				if($this->getData('config', 'index') === $this->getUrl(1)) {
-					$this->setData('config', ['index' => $key]);
-				}
 			}
-			$this->setData('menu', [$key => $this->getPost('position', helpers::NUMBER_INT)]);
-			$this->setData('pages', [
-				$key => [
-					'title' => helpers::filter($title, helpers::STRING),
-					'blank' => $this->getPost('blank', helpers::BOOLEAN),
-					'theme' => $this->getPost('theme', helpers::STRING),
-					'module' => $this->getPost('module', helpers::STRING),
-					'content' => $this->getPost('content')
-				]
+			$this->setData('menu', $key, $this->getPost('position', helpers::NUMBER_INT));
+			$this->setData('pages', $key, [
+				'title' => $title,
+				'blank' => $this->getPost('blank', helpers::BOOLEAN),
+				'theme' => $this->getPost('theme', helpers::STRING),
+				'module' => $this->getPost('module', helpers::STRING),
+				'content' => $this->getPost('content')
 			]);
 			$this->saveData();
 			$this->setNotification('Page modifiée avec succès !');
@@ -354,30 +361,30 @@ class core
 			self::$title = $this->getData('pages', $this->getUrl(1), 'title');
 			self::$content =
 				template::openForm() .
-				template::openDiv() .
+				template::openRow() .
 				template::text('title', [
 					'label' => 'Titre de la page',
 					'value' => $this->getData('pages', $this->getUrl(1), 'title')
 				]) .
-				template::closeDiv() .
-				template::openDiv() .
+				template::closeRow() .
+				template::openRow() .
 				template::text('position', [
 					'label' => 'Position dans le menu',
 					'value' => $this->getData('menu', $this->getUrl(1))
 				]) .
-				template::closeDiv() .
-				template::openDiv() .
+				template::closeRow() .
+				template::openRow() .
 				template::textarea('content', [
 					'value' => $this->getData('pages', $this->getUrl(1), 'content'),
 					'class' => 'editor'
 				]) .
-				template::closeDiv() .
-				template::openDiv() .
+				template::closeRow() .
+				template::openRow() .
 				template::checkbox('blank', true, 'Ouvrir dans un nouvel onglet en mode public', [
 					'checked' => $this->getData('pages', $this->getUrl(1), 'blank')
 				]) .
-				template::closeDiv() .
-				template::openDiv() .
+				template::closeRow() .
+				template::openRow() .
 				template::select('module', helpers::listModules('Aucun module'), [
 					'label' => 'Inclure un module <small>(en cas de changement de module, les données rattachées au module précédant seront supprimées)</small>',
 					'selected' => $this->getData('pages', $this->getUrl(1), 'module'),
@@ -389,14 +396,14 @@ class core
 					'disabled' => $this->getData('pages', $this->getUrl(1), 'module') ? false : true,
 					'col' => 2
 				]) .
-				template::closeDiv() .
-				template::openDiv() .
+				template::closeRow() .
+				template::openRow() .
 				template::select('theme', helpers::listThemes('Thème par défaut'), [
 					'label' => 'Thème en mode public',
 					'selected' => $this->getData('pages', $this->getUrl(1), 'theme')
 				]) .
-				template::closeDiv() .
-				template::openDiv() .
+				template::closeRow() .
+				template::openRow() .
 				template::button('delete', [
 					'value' => 'Supprimer',
 					'href' => '?delete/' . $this->getUrl(1),
@@ -407,7 +414,7 @@ class core
 				template::submit('submit', [
 					'col' => 2
 				]) .
-				template::closeDiv() .
+				template::closeRow() .
 				template::closeForm();
 		}
 	}
@@ -518,19 +525,19 @@ class core
 			self::$title = 'Configuration';
 			self::$content =
 				template::openForm() .
-				template::openDiv() .
+				template::openRow() .
 				template::text('title', [
 					'label' => 'Titre du site',
 					'value' => $this->getData('config', 'title')
 				]) .
-				template::closeDiv() .
-				template::openDiv() .
+				template::closeRow() .
+				template::openRow() .
 				template::textarea('description', [
 					'label' => 'Description du site',
 					'value' => $this->getData('config', 'description')
 				]) .
-				template::closeDiv() .
-				template::openDiv() .
+				template::closeRow() .
+				template::openRow() .
 				template::text('password', [
 					'label' => 'Nouveau mot de passe',
 					'col' => 6
@@ -539,26 +546,26 @@ class core
 					'label' => 'Confirmation du mot de passe',
 					'col' => 6
 				]) .
-				template::closeDiv() .
-				template::openDiv() .
+				template::closeRow() .
+				template::openRow() .
 				template::select('index', $this->getData('pages'), [
 					'label' => 'Page d\'accueil',
 					'selected' => $this->getData('config', 'index')
 				]) .
-				template::closeDiv() .
-				template::openDiv() .
+				template::closeRow() .
+				template::openRow() .
 				template::select('theme', helpers::listThemes(), [
 					'label' => 'Thème par défaut',
 					'selected' => $this->getData('config', 'theme')
 				]) .
-				template::closeDiv() .
-				template::openDiv() .
+				template::closeRow() .
+				template::openRow() .
 				template::text('keywords', [
 					'label' => 'Mots clés du site',
 					'value' => $this->getData('config', 'keywords')
 				]) .
-				template::closeDiv() .
-				template::openDiv() .
+				template::closeRow() .
+				template::openRow() .
 				template::button('export', [
 					'value' => 'Exporter',
 					'href' => '?export',
@@ -568,7 +575,7 @@ class core
 				template::submit('submit', [
 					'col' => 2
 				]) .
-				template::closeDiv() .
+				template::closeRow() .
 				template::closeForm();
 		}
 	}
@@ -597,20 +604,20 @@ class core
 			self::$title = 'Connexion';
 			self::$content =
 				template::openForm() .
-				template::openDiv() .
+				template::openRow() .
 				template::password('password', [
 					'col' => 4
 				]) .
-				template::closeDiv() .
-				template::openDiv() .
+				template::closeRow() .
+				template::openRow() .
 				template::checkbox('time', true, 'Me connecter automatiquement lors de mes prochaines visites.').
-				template::closeDiv() .
-				template::openDiv() .
+				template::closeRow() .
+				template::openRow() .
 				template::submit('submit', [
 					'value' => 'Me connecter',
 					'col' => 2
 				]) .
-				template::closeDiv() .
+				template::closeRow() .
 				template::closeForm();
 		}
 	}
@@ -753,7 +760,7 @@ class template
 	 */
 	private static function sprintAttributes(array $array = [], array $exclude = [])
 	{
-		$exclude = array_merge(['col', 'offset', 'label', 'disabled'], $exclude);
+		$exclude = array_merge(['col', 'offset', 'label', 'readonly', 'disabled'], $exclude);
 		$attributes = [];
 		foreach($array as $key => $value) {
 			if($value AND !in_array($key, $exclude)) {
@@ -765,20 +772,19 @@ class template
 	}
 
 	/**
-	 * Ouvre une div
-	 * @param string $class La ou les classes de la div
+	 * Ouvre une ligne
 	 * @return string La balise
 	 */
-	public static function openDiv($class = 'row')
+	public static function openRow()
 	{
-		return '<div class="' . $class . '">';
+		return '<div class="row">';
 	}
 
 	/**
-	 * Ferme une div
+	 * Ferme une ligne
 	 * @return string La balise
 	 */
-	public static function closeDiv()
+	public static function closeRow()
 	{
 		return '</div>';
 	}
@@ -848,6 +854,7 @@ class template
 			'value' => '',
 			'placeholder' => '',
 			'disabled' => false,
+			'readonly' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
@@ -862,9 +869,10 @@ class template
 		}
 		// <input>
 		$html .= sprintf(
-			'<input type="text" %s%s>',
+			'<input type="text" %s%s%s>',
 			self::sprintAttributes($attributes),
-			$attributes['disabled'] ? ' disabled' : false
+			$attributes['disabled'] ? ' disabled' : false,
+			$attributes['readonly'] ? ' readonly' : false
 		);
 		// </div>
 		$html .= '</div>';
@@ -885,6 +893,7 @@ class template
 			'name' => $nameId,
 			'value' => '',
 			'disabled' => false,
+			'readonly' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
@@ -899,9 +908,10 @@ class template
 		}
 		// <input>
 		$html .= sprintf(
-			'<textarea %s%s>%s</textarea>',
+			'<textarea %s%s%s>%s</textarea>',
 			self::sprintAttributes($attributes, ['value']),
 			$attributes['disabled'] ? ' disabled' : false,
+			$attributes['readonly'] ? ' readonly' : false,
 			$attributes['value']
 		);
 		// </div>
@@ -923,6 +933,7 @@ class template
 			'name' => $nameId,
 			'placeholder' => '',
 			'disabled' => false,
+			'readonly' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
@@ -937,9 +948,10 @@ class template
 		}
 		// <input>
 		$html .= sprintf(
-			'<input type="password" %s%s>',
+			'<input type="password" %s%s%s>',
 			self::sprintAttributes($attributes),
-			$attributes['disabled'] ? ' disabled' : false
+			$attributes['disabled'] ? ' disabled' : false,
+			$attributes['readonly'] ? ' readonly' : false
 		);
 		// </div>
 		$html .= '</div>';

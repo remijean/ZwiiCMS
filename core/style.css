@@ -283,10 +283,10 @@ input[type="radio"]:not(:checked):active + label::before {
 div.row {
 	margin: 0 -10px;
 }
-div.row:first-child {
+div.row:first-of-type {
 	margin-top: -10px;
 }
-div.row:last-child {
+div.row:last-of-type {
 	margin-bottom: -10px;
 }
 div.col1,

@@ -25,21 +25,23 @@ class contactConfig extends core
 	public function index()
 	{
 		if($this->getPost('submit')) {
-			self::$content = 'test';
 			$this->setData('modules', $this->getUrl(1), [
 				'mail' => $this->getPost('mail', helpers::EMAIL)
 			]);
+			$this->saveData();
+			$this->setNotification('Configuration du module enregistrée avec succès !');
+			helpers::redirect($this->getUrl());
 		}
 		else {
 			self::$content =
 				template::openForm() .
-				template::openDiv() .
-				template::text('contact_mail', [
+				template::openRow() .
+				template::text('mail', [
 					'label' => 'Adresse de réception des mails',
-					'value' => $this->getData('modules', $this->getUrl(1), 'contact_mail')
+					'value' => $this->getData('modules', $this->getUrl(1), 'mail')
 				]) .
-				template::closeDiv() .
-				template::openDiv() .
+				template::closeRow() .
+				template::openRow() .
 				template::button('back', [
 					'value' => 'Retour',
 					'href' => '?edit/' . $this->getUrl(1),
@@ -49,7 +51,7 @@ class contactConfig extends core
 					'col' => 2,
 					'offset' => 8
 				]) .
-				template::closeDiv() .
+				template::closeRow() .
 				template::closeForm();
 		}
 	}
@@ -92,29 +94,29 @@ class contactPublic extends core
 		else {
 			self::$content =
 				template::openForm() .
-				template::openDiv() .
+				template::openRow() .
 				template::text('mail', [
 					'label' => 'Adresse mail',
 					'col' => 6
 				]) .
-				template::closeDiv() .
-				template::openDiv() .
+				template::closeRow() .
+				template::openRow() .
 				template::text('subject', [
 					'label' => 'Sujet',
 					'col' => 6
 				]) .
-				template::closeDiv() .
-				template::openDiv() .
+				template::closeRow() .
+				template::openRow() .
 				template::textarea('message', [
 					'label' => 'Sujet',
 					'col' => 7
 				]) .
-				template::closeDiv() .
-				template::openDiv() .
+				template::closeRow() .
+				template::openRow() .
 				template::submit('submit', [
 					'col' => 2
 				]) .
-				template::closeDiv() .
+				template::closeRow() .
 				template::closeForm();
 		}
 	}
