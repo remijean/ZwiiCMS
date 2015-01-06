@@ -1,21 +1,15 @@
 <?php
 
 /**
- * Copyright (C) 2008-2015, Rémi Jean (remi-jean@outlook.com)
- * <http://remijean.github.io/ZwiiCMS/>
+ * This file is part of ZwiiCMS.
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * For full copyright and license information, please see the LICENSE
+ * file that was distributed with this source code.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General License for more details.
- *
- * You should have received a copy of the GNU General License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * @author Rémi Jean <remi-jean@outlook.com>
+ * @copyright Copyright (C) 2008-2015, Rémi Jean
+ * @license GNU General Public License, version 3
+ * @link http://zwiicms.com/
  */
 
 session_start();
@@ -31,13 +25,11 @@ class core
 	public static $content = false;
 	public static $views = [];
 
-	const VERSION = '0.6.3';
+	const VERSION = '0.6.4';
 
 	public function __construct()
 	{
 		$this->data = json_decode(file_get_contents('core/data.json'), true);
-		$this->sortData('pages', 'ksort');
-		$this->sortData('menu', 'asort');
 		$this->url = empty($_SERVER['QUERY_STRING']) ? $this->getData('config', 'index') : $_SERVER['QUERY_STRING'];
 		$this->url = helpers::filter($this->url, helpers::URL);
 		$this->url = explode('/', $this->url);
@@ -49,19 +41,11 @@ class core
 	 * @param mixed $key1 Clé de niveau 1
 	 * @param mixed $key2 Clé de niveau 2
 	 * @param mixed $key3 Clé de niveau 3
-	 * @param mixed $key4 Clé de niveau 4
-	 * @param mixed $key5 Clé de niveau 5
-	 * @return mixed Contenu du tableau de données
+	 * @return mixed Données du tableau de données
 	 */
-	public function getData($key1 = null, $key2 = null, $key3 = null, $key4 = null, $key5 = null)
+	public function getData($key1 = null, $key2 = null, $key3 = null)
 	{
-		if($key5 !== null) {
-			return empty($this->data[$key1][$key2][$key3][$key4][$key5]) ? false : $this->data[$key1][$key2][$key3][$key4][$key5];
-		}
-		elseif($key4 !== null) {
-			return empty($this->data[$key1][$key2][$key3][$key4]) ? false : $this->data[$key1][$key2][$key3][$key4];
-		}
-		elseif($key3 !== null) {
+		if($key3 !== null) {
 			return empty($this->data[$key1][$key2][$key3]) ? false : $this->data[$key1][$key2][$key3];
 		}
 		elseif($key2 !== null) {
@@ -80,18 +64,10 @@ class core
 	 * @param string $key1 Clé de niveau 1
 	 * @param string $key2 Clé de niveau 2
 	 * @param string $key3 Clé de niveau 3
-	 * @param string $key4 Clé de niveau 4
-	 * @param string $key5 Clé de niveau 5
 	 */
-	public function setData($key1, $key2, $key3 = null, $key4 = null, $key5 = null)
+	public function setData($key1, $key2, $key3 = null)
 	{
-		if($key5 !== null) {
-			$this->data[$key1][$key2][$key3][$key4] = $key5;
-		}
-		elseif($key4 !== null) {
-			$this->data[$key1][$key2][$key3] = $key4;
-		}
-		elseif($key3 !== null) {
+		if($key3 !== null) {
 			$this->data[$key1][$key2] = $key3;
 		}
 		else {
@@ -104,18 +80,10 @@ class core
 	 * @param string $key1 Clé de niveau 1
 	 * @param string $key2 Clé de niveau 2
 	 * @param string $key3 Clé de niveau 3
-	 * @param string $key4 Clé de niveau 4
-	 * @param string $key5 Clé de niveau 5
 	 */
-	public function removeData($key1, $key2 = null, $key3 = null, $key4 = null, $key5 = null)
+	public function removeData($key1, $key2 = null, $key3 = null)
 	{
-		if($key5 !== null) {
-			unset($this->data[$key1][$key2][$key3][$key4][$key5]);
-		}
-		elseif($key4 !== null) {
-			unset($this->data[$key1][$key2][$key3][$key4]);
-		}
-		elseif($key3 !== null) {
+		if($key3 !== null) {
 			unset($this->data[$key1][$key2][$key3]);
 		}
 		elseif($key2 !== null) {
@@ -127,37 +95,8 @@ class core
 	}
 
 	/**
-	 * Tri des données dans le tableau de données
-	 * @param string $key Clé du tableau
-	 * @param string $sort Ordre de tri
-	 */
-	public function sortData($key, $sort = 'sort')
-	{
-		switch($sort) {
-			case 'sort':
-				sort($this->data[$key]);
-				break;
-			case 'rsort':
-				rsort($this->data[$key]);
-				break;
-			case 'kort':
-				ksort($this->data[$key]);
-				break;
-			case 'krsort':
-				krsort($this->data[$key]);
-				break;
-			case 'asort':
-				asort($this->data[$key]);
-				break;
-			case 'arsort':
-				arsort($this->data[$key]);
-				break;
-		}
-	}
-
-	/**
-	 * Enregistre les données
-	 * @return mixed Nombre de bytes du fichier ou false en cas d'erreur
+	 * Enregistre le tableau de données
+	 * @return mixed Nombre de bytes du tableau de données ou false en cas d'erreur
 	 */
 	public function saveData()
 	{
@@ -165,9 +104,9 @@ class core
 	}
 
 	/**
-	 * Accède à une valeur de l'URL ou à l'URL complète sous forme de chaîne
+	 * Accède à une valeur de l'URL ou à l'URL complète
 	 * @param int $key Clé de l'URL
-	 * @return bool|string Valeur de l'URL|URL complète
+	 * @return bool|string Valeur de l'URL
 	 */
 	public function getUrl($key = null)
 	{
@@ -208,7 +147,7 @@ class core
 
 	/**
 	 * Accède à la notification
-	 * @return bool|string Retourne notification mise en forme si elle existe, sinon false
+	 * @return bool|string Notification mise en forme ou false si elle n'existe pas
 	 */
 	public function getNotification()
 	{
@@ -233,7 +172,7 @@ class core
 
 	/**
 	 * Accède au mode d'affichage
-	 * @return string|bool Retourne "edit/" si mode édition, false si mode public
+	 * @return string|bool Retourne "edit/" si le mode édition est activé, sinon retourne false
 	 */
 	public function getMode()
 	{
@@ -242,7 +181,7 @@ class core
 
 	/**
 	 * Modifie le mode d'affichage
-	 * @param bool $mode True mode édition, false mode public
+	 * @param bool $mode True pour activer le mode édition ou false pour le désactiver
 	 */
 	public function setMode($mode)
 	{
@@ -250,10 +189,10 @@ class core
 	}
 
 	/**
-	 * Accède à une valeur de la variable HTTP POST et applique un filtre
+	 * Accède à une valeur de la variable HTTP POST et lui applique un filtre
 	 * @param string $key Clé de la valeur
 	 * @param string $filter Filtre à appliquer
-	 * @return bool|string Retourne la valeur POST si la clé existe, sinon false
+	 * @return bool|string Valeur POST ou false si elle n'existe pas
 	 */
 	public function getPost($key, $filter = null)
 	{
@@ -306,7 +245,7 @@ class core
 
 	/**
 	 * Met en forme le panneau d'administration
-	 * @return bool|string Retourne le panneau d'administration si l'utilisateur est connecté, sinon false
+	 * @return bool|string Panneau d'administration ou false si l'utilisateur n'est pas connecté
 	 */
 	public function panel()
 	{
@@ -317,9 +256,10 @@ class core
 			$panel = '<ul id="panel">';
 			$panel .= '<li><select onchange="$(location).attr(\'href\', $(this).val());">';
 			$panel .= ($this->getUrl(0) === 'config') ? '<option value="">Choisissez une page</option>' : false;
-			foreach($this->getData('pages') as $key => $value) {
+			$pages = helpers::arrayCollumn($this->getData('pages'), 'title', 'SORT_ASC', true);
+			foreach($pages as $key => $value) {
 				$current = ($key === $this->getUrl(0) OR $key === $this->getUrl(1)) ? ' selected' : false;
-				$panel .= '<option value="?' . $this->getMode() . $key . '"' . $current . '>' . $value['title'] . '</option>';
+				$panel .= '<option value="?' . $this->getMode() . $key . '"' . $current . '>' . $value . '</option>';
 			}
 			$panel .= '</select></li>';
 			$panel .= '<li><a href="?create">Créer une page</a></li>';
@@ -334,18 +274,17 @@ class core
 
 	/**
 	 * Met en forme le menu
-	 * @return string Retourne le menu
+	 * @return string Menu
 	 */
 	public function menu()
 	{
 		$edit = ($this->getCookie() === $this->getData('config', 'password')) ? $this->getMode() : false;
 		$pages = false;
-		foreach($this->getData('menu') as $key => $value) {
-			if($value) {
-				$current = ($key === $this->getUrl(0) OR $key === $this->getUrl(1)) ? ' class="current"' : false;
-				$blank = ($this->getData('pages', $key, 'blank') AND !$this->getMode()) ? ' target="_blank"' : false;
-				$pages .= '<li><a href="?' . $edit . $key . '"' . $current . $blank . '>' . $this->getData('pages', $key, 'title') . '</a></li>';
-			}
+		$menu = helpers::arrayCollumn($this->getData('pages'), 'menu', 'SORT_DESC');
+		foreach($menu as $key) {
+			$current = ($key === $this->getUrl(0) OR $key === $this->getUrl(1)) ? ' class="current"' : false;
+			$blank = ($this->getData('pages', $key, 'blank') AND !$this->getMode()) ? ' target="_blank"' : false;
+			$pages .= '<li><a href="?' . $edit . $key . '"' . $current . $blank . '>' . $this->getData('pages', $key, 'title') . '</a></li>';
 		}
 
 		return $pages;
@@ -359,12 +298,12 @@ class core
 		$key = helpers::increment('nouvelle-page', $this->getData('pages'));
 		$this->setData('pages', $key, [
 			'title' => 'Nouvelle page',
+			'menu' => '0',
 			'position' => false,
 			'blank' => false,
 			'module' => false,
-			'content' => 'Contenu de la page.'
+			'content' => '<p>Contenu de la page.</p>'
 		]);
-		$this->setData('menu', $key, '0');
 		$this->saveData();
 		$this->setNotification('Nouvelle page créée avec succès !');
 		helpers::redirect('edit/' . $key);
@@ -387,7 +326,6 @@ class core
 				$this->removeData('pages', $this->getUrl(1));
 				$this->setData($key, $this->getData($this->getUrl(1)));
 				$this->removeData($this->getUrl(1));
-				$this->removeData('menu', $this->getUrl(1));
 				if($this->getData('config', 'index') === $this->getUrl(1)) {
 					$this->setData('config', 'index', $key);
 				}
@@ -395,13 +333,13 @@ class core
 			if($this->getPost('module') !== $this->setData('pages', $key, 'module')) {
 				$this->removeData($key);
 			}
-			$this->setData('menu', $key, $this->getPost('position', helpers::NUMBER_INT));
 			$this->setData('pages', $key, [
 				'title' => $title,
+				'menu' => $this->getPost('menu', helpers::INT),
 				'blank' => $this->getPost('blank', helpers::BOOLEAN),
 				'theme' => $this->getPost('theme', helpers::STRING),
 				'module' => $this->getPost('module', helpers::STRING),
-				'content' => $this->getPost('content')
+				'content' => $this->getPost('content', helpers::QUOTE)
 			]);
 			$this->saveData();
 			$this->setNotification('Page modifiée avec succès !');
@@ -419,9 +357,9 @@ class core
 				]) .
 				template::closeRow() .
 				template::openRow() .
-				template::text('position', [
+				template::text('menu', [
 					'label' => 'Position dans le menu',
-					'value' => $this->getData('menu', $this->getUrl(1))
+					'value' => $this->getData('pages', $this->getUrl(1), 'menu')
 				]) .
 				template::closeRow() .
 				template::openRow() .
@@ -501,7 +439,6 @@ class core
 		else {
 			$this->removeData('pages', $this->getUrl(1));
 			$this->removeData($this->getUrl(1));
-			$this->removeData('menu', $this->getUrl(1));
 			$this->saveData();
 			$this->setNotification('Page supprimée avec succès !');
 		}
@@ -549,7 +486,6 @@ class core
 			}
 			else {
 				$password = $this->getData('config', 'password');
-
 			}
 			$this->setData('config', [
 				'title' => $this->getPost('title', helpers::STRING),
@@ -590,7 +526,7 @@ class core
 				]) .
 				template::closeRow() .
 				template::openRow() .
-				template::select('index', $this->getData('pages'), [
+				template::select('index', helpers::arrayCollumn($this->getData('pages'), 'title', 'SORT_ASC', true), [
 					'label' => 'Page d\'accueil',
 					'selected' => $this->getData('config', 'index')
 				]) .
@@ -605,6 +541,13 @@ class core
 				template::text('keywords', [
 					'label' => 'Mots clés du site',
 					'value' => $this->getData('config', 'keywords')
+				]) .
+				template::closeRow() .
+				template::openRow() .
+				template::text('version', [
+					'label' => 'Version de ZwiiCMS',
+					'value' => self::VERSION,
+					'disabled' => true
 				]) .
 				template::closeRow() .
 				template::openRow() .
@@ -679,12 +622,11 @@ class helpers
 	const PASSWORD = 'FILTER_SANITIZE_PASSWORD';
 	const BOOLEAN = 'FILTER_SANITIZE_BOOLEAN';
 	const URL = 'FILTER_SANITIZE_URL';
-	const EMAIL = FILTER_SANITIZE_EMAIL;
-	const MAGIC_QUOTES = FILTER_SANITIZE_MAGIC_QUOTES;
-	const NUMBER_FLOAT = FILTER_SANITIZE_NUMBER_FLOAT;
-	const NUMBER_INT = FILTER_SANITIZE_NUMBER_INT;
-	const SPECIAL_CHARS = FILTER_SANITIZE_SPECIAL_CHARS;
 	const STRING = FILTER_SANITIZE_STRING;
+	const QUOTE = FILTER_SANITIZE_MAGIC_QUOTES;
+	const EMAIL = FILTER_SANITIZE_EMAIL;
+	const FLOAT = FILTER_SANITIZE_NUMBER_FLOAT;
+	const INT = FILTER_SANITIZE_NUMBER_INT;
 
 	/**
 	 * Filtre et incrémente une chaîne en fonction d'un tableau de données
@@ -731,32 +673,65 @@ class helpers
 		return $newKey;
 	}
 
-	public static function arrayCollumn($array, $columnKey)
+	/**
+	 * Retourne les valeurs d'une colonne du tableau de données
+	 * @param array $array Tableau cible
+	 * @param string $columnKey Clé à extraire
+	 * @param bool|string $sort Type de tri à appliquer au tableau (SORT_ASC, SORT_DESC, false)
+	 * @param bool $keep Conserve le format clés => valeurs
+	 * @return array Tableau contenant les colonnes
+	 */
+	public static function arrayCollumn($array, $columnKey, $sort = false, $keep = false)
 	{
 		$row = [];
 		if(!empty($array)) {
 			foreach($array as $key => $value) {
-				$row[$key] = $value[$columnKey];
+				if($value[$columnKey]) {
+					$row[$key] = $value[$columnKey];
+				}
 			}
+			switch($sort) {
+				case 'SORT_ASC':
+					asort($row);
+					break;
+				case 'SORT_DESC':
+					arsort($row);
+					break;
+			}
+			$row = $keep ? $row : array_keys($row);
 		}
 
 		return $row;
 	}
 
-	public static function pagination($array, $urlCurrent, $urlPagination)
+	/**
+	 * Crée un système de pagination
+	 * @param array $array Tableau de donnée à utiliser
+	 * @param string $url URL à utiliser, la dernière partie doit correspondre au numéro de page, par défaut utiliser $this->getUrl()
+	 * @return array Tableau contenant les informations sur la pagination (first, last, pages)
+	 */
+	public static function pagination($array, $url)
 	{
+		$url = explode('/', $url);
+		$urlPagination = is_numeric(end($url)) ? array_pop($url) : 1;
+		$urlCurrent = implode('/', $url);
 		$nbElements = count($array);
 		$nbPage = ceil($nbElements / 10);
-		$currentPage = $urlPagination ? (int) $urlPagination : 1;
+		$currentPage = is_numeric($urlPagination) ? (int) $urlPagination : 1;
 		$firstElement = ($currentPage - 1) * 10;
 		$lastElement = $firstElement + 10;
+		$lastElement = ($lastElement > $nbElements) ? $nbElements : $lastElement;
 		$pages = false;
 		for($i = 1; $i <= $nbPage; $i++)
 		{
 			$pages .= ($i === $currentPage) ? ' ' . $i . ' ' : ' <a href="?' . $urlCurrent . '/' . $i . '">' . $i . '</a> ';
 		}
 
-		return ['first' => $firstElement, 'last' => $lastElement, 'pages' => '<p>Pages : ' . $pages . '</p>'];
+		return [
+			'first' => $firstElement,
+			'last' => $lastElement,
+			'pages' => '<p>Pages : ' . $pages . '</p>'
+		];
 	}
 
 	/**
@@ -1054,9 +1029,6 @@ class template
 		$html .= sprintf('<select %s>', self::sprintAttributes($attributes, ['selected']));
 		// <option>
 		foreach($options as $value => $str) {
-			if(is_array($str)) {
-				$str = array_shift($str);
-			}
 			$html .= sprintf(
 				'<option value="%s"%s%s>%s</option>',
 				$value,

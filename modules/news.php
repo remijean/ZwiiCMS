@@ -1,21 +1,15 @@
 <?php
 
 /**
- * Copyright (C) 2008-2015, Rémi Jean (remi-jean@outlook.com)
- * <http://remijean.github.io/ZwiiCMS/>
+ * This file is part of ZwiiCMS.
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * For full copyright and license information, please see the LICENSE
+ * file that was distributed with this source code.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General License for more details.
- *
- * You should have received a copy of the GNU General License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * @author Rémi Jean <remi-jean@outlook.com>
+ * @copyright Copyright (C) 2008-2015, Rémi Jean
+ * @license GNU General Public License, version 3
+ * @link http://zwiicms.com/
  */
 
 class newsAdm extends core
@@ -41,38 +35,31 @@ class newsAdm extends core
 			helpers::redirect('module/' . $this->getUrl(1));
 		}
 		else {
-			$news = helpers::arrayCollumn($this->getData($this->getUrl(1)), 'date');
-			arsort($news);
-			if($news) {
+			if($this->getData($this->getUrl(1))) {
 				self::$content = '<h3>Liste des news</h3>';
-				$pagination = helpers::pagination($news, $this->getUrl(0) . '/' . $this->getUrl(1), $this->getUrl(2));
-				$i = 0;
-				foreach($news as $key => $value) {
-					if($i >= $pagination['first'] AND $i < $pagination['last']) {
-						self::$content .=
-							template::openRow() .
-							template::text('news[]', [
-								'value' => $this->getData($this->getUrl(1), $key, 'title'),
-								'readonly' => true,
-								'col' => 8
-							]) .
-							template::button('edit[]', [
-								'value' => 'Modifier',
-								'href' => '?' . $this->getUrl(0) . '/' . $this->getUrl(1) . '/edit/' . $key,
-								'col' => 2
-							]) .
-							template::button('delete[]', [
-								'value' => 'Supprimer',
-								'href' => '?' . $this->getUrl(0) . '/' . $this->getUrl(1) . '/delete/' . $key,
-								'onclick' => 'return confirm(\'Êtes-vous certain de vouloir supprimer cette news ?\');',
-								'col' => 2
-							]) .
-							template::closeRow();
-						if($i === $pagination['last'] - 1) {
-							break;
-						}
-					}
-					$i++;
+				$pagination = helpers::pagination($this->getData($this->getUrl(1)), $this->getUrl());
+				$news = helpers::arrayCollumn($this->getData($this->getUrl(1)), 'date', 'SORT_DESC');
+				for($i = $pagination['first']; $i < $pagination['last']; $i++) {
+					self::$content .=
+						template::openRow() .
+						template::text('news[]', [
+							'value' => $this->getData($this->getUrl(1), $news[$i], 'title'),
+							'readonly' => true,
+							'col' => 8
+						]) .
+						template::button('edit[]', [
+							'value' => 'Modifier',
+							'href' => '?' . $this->getUrl(0) . '/' . $this->getUrl(1) . '/edit/' . $news[$i],
+							'col' => 2
+						]) .
+						template::button('delete[]', [
+							'value' => 'Supprimer',
+							'href' => '?' . $this->getUrl(0) . '/' . $this->getUrl(1) . '/delete/' . $news[$i],
+							'onclick' => 'return confirm(\'Êtes-vous certain de vouloir supprimer cette news ?\');',
+							'col' => 2
+						]) .
+						template::closeRow();
+
 				}
 				self::$content .= $pagination['pages'];
 			}
@@ -127,10 +114,10 @@ class newsAdm extends core
 			$this->setData($this->getUrl(1), $key, [
 				'title' => $title,
 				'date' => $date,
-				'content' => $this->getPost('content')
+				'content' => $this->getPost('content', helpers::QUOTE)
 			]);
 			$this->saveData();
-			$this->setNotification('Nouvelle news créée avec succès !');
+			$this->setNotification('News modifiée avec succès !');
 			helpers::redirect('module/' . $this->getUrl(1));
 		}
 		else {
@@ -139,7 +126,7 @@ class newsAdm extends core
 				template::openRow() .
 				template::text('title', [
 					'label' => 'Titre de la news',
-					'value' => $this->getData($this->getUrl(1) .'News', $this->getUrl(3), 'title')
+					'value' => $this->getData($this->getUrl(1), $this->getUrl(3), 'title')
 				]) .
 				template::closeRow() .
 				template::openRow() .
@@ -182,24 +169,19 @@ class newsAdm extends core
 
 class newsMod extends core
 {
+	/**
+	 * MODULE : Liste des news
+	 */
 	public function index()
 	{
-		$news = helpers::arrayCollumn($this->getData($this->getUrl(0)), 'date');
-		arsort($news);
-		if($news) {
-			$pagination = helpers::pagination($news, $this->getUrl(0), $this->getUrl(1));
-			$i = 0;
-			foreach($news as $key => $value) {
-				if($i >= $pagination['first'] AND $i < $pagination['last']) {
-					self::$content .=
-						'<h3>' . $this->getData($this->getUrl(1), $this->getUrl(1), 'title') . '</h3>' .
-						'<h4>' . date('d/m/Y - H:i', $value) . '</h4>' .
-						$this->getData($this->getUrl(1), $this->getUrl(1), 'content');
-					if($i === $pagination['last'] - 1) {
-						break;
-					}
-				}
-				$i++;
+		if($this->getData($this->getUrl(0))) {
+  			$pagination = helpers::pagination($this->getData($this->getUrl(0)), $this->getUrl());
+			$news = helpers::arrayCollumn($this->getData($this->getUrl(0)), 'date', 'SORT_DESC');
+			for($i = $pagination['first']; $i < $pagination['last']; $i++) {
+				self::$content .=
+					'<h3>' . $this->getData($this->getUrl(0), $news[$i], 'title') . '</h3>' .
+					'<h4>' . date('d/m/Y - H:i', $this->getData($this->getUrl(0), $news[$i], 'date')) . '</h4>' .
+					$this->getData($this->getUrl(0), $news[$i], 'content');
 			}
 			self::$content .= $pagination['pages'];
 		}
