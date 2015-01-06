@@ -18,7 +18,7 @@ class newsAdm extends core
 	public static $views = ['delete', 'edit'];
 
 	/**
-	 * MODULE : Liste des news
+	 * MODULE : Ajout de news & liste des news
 	 */
 	public function index()
 	{
@@ -114,11 +114,11 @@ class newsAdm extends core
 			$this->setData($this->getUrl(1), $key, [
 				'title' => $title,
 				'date' => $date,
-				'content' => $this->getPost('content', helpers::QUOTE)
+				'content' => $this->getPost('content')
 			]);
 			$this->saveData();
 			$this->setNotification('News modifiée avec succès !');
-			helpers::redirect('module/' . $this->getUrl(1));
+			helpers::redirect($this->getUrl());
 		}
 		else {
 			self::$content =

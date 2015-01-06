@@ -13,7 +13,7 @@ var form = $('form');
 form.data('serialize', form.serialize());
 $(window).on('beforeunload', function() {
 	if(form.length && form.serialize() !== form.data('serialize')) {
-		return 'Vous avez effectué des modifications sans les enregistrer !';
+		return 'Attention, si vous continuez, vous allez perdre les modifications non enregistrées !';
 	}
 });
 form.submit(function() {
@@ -30,6 +30,6 @@ $('div#toggle').click(function() {
 });
 $(window).on('resize', function() {
 	if($(window).width() > 768) {
-		menu.css('display','');
+		menu.css('display', '');
 	}
 });

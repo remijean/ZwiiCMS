@@ -25,7 +25,7 @@ class core
 	public static $content = false;
 	public static $views = [];
 
-	const VERSION = '0.6.4';
+	const VERSION = '0.6.5';
 
 	public function __construct()
 	{
@@ -280,7 +280,7 @@ class core
 	{
 		$edit = ($this->getCookie() === $this->getData('config', 'password')) ? $this->getMode() : false;
 		$pages = false;
-		$menu = helpers::arrayCollumn($this->getData('pages'), 'menu', 'SORT_DESC');
+		$menu = helpers::arrayCollumn($this->getData('pages'), 'menu', 'SORT_ASC');
 		foreach($menu as $key) {
 			$current = ($key === $this->getUrl(0) OR $key === $this->getUrl(1)) ? ' class="current"' : false;
 			$blank = ($this->getData('pages', $key, 'blank') AND !$this->getMode()) ? ' target="_blank"' : false;
@@ -330,7 +330,7 @@ class core
 					$this->setData('config', 'index', $key);
 				}
 			}
-			if($this->getPost('module') !== $this->setData('pages', $key, 'module')) {
+			if($this->getPost('module') !== $this->getData('pages', $key, 'module')) {
 				$this->removeData($key);
 			}
 			$this->setData('pages', $key, [
@@ -339,7 +339,7 @@ class core
 				'blank' => $this->getPost('blank', helpers::BOOLEAN),
 				'theme' => $this->getPost('theme', helpers::STRING),
 				'module' => $this->getPost('module', helpers::STRING),
-				'content' => $this->getPost('content', helpers::QUOTE)
+				'content' => $this->getPost('content')
 			]);
 			$this->saveData();
 			$this->setNotification('Page modifiée avec succès !');
@@ -623,7 +623,6 @@ class helpers
 	const BOOLEAN = 'FILTER_SANITIZE_BOOLEAN';
 	const URL = 'FILTER_SANITIZE_URL';
 	const STRING = FILTER_SANITIZE_STRING;
-	const QUOTE = FILTER_SANITIZE_MAGIC_QUOTES;
 	const EMAIL = FILTER_SANITIZE_EMAIL;
 	const FLOAT = FILTER_SANITIZE_NUMBER_FLOAT;
 	const INT = FILTER_SANITIZE_NUMBER_INT;
@@ -652,7 +651,7 @@ class helpers
 				$str = filter_var($str, $filter);
 		}
 
-		return $str;
+		return get_magic_quotes_gpc() ? stripslashes($str) : $str;
 	}
 
 	/**
