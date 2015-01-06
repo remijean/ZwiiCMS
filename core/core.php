@@ -25,7 +25,7 @@ class core
 	public static $content = false;
 	public static $views = [];
 
-	const VERSION = '0.6.5';
+	const VERSION = '7.0.0';
 
 	public function __construct()
 	{
