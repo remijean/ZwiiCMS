@@ -450,7 +450,7 @@ class core
 	 */
 	public function export()
 	{
-		header('Content-disposition: attachment; filename=core/data.json');
+		header('Content-disposition: attachment; filename=data.json');
 		header('Content-type: application/json');
 		echo json_encode($this->getData());
 		exit;
