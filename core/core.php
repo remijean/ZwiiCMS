@@ -541,7 +541,7 @@ class core
 				'theme' => $this->getPost('theme', helpers::STRING),
 				'keywords' =>$this->getPost('keywords', helpers::STRING)
 			]);
-			$this->saveData(null);
+			$this->saveData(true);
 			$this->setNotification('Configuration enregistrée avec succès !');
 			helpers::redirect($this->getUrl());
 		}
