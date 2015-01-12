@@ -24,4 +24,4 @@ spl_autoload_register(function($className)
 require 'core/core.php';
 $core = new core;
 $core->router();
-require 'core/layout.html';
+echo $core->cache();

@@ -95,11 +95,24 @@ class core
 	}
 
 	/**
-	 * Enregistre le tableau de données
+	 * Enregistre le tableau de données et supprime les fichiers de cache
+	 * @param bool $removeAllCache Supprime l'ensemble des fichiers cache, sinon supprime juste les fichiers cache en rapport avec le module courant ($this->getUrl(1))
 	 * @return mixed Nombre de bytes du tableau de données ou false en cas d'erreur
 	 */
-	public function saveData()
+	public function saveData($removeAllCache = false)
 	{
+		$it = new DirectoryIterator('core/cache/');
+		foreach($it as $file) {
+			if($file->isFile()) {
+				if($removeAllCache === true) {
+					unlink($file->getPathname());
+				}
+				elseif($this->getUrl(1) === explode('_', $file->getBasename('.html'))[0]) {
+					unlink($file->getPathname());
+				}
+			}
+		}
+
 		return file_put_contents('core/data.json', json_encode($this->getData()));
 	}
 
@@ -222,17 +235,30 @@ class core
 		}
 		// Page et module
 		elseif($this->getData('pages', $this->getUrl(0))) {
+			// Cache
+			if(!$this->getCookie()) {
+				$url = str_replace('/', '_', $this->getUrl());
+				if(file_exists('core/cache/' . $url . '.html')) {
+					require 'core/cache/' . $url . '.html';
+					exit;
+				}
+				ob_start();
+			}
+			// Module
 			if($this->getData('pages', $this->getUrl(0), 'module')) {
 				$module = $this->getData('pages', $this->getUrl(0), 'module') . 'Mod';
 				$module = new $module;
 				$method = in_array($this->getUrl(1), $module::$views) ? $this->getUrl(1) : 'index';
 				$module->$method();
 			}
+			// Thème
 			$theme = $this->getData('pages', $this->getUrl(0), 'theme');
 			if($theme) {
 				$this->setData('config', 'theme', $theme);
 			}
+			// Mode d'affichage
 			$this->setMode(false);
+			// Page
 			self::$title = $this->getData('pages', $this->getUrl(0), 'title');
 			self::$content = $this->getData('pages', $this->getUrl(0), 'content') . self::$content;
 		}
@@ -240,6 +266,26 @@ class core
 		if(!self::$content) {
 			self::$title = 'Erreur 404';
 			self::$content = '<p>Page introuvable !</p>';
+		}
+		// Importe le layout
+		require 'core/layout.html';
+	}
+
+	/**
+	 * Génère le fichier de cache et retourne la valeur tampon pour les pages publics
+	 * @return string
+	 */
+	public function cache()
+	{
+		$url = str_replace('/', '_', $this->getUrl());
+		if($this->getData('pages', $this->getUrl(0)) AND !$this->getCookie() AND !file_exists('core/cache/' . $url . '.html')) {
+			if(!file_exists('core/cache/')) {
+				mkdir('core/cache/');
+			}
+			$cache = ob_get_clean();
+			file_put_contents('core/cache/' . $url . '.html', $cache);
+
+			return $cache;
 		}
 	}
 
@@ -341,7 +387,7 @@ class core
 				'module' => $this->getPost('module', helpers::STRING),
 				'content' => $this->getPost('content')
 			]);
-			$this->saveData();
+			$this->saveData($key);
 			$this->setNotification('Page modifiée avec succès !');
 			helpers::redirect('edit/' . $key);
 		}
@@ -495,7 +541,7 @@ class core
 				'theme' => $this->getPost('theme', helpers::STRING),
 				'keywords' =>$this->getPost('keywords', helpers::STRING)
 			]);
-			$this->saveData();
+			$this->saveData(null);
 			$this->setNotification('Configuration enregistrée avec succès !');
 			helpers::redirect($this->getUrl());
 		}
@@ -552,10 +598,10 @@ class core
 				template::closeRow() .
 				template::openRow() .
 				template::button('export', [
-					'value' => 'Exporter',
+					'value' => 'Export des données',
 					'href' => '?export',
-					'col' => 2,
-					'offset' => 8
+					'col' => 3,
+					'offset' => 7
 				]) .
 				template::submit('submit', [
 					'col' => 2
@@ -643,8 +689,8 @@ class helpers
 				$str = empty($str) ? false : true;
 				break;
 			case self::URL:
-				$search = explode(',', 'á,à,â,ä,ã,å,ç,é,è,ê,ë,í,ì,î,ï,ñ,ó,ò,ô,ö,õ,ú,ù,û,ü,ý,ÿ, ');
-				$replace = explode(',', 'a,a,a,a,a,a,c,e,e,e,e,i,i,i,i,n,o,o,o,o,o,u,u,u,u,y,y,-');
+				$search = explode(',', 'á,à,â,ä,ã,å,ç,é,è,ê,ë,í,ì,î,ï,ñ,ó,ò,ô,ö,õ,ú,ù,û,ü,ý,ÿ,_, ');
+				$replace = explode(',', 'a,a,a,a,a,a,c,e,e,e,e,i,i,i,i,n,o,o,o,o,o,u,u,u,u,y,y,-,-');
 				$str = str_replace($search, $replace, mb_strtolower($str, 'UTF-8'));
 				break;
 			default:

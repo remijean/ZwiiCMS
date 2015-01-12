@@ -2,26 +2,26 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title><?php echo $core::$title; ?> - <?php echo $core->getData('config', 'title'); ?></title>
-	<meta name="description" content="<?php echo $core->getData('config', 'description'); ?>">
-	<meta name="keywords" content="<?php echo $core->getData('config', 'keywords'); ?>">
+	<title><?php echo self::$title; ?> - <?php echo $this->getData('config', 'title'); ?></title>
+	<meta name="description" content="<?php echo $this->getData('config', 'description'); ?>">
+	<meta name="keywords" content="<?php echo $this->getData('config', 'keywords'); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<base href="./">
 	<link rel="stylesheet" href="core/vendor/normalize.min.css">
 	<link rel="stylesheet" href="core/vendor/trumbowyg/trumbowyg.min.css">
 	<link rel="stylesheet" href="core/style.css">
-	<link rel="stylesheet" href="themes/<?php echo $core->getData('config', 'theme'); ?>">
+	<link rel="stylesheet" href="themes/<?php echo $this->getData('config', 'theme'); ?>">
 </head>
 <body>
-<?php echo $core->panel(); ?>
-<?php echo $core->getNotification(); ?>
+<?php echo $this->panel(); ?>
+<?php echo $this->getNotification(); ?>
 <div id="container">
-	<h1 id="header"><?php echo $core->getData('config', 'title'); ?></h1>
+	<h1 id="header"><?php echo $this->getData('config', 'title'); ?></h1>
 	<div id="toggle"><span></span></div>
-	<ul id="menu"><?php echo $core->menu(); ?></ul>
+	<ul id="menu"><?php echo $this->menu(); ?></ul>
 	<div id="section">
-		<h2><?php echo $core::$title; ?></h2>
-		<?php echo $core::$content; ?>
+		<h2><?php echo self::$title; ?></h2>
+		<?php echo self::$content; ?>
 	</div>
 	<div id="footer">Motorisé par <a href="http://zwiicms.com/" target="_blank">ZwiiCMS</a> | <a href="?config">Administration</a></div>
 </div>
