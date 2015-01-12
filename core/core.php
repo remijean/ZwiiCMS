@@ -562,11 +562,11 @@ class core
 				]) .
 				template::closeRow() .
 				template::openRow() .
-				template::text('password', [
+				template::password('password', [
 					'label' => 'Nouveau mot de passe',
 					'col' => 6
 				]) .
-				template::text('confirm', [
+				template::password('confirm', [
 					'label' => 'Confirmation du mot de passe',
 					'col' => 6
 				]) .
