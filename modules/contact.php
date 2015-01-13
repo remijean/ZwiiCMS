@@ -95,19 +95,23 @@ class contactMod extends core
 				template::openRow() .
 				template::text('mail', [
 					'label' => 'Adresse mail',
-					'col' => 6
+					'col' => 6,
+					'required' => true,
+					'autofocus' => true
 				]) .
 				template::closeRow() .
 				template::openRow() .
 				template::text('subject', [
 					'label' => 'Sujet',
-					'col' => 6
+					'col' => 6,
+					'required' => true
 				]) .
 				template::closeRow() .
 				template::openRow() .
 				template::textarea('message', [
 					'label' => 'Sujet',
-					'col' => 7
+					'col' => 7,
+					'required' => true
 				]) .
 				template::closeRow() .
 				template::openRow() .
