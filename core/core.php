@@ -177,10 +177,10 @@ class core
 	 * Modifie la notification
 	 * @param string $notification Notification
 	 */
-    public function setNotification($notification)
-    {
-        $_SESSION['NOTIFICATION'] .= $notification.'<br>';
-    }
+	public function setNotification($notification)
+	{
+		$_SESSION['NOTIFICATION'] .= $notification.'<br>';
+	}
 
 	/**
 	 * Accède au mode d'affichage
@@ -526,18 +526,18 @@ class core
 	public function config()
 	{
 		if($this->getPost('submit')) {
-            if($this->getPost('password')) {
-                if($this->getPost('password') === $this->getPost('confirm')) {
-                    $password = $this->getPost('password', helpers::PASSWORD);
-                }
-                else {
-                    $password = $this->getData('config', 'password');
-                    $this->setNotification('Les mots de passe saisis sont différent.');
-                }
-            }
-            else {
-                $password = $this->getData('config', 'password');
-            }
+			if($this->getPost('password')) {
+				if($this->getPost('password') === $this->getPost('confirm')) {
+					$password = $this->getPost('password', helpers::PASSWORD);
+				}
+				else {
+					$password = $this->getData('config', 'password');
+					$this->setNotification('Les mots de passe saisis sont différent.');
+				}
+			}
+			else {
+				$password = $this->getData('config', 'password');
+			}
 			$this->setData('config', [
 				'title' => $this->getPost('title', helpers::STRING),
 				'description' => $this->getPost('description', helpers::STRING),
