@@ -364,7 +364,7 @@ class core
 			return false;
 		}
 		elseif($this->getPost('submit')) {
-			$title = $this->getPost('title') ? $this->getPost('title', helpers::STRING) : 'Sans titre';
+			$title = $this->getPost('title') ? $this->getPost('title') : 'Sans titre';
 			$key = helpers::filter($title, helpers::URL);
 			if($key !== $this->getUrl(1)) {
 				$key = helpers::increment($key, $this->getData('pages'));
@@ -380,7 +380,7 @@ class core
 				$this->removeData($key);
 			}
 			$this->setData('pages', $key, [
-				'title' => $title,
+				'title' => helpers::filter($title, helpers::STRING),
 				'menu' => $this->getPost('menu', helpers::INT),
 				'blank' => $this->getPost('blank', helpers::BOOLEAN),
 				'theme' => $this->getPost('theme', helpers::STRING),
@@ -692,6 +692,7 @@ class helpers
 				$search = explode(',', 'á,à,â,ä,ã,å,ç,é,è,ê,ë,í,ì,î,ï,ñ,ó,ò,ô,ö,õ,ú,ù,û,ü,ý,ÿ,_, ');
 				$replace = explode(',', 'a,a,a,a,a,a,c,e,e,e,e,i,i,i,i,n,o,o,o,o,o,u,u,u,u,y,y,-,-');
 				$str = str_replace($search, $replace, mb_strtolower($str, 'UTF-8'));
+				$str = preg_replace('#[^a-z0-9-/]#', '', $str);
 				break;
 			default:
 				$str = filter_var($str, $filter);
