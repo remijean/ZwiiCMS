@@ -178,10 +178,10 @@ class core
 	 * Modifie la notification
 	 * @param string $notification Notification
 	 */
-	public function setNotification($notification)
-	{
-		$_SESSION['NOTIFICATION'] = $notification;
-	}
+    public function setNotification($notification)
+    {
+        $_SESSION['NOTIFICATION'] .= $notification.'<br>';
+    }
 
 	/**
 	 * Accède au mode d'affichage
