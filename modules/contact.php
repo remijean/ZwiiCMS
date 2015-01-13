@@ -96,7 +96,8 @@ class contactMod extends core
 				template::text('mail', [
 					'label' => 'Adresse mail',
 					'col' => 6,
-					'required' => true
+					'required' => true,
+					'autofocus' => true
 				]) .
 				template::closeRow() .
 				template::openRow() .

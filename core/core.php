@@ -398,7 +398,8 @@ class core
 				template::openRow() .
 				template::text('title', [
 					'label' => 'Titre de la page',
-					'value' => $this->getData('pages', $this->getUrl(1), 'title')
+					'value' => $this->getData('pages', $this->getUrl(1), 'title'),
+					'autofocus' => true
 				]) .
 				template::closeRow() .
 				template::openRow() .
@@ -557,7 +558,8 @@ class core
 				template::openRow() .
 				template::text('title', [
 					'label' => 'Titre du site',
-					'value' => $this->getData('config', 'title')
+					'value' => $this->getData('config', 'title'),
+					'autofocus' => true
 				]) .
 				template::closeRow() .
 				template::openRow() .

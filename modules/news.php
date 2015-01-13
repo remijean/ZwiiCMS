@@ -68,7 +68,8 @@ class newsAdm extends core
 				template::openForm() .
 				template::openRow() .
 				template::text('title', [
-					'label' => 'Titre de la news'
+					'label' => 'Titre de la news',
+					'autofocus' => true
 				]) .
 				template::closeRow() .
 				template::openRow() .
