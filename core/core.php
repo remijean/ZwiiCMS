@@ -850,7 +850,7 @@ class template
 	 */
 	private static function sprintAttributes(array $array = [], array $exclude = [])
 	{
-		$exclude = array_merge(['col', 'offset', 'label', 'readonly', 'disabled', 'required'], $exclude);
+		$exclude = array_merge(['col', 'offset', 'label', 'readonly', 'disabled', 'required', 'autofocus'], $exclude);
 		$attributes = [];
 		foreach($array as $key => $value) {
 			if($value AND !in_array($key, $exclude)) {
@@ -946,6 +946,7 @@ class template
 			'disabled' => false,
 			'readonly' => false,
 			'required' => false,
+			'autofocus' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
@@ -960,11 +961,12 @@ class template
 		}
 		// <input>
 		$html .= sprintf(
-			'<input type="text" %s%s%s%s>',
+			'<input type="text" %s%s%s%s%s>',
 			self::sprintAttributes($attributes),
 			$attributes['disabled'] ? ' disabled' : false,
 			$attributes['readonly'] ? ' readonly' : false,
-			$attributes['required'] ? ' required' : false
+			$attributes['required'] ? ' required' : false,
+			$attributes['autofocus'] ? ' autofocus' : false
 		);
 		// </div>
 		$html .= '</div>';
@@ -987,6 +989,7 @@ class template
 			'disabled' => false,
 			'readonly' => false,
 			'required' => false,
+			'autofocus' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
@@ -1001,11 +1004,12 @@ class template
 		}
 		// <input>
 		$html .= sprintf(
-			'<textarea %s%s%s%s>%s</textarea>',
+			'<textarea %s%s%s%s%s>%s</textarea>',
 			self::sprintAttributes($attributes, ['value']),
 			$attributes['disabled'] ? ' disabled' : false,
 			$attributes['readonly'] ? ' readonly' : false,
 			$attributes['required'] ? ' required' : false,
+			$attributes['autofocus'] ? ' autofocus' : false,
 			$attributes['value']
 		);
 		// </div>
@@ -1029,6 +1033,7 @@ class template
 			'disabled' => false,
 			'readonly' => false,
 			'required' => false,
+			'autofocus' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
@@ -1043,11 +1048,12 @@ class template
 		}
 		// <input>
 		$html .= sprintf(
-			'<input type="password" %s%s%s%s>',
+			'<input type="password" %s%s%s%s%s>',
 			self::sprintAttributes($attributes),
 			$attributes['disabled'] ? ' disabled' : false,
 			$attributes['readonly'] ? ' readonly' : false,
-			$attributes['required'] ? ' required' : false
+			$attributes['required'] ? ' required' : false,
+			$attributes['autofocus'] ? ' autofocus' : false
 		);
 		// </div>
 		$html .= '</div>';
@@ -1070,6 +1076,7 @@ class template
 			'selected' => '',
 			'disabled' => false,
 			'required' => false,
+			'autofocus' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
@@ -1091,10 +1098,11 @@ class template
 		// <option>
 		foreach($options as $value => $str) {
 			$html .= sprintf(
-				'<option value="%s"%s%s>%s</option>',
+				'<option value="%s"%s%s%s>%s</option>',
 				$value,
 				$attributes['selected'] === $value ? ' selected' : false,
 				$attributes['disabled'] ? ' disabled' : false,
+				$attributes['autofocus'] ? ' autofocus' : false,
 				$str
 			);
 		}
@@ -1120,6 +1128,7 @@ class template
 			'checked' => false,
 			'disabled' => false,
 			'required' => false,
+			'autofocus' => false,
 			'class' => '',
 			'col' => 12,
 			'offset' => 0
@@ -1129,14 +1138,15 @@ class template
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// <input>
 		$html .= sprintf(
-			'<input type="checkbox" id="%s" name="%s" value="%s" %s%s%s%s>',
+			'<input type="checkbox" id="%s" name="%s" value="%s" %s%s%s%s%s>',
 			$nameId . '_' . $value,
 			$nameId . '[]',
 			$value,
 			self::sprintAttributes($attributes, ['checked']),
 			$attributes['checked'] ? ' checked' : false,
 			$attributes['disabled'] ? ' disabled' : false,
-			$attributes['required'] ? ' disabled' : false
+			$attributes['required'] ? ' disabled' : false,
+			$attributes['autofocus'] ? ' autofocus' : false
 		);
 		// <label>
 		$html .= self::label($nameId . '_' . $value, $label);
@@ -1160,6 +1170,7 @@ class template
 			'checked' => false,
 			'disabled' => false,
 			'required' => false,
+			'autofocus' => false,
 			'class' => '',
 			'col' => 12,
 			'offset' => 0
@@ -1169,14 +1180,15 @@ class template
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// <input>
 		$html .= sprintf(
-			'<input type="radio" id="%s" name="%s" value="%s" %s%s%s%s>',
+			'<input type="radio" id="%s" name="%s" value="%s" %s%s%s%s%s>',
 			$nameId . '_' . $value,
 			$nameId . '[]',
 			$value,
 			self::sprintAttributes($attributes, ['checked']),
 			$attributes['checked'] ? ' checked' : false,
 			$attributes['disabled'] ? ' disabled' : false,
-			$attributes['required'] ? ' required' : false
+			$attributes['required'] ? ' required' : false,
+			$attributes['autofocus'] ? ' autofocus' : false
 		);
 		// <label>
 		$html .= self::label($nameId . '_' . $value, $label);
