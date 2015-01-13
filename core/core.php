@@ -166,7 +166,6 @@ class core
 	{
 		if($this->notification) {
 			unset($_SESSION['NOTIFICATION']);
-
 			return '<div id="notification">' . $this->notification . '</div>';
 		}
 		else {
