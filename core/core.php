@@ -868,7 +868,7 @@ class template
 	 */
 	private static function sprintAttributes(array $array = [], array $exclude = [])
 	{
-		$exclude = array_merge(['col', 'offset', 'label', 'readonly', 'disabled'], $exclude);
+		$exclude = array_merge(['col', 'offset', 'label', 'readonly', 'disabled', 'required'], $exclude);
 		$attributes = [];
 		foreach($array as $key => $value) {
 			if($value AND !in_array($key, $exclude)) {
@@ -963,6 +963,7 @@ class template
 			'placeholder' => '',
 			'disabled' => false,
 			'readonly' => false,
+			'required' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
@@ -977,10 +978,11 @@ class template
 		}
 		// <input>
 		$html .= sprintf(
-			'<input type="text" %s%s%s>',
+			'<input type="text" %s%s%s%s>',
 			self::sprintAttributes($attributes),
 			$attributes['disabled'] ? ' disabled' : false,
-			$attributes['readonly'] ? ' readonly' : false
+			$attributes['readonly'] ? ' readonly' : false,
+			$attributes['required'] ? ' required' : false
 		);
 		// </div>
 		$html .= '</div>';
@@ -1002,6 +1004,7 @@ class template
 			'value' => '',
 			'disabled' => false,
 			'readonly' => false,
+			'required' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
@@ -1016,10 +1019,11 @@ class template
 		}
 		// <input>
 		$html .= sprintf(
-			'<textarea %s%s%s>%s</textarea>',
+			'<textarea %s%s%s%s>%s</textarea>',
 			self::sprintAttributes($attributes, ['value']),
 			$attributes['disabled'] ? ' disabled' : false,
 			$attributes['readonly'] ? ' readonly' : false,
+			$attributes['required'] ? ' required' : false,
 			$attributes['value']
 		);
 		// </div>
@@ -1042,6 +1046,7 @@ class template
 			'placeholder' => '',
 			'disabled' => false,
 			'readonly' => false,
+			'required' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
@@ -1056,10 +1061,11 @@ class template
 		}
 		// <input>
 		$html .= sprintf(
-			'<input type="password" %s%s%s>',
+			'<input type="password" %s%s%s%s>',
 			self::sprintAttributes($attributes),
 			$attributes['disabled'] ? ' disabled' : false,
-			$attributes['readonly'] ? ' readonly' : false
+			$attributes['readonly'] ? ' readonly' : false,
+			$attributes['required'] ? ' required' : false
 		);
 		// </div>
 		$html .= '</div>';
@@ -1081,6 +1087,7 @@ class template
 			'name' => $nameId,
 			'selected' => '',
 			'disabled' => false,
+			'required' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
@@ -1094,7 +1101,11 @@ class template
 			$html .= self::label($nameId, $attributes['label']);
 		}
 		// <select>
-		$html .= sprintf('<select %s>', self::sprintAttributes($attributes, ['selected']));
+		$html .= sprintf(
+			'<select %s%s>',
+			self::sprintAttributes($attributes, ['selected']),
+			$attributes['required'] ? ' required' : false
+		);
 		// <option>
 		foreach($options as $value => $str) {
 			$html .= sprintf(
@@ -1126,6 +1137,7 @@ class template
 		$attributes = array_merge([
 			'checked' => false,
 			'disabled' => false,
+			'required' => false,
 			'class' => '',
 			'col' => 12,
 			'offset' => 0
@@ -1135,13 +1147,14 @@ class template
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// <input>
 		$html .= sprintf(
-			'<input type="checkbox" id="%s" name="%s" value="%s" %s%s%s>',
+			'<input type="checkbox" id="%s" name="%s" value="%s" %s%s%s%s>',
 			$nameId . '_' . $value,
 			$nameId . '[]',
 			$value,
 			self::sprintAttributes($attributes, ['checked']),
 			$attributes['checked'] ? ' checked' : false,
-			$attributes['disabled'] ? ' disabled' : false
+			$attributes['disabled'] ? ' disabled' : false,
+			$attributes['required'] ? ' required' : false
 		);
 		// <label>
 		$html .= self::label($nameId . '_' . $value, $label);
@@ -1164,6 +1177,7 @@ class template
 		$attributes = array_merge([
 			'checked' => false,
 			'disabled' => false,
+			'required' => false,
 			'class' => '',
 			'col' => 12,
 			'offset' => 0
@@ -1173,13 +1187,14 @@ class template
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// <input>
 		$html .= sprintf(
-			'<input type="radio" id="%s" name="%s" value="%s" %s%s%s>',
+			'<input type="radio" id="%s" name="%s" value="%s" %s%s%s%s>',
 			$nameId . '_' . $value,
 			$nameId . '[]',
 			$value,
 			self::sprintAttributes($attributes, ['checked']),
 			$attributes['checked'] ? ' checked' : false,
-			$attributes['disabled'] ? ' disabled' : false
+			$attributes['disabled'] ? ' disabled' : false,
+			$attributes['required'] ? ' required' : false
 		);
 		// <label>
 		$html .= self::label($nameId . '_' . $value, $label);
