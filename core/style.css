@@ -328,6 +328,11 @@ div#container {
 	margin-right: auto;
 }
 @media (min-width: 768px) {
+	div#container {
+		width: 750px;
+	}
+}
+@media (min-width: 992px) {
 	div.col1 {
 		width: 8.33333333%;
 	}
@@ -400,11 +405,6 @@ div#container {
 	div.offset11 {
 		margin-left: 91.66666667%;
 	}
-	div#container {
-		width: 750px;
-	}
-}
-@media (min-width: 992px) {
 	div#container {
 		width: 970px;
 	}
