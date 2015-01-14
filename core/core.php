@@ -20,7 +20,7 @@ class core
 	private $url;
 	private $notification;
 
-	private static $modules = ['create', 'edit', 'module', 'delete', 'export', 'mode', 'config', 'logout'];
+	private static $modules = ['create', 'edit', 'module', 'delete', 'clean', 'export', 'mode', 'config', 'logout'];
 	public static $title = false;
 	public static $content = false;
 	public static $views = [];
@@ -114,7 +114,7 @@ class core
 				}
 			}
 		}
-		
+
 		return file_put_contents('core/data.json', json_encode($this->getData()));
 	}
 
@@ -494,6 +494,15 @@ class core
 	}
 
 	/**
+	 * MODULE : Vide le cache des pages publiques
+	 */
+	public function clean()
+	{
+		$this->saveData(true);
+		helpers::redirect('config');
+	}
+
+	/**
 	 * MODULE : Exporte le fichier de données
 	 */
 	public function export()
@@ -599,11 +608,16 @@ class core
 				]) .
 				template::closeRow() .
 				template::openRow() .
-				template::button('export', [
-					'value' => 'Export des données',
-					'href' => '?export',
+				template::button('clean', [
+					'value' => 'Vider le cache',
+					'href' => '?clean',
 					'col' => 3,
-					'offset' => 7
+					'offset' => 4
+				]) .
+				template::button('export', [
+					'value' => 'Exporter les données',
+					'href' => '?export',
+					'col' => 3
 				]) .
 				template::submit('submit', [
 					'col' => 2
