@@ -187,12 +187,7 @@ class core
 	 */
 	public function setNotification($notification)
 	{
-		if(empty(template::$notices)) {
-			$_SESSION['NOTIFICATION'] = $notification;
-		}
-		else {
-			$_SESSION['NOTIFICATION'] = 'Impossible de valider le formulaire, il existe une ou des erreurs';
-		}
+		$_SESSION['NOTIFICATION'] = $notification;
 	}
 
 	/**
