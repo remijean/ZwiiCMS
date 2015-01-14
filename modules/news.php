@@ -34,65 +34,63 @@ class newsAdm extends core
 			$this->setNotification('Nouvelle news créée avec succès !');
 			helpers::redirect('module/' . $this->getUrl(1));
 		}
-		else {
-			if($this->getData($this->getUrl(1))) {
-				self::$content = '<h3>Liste des news</h3>';
-				$pagination = helpers::pagination($this->getData($this->getUrl(1)), $this->getUrl());
-				$news = helpers::arrayCollumn($this->getData($this->getUrl(1)), 'date', 'SORT_DESC');
-				for($i = $pagination['first']; $i < $pagination['last']; $i++) {
-					self::$content .=
-						template::openRow() .
-						template::text('news[]', [
-							'value' => $this->getData($this->getUrl(1), $news[$i], 'title'),
-							'readonly' => true,
-							'col' => 8
-						]) .
-						template::button('edit[]', [
-							'value' => 'Modifier',
-							'href' => '?' . $this->getUrl(0) . '/' . $this->getUrl(1) . '/edit/' . $news[$i],
-							'col' => 2
-						]) .
-						template::button('delete[]', [
-							'value' => 'Supprimer',
-							'href' => '?' . $this->getUrl(0) . '/' . $this->getUrl(1) . '/delete/' . $news[$i],
-							'onclick' => 'return confirm(\'Êtes-vous certain de vouloir supprimer cette news ?\');',
-							'col' => 2
-						]) .
-						template::closeRow();
+		if($this->getData($this->getUrl(1))) {
+			self::$content = '<h3>Liste des news</h3>';
+			$pagination = helpers::pagination($this->getData($this->getUrl(1)), $this->getUrl());
+			$news = helpers::arrayCollumn($this->getData($this->getUrl(1)), 'date', 'SORT_DESC');
+			for($i = $pagination['first']; $i < $pagination['last']; $i++) {
+				self::$content .=
+					template::openRow() .
+					template::text('news[]', [
+						'value' => $this->getData($this->getUrl(1), $news[$i], 'title'),
+						'readonly' => true,
+						'col' => 8
+					]) .
+					template::button('edit[]', [
+						'value' => 'Modifier',
+						'href' => '?' . $this->getUrl(0) . '/' . $this->getUrl(1) . '/edit/' . $news[$i],
+						'col' => 2
+					]) .
+					template::button('delete[]', [
+						'value' => 'Supprimer',
+						'href' => '?' . $this->getUrl(0) . '/' . $this->getUrl(1) . '/delete/' . $news[$i],
+						'onclick' => 'return confirm(\'Êtes-vous certain de vouloir supprimer cette news ?\');',
+						'col' => 2
+					]) .
+					template::closeRow();
 
-				}
-				self::$content .= $pagination['pages'];
 			}
-			self::$content =
-				'<h3>Nouvelle news</h3>' .
-				template::openForm() .
-				template::openRow() .
-				template::text('title', [
-					'label' => 'Titre de la news'
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::textarea('content', [
-					'class' => 'editor'
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::submit('submit', [
-					'value' => 'Créer',
-					'col' => 2,
-					'offset' => 10
-				]) .
-				template::closeRow() .
-				template::closeForm() .
-				self::$content .
-				template::openRow() .
-				template::button('back', [
-					'value' => 'Retour',
-					'href' => '?edit/' . $this->getUrl(1),
-					'col' => 2
-				]) .
-				template::closeRow();
+			self::$content .= $pagination['pages'];
 		}
+		self::$content =
+			'<h3>Nouvelle news</h3>' .
+			template::openForm() .
+			template::openRow() .
+			template::text('title', [
+				'label' => 'Titre de la news'
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::textarea('content', [
+				'class' => 'editor'
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::submit('submit', [
+				'value' => 'Créer',
+				'col' => 2,
+				'offset' => 10
+			]) .
+			template::closeRow() .
+			template::closeForm() .
+			self::$content .
+			template::openRow() .
+			template::button('back', [
+				'value' => 'Retour',
+				'href' => '?edit/' . $this->getUrl(1),
+				'col' => 2
+			]) .
+			template::closeRow();
 	}
 
 	/**
@@ -120,34 +118,32 @@ class newsAdm extends core
 			$this->setNotification('News modifiée avec succès !');
 			helpers::redirect($this->getUrl());
 		}
-		else {
-			self::$content =
-				template::openForm() .
-				template::openRow() .
-				template::text('title', [
-					'label' => 'Titre de la news',
-					'value' => $this->getData($this->getUrl(1), $this->getUrl(3), 'title')
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::textarea('content', [
-					'class' => 'editor',
-					'value' => $this->getData($this->getUrl(1), $this->getUrl(3), 'content')
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::button('back', [
-					'value' => 'Retour',
-					'href' => '?module/' . $this->getUrl(1),
-					'col' => 2
-				]) .
-				template::submit('submit', [
-					'col' => 2,
-					'offset' => 8
-				]) .
-				template::closeRow();
-				template::closeForm();
-		}
+		self::$content =
+			template::openForm() .
+			template::openRow() .
+			template::text('title', [
+				'label' => 'Titre de la news',
+				'value' => $this->getData($this->getUrl(1), $this->getUrl(3), 'title')
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::textarea('content', [
+				'class' => 'editor',
+				'value' => $this->getData($this->getUrl(1), $this->getUrl(3), 'content')
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::button('back', [
+				'value' => 'Retour',
+				'href' => '?module/' . $this->getUrl(1),
+				'col' => 2
+			]) .
+			template::submit('submit', [
+				'col' => 2,
+				'offset' => 8
+			]) .
+			template::closeRow();
+			template::closeForm();
 	}
 
 	/**

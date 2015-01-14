@@ -10,7 +10,20 @@ body {
 div#notification {
 	background: #DDD;
 	text-align: center;
-	padding: 15px
+	padding: 15px;
+	color: #FFF;
+}
+div#notification.success {
+	background: #41AF6C;
+}
+div#notification.error {
+	background: #FC6160;
+}
+
+/* Notice */
+div.notice {
+	margin-bottom: 2px;
+	color: #FC6160;
 }
 
 /* Panneau */
@@ -179,6 +192,13 @@ select:hover,
 textarea:hover {
 	border: 1px solid #CCC;
 }
+input[type="text"].notice,
+input[type="password"].notice,
+input[type="file"].notice,
+select.notice,
+textarea.notice {
+	border: 1px solid #FC6160;
+}
 input:disabled,
 select:disabled,
 textarea:disabled {
@@ -258,7 +278,9 @@ input[type="radio"] + label::before {
 	background: #DDD;
 	vertical-align: top;
 }
-input[type="checkbox"] + label::before {
+input[type="checkbox"].notice + label::before,
+input[type="radio"].notice + label::before {
+	background: #FC6160;
 }
 input[type="radio"] + label::before {
 	border-radius: 50%;

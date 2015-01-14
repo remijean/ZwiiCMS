@@ -6,15 +6,6 @@ body {
 }
 
 /**
- * Notification
- */
-
-div#notification {
-	background: transparent;
-	border-bottom: 1px solid #DDD;
-}
-
-/**
  * Container
  */
 

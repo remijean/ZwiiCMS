@@ -21,9 +21,9 @@ class core
 	private $notification;
 
 	private static $modules = ['create', 'edit', 'module', 'delete', 'clean', 'export', 'mode', 'config', 'logout'];
+	public static $views = [];
 	public static $title = false;
 	public static $content = false;
-	public static $views = [];
 
 	const VERSION = '7.0.0';
 
@@ -101,21 +101,23 @@ class core
 	 */
 	public function saveData($removeAllCache = false)
 	{
-		if(file_exists('core/cache/')) {
-			$it = new DirectoryIterator('core/cache/');
-			foreach($it as $file) {
-				if($file->isFile()) {
-					if($removeAllCache === true) {
-						unlink($file->getPathname());
-					}
-					elseif($this->getUrl(1) === explode('_', $file->getBasename('.html'))[0]) {
-						unlink($file->getPathname());
+		if(empty(template::$notices)) {
+			if(file_exists('core/cache/')) {
+				$it = new DirectoryIterator('core/cache/');
+				foreach($it as $file) {
+					if($file->isFile()) {
+						if($removeAllCache === true) {
+							unlink($file->getPathname());
+						}
+						elseif($this->getUrl(1) === explode('_', $file->getBasename('.html'))[0]) {
+							unlink($file->getPathname());
+						}
 					}
 				}
 			}
-		}
 
-		return file_put_contents('core/data.json', json_encode($this->getData()));
+			return file_put_contents('core/data.json', json_encode($this->getData()));
+		}
 	}
 
 	/**
@@ -166,10 +168,13 @@ class core
 	 */
 	public function getNotification()
 	{
-		if($this->notification) {
+		if(template::$notices) {
+			return '<div id="notification" class="error">Il existe des erreurs dans le formulaire, il est impossible de le valider !</div>';
+		}
+		elseif($this->notification) {
 			unset($_SESSION['NOTIFICATION']);
 
-			return '<div id="notification">' . $this->notification . '</div>';
+			return '<div id="notification" class="success">' . $this->notification . '</div>';
 		}
 		else {
 			return false;
@@ -182,7 +187,12 @@ class core
 	 */
 	public function setNotification($notification)
 	{
-		$_SESSION['NOTIFICATION'] .= $notification.'<br>';
+		if(empty(template::$notices)) {
+			$_SESSION['NOTIFICATION'] = $notification;
+		}
+		else {
+			$_SESSION['NOTIFICATION'] = 'Impossible de valider le formulaire, il existe une ou des erreurs';
+		}
 	}
 
 	/**
@@ -393,67 +403,65 @@ class core
 			$this->setNotification('Page modifiée avec succès !');
 			helpers::redirect('edit/' . $key);
 		}
-		else {
-			$this->setMode(true);
-			self::$title = $this->getData('pages', $this->getUrl(1), 'title');
-			self::$content =
-				template::openForm() .
-				template::openRow() .
-				template::text('title', [
-					'label' => 'Titre de la page',
-					'value' => $this->getData('pages', $this->getUrl(1), 'title')
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::text('menu', [
-					'label' => 'Position dans le menu',
-					'value' => $this->getData('pages', $this->getUrl(1), 'menu')
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::textarea('content', [
-					'value' => $this->getData('pages', $this->getUrl(1), 'content'),
-					'class' => 'editor'
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::checkbox('blank', true, 'Ouvrir dans un nouvel onglet en mode public', [
-					'checked' => $this->getData('pages', $this->getUrl(1), 'blank')
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::select('module', helpers::listModules('Aucun module'), [
-					'label' => 'Inclure un module <small>(en cas de changement de module, les données rattachées au module précédant seront supprimées)</small>',
-					'selected' => $this->getData('pages', $this->getUrl(1), 'module'),
-					'col' => 10
-				]) .
-				template::button('config', [
-					'value' => 'Administrer',
-					'href' => '?module/' . $this->getUrl(1),
-					'disabled' => $this->getData('pages', $this->getUrl(1), 'module') ? false : true,
-					'col' => 2
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::select('theme', helpers::listThemes('Thème par défaut'), [
-					'label' => 'Thème en mode public',
-					'selected' => $this->getData('pages', $this->getUrl(1), 'theme')
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::button('delete', [
-					'value' => 'Supprimer',
-					'href' => '?delete/' . $this->getUrl(1),
-					'onclick' => 'return confirm(\'Êtes-vous certain de vouloir supprimer cette page ?\');',
-					'col' => 2,
-					'offset' => 8
-				]) .
-				template::submit('submit', [
-					'col' => 2
-				]) .
-				template::closeRow() .
-				template::closeForm();
-		}
+		$this->setMode(true);
+		self::$title = $this->getData('pages', $this->getUrl(1), 'title');
+		self::$content =
+			template::openForm() .
+			template::openRow() .
+			template::text('title', [
+				'label' => 'Titre de la page',
+				'value' => $this->getData('pages', $this->getUrl(1), 'title')
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::text('menu', [
+				'label' => 'Position dans le menu',
+				'value' => $this->getData('pages', $this->getUrl(1), 'menu')
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::textarea('content', [
+				'value' => $this->getData('pages', $this->getUrl(1), 'content'),
+				'class' => 'editor'
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::checkbox('blank', true, 'Ouvrir dans un nouvel onglet en mode public', [
+				'checked' => $this->getData('pages', $this->getUrl(1), 'blank')
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::select('module', helpers::listModules('Aucun module'), [
+				'label' => 'Inclure un module <small>(en cas de changement de module, les données rattachées au module précédant seront supprimées)</small>',
+				'selected' => $this->getData('pages', $this->getUrl(1), 'module'),
+				'col' => 10
+			]) .
+			template::button('config', [
+				'value' => 'Administrer',
+				'href' => '?module/' . $this->getUrl(1),
+				'disabled' => $this->getData('pages', $this->getUrl(1), 'module') ? false : true,
+				'col' => 2
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::select('theme', helpers::listThemes('Thème par défaut'), [
+				'label' => 'Thème en mode public',
+				'selected' => $this->getData('pages', $this->getUrl(1), 'theme')
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::button('delete', [
+				'value' => 'Supprimer',
+				'href' => '?delete/' . $this->getUrl(1),
+				'onclick' => 'return confirm(\'Êtes-vous certain de vouloir supprimer cette page ?\');',
+				'col' => 2,
+				'offset' => 8
+			]) .
+			template::submit('submit', [
+				'col' => 2
+			]) .
+			template::closeRow() .
+			template::closeForm();
 	}
 
 	/**
@@ -544,7 +552,7 @@ class core
 				}
 				else {
 					$password = $this->getData('config', 'password');
-					$this->setNotification('Mot de passe inchangé : Les mots de passe saisis sont différents.');
+					template::$notices['confirm'] = 'La confirmation ne correspond pas au nouveau mot de passe';
 				}
 			}
 			else {
@@ -562,75 +570,73 @@ class core
 			$this->setNotification('Configuration enregistrée avec succès !');
 			helpers::redirect($this->getUrl());
 		}
-		else {
-			self::$title = 'Configuration';
-			self::$content =
-				template::openForm() .
-				template::openRow() .
-				template::text('title', [
-					'label' => 'Titre du site',
-					'value' => $this->getData('config', 'title')
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::textarea('description', [
-					'label' => 'Description du site',
-					'value' => $this->getData('config', 'description')
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::password('password', [
-					'label' => 'Nouveau mot de passe',
-					'col' => 6
-				]) .
-				template::password('confirm', [
-					'label' => 'Confirmation du mot de passe',
-					'col' => 6
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::select('index', helpers::arrayCollumn($this->getData('pages'), 'title', 'SORT_ASC', true), [
-					'label' => 'Page d\'accueil',
-					'selected' => $this->getData('config', 'index')
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::select('theme', helpers::listThemes(), [
-					'label' => 'Thème par défaut',
-					'selected' => $this->getData('config', 'theme')
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::text('keywords', [
-					'label' => 'Mots clés du site',
-					'value' => $this->getData('config', 'keywords')
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::text('version', [
-					'label' => 'Version de ZwiiCMS',
-					'value' => self::VERSION,
-					'disabled' => true
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::button('clean', [
-					'value' => 'Vider le cache',
-					'href' => '?clean',
-					'col' => 3,
-					'offset' => 4
-				]) .
-				template::button('export', [
-					'value' => 'Exporter les données',
-					'href' => '?export',
-					'col' => 3
-				]) .
-				template::submit('submit', [
-					'col' => 2
-				]) .
-				template::closeRow() .
-				template::closeForm();
-		}
+		self::$title = 'Configuration';
+		self::$content =
+			template::openForm() .
+			template::openRow() .
+			template::text('title', [
+				'label' => 'Titre du site',
+				'value' => $this->getData('config', 'title')
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::textarea('description', [
+				'label' => 'Description du site',
+				'value' => $this->getData('config', 'description')
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::password('password', [
+				'label' => 'Nouveau mot de passe',
+				'col' => 6
+			]) .
+			template::password('confirm', [
+				'label' => 'Confirmation du mot de passe',
+				'col' => 6
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::select('index', helpers::arrayCollumn($this->getData('pages'), 'title', 'SORT_ASC', true), [
+				'label' => 'Page d\'accueil',
+				'selected' => $this->getData('config', 'index')
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::select('theme', helpers::listThemes(), [
+				'label' => 'Thème par défaut',
+				'selected' => $this->getData('config', 'theme')
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::text('keywords', [
+				'label' => 'Mots clés du site',
+				'value' => $this->getData('config', 'keywords')
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::text('version', [
+				'label' => 'Version de ZwiiCMS',
+				'value' => self::VERSION,
+				'disabled' => true
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::button('clean', [
+				'value' => 'Vider le cache',
+				'href' => '?clean',
+				'col' => 3,
+				'offset' => 4
+			]) .
+			template::button('export', [
+				'value' => 'Exporter les données',
+				'href' => '?export',
+				'col' => 3
+			]) .
+			template::submit('submit', [
+				'col' => 2
+			]) .
+			template::closeRow() .
+			template::closeForm();
 	}
 
 	/**
@@ -649,26 +655,24 @@ class core
 				helpers::redirect($this->getUrl());
 			}
 		}
-		else {
-			self::$title = 'Connexion';
-			self::$content =
-				template::openForm() .
-				template::openRow() .
-				template::password('password', [
-					'col' => 4
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::checkbox('time', true, 'Me connecter automatiquement lors de mes prochaines visites.').
-				template::closeRow() .
-				template::openRow() .
-				template::submit('submit', [
-					'value' => 'Me connecter',
-					'col' => 2
-				]) .
-				template::closeRow() .
-				template::closeForm();
-		}
+		self::$title = 'Connexion';
+		self::$content =
+			template::openForm() .
+			template::openRow() .
+			template::password('password', [
+				'col' => 4
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::checkbox('time', true, 'Me connecter automatiquement lors de mes prochaines visites.').
+			template::closeRow() .
+			template::openRow() .
+			template::submit('submit', [
+				'value' => 'Me connecter',
+				'col' => 2
+			]) .
+			template::closeRow() .
+			template::closeForm();
 	}
 
 	/**
@@ -853,13 +857,17 @@ class helpers
 	 */
 	public static function redirect($url, $prefix = '?')
 	{
-		header('location:' . $prefix . $url);
-		exit();
+		if(empty(template::$notices)) {
+			header('location:' . $prefix . $url);
+			exit();
+		}
 	}
 }
 
 class template
 {
+	static $notices = [];
+
 	/**
 	 * Retourne les attributs d'une balise au bon format
 	 * @param array $array Liste des attributs ($key => $value)
@@ -969,20 +977,25 @@ class template
 			'offset' => 0
 		], $attributes);
 
-		// <div>
+		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
-		// <label>
+		// Notice
+		if(!empty(self::$notices[$nameId])) {
+			$html .= '<div class="notice">' . self::$notices[$nameId] . '</div>';
+			$attributes['class'] .= ' notice';
+		}
+		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label']);
 		}
-		// <input>
+		// Texte
 		$html .= sprintf(
 			'<input type="text" %s%s%s>',
 			self::sprintAttributes($attributes),
 			$attributes['disabled'] ? ' disabled' : false,
 			$attributes['readonly'] ? ' readonly' : false
 		);
-		// </div>
+		// Fin col
 		$html .= '</div>';
 
 		return $html;
@@ -1008,13 +1021,18 @@ class template
 			'offset' => 0
 		], $attributes);
 
-		// <div>
+		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
-		// <label>
+		// Notice
+		if(!empty(self::$notices[$nameId])) {
+			$html .= '<div class="notice">' . self::$notices[$nameId] . '</div>';
+			$attributes['class'] .= ' notice';
+		}
+		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label']);
 		}
-		// <input>
+		// Texte long
 		$html .= sprintf(
 			'<textarea %s%s%s>%s</textarea>',
 			self::sprintAttributes($attributes, ['value']),
@@ -1022,7 +1040,7 @@ class template
 			$attributes['readonly'] ? ' readonly' : false,
 			$attributes['value']
 		);
-		// </div>
+		// Fin col
 		$html .= '</div>';
 
 		return $html;
@@ -1048,20 +1066,25 @@ class template
 			'offset' => 0
 		], $attributes);
 
-		// <div>
+		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
-		// <label>
+		// Notice
+		if(!empty(self::$notices[$nameId])) {
+			$html .= '<div class="notice">' . self::$notices[$nameId] . '</div>';
+			$attributes['class'] .= ' notice';
+		}
+		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label']);
 		}
-		// <input>
+		// Mot de passe
 		$html .= sprintf(
 			'<input type="password" %s%s%s>',
 			self::sprintAttributes($attributes),
 			$attributes['disabled'] ? ' disabled' : false,
 			$attributes['readonly'] ? ' readonly' : false
 		);
-		// </div>
+		// Fin col
 		$html .= '</div>';
 
 		return $html;
@@ -1087,15 +1110,20 @@ class template
 			'offset' => 0
 		], $attributes);
 
-		// <div>
+		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
-		// <label>
+		// Notice
+		if(!empty(self::$notices[$nameId])) {
+			$html .= '<div class="notice">' . self::$notices[$nameId] . '</div>';
+			$attributes['class'] .= ' notice';
+		}
+		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label']);
 		}
-		// <select>
+		// Début sélection
 		$html .= sprintf('<select %s>', self::sprintAttributes($attributes, ['selected']));
-		// <option>
+		// Options
 		foreach($options as $value => $str) {
 			$html .= sprintf(
 				'<option value="%s"%s%s>%s</option>',
@@ -1105,16 +1133,16 @@ class template
 				$str
 			);
 		}
-		// </select>
+		// Fin sélection
 		$html .= '</select>';
-		// </div>
+		// Fin col
 		$html .= '</div>';
 
 		return $html;
 	}
 
 	/**
-	 * Crée  à sélection multiple
+	 * Crée case à cocher à sélection multiple
 	 * @param string $nameId Nom & id de la case à cocher à sélection multiple
 	 * @param string $value Valeur de la case à cocher à sélection multiple
 	 * @param string $label Label de la case à cocher à sélection multiple
@@ -1131,9 +1159,14 @@ class template
 			'offset' => 0
 		], $attributes);
 
-		// <div>
+		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
-		// <input>
+		// Notice
+		if(!empty(self::$notices[$nameId])) {
+			$html .= '<div class="notice">' . self::$notices[$nameId] . '</div>';
+			$attributes['class'] .= ' notice';
+		}
+		// Case à cocher
 		$html .= sprintf(
 			'<input type="checkbox" id="%s" name="%s" value="%s" %s%s%s>',
 			$nameId . '_' . $value,
@@ -1143,9 +1176,9 @@ class template
 			$attributes['checked'] ? ' checked' : false,
 			$attributes['disabled'] ? ' disabled' : false
 		);
-		// <label>
+		// Label
 		$html .= self::label($nameId . '_' . $value, $label);
-		// </div>
+		// Fin col
 		$html .= '</div>';
 
 		return $html;
@@ -1169,9 +1202,14 @@ class template
 			'offset' => 0
 		], $attributes);
 
-		// <div>
+		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
-		// <input>
+		// Notice
+		if(!empty(self::$notices[$nameId])) {
+			$html .= '<div class="notice">' . self::$notices[$nameId] . '</div>';
+			$attributes['class'] .= ' notice';
+		}
+		// Case à cocher
 		$html .= sprintf(
 			'<input type="radio" id="%s" name="%s" value="%s" %s%s%s>',
 			$nameId . '_' . $value,
@@ -1181,9 +1219,9 @@ class template
 			$attributes['checked'] ? ' checked' : false,
 			$attributes['disabled'] ? ' disabled' : false
 		);
-		// <label>
+		// Label
 		$html .= self::label($nameId . '_' . $value, $label);
-		// </div>
+		// Fin col
 		$html .= '</div>';
 
 		return $html;
@@ -1208,19 +1246,19 @@ class template
 			'offset' => 0
 		], $attributes);
 
-		// <div>
+		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
-		// <label>
+		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label']);
 		}
-		// <input>
+		// Bouton
 		$html .= sprintf(
 			'<input type="submit" %s%s>',
 			self::sprintAttributes($attributes),
 			$attributes['disabled'] ? ' disabled' : false
 		);
-		// </div>
+		// Fin col
 		$html .= '</div>';
 
 		return $html;
@@ -1248,13 +1286,13 @@ class template
 			'offset' => 0
 		], $attributes);
 
-		// <div>
+		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
-		// <label>
+		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label']);
 		}
-		// <input>
+		// Bouton
 		$html .= sprintf(
 			'<a %s class="button %s%s">%s</a>',
 			self::sprintAttributes($attributes, ['value', 'class']),
@@ -1262,7 +1300,7 @@ class template
 			$attributes['disabled'] ? ' disabled' : false,
 			$attributes['value']
 		);
-		// </div>
+		// Fin col
 		$html .= '</div>';
 
 		return $html;

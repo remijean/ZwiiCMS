@@ -27,28 +27,26 @@ class redirectionAdm extends core
 			$this->setNotification('Configuration du module enregistrée avec succès !');
 			helpers::redirect($this->getUrl());
 		}
-		else {
-			self::$content =
-				template::openForm() .
-				template::openRow() .
-				template::text('url', [
-					'label' => 'URL de redirection',
-					'value' => $this->getData($this->getUrl(1), 'url')
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::button('back', [
-					'value' => 'Retour',
-					'href' => '?edit/' . $this->getUrl(1),
-					'col' => 2
-				]) .
-				template::submit('submit', [
-					'col' => 2,
-					'offset' => 8
-				]) .
-				template::closeRow() .
-				template::closeForm();
-		}
+		self::$content =
+			template::openForm() .
+			template::openRow() .
+			template::text('url', [
+				'label' => 'URL de redirection',
+				'value' => $this->getData($this->getUrl(1), 'url')
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::button('back', [
+				'value' => 'Retour',
+				'href' => '?edit/' . $this->getUrl(1),
+				'col' => 2
+			]) .
+			template::submit('submit', [
+				'col' => 2,
+				'offset' => 8
+			]) .
+			template::closeRow() .
+			template::closeForm();
 	}
 }
 

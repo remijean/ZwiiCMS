@@ -27,28 +27,26 @@ class contactAdm extends core
 			$this->setNotification('Configuration du module enregistrée avec succès !');
 			helpers::redirect($this->getUrl());
 		}
-		else {
-			self::$content =
-				template::openForm() .
-				template::openRow() .
-				template::text('mail', [
-					'label' => 'Adresse de réception des mails',
-					'value' => $this->getData('modules', $this->getUrl(1), 'mail')
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::button('back', [
-					'value' => 'Retour',
-					'href' => '?edit/' . $this->getUrl(1),
-					'col' => 2
-				]) .
-				template::submit('submit', [
-					'col' => 2,
-					'offset' => 8
-				]) .
-				template::closeRow() .
-				template::closeForm();
-		}
+		self::$content =
+			template::openForm() .
+			template::openRow() .
+			template::text('mail', [
+				'label' => 'Adresse de réception des mails',
+				'value' => $this->getData('modules', $this->getUrl(1), 'mail')
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::button('back', [
+				'value' => 'Retour',
+				'href' => '?edit/' . $this->getUrl(1),
+				'col' => 2
+			]) .
+			template::submit('submit', [
+				'col' => 2,
+				'offset' => 8
+			]) .
+			template::closeRow() .
+			template::closeForm();
 	}
 }
 
@@ -89,33 +87,31 @@ class contactMod extends core
 			helpers::redirect($this->getUrl());
 		}
 		// Interface d'écriture de mail
-		else {
-			self::$content =
-				template::openForm() .
-				template::openRow() .
-				template::text('mail', [
-					'label' => 'Adresse mail',
-					'col' => 6
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::text('subject', [
-					'label' => 'Sujet',
-					'col' => 6
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::textarea('message', [
-					'label' => 'Sujet',
-					'col' => 7
-				]) .
-				template::closeRow() .
-				template::openRow() .
-				template::submit('submit', [
-					'col' => 2
-				]) .
-				template::closeRow() .
-				template::closeForm();
-		}
+		self::$content =
+			template::openForm() .
+			template::openRow() .
+			template::text('mail', [
+				'label' => 'Adresse mail',
+				'col' => 6
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::text('subject', [
+				'label' => 'Sujet',
+				'col' => 6
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::textarea('message', [
+				'label' => 'Sujet',
+				'col' => 7
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::submit('submit', [
+				'col' => 2
+			]) .
+			template::closeRow() .
+			template::closeForm();
 	}
 }
