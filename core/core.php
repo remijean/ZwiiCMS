@@ -527,8 +527,14 @@ class core
 	public function config()
 	{
 		if($this->getPost('submit')) {
-			if($this->getPost('password') AND $this->getPost('password') === $this->getPost('confirm')) {
-				$password = $this->getPost('password', helpers::PASSWORD);
+			if($this->getPost('password')) {
+				if($this->getPost('password') === $this->getPost('confirm')) {
+					$password = $this->getPost('password', helpers::PASSWORD);
+				}
+				else {
+					$password = $this->getData('config', 'password');
+					$this->setNotification('Mot de passe inchangé : Les mots de passe saisis sont différents.');
+				}
 			}
 			else {
 				$password = $this->getData('config', 'password');
