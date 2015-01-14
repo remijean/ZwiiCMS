@@ -180,7 +180,7 @@ class core
 	 */
 	public function setNotification($notification)
 	{
-		$_SESSION['NOTIFICATION'] = $notification;
+		$_SESSION['NOTIFICATION'] .= $notification.'<br>';
 	}
 
 	/**
