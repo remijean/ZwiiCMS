@@ -101,18 +101,20 @@ class core
 	 */
 	public function saveData($removeAllCache = false)
 	{
-		$it = new DirectoryIterator('core/cache/');
-		foreach($it as $file) {
-			if($file->isFile()) {
-				if($removeAllCache === true) {
-					unlink($file->getPathname());
-				}
-				elseif($this->getUrl(1) === explode('_', $file->getBasename('.html'))[0]) {
-					unlink($file->getPathname());
+		if(file_exists('core/cache/')) {
+			$it = new DirectoryIterator('core/cache/');
+			foreach($it as $file) {
+				if($file->isFile()) {
+					if($removeAllCache === true) {
+						unlink($file->getPathname());
+					}
+					elseif($this->getUrl(1) === explode('_', $file->getBasename('.html'))[0]) {
+						unlink($file->getPathname());
+					}
 				}
 			}
 		}
-
+		
 		return file_put_contents('core/data.json', json_encode($this->getData()));
 	}
 
