@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title><?php echo self::$title; ?> - <?php echo $this->getData('config', 'title'); ?></title>
+	<title><?php echo self::$title; echo $this->getData('config', 'title') ? " - " : ""; echo $this->getData('config', 'title'); ?></title>
 	<meta name="description" content="<?php echo $this->getData('config', 'description'); ?>">
 	<meta name="keywords" content="<?php echo $this->getData('config', 'keywords'); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
