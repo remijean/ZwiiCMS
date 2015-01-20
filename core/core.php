@@ -101,7 +101,7 @@ class core
 	 */
 	public function saveData($removeAllCache = false)
 	{
-		if(empty(template::$notices)) {
+		if(!template::$notices) {
 			if(file_exists('core/cache/')) {
 				$it = new DirectoryIterator('core/cache/');
 				foreach($it as $file) {
@@ -187,7 +187,7 @@ class core
 	 */
 	public function setNotification($notification)
 	{
-		if(empty(template::$notices)) {
+		if(!template::$notices) {
 			$_SESSION['NOTIFICATION'] = $notification;
 		}
 	}
@@ -219,6 +219,10 @@ class core
 	public function getPost($key, $filter = null)
 	{
 		if(empty($_POST[$key])) {
+			if(!empty($_SESSION['REQUIRED']) AND in_array($key, $_SESSION['REQUIRED'])) {
+				template::$notices[$key] = 'Ce champ est requis';
+			}
+
 			return false;
 		}
 		else {
@@ -407,7 +411,8 @@ class core
 			template::openRow() .
 			template::text('title', [
 				'label' => 'Titre de la page',
-				'value' => $this->getData('pages', $this->getUrl(1), 'title')
+				'value' => $this->getData('pages', $this->getUrl(1), 'title'),
+				'required' => true
 			]) .
 			template::closeRow() .
 			template::openRow() .
@@ -573,17 +578,19 @@ class core
 			template::openRow() .
 			template::text('title', [
 				'label' => 'Titre du site',
+				'required' => true,
 				'value' => $this->getData('config', 'title')
 			]) .
 			template::closeRow() .
 			template::openRow() .
 			template::textarea('description', [
 				'label' => 'Description du site',
+				'required' => true,
 				'value' => $this->getData('config', 'description')
 			]) .
 			template::closeRow() .
 			template::openRow() .
-			template::password('password', [
+			template::text('password', [
 				'label' => 'Nouveau mot de passe',
 				'col' => 6
 			]) .
@@ -595,12 +602,14 @@ class core
 			template::openRow() .
 			template::select('index', helpers::arrayCollumn($this->getData('pages'), 'title', 'SORT_ASC', true), [
 				'label' => 'Page d\'accueil',
+				'required' => true,
 				'selected' => $this->getData('config', 'index')
 			]) .
 			template::closeRow() .
 			template::openRow() .
 			template::select('theme', helpers::listThemes(), [
 				'label' => 'Thème par défaut',
+				'required' => true,
 				'selected' => $this->getData('config', 'theme')
 			]) .
 			template::closeRow() .
@@ -657,6 +666,7 @@ class core
 			template::openForm() .
 			template::openRow() .
 			template::password('password', [
+				'required' => true,
 				'col' => 4
 			]) .
 			template::closeRow() .
@@ -854,7 +864,7 @@ class helpers
 	 */
 	public static function redirect($url, $prefix = '?')
 	{
-		if(empty(template::$notices)) {
+		if(!template::$notices) {
 			header('location:' . $prefix . $url);
 			exit();
 		}
@@ -873,7 +883,7 @@ class template
 	 */
 	private static function sprintAttributes(array $array = [], array $exclude = [])
 	{
-		$exclude = array_merge(['col', 'offset', 'label', 'readonly', 'disabled'], $exclude);
+		$exclude = array_merge(['col', 'offset', 'label', 'readonly', 'disabled', 'required'], $exclude);
 		$attributes = [];
 		foreach($array as $key => $value) {
 			if($value AND !in_array($key, $exclude)) {
@@ -968,11 +978,17 @@ class template
 			'placeholder' => '',
 			'disabled' => false,
 			'readonly' => false,
+			'required' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
+
+		// Champ requis
+		if($attributes['required']) {
+			$_SESSION['REQUIRED'][] = $nameId;
+		}
 
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
@@ -987,10 +1003,11 @@ class template
 		}
 		// Texte
 		$html .= sprintf(
-			'<input type="text" %s%s%s>',
+			'<input type="text" %s%s%s%s>',
 			self::sprintAttributes($attributes),
 			$attributes['disabled'] ? ' disabled' : false,
-			$attributes['readonly'] ? ' readonly' : false
+			$attributes['readonly'] ? ' readonly' : false,
+			$attributes['required'] ? ' required' : false
 		);
 		// Fin col
 		$html .= '</div>';
@@ -1012,11 +1029,17 @@ class template
 			'value' => '',
 			'disabled' => false,
 			'readonly' => false,
+			'required' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
+
+		// Champ requis
+		if($attributes['required']) {
+			$_SESSION['REQUIRED'][] = $nameId;
+		}
 
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
@@ -1031,10 +1054,11 @@ class template
 		}
 		// Texte long
 		$html .= sprintf(
-			'<textarea %s%s%s>%s</textarea>',
+			'<textarea %s%s%s%s>%s</textarea>',
 			self::sprintAttributes($attributes, ['value']),
 			$attributes['disabled'] ? ' disabled' : false,
 			$attributes['readonly'] ? ' readonly' : false,
+			$attributes['required'] ? ' required' : false,
 			$attributes['value']
 		);
 		// Fin col
@@ -1057,11 +1081,17 @@ class template
 			'placeholder' => '',
 			'disabled' => false,
 			'readonly' => false,
+			'required' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
+
+		// Champ requis
+		if($attributes['required']) {
+			$_SESSION['REQUIRED'][] = $nameId;
+		}
 
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
@@ -1076,10 +1106,11 @@ class template
 		}
 		// Mot de passe
 		$html .= sprintf(
-			'<input type="password" %s%s%s>',
+			'<input type="password" %s%s%s%s>',
 			self::sprintAttributes($attributes),
 			$attributes['disabled'] ? ' disabled' : false,
-			$attributes['readonly'] ? ' readonly' : false
+			$attributes['readonly'] ? ' readonly' : false,
+			$attributes['required'] ? ' required' : false
 		);
 		// Fin col
 		$html .= '</div>';
@@ -1101,11 +1132,17 @@ class template
 			'name' => $nameId,
 			'selected' => '',
 			'disabled' => false,
+			'required' => false,
 			'label' => '',
 			'class' => '',
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
+
+		// Champ requis
+		if($attributes['required']) {
+			$_SESSION['REQUIRED'][] = $nameId;
+		}
 
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
@@ -1123,10 +1160,11 @@ class template
 		// Options
 		foreach($options as $value => $str) {
 			$html .= sprintf(
-				'<option value="%s"%s%s>%s</option>',
+				'<option value="%s"%s%s%s>%s</option>',
 				$value,
 				$attributes['selected'] === $value ? ' selected' : false,
 				$attributes['disabled'] ? ' disabled' : false,
+				$attributes['required'] ? ' required' : false,
 				$str
 			);
 		}
@@ -1151,10 +1189,16 @@ class template
 		$attributes = array_merge([
 			'checked' => false,
 			'disabled' => false,
+			'required' => false,
 			'class' => '',
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
+
+		// Champ requis
+		if($attributes['required']) {
+			$_SESSION['REQUIRED'][] = $nameId;
+		}
 
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
@@ -1165,13 +1209,14 @@ class template
 		}
 		// Case à cocher
 		$html .= sprintf(
-			'<input type="checkbox" id="%s" name="%s" value="%s" %s%s%s>',
+			'<input type="checkbox" id="%s" name="%s" value="%s" %s%s%s%s>',
 			$nameId . '_' . $value,
 			$nameId . '[]',
 			$value,
 			self::sprintAttributes($attributes, ['checked']),
 			$attributes['checked'] ? ' checked' : false,
-			$attributes['disabled'] ? ' disabled' : false
+			$attributes['disabled'] ? ' disabled' : false,
+			$attributes['required'] ? ' required' : false
 		);
 		// Label
 		$html .= self::label($nameId . '_' . $value, $label);
@@ -1194,10 +1239,16 @@ class template
 		$attributes = array_merge([
 			'checked' => false,
 			'disabled' => false,
+			'required' => false,
 			'class' => '',
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
+
+		// Champ requis
+		if($attributes['required']) {
+			$_SESSION['REQUIRED'][] = $nameId;
+		}
 
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
@@ -1208,13 +1259,14 @@ class template
 		}
 		// Case à cocher
 		$html .= sprintf(
-			'<input type="radio" id="%s" name="%s" value="%s" %s%s%s>',
+			'<input type="radio" id="%s" name="%s" value="%s" %s%s%s%s>',
 			$nameId . '_' . $value,
 			$nameId . '[]',
 			$value,
 			self::sprintAttributes($attributes, ['checked']),
 			$attributes['checked'] ? ' checked' : false,
-			$attributes['disabled'] ? ' disabled' : false
+			$attributes['disabled'] ? ' disabled' : false,
+			$attributes['required'] ? ' required' : false
 		);
 		// Label
 		$html .= self::label($nameId . '_' . $value, $label);

@@ -92,18 +92,21 @@ class contactMod extends core
 			template::openRow() .
 			template::text('mail', [
 				'label' => 'Adresse mail',
+				'required' => true,
 				'col' => 6
 			]) .
 			template::closeRow() .
 			template::openRow() .
 			template::text('subject', [
 				'label' => 'Sujet',
+				'required' => true,
 				'col' => 6
 			]) .
 			template::closeRow() .
 			template::openRow() .
 			template::textarea('message', [
 				'label' => 'Sujet',
+				'required' => true,
 				'col' => 7
 			]) .
 			template::closeRow() .

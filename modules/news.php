@@ -67,7 +67,8 @@ class newsAdm extends core
 			template::openForm() .
 			template::openRow() .
 			template::text('title', [
-				'label' => 'Titre de la news'
+				'label' => 'Titre de la news',
+				'required' => true
 			]) .
 			template::closeRow() .
 			template::openRow() .
@@ -123,7 +124,8 @@ class newsAdm extends core
 			template::openRow() .
 			template::text('title', [
 				'label' => 'Titre de la news',
-				'value' => $this->getData($this->getUrl(1), $this->getUrl(3), 'title')
+				'value' => $this->getData($this->getUrl(1), $this->getUrl(3), 'title'),
+				'required' => true
 			]) .
 			template::closeRow() .
 			template::openRow() .
