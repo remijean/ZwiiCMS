@@ -187,7 +187,9 @@ class core
 	 */
 	public function setNotification($notification)
 	{
-		$_SESSION['NOTIFICATION'] = $notification;
+		if(empty(template::$notices)) {
+			$_SESSION['NOTIFICATION'] = $notification;
+		}
 	}
 
 	/**
