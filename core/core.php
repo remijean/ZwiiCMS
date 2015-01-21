@@ -26,7 +26,7 @@ class core
 	public static $title = false;
 	public static $content = false;
 
-	const VERSION = '7.0.0';
+	const VERSION = '7.1.0';
 
 	public function __construct()
 	{
