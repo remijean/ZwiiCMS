@@ -23,10 +23,9 @@ class newsAdm extends core
 	public function index()
 	{
 		if($this->getPost('submit')) {
-			$title = $this->getPost('title') ? $this->getPost('title', helpers::STRING) : 'sans-titre';
-			$key = helpers::increment(helpers::filter($title, helpers::URL), $this->getData($this->getUrl(1)));
+			$key = helpers::increment($this->getPost('title', helpers::URL), $this->getData($this->getUrl(1)));
 			$this->setData($this->getUrl(1), $key, [
-				'title' => $title,
+				'title' => $this->getPost('title', helpers::STRING),
 				'date' => time(),
 				'content' => $this->getPost('content'),
 			]);
@@ -103,16 +102,14 @@ class newsAdm extends core
 			return false;
 		}
 		elseif($this->getPost('submit')) {
-			$title = $this->getPost('title') ? $this->getPost('title', helpers::STRING) : 'sans-titre';
-			$date = $this->getData($this->getUrl(1), $this->getUrl(3), 'date');
-			$key = helpers::filter($title, helpers::URL);
+			$key = $this->getPost('title') ? $this->getPost('title', helpers::URL) : $this->getUrl(3);
 			if($key !== $this->getUrl(3)) {
 				$key = helpers::increment($key, $this->getData($this->getUrl(1)));
 				$this->removeData($this->getUrl(1), $this->getUrl(3));
 			}
 			$this->setData($this->getUrl(1), $key, [
-				'title' => $title,
-				'date' => $date,
+				'title' => $this->getPost('title', helpers::STRING),
+				'date' => $this->getData($this->getUrl(1), $this->getUrl(3), 'date'),
 				'content' => $this->getPost('content')
 			]);
 			$this->saveData();

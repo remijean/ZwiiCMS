@@ -18,7 +18,8 @@ class core
 {
 	private $data;
 	private $url;
-	private $notification;
+	private $error;
+	private $success;
 
 	private static $modules = ['create', 'edit', 'module', 'delete', 'clean', 'export', 'mode', 'config', 'logout'];
 	public static $views = [];
@@ -33,7 +34,8 @@ class core
 		$this->url = empty($_SERVER['QUERY_STRING']) ? $this->getData('config', 'index') : $_SERVER['QUERY_STRING'];
 		$this->url = helpers::filter($this->url, helpers::URL);
 		$this->url = explode('/', $this->url);
-		$this->notification = empty($_SESSION['NOTIFICATION']) ? false : $_SESSION['NOTIFICATION'];
+		$this->error = empty($_SESSION['ERROR']) ? false : $_SESSION['ERROR'];
+		$this->success = empty($_SESSION['SUCCESS']) ? false : $_SESSION['SUCCESS'];
 	}
 
 	/**
@@ -80,10 +82,14 @@ class core
 	 * @param string $key1 Clé de niveau 1
 	 * @param string $key2 Clé de niveau 2
 	 * @param string $key3 Clé de niveau 3
+	 * @return bool False si une notice existe
 	 */
 	public function removeData($key1, $key2 = null, $key3 = null)
 	{
-		if($key3 !== null) {
+		if(template::$notices) {
+			return false;
+		}
+		elseif($key3 !== null) {
 			unset($this->data[$key1][$key2][$key3]);
 		}
 		elseif($key2 !== null) {
@@ -97,21 +103,22 @@ class core
 	/**
 	 * Enregistre le tableau de données et supprime les fichiers de cache
 	 * @param bool $removeAllCache Supprime l'ensemble des fichiers cache, sinon supprime juste les fichiers cache en rapport avec le module courant ($this->getUrl(1))
-	 * @return mixed Nombre de bytes du tableau de données ou false en cas d'erreur
+	 * @return mixed Nombre de bytes du tableau de données et false en cas d'erreur ou si une notice existe
 	 */
 	public function saveData($removeAllCache = false)
 	{
-		if(!template::$notices) {
-			if(file_exists('core/cache/')) {
-				$it = new DirectoryIterator('core/cache/');
-				foreach($it as $file) {
-					if($file->isFile()) {
-						if($removeAllCache === true) {
-							unlink($file->getPathname());
-						}
-						elseif($this->getUrl(1) === explode('_', $file->getBasename('.html'))[0]) {
-							unlink($file->getPathname());
-						}
+		if(template::$notices) {
+			return false;
+		}
+		elseif(file_exists('core/cache/')) {
+			$it = new DirectoryIterator('core/cache/');
+			foreach($it as $file) {
+				if($file->isFile()) {
+					if($removeAllCache === true) {
+						unlink($file->getPathname());
+					}
+					elseif($this->getUrl(1) === explode('_', $file->getBasename('.html'))[0]) {
+						unlink($file->getPathname());
 					}
 				}
 			}
@@ -169,12 +176,17 @@ class core
 	public function getNotification()
 	{
 		if(template::$notices) {
-			return '<div id="notification" class="error">Il existe des erreurs dans le formulaire, il est impossible de le valider !</div>';
+			return '<div id="notification" class="error">Impossible d\'enregistrer les données, le formulaire contient des erreurs !</div>';
 		}
-		elseif($this->notification) {
-			unset($_SESSION['NOTIFICATION']);
+		elseif($this->error) {
+			unset($_SESSION['ERROR']);
 
-			return '<div id="notification" class="success">' . $this->notification . '</div>';
+			return '<div id="notification" class="error">' . $this->error . '</div>';
+		}
+		elseif($this->success) {
+			unset($_SESSION['SUCCESS']);
+
+			return '<div id="notification" class="success">' . $this->success . '</div>';
 		}
 		else {
 			return false;
@@ -185,10 +197,11 @@ class core
 	 * Modifie la notification
 	 * @param string $notification Notification
 	 */
-	public function setNotification($notification)
+	public function setNotification($notification, $error = false)
 	{
 		if(!template::$notices) {
-			$_SESSION['NOTIFICATION'] = $notification;
+			$type = $error ? 'ERROR' : 'SUCCESS';
+			$_SESSION[$type] = $notification;
 		}
 	}
 
@@ -219,11 +232,7 @@ class core
 	public function getPost($key, $filter = null)
 	{
 		if(empty($_POST[$key])) {
-			if(!empty($_SESSION['REQUIRED']) AND in_array($key, $_SESSION['REQUIRED'])) {
-				template::$notices[$key] = 'Ce champ est requis';
-			}
-
-			return false;
+			return template::getRequired($key);
 		}
 		else {
 			return ($filter !== null) ? helpers::filter($_POST[$key], $filter) : $_POST[$key];
@@ -377,8 +386,7 @@ class core
 			return false;
 		}
 		elseif($this->getPost('submit')) {
-			$title = $this->getPost('title') ? $this->getPost('title') : 'Sans titre';
-			$key = helpers::filter($title, helpers::URL);
+			$key = $this->getPost('title') ? $this->getPost('title', helpers::URL) : $this->getUrl(1);
 			if($key !== $this->getUrl(1)) {
 				$key = helpers::increment($key, $this->getData('pages'));
 				$key = helpers::increment($key, self::$modules);
@@ -393,7 +401,7 @@ class core
 				$this->removeData($key);
 			}
 			$this->setData('pages', $key, [
-				'title' => helpers::filter($title, helpers::STRING),
+				'title' => $this->getPost('title', helpers::STRING),
 				'menu' => $this->getPost('menu', helpers::INT),
 				'blank' => $this->getPost('blank', helpers::BOOLEAN),
 				'theme' => $this->getPost('theme', helpers::STRING),
@@ -492,7 +500,7 @@ class core
 			return false;
 		}
 		elseif($this->getUrl(1) === $this->getData('config', 'index')) {
-			$this->setNotification('Impossible de supprimer la page d\'accueil !');
+			$this->setNotification('Impossible de supprimer la page d\'accueil !', true);
 		}
 		else {
 			$this->removeData('pages', $this->getUrl(1));
@@ -742,14 +750,19 @@ class helpers
 	 */
 	public static function increment($key, $array)
 	{
-		$i = 2;
-		$newKey = $key;
-		while(array_key_exists($newKey, $array) OR in_array($newKey, $array)) {
-			$newKey = $key . '-' . $i;
-			$i++;
+		if(empty($array)) {
+			return $key;
 		}
+		else {
+			$i = 2;
+			$newKey = $key;
+			while(array_key_exists($newKey, $array) OR in_array($newKey, $array)) {
+				$newKey = $key . '-' . $i;
+				$i++;
+			}
 
-		return $newKey;
+			return $newKey;
+		}
 	}
 
 	/**
@@ -876,6 +889,30 @@ class template
 	static $notices = [];
 
 	/**
+	 * @param string|int $key
+	 * @return bool Retourne false car cette fonction intervient quand un champ est vide
+	 */
+	public static function getRequired($key)
+	{
+		if(!empty($_SESSION['REQUIRED']) AND in_array($key . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED'])) {
+			self::$notices[$key] = 'Ce champ est requis';
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param string $nameId
+	 * @param array $attributes
+	 */
+	private static function setRequired($nameId, $attributes)
+	{
+		if($attributes['required'] AND (empty($_SESSION['REQUIRED']) OR !in_array($nameId . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED']))) {
+			$_SESSION['REQUIRED'][] = $nameId . '.' . md5($_SERVER['QUERY_STRING']);
+		}
+	}
+
+	/**
 	 * Retourne les attributs d'une balise au bon format
 	 * @param array $array Liste des attributs ($key => $value)
 	 * @param array $exclude Clés à ignorer ($key)
@@ -986,20 +1023,18 @@ class template
 		], $attributes);
 
 		// Champ requis
-		if($attributes['required']) {
-			$_SESSION['REQUIRED'][] = $nameId;
-		}
+		self::setRequired($nameId, $attributes);
 
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		// Label
+		if($attributes['label']) {
+			$html .= self::label($nameId, $attributes['label']);
+		}
 		// Notice
 		if(!empty(self::$notices[$nameId])) {
 			$html .= '<div class="notice">' . self::$notices[$nameId] . '</div>';
 			$attributes['class'] .= ' notice';
-		}
-		// Label
-		if($attributes['label']) {
-			$html .= self::label($nameId, $attributes['label']);
 		}
 		// Texte
 		$html .= sprintf(
@@ -1037,20 +1072,18 @@ class template
 		], $attributes);
 
 		// Champ requis
-		if($attributes['required']) {
-			$_SESSION['REQUIRED'][] = $nameId;
-		}
+		self::setRequired($nameId, $attributes);
 
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		// Label
+		if($attributes['label']) {
+			$html .= self::label($nameId, $attributes['label']);
+		}
 		// Notice
 		if(!empty(self::$notices[$nameId])) {
 			$html .= '<div class="notice">' . self::$notices[$nameId] . '</div>';
 			$attributes['class'] .= ' notice';
-		}
-		// Label
-		if($attributes['label']) {
-			$html .= self::label($nameId, $attributes['label']);
 		}
 		// Texte long
 		$html .= sprintf(
@@ -1089,20 +1122,18 @@ class template
 		], $attributes);
 
 		// Champ requis
-		if($attributes['required']) {
-			$_SESSION['REQUIRED'][] = $nameId;
-		}
+		self::setRequired($nameId, $attributes);
 
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		// Label
+		if($attributes['label']) {
+			$html .= self::label($nameId, $attributes['label']);
+		}
 		// Notice
 		if(!empty(self::$notices[$nameId])) {
 			$html .= '<div class="notice">' . self::$notices[$nameId] . '</div>';
 			$attributes['class'] .= ' notice';
-		}
-		// Label
-		if($attributes['label']) {
-			$html .= self::label($nameId, $attributes['label']);
 		}
 		// Mot de passe
 		$html .= sprintf(
@@ -1140,20 +1171,18 @@ class template
 		], $attributes);
 
 		// Champ requis
-		if($attributes['required']) {
-			$_SESSION['REQUIRED'][] = $nameId;
-		}
+		self::setRequired($nameId, $attributes);
 
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		// Label
+		if($attributes['label']) {
+			$html .= self::label($nameId, $attributes['label']);
+		}
 		// Notice
 		if(!empty(self::$notices[$nameId])) {
 			$html .= '<div class="notice">' . self::$notices[$nameId] . '</div>';
 			$attributes['class'] .= ' notice';
-		}
-		// Label
-		if($attributes['label']) {
-			$html .= self::label($nameId, $attributes['label']);
 		}
 		// Début sélection
 		$html .= sprintf('<select %s>', self::sprintAttributes($attributes, ['selected']));
@@ -1196,9 +1225,7 @@ class template
 		], $attributes);
 
 		// Champ requis
-		if($attributes['required']) {
-			$_SESSION['REQUIRED'][] = $nameId;
-		}
+		self::setRequired($nameId, $attributes);
 
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
@@ -1246,9 +1273,7 @@ class template
 		], $attributes);
 
 		// Champ requis
-		if($attributes['required']) {
-			$_SESSION['REQUIRED'][] = $nameId;
-		}
+		self::setRequired($nameId, $attributes);
 
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
