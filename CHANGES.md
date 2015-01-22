@@ -1,8 +1,13 @@
 ZwiiCMS 7
 =========
 
+## 7.1.1
+* Optimisation du css
+* Correction du bug de champ requis pour le nouveau mot de passe du module de configuration
+
 ## 7.1.0
 
+* Correction d'un bug à la création d'une news sans titre
 * Ajout des notifications d'erreur en plus des notifications de succès
 * Ajout de notices aux champs des formulaires
 * Modification des réactions du responsive
