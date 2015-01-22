@@ -598,7 +598,7 @@ class core
 			]) .
 			template::closeRow() .
 			template::openRow() .
-			template::text('password', [
+			template::password('password', [
 				'label' => 'Nouveau mot de passe',
 				'col' => 6
 			]) .
@@ -674,7 +674,6 @@ class core
 			template::openForm() .
 			template::openRow() .
 			template::password('password', [
-				'required' => true,
 				'col' => 4
 			]) .
 			template::closeRow() .
