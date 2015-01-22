@@ -172,9 +172,6 @@ form {
  * Inputs génériques
  */
 
-form {
-	margin: 15px 0;
-}
 input[type="text"],
 input[type="password"],
 input[type="file"],
