@@ -348,7 +348,7 @@ class core
 	{
 		$edit = ($this->getCookie() === $this->getData('config', 'password')) ? $this->getMode() : false;
 		$pages = false;
-		$menu = helpers::arrayCollumn($this->getData('pages'), 'menu', 'SORT_ASC');
+		$menu = helpers::arrayCollumn($this->getData('pages'), 'position', 'SORT_ASC');
 		foreach($menu as $key) {
 			$current = ($key === $this->getUrl(0) OR $key === $this->getUrl(1)) ? ' class="current"' : false;
 			$blank = ($this->getData('pages', $key, 'blank') AND !$this->getMode()) ? ' target="_blank"' : false;
@@ -366,9 +366,9 @@ class core
 		$key = helpers::increment('nouvelle-page', $this->getData('pages'));
 		$this->setData('pages', $key, [
 			'title' => 'Nouvelle page',
-			'menu' => '0',
-			'position' => false,
+			'position' => '0',
 			'blank' => false,
+			'theme' => false,
 			'module' => false,
 			'content' => '<p>Contenu de la page.</p>'
 		]);
@@ -402,7 +402,7 @@ class core
 			}
 			$this->setData('pages', $key, [
 				'title' => $this->getPost('title', helpers::STRING),
-				'menu' => $this->getPost('menu', helpers::INT),
+				'position' => $this->getPost('position', helpers::INT),
 				'blank' => $this->getPost('blank', helpers::BOOLEAN),
 				'theme' => $this->getPost('theme', helpers::STRING),
 				'module' => $this->getPost('module', helpers::STRING),
@@ -424,9 +424,9 @@ class core
 			]) .
 			template::closeRow() .
 			template::openRow() .
-			template::text('menu', [
+			template::text('position', [
 				'label' => 'Position dans le menu',
-				'value' => $this->getData('pages', $this->getUrl(1), 'menu')
+				'value' => $this->getData('pages', $this->getUrl(1), 'position')
 			]) .
 			template::closeRow() .
 			template::openRow() .
