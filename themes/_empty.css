@@ -4,53 +4,53 @@ body {}
  * Container
  */
 
-div#container {}
+#container {}
 
 /**
  * Titre du site
  */
 
-h1#header {}
+#header {}
 
 /**
  * Menu
  */
 
 /* Menu */
-div#toggle,
-ul#menu {}
+#toggle,
+#menu {}
 
 /* Icône du menu en mode responsive */
-div#toggle > span {
+#toggle > span {
 	/* Blanc */
-	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gweDQQTedwN2wAAACxJREFUSMdjYBgFo4BSwIjM+f///3+qGMrICDeXaTSMRyN5FIxG8igYBfQAAKEtDAplk4dlAAAAAElFTkSuQmCC');
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gweDQQTedwN2wAAACxJREFUSMdjYBgFo4BSwIjM+f///3+qGMrICDeXaTSMRyN5FIxG8igYBfQAAKEtDAplk4dlAAAAAElFTkSuQmCC);
 	/* Noir */
-	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gweDREk9tROwAAAAC1JREFUSMdjYBgFo4BSwIjMcXFx+U8NQ/fs2QM3l2k0jEcjeRSMRvIoGAX0AADHtwwK/qaMdgAAAABJRU5ErkJggg==');
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gweDREk9tROwAAAAC1JREFUSMdjYBgFo4BSwIjMcXFx+U8NQ/fs2QM3l2k0jEcjeRSMRvIoGAX0AADHtwwK/qaMdgAAAABJRU5ErkJggg==);
 }
 
 /* Liens du menu */
-ul#menu > li > a {}
+#menu > li > a {}
 
 /* Liens du menu survolés */
-div#toggle:hover,
-ul#menu > li > a:hover {}
+#toggle:hover,
+#menu > li > a:hover {}
 
 /* Liens du menu appuyés et lien courant */
-div#toggle:active,
-ul#menu > li > a:active,
-ul#menu > li > a.current {}
+#toggle:active,
+#menu > li > a:active,
+#menu > li > a.current {}
 
 /**
  * Corps
  */
 
-div#section {}
+#section {}
 
 /**
  * Bas de page
  */
 
-div#footer {}
+#footer {}
 
 /**
  * Titres
@@ -78,23 +78,23 @@ a:hover {}
  */
 
 /* Boutons */
-input[type="submit"],
-a.button {}
+input[type='submit'],
+.button {}
 
 /* Boutons survolés */
-input[type="submit"]:hover,
-a.button:hover {}
+input[type='submit']:hover,
+.button:hover {}
 
 /* Boutons appuyés */
-input[type="submit"]:active,
-a.button:active {}
+input[type='submit']:active,
+.button:active {}
 
 /* Cases à cocher non cochées */
-input[type="checkbox"]:checked + label::before,
-input[type="radio"]:checked + label::before {}
+input[type='checkbox']:checked + label:before,
+input[type='radio']:checked + label:before {}
 
 /* Cases à cocher cochées */
-input[type="checkbox"]:not(:active):checked:hover + label::before,
-input[type="checkbox"]:active + label::before,
-input[type="radio"]:checked:hover + label::before,
-input[type="radio"]:not(:checked):active + label::before {}
+input[type='checkbox']:not(:active):checked:hover + label:before,
+input[type='checkbox']:active + label:before,
+input[type='radio']:checked:hover + label:before,
+input[type='radio']:not(:checked):active + label:before {}

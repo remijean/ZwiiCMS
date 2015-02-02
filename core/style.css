@@ -7,58 +7,58 @@ body {
 }
 
 /* Notification */
-div#notification {
+#notification {
 	background: #DDD;
 	text-align: center;
 	padding: 15px;
 	color: #FFF;
 }
-div#notification.success {
+#notification.success {
 	background: #41AF6C;
 }
-div#notification.error {
+#notification.error {
 	background: #FC6160;
 }
 
 /* Notice */
-div.notice {
+.notice {
 	margin-bottom: 2px;
 	color: #FC6160;
 }
 
 /* Panneau */
-ul#panel {
+#panel {
 	background: #333;
 	padding: 0 5px;
 	margin: 0;
 	list-style: none;
 }
-ul#panel > li {
+#panel > li {
 	display: inline;
 }
-ul#panel > li > a {
+#panel > li > a {
 	display: inline-block;
 	color: #FFF;
 	padding: 10px;
 }
-ul#panel > li > a:hover {
+#panel > li > a:hover {
 	background: #222;
 	text-decoration: none;
 }
-ul#panel > li > a:active {
+#panel > li > a:active {
 	background: #111;
 }
-ul#panel > li > select {
+#panel > li > select {
 	width: 250px;
 	padding: 5px;
 	border: 0;
 }
 @media (max-width: 768px)
 {
-	ul#panel {
+	#panel {
 		text-align: center;
 	}
-	ul#panel > li > select {
+	#panel > li > select {
 		width: 100%;
 		margin-top: 5px;
 		display: inline-block;
@@ -66,70 +66,70 @@ ul#panel > li > select {
 }
 
 /* Titre du site */
-h1#header {
+#header {
 	margin: 0;
 }
 
 /* Menu */
-div#toggle {
+#toggle {
 	cursor: pointer;
 	background: #DDD;
 	padding: 13px 10px; /* -2px à cause de l'image */
 	text-align: right;
 	display: none;
 }
-ul#menu {
+#menu {
 	display: block;
 }
-div#toggle:hover {
+#toggle:hover {
 	background: #DDD;
 }
-div#toggle:active {
+#toggle:active {
 	background: #CCC;
 }
-div#toggle > span {
+#toggle > span {
 	display: inline-block;
 	vertical-align: middle;
 	width: 24px;
 	height: 24px;
-	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gweDREk9tROwAAAAC1JREFUSMdjYBgFo4BSwIjMcXFx+U8NQ/fs2QM3l2k0jEcjeRSMRvIoGAX0AADHtwwK/qaMdgAAAABJRU5ErkJggg==');
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gweDREk9tROwAAAAC1JREFUSMdjYBgFo4BSwIjMcXFx+U8NQ/fs2QM3l2k0jEcjeRSMRvIoGAX0AADHtwwK/qaMdgAAAABJRU5ErkJggg==);
 }
-ul#menu {
+#menu {
 	background: #DDD;
 	padding: 0;
 	margin: 0;
 	list-style: none;
 }
-ul#menu > li {
+#menu > li {
 	display: inline-block;
 }
-ul#menu > li > a {
+#menu > li > a {
 	display: inherit;
 	padding: 15px 10px;
 }
-ul#menu > li > a:hover {
+#menu > li > a:hover {
 	background: #DDD;
 	text-decoration: none;
 }
-ul#menu > li > a:active,
-ul#menu > li > a.current {
+#menu > li > a:active,
+#menu > li > a.current {
 	background: #CCC;
 }
 @media (max-width: 768px) {
-	div#toggle {
+	#toggle {
 		display: block;
 	}
-	ul#menu {
+	#menu {
 		display: none;
 		text-align: center;
 	}
-	ul#menu > li {
+	#menu > li {
 		display: block;
 	}
 }
 
 /* Corps */
-div#section img {
+#section img {
 	max-width: 100%;
 }
 
@@ -172,9 +172,9 @@ form {
  * Inputs génériques
  */
 
-input[type="text"],
-input[type="password"],
-input[type="file"],
+input[type='text'],
+input[type='password'],
+input[type='file'],
 select,
 textarea {
 	padding: 9px; /* -1px à cause des bordures */
@@ -182,16 +182,16 @@ textarea {
 	border: 1px solid #DDD;
 	width: 100%;
 }
-input[type="text"]:hover,
-input[type="password"]:hover,
-input[type="file"]:hover,
+input[type='text']:hover,
+input[type='password']:hover,
+input[type='file']:hover,
 select:hover,
 textarea:hover {
 	border: 1px solid #CCC;
 }
-input[type="text"].notice,
-input[type="password"].notice,
-input[type="file"].notice,
+input[type='text'].notice,
+input[type='password'].notice,
+input[type='file'].notice,
 select.notice,
 textarea.notice {
 	border: 1px solid #FC6160;
@@ -202,16 +202,16 @@ textarea:disabled {
 	background: #EEE;
 	color: #888;
 }
-input[type="submit"] {
+input[type='submit'] {
 	width: 100%;
 	padding: 10px;
 	background: #DDD;
 	border: 0;
 }
-input[type="submit"]:hover {
+input[type='submit']:hover {
 	background: #CCC;
 }
-input[type="submit"]:active {
+input[type='submit']:active {
 	background: #BBB;
 }
 textarea {
@@ -228,21 +228,21 @@ label {
  */
 
 /* Bouton */
-a.button {
+.button {
 	width: 100%;
 	display: inline-block;
 	padding: 10px;
 	text-align: center;
 	background: #DDD;
 }
-a.button:hover {
+.button:hover {
 	background: #CCC;
 	text-decoration: none;
 }
-a.button:active {
+.button:active {
 	background: #BBB;
 }
-a.button.disabled {
+.button.disabled {
 	pointer-events: none;
 	cursor: default;
 	background: #EEE;
@@ -250,19 +250,19 @@ a.button.disabled {
 }
 
 /* Cases à cocher */
-input[type="checkbox"],
-input[type="radio"] {
+input[type='checkbox'],
+input[type='radio'] {
 	display: none;
 }
-input[type="checkbox"] + label,
-input[type="radio"] + label {
+input[type='checkbox'] + label,
+input[type='radio'] + label {
 	display: inline-block;
 	margin-right: 10px;
 	cursor: pointer;
 }
-input[type="checkbox"] + label::before,
-input[type="radio"] + label::before {
-	content: "✓";
+input[type='checkbox'] + label:before,
+input[type='radio'] + label:before {
+	content: '✓';
 	display: inline-block;
 	text-align: center;
 	color: transparent;
@@ -275,28 +275,28 @@ input[type="radio"] + label::before {
 	background: #DDD;
 	vertical-align: top;
 }
-input[type="checkbox"].notice + label::before,
-input[type="radio"].notice + label::before {
+input[type='checkbox'].notice + label:before,
+input[type='radio'].notice + label:before {
 	background: #FC6160;
 }
-input[type="radio"] + label::before {
+input[type='radio'] + label:before {
 	border-radius: 50%;
 }
-input[type="checkbox"]:checked + label::before,
-input[type="radio"]:checked + label::before {
+input[type='checkbox']:checked + label:before,
+input[type='radio']:checked + label:before {
 	color: #FFF;
 	background: #BBB;
 }
-input[type="checkbox"]:hover + label::before,
-input[type="checkbox"]:checked:active + label::before,
-input[type="radio"]:hover + label::before {
+input[type='checkbox']:hover + label:before,
+input[type='checkbox']:checked:active + label:before,
+input[type='radio']:hover + label:before {
 	color: #FFF;
 	background: #CCC;
 }
-input[type="checkbox"]:not(:active):checked:hover + label::before,
-input[type="checkbox"]:active + label::before,
-input[type="radio"]:checked:hover + label::before,
-input[type="radio"]:not(:checked):active + label::before {
+input[type='checkbox']:not(:active):checked:hover + label:before,
+input[type='checkbox']:active + label:before,
+input[type='radio']:checked:hover + label:before,
+input[type='radio']:not(:checked):active + label:before {
 	background: #AAA;
 }
 
@@ -314,27 +314,27 @@ input[type="radio"]:not(:checked):active + label::before {
 .none {
 	display: none;
 }
-div.row {
+.row {
 	margin: 0 -10px;
 }
-div.row:first-of-type {
+.row:first-of-type {
 	margin-top: -10px;
 }
-div.row:last-of-type {
+.row:last-of-type {
 	margin-bottom: -10px;
 }
-div.col1,
-div.col2,
-div.col3,
-div.col4,
-div.col5,
-div.col6,
-div.col7,
-div.col8,
-div.col9,
-div.col10,
-div.col11,
-div.col12 {
+.col1,
+.col2,
+.col3,
+.col4,
+.col5,
+.col6,
+.col7,
+.col8,
+.col9,
+.col10,
+.col11,
+.col12 {
 	display: inline-block;
 	vertical-align: bottom;
 	position: relative;
@@ -342,94 +342,94 @@ div.col12 {
 	padding: 10px;
 	width: 100%;
 }
-div#container {
+#container {
 	margin-left: auto;
 	margin-right: auto;
 }
 @media (min-width: 768px) {
-	div#container {
+	#container {
 		width: 750px;
 	}
 }
 @media (min-width: 992px) {
-	div.col1 {
+	.col1 {
 		width: 8.33333333%;
 	}
-	div.col2 {
+	.col2 {
 		width: 16.66666667%;
 	}
-	div.col3 {
+	.col3 {
 		width: 25%;
 	}
-	div.col4 {
+	.col4 {
 		width: 33.33333333%;
 	}
-	div.col5 {
+	.col5 {
 		width: 41.66666667%;
 	}
-	div.col6 {
+	.col6 {
 		width: 50%;
 	}
-	div.col7 {
+	.col7 {
 		width: 58.33333333%;
 	}
-	div.col8 {
+	.col8 {
 		width: 66.66666667%;
 	}
-	div.col9 {
+	.col9 {
 		width: 75%;
 	}
-	div.col10 {
+	.col10 {
 		width: 83.33333333%;
 	}
-	div.col11 {
+	.col11 {
 		width: 91.66666667%;
 	}
-	div.col12 {
+	.col12 {
 		width: 100%;
 	}
-	div.offset0 {
+	.offset0 {
 		margin-left: 0;
 	}
-	div.offset1 {
+	.offset1 {
 		margin-left: 8.33333333%;
 	}
-	div.offset2 {
+	.offset2 {
 		margin-left: 16.66666667%;
 	}
-	div.offset3 {
+	.offset3 {
 		margin-left: 25%;
 	}
-	div.offset4 {
+	.offset4 {
 		margin-left: 33.33333333%;
 	}
-	div.offset5 {
+	.offset5 {
 		margin-left: 41.66666667%;
 	}
-	div.offset6 {
+	.offset6 {
 		margin-left: 50%;
 	}
-	div.offset7 {
+	.offset7 {
 		margin-left: 58.33333333%;
 	}
-	div.offset8 {
+	.offset8 {
 		margin-left: 66.66666667%;
 	}
-	div.offset9 {
+	.offset9 {
 		margin-left: 75%;
 	}
-	div.offset10 {
+	.offset10 {
 		margin-left: 83.33333333%;
 	}
-	div.offset11 {
+	.offset11 {
 		margin-left: 91.66666667%;
 	}
-	div#container {
+	#container {
 		width: 970px;
 	}
 }
 @media (min-width: 1200px) {
-	div#container {
+	#container {
 		width: 1170px;
 	}
 }

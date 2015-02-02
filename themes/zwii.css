@@ -1,8 +1,7 @@
-@import url(http://fonts.googleapis.com/css?family=Noto+Sans);
-@import url(http://fonts.googleapis.com/css?family=Fjalla+One);
+@import url(http://fonts.googleapis.com/css?family=Noto+Sans|Fjalla+One);
 
 body {
-	font-family: "Noto Sans", sans-serif;
+	font-family: 'Noto Sans', sans-serif;
 	background: #008DAB;
 }
 
@@ -10,7 +9,7 @@ body {
  * Container
  */
 
-div#container {
+#container {
 	margin: 20px auto;
 	background: #FFF;
 	padding: 20px;
@@ -22,7 +21,7 @@ div#container {
  * Titre du site
  */
 
-h1#header {
+#header {
 	text-align: center;
 	padding: 30px 0 50px; /* -20px à cause du padding du container */
 	font-size: 1.8em;
@@ -33,31 +32,31 @@ h1#header {
  */
 
 /* Menu */
-div#toggle,
-ul#menu {
+#toggle,
+#menu {
 	background: #008DAB;
 }
 
 /* Icône du menu en mode responsive */
-div#toggle > span {
-	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gweDQQTedwN2wAAACxJREFUSMdjYBgFo4BSwIjM+f///3+qGMrICDeXaTSMRyN5FIxG8igYBfQAAKEtDAplk4dlAAAAAElFTkSuQmCC');
+#toggle > span {
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gweDQQTedwN2wAAACxJREFUSMdjYBgFo4BSwIjM+f///3+qGMrICDeXaTSMRyN5FIxG8igYBfQAAKEtDAplk4dlAAAAAElFTkSuQmCC);
 }
 
 /* Liens du menu */
-ul#menu > li > a {
+#menu > li > a {
 	color: #FFF;
 }
 
 /* Liens du menu survolés */
-div#toggle:hover,
-ul#menu > li > a:hover {
+#toggle:hover,
+#menu > li > a:hover {
 	background: #007A98;
 }
 
 /* Liens du menu appuyés et lien courant */
-div#toggle:active,
-ul#menu > li > a:active,
-ul#menu > li > a.current {
+#toggle:active,
+#menu > li > a:active,
+#menu > li > a.current {
 	background: #00708C;
 }
 
@@ -65,7 +64,7 @@ ul#menu > li > a.current {
  * Corps
  */
 
-div#section {
+#section {
 	margin: 20px 0;
 }
 
@@ -73,7 +72,7 @@ div#section {
  * Bas de page
  */
 
-div#footer {
+#footer {
 	text-align: center;
 	font-size: 0.8em;
 }
@@ -88,7 +87,7 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: "Fjalla One", sans-serif;
+	font-family: 'Fjalla One', sans-serif;
 	font-weight: normal;
 	text-transform: uppercase;
 }
@@ -111,34 +110,34 @@ a {
  */
 
 /* Boutons */
-input[type="submit"],
-a.button {
+input[type='submit'],
+.button {
 	background: #008DAB;
 	color: #FFF;
 }
 
 /* Boutons survolés */
-input[type="submit"]:hover,
-a.button:hover {
+input[type='submit']:hover,
+.button:hover {
 	background: #007A98;
 }
 
 /* Boutons appuyés */
-input[type="submit"]:active,
-a.button:active {
+input[type='submit']:active,
+.button:active {
 	background: #00708C;
 }
 
 /* Cases à cocher non cochées */
-input[type="checkbox"]:checked + label::before,
-input[type="radio"]:checked + label::before {
+input[type='checkbox']:checked + label:before,
+input[type='radio']:checked + label:before {
 	background: #008DAB;
 }
 
 /* Cases à cocher cochées */
-input[type="checkbox"]:not(:active):checked:hover + label::before,
-input[type="checkbox"]:active + label::before,
-input[type="radio"]:checked:hover + label::before,
-input[type="radio"]:not(:checked):active + label::before {
+input[type='checkbox']:not(:active):checked:hover + label:before,
+input[type='checkbox']:active + label:before,
+input[type='radio']:checked:hover + label:before,
+input[type='radio']:not(:checked):active + label:before {
 	background: #007A98;
 }

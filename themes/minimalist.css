@@ -1,15 +1,14 @@
-@import url(http://fonts.googleapis.com/css?family=Arimo);
-@import url(http://fonts.googleapis.com/css?family=Alegreya);
+@import url(http://fonts.googleapis.com/css?family=Arimo|Alegreya);
 
 body {
-	font-family: "Arimo", sans-serif;
+	font-family: 'Arimo', sans-serif;
 }
 
 /**
  * Container
  */
 
-div#container {
+#container {
 	padding: 0 20px;
 }
 
@@ -17,7 +16,7 @@ div#container {
  * Titre du site
  */
 
-h1#header {
+#header {
 	text-align: center;
 	padding: 60px 0;
 	font-size: 2.5em;
@@ -29,30 +28,30 @@ h1#header {
  */
 
 /* Menu */
-div#toggle,
-ul#menu {
+#toggle,
+#menu {
 	border-top: 1px solid #DDD;
 	border-bottom: 2px solid #444;
 	background: transparent;
-	font-family: "Alegreya", serif;
+	font-family: 'Alegreya', serif;
 	letter-spacing: 1px;
 	text-transform: uppercase;
 }
-ul#menu {
+#menu {
 	text-align: center;
 }
 
 /* Liens du menu */
-ul#menu > li > a {
+#menu > li > a {
 	color: #444;
 }
 
 /* Liens du menu survolés, appuyés et lien courant  */
-div#toggle:hover,
-div#toggle:active,
-ul#menu > li > a:hover,
-ul#menu > li > a:active,
-ul#menu > li > a.current {
+#toggle:hover,
+#toggle:active,
+#menu > li > a:hover,
+#menu > li > a:active,
+#menu > li > a.current {
 	color: #48C09A;
 	background: transparent;
 }
@@ -61,7 +60,7 @@ ul#menu > li > a.current {
  * Corps
  */
 
-div#section {
+#section {
 	margin: 20px 0;
 }
 
@@ -69,7 +68,7 @@ div#section {
  * Bas de page
  */
 
-div#footer {
+#footer {
 	border-top: 2px solid #444;
 	text-align: center;
 	font-size: 0.8em;
@@ -86,7 +85,7 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: "Alegreya", serif;
+	font-family: 'Alegreya', serif;
 	font-weight: normal;
 	text-transform: uppercase;
 	letter-spacing: 1px;
@@ -110,34 +109,34 @@ a {
  */
 
 /* Boutons */
-input[type="submit"],
-a.button {
+input[type='submit'],
+.button {
 	background: #444;
 	color: #FFF;
 }
 
 /* Boutons survolés */
-input[type="submit"]:hover,
-a.button:hover {
+input[type='submit']:hover,
+.button:hover {
 	background: #48C09A;
 }
 
 /* Boutons appuyés */
-input[type="submit"]:active,
-a.button:active {
+input[type='submit']:active,
+.button:active {
 	background: #48B09A;
 }
 
 /* Cases à cocher non cochées */
-input[type="checkbox"]:checked + label::before,
-input[type="radio"]:checked + label::before {
+input[type='checkbox']:checked + label:before,
+input[type='radio']:checked + label:before {
 	background: #48C09A;
 }
 
 /* Cases à cocher cochées */
-input[type="checkbox"]:not(:active):checked:hover + label::before,
-input[type="checkbox"]:active + label::before,
-input[type="radio"]:checked:hover + label::before,
-input[type="radio"]:not(:checked):active + label::before {
+input[type='checkbox']:not(:active):checked:hover + label:before,
+input[type='checkbox']:active + label:before,
+input[type='radio']:checked:hover + label:before,
+input[type='radio']:not(:checked):active + label:before {
 	background: #48B09A;
 }

@@ -6,15 +6,13 @@
 	<meta name="description" content="<?php echo $this->getData('config', 'description'); ?>">
 	<meta name="keywords" content="<?php echo $this->getData('config', 'keywords'); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<base href="./">
 	<link rel="stylesheet" href="core/vendor/normalize.min.css">
 	<link rel="stylesheet" href="core/vendor/trumbowyg/trumbowyg.min.css">
 	<link rel="stylesheet" href="core/style.css">
 	<link rel="stylesheet" href="themes/<?php echo $this->getData('config', 'theme'); ?>">
 </head>
 <body>
-<?php echo $this->panel(); ?>
-<?php echo $this->getNotification(); ?>
+<?php echo $this->panel() . $this->getNotification(); ?>
 <div id="container">
 	<h1 id="header"><?php echo $this->getData('config', 'title'); ?></h1>
 	<div id="toggle"><span></span></div>
@@ -28,6 +26,6 @@
 <script src="core/vendor/jquery.min.js"></script>
 <script src="core/vendor/trumbowyg/trumbowyg.min.js"></script>
 <script src="core/script.js"></script>
-<script>$('textarea.editor').trumbowyg();</script>
+<script>$('.editor').trumbowyg();</script>
 </body>
 </html>

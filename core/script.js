@@ -2,7 +2,7 @@
  * Cache la notification après 4 secondes
  */
 setTimeout(function() {
-	$('div#notification').slideUp();
+	$('#notification').slideUp();
 }, 4000);
 
 /**
@@ -23,9 +23,9 @@ form.submit(function() {
 /**
  * Affiche/cache le menu en mode responsive
  */
-var menu = $('ul#menu');
+var menu = $('.menu');
 
-$('div#toggle').click(function() {
+$('#toggle').click(function() {
 	menu.slideToggle();
 });
 $(window).on('resize', function() {
