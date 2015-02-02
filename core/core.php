@@ -122,9 +122,9 @@ class core
 					}
 				}
 			}
-
-			return file_put_contents('core/data.json', json_encode($this->getData()));
 		}
+
+		return file_put_contents('core/data.json', json_encode($this->getData()));
 	}
 
 	/**
