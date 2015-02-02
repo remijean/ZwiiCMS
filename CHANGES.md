@@ -1,6 +1,11 @@
 ZwiiCMS 7
 =========
 
+## 7.1.2
+* Correction du bug du double id menu
+* Correction d'un bug critique bloquant l'enregistrement des données
+* Optimisation du css et du js
+
 ## 7.1.1
 * Optimisation du css
 * Correction du bug de champ requis pour le nouveau mot de passe du module de configuration
