@@ -1,6 +1,14 @@
 ZwiiCMS 7
 =========
 
+## 7.1.3
+* Correction de commentaires erronés dans les thèmes
+* Nouveau thème "dark"
+* Ajout d'un header 404 en cas d'erreur 404
+* Mise à jour du PHPDoc des méthodes getRequired() et setRequired()
+* Blocage du choix du mode d'affichage dans le module de configuration
+* Correction d'un bug bloquant l'ouverture du menu en mode responsive
+
 ## 7.1.2
 * Correction du bug du double id menu
 * Correction d'un bug critique bloquant l'enregistrement des données
