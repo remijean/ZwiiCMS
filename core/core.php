@@ -286,6 +286,7 @@ class core
 		}
 		// Erreur 404
 		if(!self::$content) {
+			header("HTTP/1.0 404 Not Found");
 			self::$title = 'Erreur 404';
 			self::$content = '<p>Page introuvable !</p>';
 		}
