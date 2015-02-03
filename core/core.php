@@ -886,6 +886,7 @@ class template
 	static $notices = [];
 
 	/**
+	 * Retourne une notice pour les champs obligatoires (à appeler après avoir vérifié que le champ est vide)
 	 * @param string|int $key
 	 * @return bool Retourne false car cette fonction intervient quand un champ est vide
 	 */
@@ -899,6 +900,7 @@ class template
 	}
 
 	/**
+	 * Enregistre un champ comme obligatoire
 	 * @param string $nameId
 	 * @param array $attributes
 	 */
