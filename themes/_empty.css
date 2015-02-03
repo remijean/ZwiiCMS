@@ -89,11 +89,11 @@ input[type='submit']:hover,
 input[type='submit']:active,
 .button:active {}
 
-/* Cases à cocher non cochées */
+/* Cases à cocher cochées */
 input[type='checkbox']:checked + label:before,
 input[type='radio']:checked + label:before {}
 
-/* Cases à cocher cochées */
+/* Cases à cocher cochées et survolées */
 input[type='checkbox']:not(:active):checked:hover + label:before,
 input[type='checkbox']:active + label:before,
 input[type='radio']:checked:hover + label:before,
