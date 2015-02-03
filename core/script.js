@@ -23,7 +23,7 @@ form.submit(function() {
 /**
  * Affiche/cache le menu en mode responsive
  */
-var menu = $('.menu');
+var menu = $('#menu');
 
 $('#toggle').click(function() {
 	menu.slideToggle();
