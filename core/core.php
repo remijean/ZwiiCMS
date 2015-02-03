@@ -321,22 +321,20 @@ class core
 			return false;
 		}
 		else {
-			$panel = '<ul id="panel">';
-			$panel .= '<li><select onchange="$(location).attr(\'href\', $(this).val());">';
-			$panel .= ($this->getUrl(0) === 'config') ? '<option value="">Choisissez une page</option>' : false;
+			$li = '<li><select onchange="$(location).attr(\'href\', $(this).val());">';
+			$li .= ($this->getUrl(0) === 'config') ? '<option value="">Choisissez une page</option>' : false;
 			$pages = helpers::arrayCollumn($this->getData('pages'), 'title', 'SORT_ASC', true);
 			foreach($pages as $key => $value) {
 				$current = ($key === $this->getUrl(0) OR $key === $this->getUrl(1)) ? ' selected' : false;
-				$panel .= '<option value="?' . $this->getMode() . $key . '"' . $current . '>' . $value . '</option>';
+				$li .= '<option value="?' . $this->getMode() . $key . '"' . $current . '>' . $value . '</option>';
 			}
-			$panel .= '</select></li>';
-			$panel .= '<li><a href="?create">Créer une page</a></li>';
-			$panel .= '<li><a href="?mode/' . $this->getUrl() . '">Mode ' . ($this->getMode() ? 'public' : 'édition') . '</a></li>';
-			$panel .= '<li><a href="?config">Configuration</a></li>';
-			$panel .= '<li><a href="?logout" onclick="return confirm(\'Êtes-vous certain de vouloir vous déconnecter ?\');">Déconnexion</a></li>';
-			$panel .= '</ul>';
+			$li .= '</select></li>';
+			$li .= '<li><a href="?create">Créer une page</a></li>';
+			$li .= ($this->getUrl(0) !== 'config') ? '<li><a href="?mode/' . $this->getUrl() . '">Mode ' . ($this->getMode() ? 'public' : 'édition') . '</a></li>' : false;
+			$li .= '<li><a href="?config">Configuration</a></li>';
+			$li .= '<li><a href="?logout" onclick="return confirm(\'Êtes-vous certain de vouloir vous déconnecter ?\');">Déconnexion</a></li>';
 
-			return $panel;
+			return '<ul id="panel">' . $li . '</ul>';
 		}
 	}
 
