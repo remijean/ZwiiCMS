@@ -1,0 +1,142 @@
+@import url(http://fonts.googleapis.com/css?family=Lato|Oswald);
+
+body {
+	font-family: 'Lato', sans-serif;
+	background: #EEE;
+}
+
+/**
+ * Container
+ */
+
+#container {
+	margin: 20px auto;
+	background: #FFF;
+	border: 1px solid #DDD;
+}
+
+/**
+ * Titre du site
+ */
+
+#header {
+	text-align: center;
+	padding: 50px 0;
+	font-size: 1.8em;
+}
+
+/**
+ * Menu
+ */
+
+/* Menu */
+#toggle,
+#menu {
+	background: #333;
+}
+/* Icône du menu en mode responsive */
+#toggle > span {
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gweDQQTedwN2wAAACxJREFUSMdjYBgFo4BSwIjM+f///3+qGMrICDeXaTSMRyN5FIxG8igYBfQAAKEtDAplk4dlAAAAAElFTkSuQmCC);
+}
+
+/* Liens du menu */
+#menu > li > a {
+	color: #FFF;
+}
+
+/* Liens du menu survolés */
+#toggle:hover,
+#menu > li > a:hover {
+	background: #222;
+}
+
+/* Liens du menu appuyés et lien courant */
+#toggle:active,
+#menu > li > a:active,
+#menu > li > a.current {
+	background: #111;
+}
+
+/**
+ * Corps
+ */
+
+#section {
+	margin: 20px;
+}
+
+/**
+ * Bas de page
+ */
+
+#footer {
+	text-align: center;
+	font-size: 0.8em;
+	padding-bottom: 20px;
+}
+
+/**
+ * Titres
+ */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: 'Oswald', sans-serif;
+	font-weight: normal;
+	text-transform: uppercase;
+}
+h2,
+h4,
+h6 {
+	color: #333;
+}
+
+/**
+ * Liens
+ */
+
+a {
+	color: #888;
+}
+
+
+/**
+ * Inputs
+ */
+
+/* Boutons */
+input[type='submit'],
+.button {
+	background: #333;
+	color: #FFF;
+}
+
+/* Boutons survolés */
+input[type='submit']:hover,
+.button:hover {
+	background: #222;
+}
+
+/* Boutons appuyés */
+input[type='submit']:active,
+.button:active {
+	background: #111;
+}
+
+/* Cases à cocher non cochées */
+input[type='checkbox']:checked + label:before,
+input[type='radio']:checked + label:before {
+	background: #333;
+}
+
+/* Cases à cocher cochées */
+input[type='checkbox']:not(:active):checked:hover + label:before,
+input[type='checkbox']:active + label:before,
+input[type='radio']:checked:hover + label:before,
+input[type='radio']:not(:checked):active + label:before {
+	background: #111;
+}
