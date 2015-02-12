@@ -21,7 +21,7 @@ body {}
 #menu {}
 
 /* Icône du menu en mode responsive */
-#toggle > span {}
+#toggle > span:after {}
 
 /* Liens du menu */
 #menu > li > a {}
