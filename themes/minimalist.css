@@ -41,6 +41,11 @@ body {
 	text-align: center;
 }
 
+/* Icône du menu en mode responsive */
+#toggle > span:after {
+	color: #444;
+}
+
 /* Liens du menu */
 #menu > li > a {
 	color: #444;

@@ -21,12 +21,7 @@ body {}
 #menu {}
 
 /* Icône du menu en mode responsive */
-#toggle > span {
-	/* Blanc */
-	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gweDQQTedwN2wAAACxJREFUSMdjYBgFo4BSwIjM+f///3+qGMrICDeXaTSMRyN5FIxG8igYBfQAAKEtDAplk4dlAAAAAElFTkSuQmCC);
-	/* Noir */
-	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gweDREk9tROwAAAAC1JREFUSMdjYBgFo4BSwIjMcXFx+U8NQ/fs2QM3l2k0jEcjeRSMRvIoGAX0AADHtwwK/qaMdgAAAABJRU5ErkJggg==);
-}
+#toggle > span {}
 
 /* Liens du menu */
 #menu > li > a {}

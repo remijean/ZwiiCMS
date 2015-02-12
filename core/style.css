@@ -74,12 +74,9 @@ body {
 #toggle {
 	cursor: pointer;
 	background: #DDD;
-	padding: 13px 10px; /* -2px à cause de l'image */
+	padding: 15px 10px;
 	text-align: right;
 	display: none;
-}
-#menu {
-	display: block;
 }
 #toggle:hover {
 	background: #DDD;
@@ -87,14 +84,12 @@ body {
 #toggle:active {
 	background: #CCC;
 }
-#toggle > span {
-	display: inline-block;
-	vertical-align: middle;
-	width: 24px;
-	height: 24px;
-	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gweDREk9tROwAAAAC1JREFUSMdjYBgFo4BSwIjMcXFx+U8NQ/fs2QM3l2k0jEcjeRSMRvIoGAX0AADHtwwK/qaMdgAAAABJRU5ErkJggg==);
+#toggle > span:after {
+	content: '\2630';
+	font-weight: bold;
 }
 #menu {
+	display: block;
 	background: #DDD;
 	padding: 0;
 	margin: 0;
