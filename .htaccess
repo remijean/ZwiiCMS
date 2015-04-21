@@ -1,3 +1,6 @@
+# Cache le PHPSESSID de l'url
+SetEnv SESSION_USE_TRANS_SID 0
+
 # Bloque l'accès à la liste des fichiers
 Options -Indexes
 
