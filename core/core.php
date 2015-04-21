@@ -24,6 +24,7 @@ class core
 	private static $modules = ['create', 'edit', 'module', 'delete', 'clean', 'export', 'mode', 'config', 'logout'];
 	public static $views = [];
 	public static $title = false;
+	public static $description = false;
 	public static $content = false;
 
 	const VERSION = '7.1.3';
@@ -282,6 +283,7 @@ class core
 			$this->setMode(false);
 			// Page
 			self::$title = $this->getData('pages', $this->getUrl(0), 'title');
+			self::$description = $this->getData('pages', $this->getUrl(0), 'description');
 			self::$content = $this->getData('pages', $this->getUrl(0), 'content') . self::$content;
 		}
 		// Erreur 404
@@ -289,6 +291,10 @@ class core
 			header("HTTP/1.0 404 Not Found");
 			self::$title = 'Erreur 404';
 			self::$content = '<p>Page introuvable !</p>';
+		}
+		// Description par défaut
+		if(!self::$description) {
+			self::$description = $this->getData('config', 'description');
 		}
 		// Importe le layout
 		require 'core/layout.html';
@@ -365,6 +371,7 @@ class core
 		$key = helpers::increment('nouvelle-page', $this->getData('pages'));
 		$this->setData('pages', $key, [
 			'title' => 'Nouvelle page',
+			'description' => false,
 			'position' => '0',
 			'blank' => false,
 			'theme' => false,
@@ -401,6 +408,7 @@ class core
 			}
 			$this->setData('pages', $key, [
 				'title' => $this->getPost('title', helpers::STRING),
+				'description' => $this->getPost('description', helpers::STRING),
 				'position' => $this->getPost('position', helpers::INT),
 				'blank' => $this->getPost('blank', helpers::BOOLEAN),
 				'theme' => $this->getPost('theme', helpers::STRING),
@@ -435,8 +443,9 @@ class core
 			]) .
 			template::closeRow() .
 			template::openRow() .
-			template::checkbox('blank', true, 'Ouvrir dans un nouvel onglet en mode public', [
-				'checked' => $this->getData('pages', $this->getUrl(1), 'blank')
+			template::textarea('description', [
+				'label' => 'Description de la page <small>(si le champ est vide, la description du site est utilisée)</small>',
+				'value' => $this->getData('pages', $this->getUrl(1), 'description')
 			]) .
 			template::closeRow() .
 			template::openRow() .
@@ -456,6 +465,11 @@ class core
 			template::select('theme', helpers::listThemes('Thème par défaut'), [
 				'label' => 'Thème en mode public',
 				'selected' => $this->getData('pages', $this->getUrl(1), 'theme')
+			]) .
+			template::closeRow() .
+			template::openRow() .
+			template::checkbox('blank', true, 'Ouvrir dans un nouvel onglet en mode public', [
+				'checked' => $this->getData('pages', $this->getUrl(1), 'blank')
 			]) .
 			template::closeRow() .
 			template::openRow() .
@@ -572,8 +586,7 @@ class core
 				'description' => $this->getPost('description', helpers::STRING),
 				'password' => $password,
 				'index' => $this->getPost('index', helpers::STRING),
-				'theme' => $this->getPost('theme', helpers::STRING),
-				'keywords' =>$this->getPost('keywords', helpers::STRING)
+				'theme' => $this->getPost('theme', helpers::STRING)
 			]);
 			$this->saveData(true);
 			$this->setNotification('Configuration enregistrée avec succès !');
@@ -618,12 +631,6 @@ class core
 				'label' => 'Thème par défaut',
 				'required' => true,
 				'selected' => $this->getData('config', 'theme')
-			]) .
-			template::closeRow() .
-			template::openRow() .
-			template::text('keywords', [
-				'label' => 'Mots clés du site',
-				'value' => $this->getData('config', 'keywords')
 			]) .
 			template::closeRow() .
 			template::openRow() .
