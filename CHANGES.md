@@ -1,6 +1,14 @@
 ZwiiCMS 7
 =========
 
+## 7.1.4
+* Suppression du PHPSESSID de l'url
+* Suppression des mots-clés
+* Ajout d'une description par page
+* Correction d'une erreur dans le thème vide
+* Simplification de l'icône du menu responsive
+* Correction d'un bug dans Normalize (merci à Philippe de Boisriou)
+
 ## 7.1.3
 * Correction de commentaires erronés dans les thèmes
 * Nouveau thème "dark"
