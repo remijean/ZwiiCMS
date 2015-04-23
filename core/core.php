@@ -197,12 +197,12 @@ class core
 	/**
 	 * Modifie la notification
 	 * @param string $notification Notification
+	 * @param bool $error Message d'erreur ou non
 	 */
 	public function setNotification($notification, $error = false)
 	{
 		if(!template::$notices) {
-			$type = $error ? 'ERROR' : 'SUCCESS';
-			$_SESSION[$type] = $notification;
+			$_SESSION[$error ? 'ERROR' : 'SUCCESS'] = $notification;
 		}
 	}
 
