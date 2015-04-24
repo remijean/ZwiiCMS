@@ -8,20 +8,10 @@ if(version_compare(PHP_VERSION, '5.4.0', '<')) {
 }
 
 /**
- * Auto-chargement des classes
- */
-spl_autoload_register(function($className)
-{
-	$classPath = 'modules/' . substr($className, 0, -3) . '.php';
-	if(is_readable($classPath)) {
-		require $classPath;
-	}
-}, true, true);
-
-/**
- * Initialise ZwiiCMS
+ * Initialisation de ZwiiCMS
  */
 require 'core/core.php';
 $core = new core;
+spl_autoload_register('core::autoload');
 $core->router();
 echo $core->cache();

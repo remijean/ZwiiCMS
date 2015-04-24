@@ -40,6 +40,18 @@ class core
 	}
 
 	/**
+	 * Auto-chargement des classes
+	 * @param $className string Nom de la classe à charger
+	 */
+	public static function autoload($className)
+	{
+		$classPath = 'modules/' . substr($className, 0, -3) . '.php';
+		if(is_readable($classPath)) {
+			require $classPath;
+		}
+	}
+
+	/**
 	 * Accède aux données du tableau de données
 	 * @param mixed $key1 Clé de niveau 1
 	 * @param mixed $key2 Clé de niveau 2
