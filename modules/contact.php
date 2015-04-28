@@ -59,26 +59,13 @@ class contactMod extends core
 	{
 		// Envoi du mail
 		if($this->getPost('submit')) {
-			$mail = $this->getData($this->getUrl(0), 'mail');
-			$n = preg_match("#@(hotmail|live|msn|outlook).[a-z]{2,4}$#", $mail) ? "\n" : "\r\n";
-			$boundary = '-----=' . md5(rand());
-			$html = '<html><head></head><body>' . $this->getPost('message', helpers::STRING) . '</body></html>';
-			$txt = strip_tags($html);
-			$header = 'From: ' . $this->getPost('mail', helpers::EMAIL) . $n;
-			$header .= 'Reply-To: ' . $mail . $n;
-			$header .= 'MIME-Version: 1.0' . $n;
-			$header .= 'Content-Type: multipart/alternative;' . $n . ' boundary="' . $boundary . '"' . $n;
-			$message = $n . $boundary . $n;
-			$message .= 'Content-Type: text/plain; charset="utf-8"' . $n;
-			$message .= 'Content-Transfer-Encoding: 8bit' . $n;
-			$message .= $n . $txt . $n;
-			$message .= $n . '--' . $boundary . $n;
-			$message .= 'Content-Type: text/html; charset="utf-8"' . $n;
-			$message .= 'Content-Transfer-Encoding: 8bit' . $n;
-			$message .= $n . $html . $n;
-			$message .= $n . '--' . $boundary . '--' . $n;
-			$message .= $n . '--' . $boundary . '--' . $n;
-			if($mail AND @mail($mail, $this->getPost('subject', helpers::STRING), $message, $header)) {
+			$mail = helpers::mail(
+				$this->getPost('subject', helpers::STRING),
+				$this->getData($this->getUrl(0), 'mail'),
+				$this->getPost('subject', helpers::STRING),
+				$this->getPost('message', helpers::STRING)
+			);
+			if($mail) {
 				$this->setNotification('Mail envoyé avec succès !');
 			}
 			else {

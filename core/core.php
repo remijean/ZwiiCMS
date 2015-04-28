@@ -899,6 +899,45 @@ class helpers
 			exit();
 		}
 	}
+
+	/**
+	 * Envoi un mail
+	 * @param string $from Expéditeur
+	 * @param string $to Destinataire
+	 * @param string $subject Sujet
+	 * @param string $message Message
+	 * @return bool	False en cas d'échec, sinon true
+	 */
+	public static function mail($from, $to, $subject, $message)
+	{
+		// Retour chariot différent pour les adresses Microsoft
+		$n = preg_match("#^[a-z0-9._-]+@(hotmail|live|msn|outlook).[a-z]{2,4}$#", $to) ? "\n" : "\r\n";
+		// Définition du séparateur
+		$boundary = '-----=' . md5(rand());
+		// Création du template
+		$html = '<html><head></head><body>' . $message . '</body></html>';
+		$txt = strip_tags($html);
+		// Définition du header
+		$header = 'From: ' . $from . $n;
+		$header .= 'Reply-To: ' . $to . $n;
+		$header .= 'MIME-Version: 1.0' . $n;
+		$header .= 'Content-Type: multipart/alternative;' . $n . ' boundary="' . $boundary . '"' . $n;
+		// Message au format texte
+		$message .= $n . '--' . $boundary . $n;
+		$message .= 'Content-Type: text/plain; charset="utf-8"' . $n;
+		$message .= 'Content-Transfer-Encoding: 8bit' . $n;
+		$message .= $n . $txt . $n;
+		// Message au format HTML
+		$message .= $n . '--' . $boundary . $n;
+		$message .= 'Content-Type: text/html; charset="utf-8"' . $n;
+		$message .= 'Content-Transfer-Encoding: 8bit' . $n;
+		$message .= $n . $html . $n;
+		// Fermeture des séparateurs
+		$message .= $n . '--' . $boundary . '--' . $n;
+		$message .= $n . '--' . $boundary . '--' . $n;
+		// Envoi du mail
+		return @mail($to, $subject, $message, $header);
+	}
 }
 
 class template
