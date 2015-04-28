@@ -210,7 +210,7 @@ input[type='submit']:active {
 	background: #BBB;
 }
 textarea {
-	height: 150px;
+	height: 100px;
 	resize: none;
 }
 label {
