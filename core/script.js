@@ -17,7 +17,7 @@ $(window).on('beforeunload', function() {
 	}
 });
 form.submit(function() {
-	$(window).unbind('beforeunload');
+	$(window).off('beforeunload');
 });
 
 /**
@@ -25,7 +25,7 @@ form.submit(function() {
  */
 var menu = $('#menu');
 
-$('#toggle').click(function() {
+$('#toggle').on('click', function() {
 	menu.slideToggle();
 });
 $(window).on('resize', function() {
