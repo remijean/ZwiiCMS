@@ -279,13 +279,13 @@ input[type='radio'] + label:before {
 }
 input[type='checkbox']:checked + label:before,
 input[type='radio']:checked + label:before {
-	color: #FFF;
+	color: #444;
 	background: #BBB;
 }
 input[type='checkbox']:hover + label:before,
 input[type='checkbox']:checked:active + label:before,
 input[type='radio']:hover + label:before {
-	color: #FFF;
+	color: #444;
 	background: #CCC;
 }
 input[type='checkbox']:not(:active):checked:hover + label:before,
@@ -293,6 +293,34 @@ input[type='checkbox']:active + label:before,
 input[type='radio']:checked:hover + label:before,
 input[type='radio']:not(:checked):active + label:before {
 	background: #AAA;
+}
+
+/* Aides */
+.helpButton {
+	display: inline-block;
+	border-radius: 50%;
+	background: #DDD;
+	text-align: center;
+	cursor: help;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	margin: 0 5px;
+}
+.helpButton:hover {
+	background: #CCC;
+}
+.helpButton:hover > .helpContent {
+	display: inline;
+}
+.helpContent {
+	display: none;
+	position: absolute;
+	margin: 30px 0 0 -30px;
+	text-align: left;
+	background: #EEE;
+	padding: 10px;
+	z-index: 10;
 }
 
 /**

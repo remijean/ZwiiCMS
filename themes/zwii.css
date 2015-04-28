@@ -132,9 +132,17 @@ input[type='submit']:active,
 input[type='checkbox']:checked + label:before,
 input[type='radio']:checked + label:before {
 	background: #008DAB;
+	color: #FFF;
 }
 
-/* Cases à cocher cochées et survolées */
+/* Cases à cocher survolées */
+input[type='checkbox']:hover + label:before,
+input[type='checkbox']:checked:active + label:before,
+input[type='radio']:hover + label:before {
+	color: #FFF;
+}
+
+/* Cases à cocher survolées et cochées */
 input[type='checkbox']:not(:active):checked:hover + label:before,
 input[type='checkbox']:active + label:before,
 input[type='radio']:checked:hover + label:before,

@@ -444,7 +444,7 @@ class core
 			template::closeRow() .
 			template::openRow() .
 			template::text('position', [
-				'label' => 'Position dans le menu',
+				'label' => 'Position dans le menu' . template::help('Le classement se fait par ordre croissant. Si le champ est vide, la page ne s\'affiche pas dans le menu.'),
 				'value' => $this->getData('pages', $this->getUrl(1), 'position')
 			]) .
 			template::closeRow() .
@@ -456,13 +456,13 @@ class core
 			template::closeRow() .
 			template::openRow() .
 			template::textarea('description', [
-				'label' => 'Description de la page <small>(si le champ est vide, la description du site est utilisée)</small>',
+				'label' => 'Description de la page' . template::help('Si le champ est vide, la description du site est utilisée.'),
 				'value' => $this->getData('pages', $this->getUrl(1), 'description')
 			]) .
 			template::closeRow() .
 			template::openRow() .
 			template::select('module', helpers::listModules('Aucun module'), [
-				'label' => 'Inclure un module <small>(en cas de changement de module, les données rattachées au module précédant seront supprimées)</small>',
+				'label' => 'Inclure un module' . template::help('En cas de changement de module, les données rattachées au module précédant seront supprimées.'),
 				'selected' => $this->getData('pages', $this->getUrl(1), 'module'),
 				'col' => 10
 			]) .
@@ -1436,5 +1436,15 @@ class template
 		$html .= '</div>';
 
 		return $html;
+	}
+
+	/**
+	 * Crée une aide qui s'affiche au survole
+	 * @param string $text Texte de l'aide
+	 * @return string L'aide mise en forme
+	 */
+	public static function help($text)
+	{
+		return '<span class="helpButton">?<span class="helpContent">' . $text . '</span></span>';
 	}
 }
