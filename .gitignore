@@ -1,2 +1,5 @@
-.idea/
+# Dossier de cache
 core/cache/
+
+# Configuration de PHPStorm
+.idea/
