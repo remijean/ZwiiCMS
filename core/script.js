@@ -33,3 +33,24 @@ $(window).on('resize', function() {
 		menu.css('display', '');
 	}
 });
+
+/**
+ * Verrouille l'administration de module après un changement
+ */
+var module = $('#module');
+var oldModule = module.val();
+
+module.on('change', function() {
+	var newModule = module.val();
+	var config = $('#config');
+
+	if(newModule != '' && newModule == oldModule) {
+		config.removeClass('disabled');
+	}
+	else {
+		if(newModule != '') {
+			alert('Pour accéder à l\'administration du nouveau module vous devez enregistrer les modifications de la page !');
+		}
+		config.addClass('disabled');
+	}
+});
