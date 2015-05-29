@@ -69,13 +69,11 @@ class newsAdm extends core
 				'label' => 'Titre de la news',
 				'required' => true
 			]) .
-			template::closeRow() .
-			template::openRow() .
+			template::newRow() .
 			template::textarea('content', [
 				'class' => 'editor'
 			]) .
-			template::closeRow() .
-			template::openRow() .
+			template::newRow() .
 			template::submit('submit', [
 				'value' => 'Créer',
 				'col' => 2,
@@ -124,14 +122,12 @@ class newsAdm extends core
 				'value' => $this->getData($this->getUrl(1), $this->getUrl(3), 'title'),
 				'required' => true
 			]) .
-			template::closeRow() .
-			template::openRow() .
+			template::newRow() .
 			template::textarea('content', [
 				'class' => 'editor',
 				'value' => $this->getData($this->getUrl(1), $this->getUrl(3), 'content')
 			]) .
-			template::closeRow() .
-			template::openRow() .
+			template::newRow() .
 			template::button('back', [
 				'value' => 'Retour',
 				'href' => '?module/' . $this->getUrl(1),

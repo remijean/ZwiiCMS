@@ -34,8 +34,7 @@ class redirectionAdm extends core
 				'label' => 'URL de redirection',
 				'value' => $this->getData($this->getUrl(1), 'url')
 			]) .
-			template::closeRow() .
-			template::openRow() .
+			template::newRow() .
 			template::button('back', [
 				'value' => 'Retour',
 				'href' => '?edit/' . $this->getUrl(1),

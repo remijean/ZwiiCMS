@@ -441,26 +441,22 @@ class core
 				'value' => $this->getData('pages', $this->getUrl(1), 'title'),
 				'required' => true
 			]) .
-			template::closeRow() .
-			template::openRow() .
+			template::newRow() .
 			template::text('position', [
 				'label' => 'Position dans le menu' . template::help('Le classement se fait par ordre croissant. Si le champ est vide, la page ne s\'affiche pas dans le menu.'),
 				'value' => $this->getData('pages', $this->getUrl(1), 'position')
 			]) .
-			template::closeRow() .
-			template::openRow() .
+			template::newRow() .
 			template::textarea('content', [
 				'value' => $this->getData('pages', $this->getUrl(1), 'content'),
 				'class' => 'editor'
 			]) .
-			template::closeRow() .
-			template::openRow() .
+			template::newRow() .
 			template::textarea('description', [
 				'label' => 'Description de la page' . template::help('Si le champ est vide, la description du site est utilisée.'),
 				'value' => $this->getData('pages', $this->getUrl(1), 'description')
 			]) .
-			template::closeRow() .
-			template::openRow() .
+			template::newRow() .
 			template::select('module', helpers::listModules('Aucun module'), [
 				'label' => 'Inclure un module' . template::help('En cas de changement de module, les données rattachées au module précédant seront supprimées.'),
 				'selected' => $this->getData('pages', $this->getUrl(1), 'module'),
@@ -472,19 +468,16 @@ class core
 				'disabled' => $this->getData('pages', $this->getUrl(1), 'module') ? false : true,
 				'col' => 2
 			]) .
-			template::closeRow() .
-			template::openRow() .
+			template::newRow() .
 			template::select('theme', helpers::listThemes('Thème par défaut'), [
 				'label' => 'Thème en mode public',
 				'selected' => $this->getData('pages', $this->getUrl(1), 'theme')
 			]) .
-			template::closeRow() .
-			template::openRow() .
+			template::newRow() .
 			template::checkbox('blank', true, 'Ouvrir dans un nouvel onglet en mode public', [
 				'checked' => $this->getData('pages', $this->getUrl(1), 'blank')
 			]) .
-			template::closeRow() .
-			template::openRow() .
+			template::newRow() .
 			template::button('delete', [
 				'value' => 'Supprimer',
 				'href' => '?delete/' . $this->getUrl(1),
@@ -613,15 +606,13 @@ class core
 				'required' => true,
 				'value' => $this->getData('config', 'title')
 			]) .
-			template::closeRow() .
-			template::openRow() .
+			template::newRow() .
 			template::textarea('description', [
 				'label' => 'Description du site',
 				'required' => true,
 				'value' => $this->getData('config', 'description')
 			]) .
-			template::closeRow() .
-			template::openRow() .
+			template::newRow() .
 			template::password('password', [
 				'label' => 'Nouveau mot de passe',
 				'col' => 6
@@ -630,29 +621,25 @@ class core
 				'label' => 'Confirmation du mot de passe',
 				'col' => 6
 			]) .
-			template::closeRow() .
-			template::openRow() .
+			template::newRow() .
 			template::select('index', helpers::arrayCollumn($this->getData('pages'), 'title', 'SORT_ASC', true), [
 				'label' => 'Page d\'accueil',
 				'required' => true,
 				'selected' => $this->getData('config', 'index')
 			]) .
-			template::closeRow() .
-			template::openRow() .
+			template::newRow() .
 			template::select('theme', helpers::listThemes(), [
 				'label' => 'Thème par défaut',
 				'required' => true,
 				'selected' => $this->getData('config', 'theme')
 			]) .
-			template::closeRow() .
-			template::openRow() .
+			template::newRow() .
 			template::text('version', [
 				'label' => 'Version de ZwiiCMS',
 				'value' => self::VERSION,
 				'disabled' => true
 			]) .
-			template::closeRow() .
-			template::openRow() .
+			template::newRow() .
 			template::button('clean', [
 				'value' => 'Vider le cache',
 				'href' => '?clean',
@@ -694,11 +681,9 @@ class core
 			template::password('password', [
 				'col' => 4
 			]) .
-			template::closeRow() .
-			template::openRow() .
+			template::newRow() .
 			template::checkbox('time', true, 'Me connecter automatiquement lors de mes prochaines visites.').
-			template::closeRow() .
-			template::openRow() .
+			template::newRow() .
 			template::submit('submit', [
 				'value' => 'Me connecter',
 				'col' => 2
@@ -996,6 +981,15 @@ class template
 	public static function openRow()
 	{
 		return '<div class="row">';
+	}
+
+	/**
+	 * Ferme la ligne courante et ouvre une ligne
+	 * @return string La balise
+	 */
+	public static function newRow()
+	{
+		return '</div><div class="row">';
 	}
 
 	/**
