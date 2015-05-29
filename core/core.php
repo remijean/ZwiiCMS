@@ -82,7 +82,10 @@ class core
 	 */
 	public function setData($key1, $key2, $key3 = null)
 	{
-		if($key3 !== null) {
+		if(template::$notices) {
+			return false;
+		}
+		elseif($key3 !== null) {
 			$this->data[$key1][$key2] = $key3;
 		}
 		else {
@@ -873,13 +876,16 @@ class helpers
 	}
 
 	/**
-	 * Redirige vers une page du site ou une page externe
+	 * Redirige vers une page du site ou une page externe et sauvegarde les données du formulaire si il existe des notices
 	 * @param string $url Url de destination
 	 * @param string $prefix Ajoute ou non un préfixe à l'url
 	 */
 	public static function redirect($url, $prefix = '?')
 	{
-		if(!template::$notices) {
+		if(template::$notices) {
+			template::$before = $_POST;
+		}
+		else {
 			header('location:' . $prefix . $url);
 			exit();
 		}
@@ -928,6 +934,7 @@ class helpers
 class template
 {
 	static $notices = [];
+	static $before = [];
 
 	/**
 	 * Retourne une notice pour les champs obligatoires (à appeler après avoir vérifié que le champ est vide)
@@ -956,6 +963,15 @@ class template
 	}
 
 	/**
+	 * Valeur avant validation et erreur dans le formulaire
+	 * @param $nameId
+	 * @return bool|string Valeur avant validation si elle existe, sinon false
+	 */
+	private static function getBefore($nameId) {
+		return empty(self::$before[$nameId]) ? false : self::$before[$nameId];
+	}
+
+	/**
 	 * Retourne les attributs d'une balise au bon format
 	 * @param array $array Liste des attributs ($key => $value)
 	 * @param array $exclude Clés à ignorer ($key)
@@ -967,6 +983,9 @@ class template
 		$attributes = [];
 		foreach($array as $key => $value) {
 			if($value AND !in_array($key, $exclude)) {
+				if($key === 'value' AND isset($array['id']) AND template::getBefore($array['id'])) {
+					$value = template::getBefore($array['id']);
+				}
 				$attributes[] = sprintf('%s="%s"', $key, $value);
 			}
 		}
@@ -1240,6 +1259,9 @@ class template
 		$html .= sprintf('<select %s>', self::sprintAttributes($attributes, ['selected']));
 		// Options
 		foreach($options as $value => $str) {
+			if(template::getBefore($nameId)) {
+				$attributes['selected'] = template::getBefore($nameId);
+			}
 			$html .= sprintf(
 				'<option value="%s"%s%s%s>%s</option>',
 				$value,
