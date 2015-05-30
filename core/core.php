@@ -983,9 +983,6 @@ class template
 		$attributes = [];
 		foreach($array as $key => $value) {
 			if($value AND !in_array($key, $exclude)) {
-				if($key === 'value' AND isset($array['id']) AND template::getBefore($array['id'])) {
-					$value = template::getBefore($array['id']);
-				}
 				$attributes[] = sprintf('%s="%s"', $key, $value);
 			}
 		}
@@ -1095,6 +1092,10 @@ class template
 
 		// Champ requis
 		self::setRequired($nameId, $attributes);
+		// Sauvegarde des données en cas d'erreur
+		if($value = self::getBefore($nameId)) {
+			$attributes['value'] = $value;
+		}
 
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
@@ -1144,6 +1145,10 @@ class template
 
 		// Champ requis
 		self::setRequired($nameId, $attributes);
+		// Sauvegarde des données en cas d'erreur
+		if($value = self::getBefore($nameId)) {
+			$attributes['value'] = $value;
+		}
 
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
@@ -1243,6 +1248,10 @@ class template
 
 		// Champ requis
 		self::setRequired($nameId, $attributes);
+		// Sauvegarde des données en cas d'erreur
+		if($selected = self::getBefore($nameId)) {
+			$attributes['selected'] = $selected;
+		}
 
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
@@ -1259,9 +1268,6 @@ class template
 		$html .= sprintf('<select %s>', self::sprintAttributes($attributes, ['selected']));
 		// Options
 		foreach($options as $value => $str) {
-			if(template::getBefore($nameId)) {
-				$attributes['selected'] = template::getBefore($nameId);
-			}
 			$html .= sprintf(
 				'<option value="%s"%s%s%s>%s</option>',
 				$value,
