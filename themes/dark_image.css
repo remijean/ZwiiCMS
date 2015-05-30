@@ -12,16 +12,21 @@ body {
 #container {
 	margin: 20px auto;
 	background: #FFF;
+	border: 1px solid #DDD;
 }
 
 /**
  * Haut de page
  */
 
+/**
+ * Haut de page
+ */
+
 #header {
-	text-align: center;
-	padding: 50px 0;
-	font-size: 1.8em;
+	font-size: 0;
+	height: 200px;
+	background: url(dark_image.jpg) no-repeat center;
 }
 
 /**
@@ -31,7 +36,7 @@ body {
 /* Menu */
 #toggle,
 #menu {
-	background: #00A4FF;
+	background: #333;
 }
 
 /* Icône du menu en mode responsive */
@@ -47,14 +52,14 @@ body {
 /* Liens du menu survolés */
 #toggle:hover,
 #menu > li > a:hover {
-	background: #0094FF;
+	background: #222;
 }
 
 /* Liens du menu appuyés et lien courant */
 #toggle:active,
 #menu > li > a:active,
 #menu > li > a.current {
-	background: #0084FF;
+	background: #111;
 }
 
 /**
@@ -92,7 +97,7 @@ h6 {
 h2,
 h4,
 h6 {
-	color: #00A4FF;
+	color: #333;
 }
 
 /**
@@ -100,8 +105,9 @@ h6 {
  */
 
 a {
-	color: #00A4FF;
+	color: #888;
 }
+
 
 /**
  * Inputs
@@ -110,26 +116,26 @@ a {
 /* Boutons */
 input[type='submit'],
 .button {
-	background: #00A4FF;
+	background: #333;
 	color: #FFF;
 }
 
 /* Boutons survolés */
 input[type='submit']:hover,
 .button:hover {
-	background: #0094FF;
+	background: #222;
 }
 
 /* Boutons appuyés */
 input[type='submit']:active,
 .button:active {
-	background: #0084FF;
+	background: #111;
 }
 
 /* Cases à cocher cochées */
 input[type='checkbox']:checked + label:before,
 input[type='radio']:checked + label:before {
-	background: #00A4FF;
+	background: #333;
 	color: #FFF;
 }
 
@@ -145,5 +151,5 @@ input[type='checkbox']:not(:active):checked:hover + label:before,
 input[type='checkbox']:active + label:before,
 input[type='radio']:checked:hover + label:before,
 input[type='radio']:not(:checked):active + label:before {
-	background: #0094FF;
+	background: #111;
 }

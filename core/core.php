@@ -844,7 +844,7 @@ class helpers
 		}
 		$it = new DirectoryIterator('themes/');
 		foreach($it as $file) {
-			if($file->isFile()) {
+			if($file->isFile() AND $file->getExtension() === 'css') {
 				$themes[$file->getBasename()] = $file->getBasename('.css');
 			}
 		}
