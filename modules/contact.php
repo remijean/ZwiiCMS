@@ -32,7 +32,7 @@ class contactAdm extends core
 			template::openRow() .
 			template::text('mail', [
 				'label' => 'Adresse de réception des mails',
-				'value' => $this->getData('modules', $this->getUrl(1), 'mail')
+				'value' => $this->getData($this->getUrl(1), 'mail')
 			]) .
 			template::closeRow() .
 			template::openRow() .
