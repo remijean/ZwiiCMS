@@ -101,18 +101,19 @@ class newsAdm extends core
 		}
 		elseif($this->getPost('submit')) {
 			$key = $this->getPost('title') ? $this->getPost('title', helpers::URL) : $this->getUrl(3);
+			$date = $this->getData($this->getUrl(1), $this->getUrl(3), 'date');
 			if($key !== $this->getUrl(3)) {
 				$key = helpers::increment($key, $this->getData($this->getUrl(1)));
 				$this->removeData($this->getUrl(1), $this->getUrl(3));
 			}
 			$this->setData($this->getUrl(1), $key, [
 				'title' => $this->getPost('title', helpers::STRING),
-				'date' => $this->getData($this->getUrl(1), $this->getUrl(3), 'date'),
+				'date' => $date,
 				'content' => $this->getPost('content')
 			]);
 			$this->saveData();
 			$this->setNotification('News modifiée avec succès !');
-			helpers::redirect($this->getUrl());
+			helpers::redirect('module/' . $this->getUrl(1) . '/' . $this->getUrl(2) . '/' . $key);
 		}
 		self::$content =
 			template::openForm() .
