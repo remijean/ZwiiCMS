@@ -1,6 +1,22 @@
 ZwiiCMS 7
 =========
 
+## 7.1.5
+* Correction du bug à la modification du titre d'une news
+* Nouveau thème dark_image
+* Ajout d'une sauvegarde des données des formulaires en cas d'erreur
+* Optimisation de la création des vues
+* Administration du module impossible en cas de changement
+* Ajout de commentaires dans le .gitignore
+* Optimisation des scripts
+* Ajustement de la hauteur des textareas
+* Ajout des aides au survole
+* Ajout d'un helper pour envoyer les mails
+* Ajout d'une fonction dans core pour l'auto-chargement des classes
+* Mise à jour de Normalize en version 3.0.3
+* Nouvelle adresse email de contact
+* DocBlock manquante pour la méthode setNotification()
+
 ## 7.1.4
 * Suppression du PHPSESSID de l'url
 * Suppression des mots-clés
