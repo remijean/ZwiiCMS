@@ -60,7 +60,7 @@ class contactMod extends core
 		// Envoi du mail
 		if($this->getPost('submit')) {
 			$mail = helpers::mail(
-				$this->getPost('subject', helpers::STRING),
+				$this->getPost('mail', helpers::STRING),
 				$this->getData($this->getUrl(0), 'mail'),
 				$this->getPost('subject', helpers::STRING),
 				$this->getPost('message', helpers::STRING)
