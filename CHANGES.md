@@ -1,6 +1,11 @@
 ZwiiCMS 7
 =========
 
+## 7.1.6
+* Correction du mail de l'expéditeur qui n'était pas utilisé dans le module de contact
+* Correction d'un texte
+* Correction du mail qui ne s'affiche pas dans le module contact
+
 ## 7.1.5
 * Correction du bug à la modification du titre d'une news
 * Nouveau thème dark_image
