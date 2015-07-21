@@ -36,23 +36,30 @@ $(window).on('resize', function() {
  * Enregistrement en AJAX du module des page
  */
 $('#module').on('change', function() {
-	var module = $('#module');
+	var newModule = $('#module').val();
 	var config = $('#config');
-	$.ajax({
-		type: "POST",
-		url: '?ajax/' + $("#key").val(),
-		data: {module: module.val()},
-		success: function() {
-			if(module.val() == '') {
+	var ok = true;
+	if($('#oldModule').val() != '') {
+		ok = confirm('Si vous confirmez, les données du module précédent seront supprimées !');
+	}
+	if(ok) {
+		$.ajax({
+			type: "POST",
+			url: '?ajax/' + $("#key").val(),
+			data: {module: newModule},
+			success: function() {
+				$('#oldModule').val(newModule);
+				if(newModule == '') {
+					config.addClass('disabled');
+				}
+				else {
+					config.removeClass('disabled');
+				}
+			},
+			error: function() {
+				alert('Impossible d\'enregistrer le module !');
 				config.addClass('disabled');
 			}
-			else {
-				config.removeClass('disabled');
-			}
-		},
-		error: function() {
-			alert('Impossible d\'enregistrer le module !');
-			config.addClass('disabled');
-		}
-	});
+		});
+	}
 });

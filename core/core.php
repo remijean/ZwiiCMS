@@ -245,15 +245,11 @@ class core
 	 * Accède à une valeur de la variable HTTP POST et lui applique un filtre
 	 * @param string $key Clé de la valeur
 	 * @param string $filter Filtre à appliquer
-	 * @param string $isset Check l'existence de la variable
 	 * @return bool|string Valeur POST ou false si elle n'existe pas
 	 */
-	public function getPost($key, $filter = null, $isset = false)
+	public function getPost($key, $filter = null)
 	{
-		if($isset AND !isset($_POST[$key])) {
-			return false;
-		}
-		elseif(empty($_POST[$key])) {
+		if(empty($_POST[$key])) {
 			return template::getRequired($key);
 		}
 		else {
@@ -480,8 +476,11 @@ class core
 			template::hidden('key', [
 				'value' => $this->getUrl(1)
 			]) .
+			template::hidden('oldModule', [
+				'value' => $this->getData('pages', $this->getUrl(1), 'module')
+			]) .
 			template::select('module', helpers::listModules('Aucun module'), [
-				'label' => 'Inclure un module' . template::help('En cas de changement de module, les données rattachées au module précédant seront supprimées.'),
+				'label' => 'Inclure un module' . template::help('En cas de changement de module, les données rattachées au module précédent seront supprimées.'),
 				'selected' => $this->getData('pages', $this->getUrl(1), 'module'),
 				'col' => 10
 			]) .
@@ -521,7 +520,7 @@ class core
 	 */
 	public function ajax()
 	{
-		if(!$this->getData('pages', $this->getUrl(1)) OR !$this->getPost('module', null, true)) {
+		if(!$this->getData('pages', $this->getUrl(1))) {
 			return false;
 		}
 		if($this->getPost('module') !== $this->getData('pages', $this->getUrl(1), 'module')) {
