@@ -90,7 +90,7 @@ class contactMod extends core
 			]) .
 			template::newRow() .
 			template::textarea('message', [
-				'label' => 'Sujet',
+				'label' => 'Message',
 				'required' => true,
 				'col' => 7
 			]) .
