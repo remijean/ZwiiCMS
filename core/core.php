@@ -1116,7 +1116,7 @@ class template
 
 	/**
 	 * Crée un champ caché
-	 * @param string $nameId Nom & id du champ texte court
+	 * @param string $nameId Nom & id du champ caché
 	 * @param array $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
 	 * @return string La balise et ses attributs au bon format
 	 */
