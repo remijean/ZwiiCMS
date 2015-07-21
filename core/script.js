@@ -9,7 +9,6 @@ setTimeout(function() {
  * Modifications non enregistrées du formulaire
  */
 var form = $('form');
-
 form.data('serialize', form.serialize());
 $(window).on('beforeunload', function() {
 	if(form.length && form.serialize() !== form.data('serialize')) {
@@ -24,7 +23,6 @@ form.submit(function() {
  * Affiche/cache le menu en mode responsive
  */
 var menu = $('#menu');
-
 $('#toggle').on('click', function() {
 	menu.slideToggle();
 });
@@ -35,22 +33,26 @@ $(window).on('resize', function() {
 });
 
 /**
- * Verrouille l'administration de module après un changement
+ * Enregistrement en AJAX du module des page
  */
-var module = $('#module');
-var oldModule = module.val();
-
-module.on('change', function() {
-	var newModule = module.val();
+$('#module').on('change', function() {
+	var module = $('#module');
 	var config = $('#config');
-
-	if(newModule != '' && newModule == oldModule) {
-		config.removeClass('disabled');
-	}
-	else {
-		if(newModule != '') {
-			alert('Pour accéder à l\'administration du nouveau module vous devez enregistrer les modifications de la page !');
+	$.ajax({
+		type: "POST",
+		url: '?ajax/' + $("#key").val(),
+		data: {module: module.val()},
+		success: function() {
+			if(module.val() == '') {
+				config.addClass('disabled');
+			}
+			else {
+				config.removeClass('disabled');
+			}
+		},
+		error: function() {
+			alert('Impossible d\'enregistrer le module !');
+			config.addClass('disabled');
 		}
-		config.addClass('disabled');
-	}
+	});
 });

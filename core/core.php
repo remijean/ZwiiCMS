@@ -21,11 +21,12 @@ class core
 	private $error;
 	private $success;
 
-	private static $modules = ['create', 'edit', 'module', 'delete', 'clean', 'export', 'mode', 'config', 'logout'];
+	private static $modules = ['create', 'edit', 'ajax', 'module', 'delete', 'clean', 'export', 'mode', 'config', 'logout'];
 	public static $views = [];
 	public static $title = false;
 	public static $description = false;
 	public static $content = false;
+	public static $layout = 'LAYOUT'; // LAYOUT : affiche le layout et active la mise en cache, JSON : affiche un tableau JSON, BLANK : affiche une page vide
 
 	const VERSION = '7.1.6';
 
@@ -79,6 +80,7 @@ class core
 	 * @param string $key1 Clé de niveau 1
 	 * @param string $key2 Clé de niveau 2
 	 * @param string $key3 Clé de niveau 3
+	 * @return bool False si une notice existe
 	 */
 	public function setData($key1, $key2, $key3 = null)
 	{
@@ -243,11 +245,15 @@ class core
 	 * Accède à une valeur de la variable HTTP POST et lui applique un filtre
 	 * @param string $key Clé de la valeur
 	 * @param string $filter Filtre à appliquer
+	 * @param string $isset Check l'existence de la variable
 	 * @return bool|string Valeur POST ou false si elle n'existe pas
 	 */
-	public function getPost($key, $filter = null)
+	public function getPost($key, $filter = null, $isset = false)
 	{
-		if(empty($_POST[$key])) {
+		if($isset AND !isset($_POST[$key])) {
+			return false;
+		}
+		elseif(empty($_POST[$key])) {
 			return template::getRequired($key);
 		}
 		else {
@@ -274,7 +280,7 @@ class core
 		// Page et module
 		elseif($this->getData('pages', $this->getUrl(0))) {
 			// Cache
-			if(!$this->getCookie()) {
+			if(!$this->getCookie() AND self::$layout === 'LAYOUT') {
 				$url = str_replace('/', '_', $this->getUrl());
 				if(file_exists('core/cache/' . $url . '.html')) {
 					require 'core/cache/' . $url . '.html';
@@ -307,12 +313,26 @@ class core
 			self::$title = 'Erreur 404';
 			self::$content = '<p>Page introuvable !</p>';
 		}
-		// Description par défaut
-		if(!self::$description) {
-			self::$description = $this->getData('config', 'description');
+		// Choix du type de données à afficher
+		switch(self::$layout) {
+			// Affiche le layout
+			case 'LAYOUT':
+				// Description par défaut
+				if(!self::$description) {
+					self::$description = $this->getData('config', 'description');
+				}
+				// Importe le layout
+				require 'core/layout.html';
+				break;
+			// Affiche un tableau JSON
+			case 'JSON':
+				echo json_encode(self::$content);
+				break;
+			// Affiche une page vide
+			case 'BLANK':
+				echo self::$content;
+				break;
 		}
-		// Importe le layout
-		require 'core/layout.html';
 	}
 
 	/**
@@ -322,7 +342,7 @@ class core
 	public function cache()
 	{
 		$url = str_replace('/', '_', $this->getUrl());
-		if($this->getData('pages', $this->getUrl(0)) AND !$this->getCookie() AND !file_exists('core/cache/' . $url . '.html')) {
+		if($this->getData('pages', $this->getUrl(0)) AND !$this->getCookie() AND !file_exists('core/cache/' . $url . '.html') AND self::$layout === 'LAYOUT') {
 			if(!file_exists('core/cache/')) {
 				mkdir('core/cache/');
 			}
@@ -418,16 +438,13 @@ class core
 					$this->setData('config', 'index', $key);
 				}
 			}
-			if($this->getPost('module') !== $this->getData('pages', $key, 'module')) {
-				$this->removeData($key);
-			}
 			$this->setData('pages', $key, [
 				'title' => $this->getPost('title', helpers::STRING),
 				'description' => $this->getPost('description', helpers::STRING),
 				'position' => $this->getPost('position', helpers::INT),
 				'blank' => $this->getPost('blank', helpers::BOOLEAN),
 				'theme' => $this->getPost('theme', helpers::STRING),
-				'module' => $this->getPost('module', helpers::STRING),
+				'module' => $this->getData('pages', $key, 'module'),
 				'content' => $this->getPost('content')
 			]);
 			$this->saveData($key);
@@ -460,6 +477,9 @@ class core
 				'value' => $this->getData('pages', $this->getUrl(1), 'description')
 			]) .
 			template::newRow() .
+			template::hidden('key', [
+				'value' => $this->getUrl(1)
+			]) .
 			template::select('module', helpers::listModules('Aucun module'), [
 				'label' => 'Inclure un module' . template::help('En cas de changement de module, les données rattachées au module précédant seront supprimées.'),
 				'selected' => $this->getData('pages', $this->getUrl(1), 'module'),
@@ -468,6 +488,7 @@ class core
 			template::button('config', [
 				'value' => 'Administrer',
 				'href' => '?module/' . $this->getUrl(1),
+				'target' => '_blank',
 				'disabled' => $this->getData('pages', $this->getUrl(1), 'module') ? false : true,
 				'col' => 2
 			]) .
@@ -496,11 +517,36 @@ class core
 	}
 
 	/**
+	 * MODULE : Enregistrement du module en ajax
+	 */
+	public function ajax()
+	{
+		if(!$this->getData('pages', $this->getUrl(1)) OR !$this->getPost('module', null, true)) {
+			return false;
+		}
+		if($this->getPost('module') !== $this->getData('pages', $this->getUrl(1), 'module')) {
+			$this->removeData($this->getUrl(1));
+		}
+		$this->setData('pages', $this->getUrl(1), [
+			'title' => $this->getData('pages', $this->getUrl(1), 'title'),
+			'description' => $this->getData('pages', $this->getUrl(1), 'description'),
+			'position' => $this->getData('pages', $this->getUrl(1), 'position'),
+			'blank' => $this->getData('pages', $this->getUrl(1), 'blank'),
+			'theme' => $this->getData('pages', $this->getUrl(1), 'theme'),
+			'module' => $this->getPost('module', helpers::STRING),
+			'content' => $this->getData('pages', $this->getUrl(1), 'content')
+		]);
+		$this->saveData($this->getUrl(1));
+		self::$layout = 'JSON';
+		self::$content = true;
+	}
+
+	/**
 	 * MODULE : Configuration du module
 	 */
 	public function module()
 	{
-		if(!$this->getData('pages', $this->getUrl(1))) {
+		if(!$this->getData('pages', $this->getUrl(1), 'module')) {
 			return false;
 		}
 		else {
@@ -548,8 +594,8 @@ class core
 	{
 		header('Content-disposition: attachment; filename=data.json');
 		header('Content-type: application/json');
-		echo json_encode($this->getData());
-		exit;
+		self::$layout = 'JSON';
+		self::$content = $this->getData();
 	}
 
 	/**
@@ -1066,6 +1112,32 @@ class template
 			self::sprintAttributes($attributes),
 			$str
 		);
+	}
+
+	/**
+	 * Crée un champ caché
+	 * @param string $nameId Nom & id du champ texte court
+	 * @param array $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @return string La balise et ses attributs au bon format
+	 */
+	public static function hidden($nameId, array $attributes = [])
+	{
+		$attributes = array_merge([
+			'id' => $nameId,
+			'name' => $nameId,
+			'value' => '',
+			'class' => ''
+		], $attributes);
+
+		// Sauvegarde des données en cas d'erreur
+		if($value = self::getBefore($nameId)) {
+			$attributes['value'] = $value;
+		}
+
+		// Texte
+		$html = sprintf('<input type="hidden" %s>', self::sprintAttributes($attributes));
+
+		return $html;
 	}
 
 	/**
