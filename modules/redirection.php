@@ -14,6 +14,9 @@
 
 class redirectionAdm extends core
 {
+	/**
+	 * @var string $name Nom du module
+	 */
 	public static $name = 'URL de redirection';
 
 	/**

@@ -4,7 +4,7 @@
  * Vérification de la version de PHP
  */
 if(version_compare(PHP_VERSION, '5.4.0', '<')) {
-	die('PHP 5.4+ requis !');
+	exit('PHP 5.4+ requis !');
 }
 
 /**

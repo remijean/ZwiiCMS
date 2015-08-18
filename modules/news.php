@@ -14,7 +14,14 @@
 
 class newsAdm extends core
 {
+	/**
+	 * @var string $name Nom du module
+	 */
 	public static $name = 'Gestionnaire de news';
+
+	/**
+	 * @var array $views Liste des vues du module
+	 */
 	public static $views = ['delete', 'edit'];
 
 	/**

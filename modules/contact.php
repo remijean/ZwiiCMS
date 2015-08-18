@@ -14,6 +14,9 @@
 
 class contactAdm extends core
 {
+	/**
+	 * @var string $name Nom du module
+	 */
 	public static $name = 'Formulaire de contact';
 
 	/**

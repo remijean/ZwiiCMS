@@ -16,20 +16,67 @@ session_start();
 
 class core
 {
-	private $data;
-	private $url;
-	private $error;
-	private $success;
-
-	private static $modules = ['create', 'edit', 'ajax', 'module', 'delete', 'clean', 'export', 'mode', 'config', 'logout'];
-	public static $views = [];
-	public static $title = false;
-	public static $description = false;
-	public static $content = false;
-	public static $layout = 'LAYOUT'; // LAYOUT : affiche le layout et active la mise en cache, JSON : affiche un tableau JSON, BLANK : affiche une page vide
-
+	/**
+	 * Version de ZwiiCMS
+	 */
 	const VERSION = '7.1.6';
 
+	/**
+	 * @var array $data Base de données
+	 */
+	private $data;
+
+	/**
+	 * @var array $url Url du site coupée à chaque "/"
+	 */
+	private $url;
+
+	/**
+	 * @var bool|string $error Message d'erreur
+	 */
+	private $error;
+
+	/**
+	 * @var bool|string $success Message de succès
+	 */
+	private $success;
+
+	/**
+	 * @var array $module Liste des modules
+	 */
+	private static $modules = ['create', 'edit', 'ajax', 'module', 'delete', 'clean', 'export', 'mode', 'config', 'logout'];
+
+	/**
+	 * @var array $views Liste des vues pour les modules
+	 */
+	public static $views = [];
+
+	/**
+	 * @var bool|string $title Titre de la page
+	 */
+	public static $title = false;
+
+	/**
+	 * @var bool|string $description Description de la page
+	 */
+	public static $description = false;
+
+	/**
+	 * @var bool|string $content Contenu de la page
+	 */
+	public static $content = false;
+
+	/**
+	 * @var string $layout Type de layout à afficher
+	 * - LAYOUT : affiche le layout et active la mise en cache
+	 * - JSON : affiche un tableau JSON
+	 * - BLANK : affiche une page vide)
+	 */
+	public static $layout = 'LAYOUT';
+
+	/**
+	 * Constructeur de la classe
+	 */
 	public function __construct()
 	{
 		$this->data = json_decode(file_get_contents('core/data.json'), true);
@@ -84,14 +131,13 @@ class core
 	 */
 	public function setData($key1, $key2, $key3 = null)
 	{
-		if(template::$notices) {
-			return false;
-		}
-		elseif($key3 !== null) {
-			$this->data[$key1][$key2] = $key3;
-		}
-		else {
-			$this->data[$key1] = $key2;
+		if(!template::$notices) {
+			if($key3 !== null) {
+				$this->data[$key1][$key2] = $key3;
+			}
+			else {
+				$this->data[$key1] = $key2;
+			}
 		}
 	}
 
@@ -104,17 +150,16 @@ class core
 	 */
 	public function removeData($key1, $key2 = null, $key3 = null)
 	{
-		if(template::$notices) {
-			return false;
-		}
-		elseif($key3 !== null) {
-			unset($this->data[$key1][$key2][$key3]);
-		}
-		elseif($key2 !== null) {
-			unset($this->data[$key1][$key2]);
-		}
-		else {
-			unset($this->data[$key1]);
+		if(!template::$notices) {
+			if($key3 !== null) {
+				unset($this->data[$key1][$key2][$key3]);
+			}
+			elseif($key2 !== null) {
+				unset($this->data[$key1][$key2]);
+			}
+			else {
+				unset($this->data[$key1]);
+			}
 		}
 	}
 
@@ -125,10 +170,7 @@ class core
 	 */
 	public function saveData($removeAllCache = false)
 	{
-		if(template::$notices) {
-			return false;
-		}
-		elseif(file_exists('core/cache/')) {
+		if(!template::$notices AND file_exists('core/cache/')) {
 			$it = new DirectoryIterator('core/cache/');
 			foreach($it as $file) {
 				if($file->isFile()) {
@@ -140,9 +182,9 @@ class core
 					}
 				}
 			}
+			return file_put_contents('core/data.json', json_encode($this->getData()));
 		}
-
-		return file_put_contents('core/data.json', json_encode($this->getData()));
+		return false;
 	}
 
 	/**
@@ -198,12 +240,10 @@ class core
 		}
 		elseif($this->error) {
 			unset($_SESSION['ERROR']);
-
 			return '<div id="notification" class="error">' . $this->error . '</div>';
 		}
 		elseif($this->success) {
 			unset($_SESSION['SUCCESS']);
-
 			return '<div id="notification" class="success">' . $this->success . '</div>';
 		}
 		else {
@@ -344,9 +384,9 @@ class core
 			}
 			$cache = ob_get_clean();
 			file_put_contents('core/cache/' . $url . '.html', $cache);
-
 			return $cache;
 		}
+		return false;
 	}
 
 	/**
@@ -371,7 +411,6 @@ class core
 			$li .= ($this->getUrl(0) !== 'config') ? '<li><a href="?mode/' . $this->getUrl() . '">Mode ' . ($this->getMode() ? 'public' : 'édition') . '</a></li>' : false;
 			$li .= '<li><a href="?config">Configuration</a></li>';
 			$li .= '<li><a href="?logout" onclick="return confirm(\'Êtes-vous certain de vouloir vous déconnecter ?\');">Déconnexion</a></li>';
-
 			return '<ul id="panel">' . $li . '</ul>';
 		}
 	}
@@ -390,7 +429,6 @@ class core
 			$blank = ($this->getData('pages', $key, 'blank') AND !$this->getMode()) ? ' target="_blank"' : false;
 			$pages .= '<li><a href="?' . $edit . $key . '"' . $current . $blank . '>' . $this->getData('pages', $key, 'title') . '</a></li>';
 		}
-
 		return $pages;
 	}
 
@@ -788,7 +826,6 @@ class helpers
 			default:
 				$str = filter_var($str, $filter);
 		}
-
 		return get_magic_quotes_gpc() ? stripslashes($str) : $str;
 	}
 
@@ -810,7 +847,6 @@ class helpers
 				$newKey = $key . '-' . $i;
 				$i++;
 			}
-
 			return $newKey;
 		}
 	}
@@ -842,7 +878,6 @@ class helpers
 			}
 			$row = $keep ? $row : array_keys($row);
 		}
-
 		return $row;
 	}
 
@@ -854,21 +889,30 @@ class helpers
 	 */
 	public static function pagination($array, $url)
 	{
+		// Scinde l'url
 		$url = explode('/', $url);
+		// Url de pagination
 		$urlPagination = is_numeric(end($url)) ? array_pop($url) : 1;
+		// Url de la page courante
 		$urlCurrent = implode('/', $url);
+		// Nombre d'éléments à afficher
 		$nbElements = count($array);
+		// Nombre de page
 		$nbPage = ceil($nbElements / 10);
+		// Page courante
 		$currentPage = is_numeric($urlPagination) ? (int) $urlPagination : 1;
+		// Premier élément de la page
 		$firstElement = ($currentPage - 1) * 10;
+		// Dernier élément de la page
 		$lastElement = $firstElement + 10;
 		$lastElement = ($lastElement > $nbElements) ? $nbElements : $lastElement;
+		// Mise en forme de la liste des pages
 		$pages = false;
 		for($i = 1; $i <= $nbPage; $i++)
 		{
 			$pages .= ($i === $currentPage) ? ' ' . $i . ' ' : ' <a href="?' . $urlCurrent . '/' . $i . '">' . $i . '</a> ';
 		}
-
+		// Retourne un tableau contenant les informations sur la pagination
 		return [
 			'first' => $firstElement,
 			'last' => $lastElement,
@@ -893,7 +937,6 @@ class helpers
 				$themes[$file->getBasename()] = $file->getBasename('.css');
 			}
 		}
-
 		return $themes;
 	}
 
@@ -916,7 +959,6 @@ class helpers
 				$modules[$file->getBasename('.php')] = $module::$name;
 			}
 		}
-
 		return $modules;
 	}
 
@@ -991,7 +1033,6 @@ class template
 		if(!empty($_SESSION['REQUIRED']) AND in_array($key . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED'])) {
 			self::$notices[$key] = 'Ce champ est requis';
 		}
-
 		return false;
 	}
 
@@ -1031,7 +1072,6 @@ class template
 				$attributes[] = sprintf('%s="%s"', $key, $value);
 			}
 		}
-
 		return implode(' ', $attributes);
 	}
 
@@ -1070,6 +1110,7 @@ class template
 	 */
 	public static function openForm($nameId = 'form', $attributes = [])
 	{
+		// Attributs possibles
 		$attributes = array_merge([
 			'id' => $nameId,
 			'name' => $nameId,
@@ -1079,7 +1120,7 @@ class template
 			'enctype' => '',
 			'class' => ''
 		], $attributes);
-
+		// Retourne le html
 		return sprintf('<form %s>', self::sprintAttributes($attributes));
 	}
 
@@ -1101,11 +1142,12 @@ class template
 	 */
 	public static function label($for, $str, array $attributes = [])
 	{
+		// Attributs possibles
 		$attributes = array_merge([
 			'for' => $for,
 			'class' => ''
 		], $attributes);
-
+		// Retourne le html
 		return sprintf(
 			'<label %s>%s</label>',
 			self::sprintAttributes($attributes),
@@ -1121,21 +1163,20 @@ class template
 	 */
 	public static function hidden($nameId, array $attributes = [])
 	{
+		// Attributs possibles
 		$attributes = array_merge([
 			'id' => $nameId,
 			'name' => $nameId,
 			'value' => '',
 			'class' => ''
 		], $attributes);
-
 		// Sauvegarde des données en cas d'erreur
 		if($value = self::getBefore($nameId)) {
 			$attributes['value'] = $value;
 		}
-
 		// Texte
 		$html = sprintf('<input type="hidden" %s>', self::sprintAttributes($attributes));
-
+		// Retourne le html
 		return $html;
 	}
 
@@ -1147,6 +1188,7 @@ class template
 	 */
 	public static function text($nameId, array $attributes = [])
 	{
+		// Attributs possibles
 		$attributes = array_merge([
 			'id' => $nameId,
 			'name' => $nameId,
@@ -1160,14 +1202,12 @@ class template
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
-
 		// Champ requis
 		self::setRequired($nameId, $attributes);
 		// Sauvegarde des données en cas d'erreur
 		if($value = self::getBefore($nameId)) {
 			$attributes['value'] = $value;
 		}
-
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
@@ -1189,7 +1229,7 @@ class template
 		);
 		// Fin col
 		$html .= '</div>';
-
+		// Retourne le html
 		return $html;
 	}
 
@@ -1201,6 +1241,7 @@ class template
 	 */
 	public static function textarea($nameId, array $attributes = [])
 	{
+		// Attributs possibles
 		$attributes = array_merge([
 			'id' => $nameId,
 			'name' => $nameId,
@@ -1213,14 +1254,12 @@ class template
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
-
 		// Champ requis
 		self::setRequired($nameId, $attributes);
 		// Sauvegarde des données en cas d'erreur
 		if($value = self::getBefore($nameId)) {
 			$attributes['value'] = $value;
 		}
-
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
@@ -1243,7 +1282,7 @@ class template
 		);
 		// Fin col
 		$html .= '</div>';
-
+		// Retourne le html
 		return $html;
 	}
 
@@ -1255,6 +1294,7 @@ class template
 	 */
 	public static function password($nameId, array $attributes = [])
 	{
+		// Attributs possibles
 		$attributes = array_merge([
 			'id' => $nameId,
 			'name' => $nameId,
@@ -1267,10 +1307,8 @@ class template
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
-
 		// Champ requis
 		self::setRequired($nameId, $attributes);
-
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
@@ -1292,7 +1330,7 @@ class template
 		);
 		// Fin col
 		$html .= '</div>';
-
+		// Retourne le html
 		return $html;
 	}
 
@@ -1305,6 +1343,7 @@ class template
 	 */
 	public static function select($nameId, array $options, array $attributes = [])
 	{
+		// Attributs possibles
 		$attributes = array_merge([
 			'id' => $nameId,
 			'name' => $nameId,
@@ -1316,14 +1355,12 @@ class template
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
-
 		// Champ requis
 		self::setRequired($nameId, $attributes);
 		// Sauvegarde des données en cas d'erreur
 		if($selected = self::getBefore($nameId)) {
 			$attributes['selected'] = $selected;
 		}
-
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
@@ -1352,7 +1389,7 @@ class template
 		$html .= '</select>';
 		// Fin col
 		$html .= '</div>';
-
+		// Retourne le html
 		return $html;
 	}
 
@@ -1366,6 +1403,7 @@ class template
 	 */
 	public static function checkbox($nameId, $value, $label, array $attributes = [])
 	{
+		// Attributs possibles
 		$attributes = array_merge([
 			'checked' => false,
 			'disabled' => false,
@@ -1374,10 +1412,8 @@ class template
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
-
 		// Champ requis
 		self::setRequired($nameId, $attributes);
-
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Notice
@@ -1400,7 +1436,7 @@ class template
 		$html .= self::label($nameId . '_' . $value, $label);
 		// Fin col
 		$html .= '</div>';
-
+		// Retourne le html
 		return $html;
 	}
 
@@ -1414,6 +1450,7 @@ class template
 	 */
 	public static function radio($nameId, $value, $label, array $attributes = [])
 	{
+		// Attributs possibles
 		$attributes = array_merge([
 			'checked' => false,
 			'disabled' => false,
@@ -1422,10 +1459,8 @@ class template
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
-
 		// Champ requis
 		self::setRequired($nameId, $attributes);
-
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Notice
@@ -1448,7 +1483,7 @@ class template
 		$html .= self::label($nameId . '_' . $value, $label);
 		// Fin col
 		$html .= '</div>';
-
+		// Retourne le html
 		return $html;
 	}
 
@@ -1460,6 +1495,7 @@ class template
 	 */
 	public static function submit($nameId, array $attributes = [])
 	{
+		// Attributs possibles
 		$attributes = array_merge([
 			'id' => $nameId,
 			'name' => $nameId,
@@ -1470,7 +1506,6 @@ class template
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
-
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
@@ -1485,7 +1520,7 @@ class template
 		);
 		// Fin col
 		$html .= '</div>';
-
+		// Retourne le html
 		return $html;
 	}
 
@@ -1497,6 +1532,7 @@ class template
 	 */
 	public static function button($nameId, array $attributes = [])
 	{
+		// Attributs possibles
 		$attributes = array_merge([
 			'id' => $nameId,
 			'name' => $nameId,
@@ -1527,7 +1563,7 @@ class template
 		);
 		// Fin col
 		$html .= '</div>';
-
+		// Retourne le html
 		return $html;
 	}
 
