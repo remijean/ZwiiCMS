@@ -9,6 +9,7 @@
 	<link rel="stylesheet" href="core/vendor/trumbowyg/trumbowyg.min.css">
 	<link rel="stylesheet" href="core/style.css">
 	<link rel="stylesheet" href="themes/<?php echo $this->getData('config', 'theme'); ?>">
+	<?php echo $this->css(); ?>
 </head>
 <body>
 <?php echo $this->panel() . $this->getNotification(); ?>
@@ -26,5 +27,6 @@
 <script src="core/vendor/trumbowyg/trumbowyg.min.js"></script>
 <script src="core/script.js"></script>
 <script>$('.editor').trumbowyg();</script>
+<?php echo $this->js(); ?>
 </body>
 </html>

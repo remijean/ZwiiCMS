@@ -438,6 +438,44 @@ class core
 	}
 
 	/**
+	 * Importe le js du module
+	 * @return string Import js
+	 */
+	public function js()
+	{
+		// Importe en mode public
+		if(file_exists('modules/' . $this->getData('pages', $this->getUrl(0), 'module') . '.js')) {
+			$file = $this->getData('pages', $this->getUrl(0), 'module');
+		}
+		// Importe en mode admin
+		elseif(file_exists('modules/' . $this->getData('pages', $this->getUrl(1), 'module') . '.js')) {
+			$file = $this->getData('pages', $this->getUrl(1), 'module');
+		}
+		if(isset($file)) {
+			return '<script src="modules/' . $file . '.js"></script>';
+		}
+	}
+
+	/**
+	 * Importe le css du module
+	 * @return string Import css
+	 */
+	public function css()
+	{
+		// Importe en mode public
+		if(file_exists('modules/' . $this->getData('pages', $this->getUrl(0), 'module') . '.css')) {
+			$file = $this->getData('pages', $this->getUrl(0), 'module');
+		}
+		// Importe en mode admin
+		elseif(file_exists('modules/' . $this->getData('pages', $this->getUrl(1), 'module') . '.css')) {
+			$file = $this->getData('pages', $this->getUrl(1), 'module');
+		}
+		if(isset($file)) {
+			return '<link rel="stylesheet" href="modules/' . $file . '.css">';
+		}
+	}
+
+	/**
 	 * MODULE : Création d'une page
 	 */
 	public function create()
@@ -964,7 +1002,7 @@ class helpers
 		}
 		$it = new DirectoryIterator('modules/');
 		foreach($it as $file) {
-			if($file->isFile()) {
+			if($file->isFile() AND $file->getExtension() === 'php') {
 				$module = $file->getBasename('.php') . 'Adm';
 				$module = new $module;
 				$modules[$file->getBasename('.php')] = $module::$name;
