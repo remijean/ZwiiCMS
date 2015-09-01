@@ -63,3 +63,12 @@ $('#module').on('change', function() {
 		});
 	}
 });
+
+/**
+ * Change le thème en direct
+ */
+$('#theme').on('change', function() {
+	var oldTheme = $('#oldTheme');
+	$('link[href="themes/' + oldTheme.val() + '"]').attr('href', 'themes/' + $(this).val());
+	oldTheme.val($(this).val());
+});

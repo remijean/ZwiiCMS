@@ -331,11 +331,6 @@ class core
 				$method = in_array($this->getUrl(1), $module::$views) ? $this->getUrl(1) : 'index';
 				$module->$method();
 			}
-			// Thème
-			$theme = $this->getData('pages', $this->getUrl(0), 'theme');
-			if($theme) {
-				$this->setData('config', 'theme', $theme);
-			}
 			// Mode d'affichage
 			$this->setMode(false);
 			// Page
@@ -348,6 +343,16 @@ class core
 			header("HTTP/1.0 404 Not Found");
 			self::$title = 'Erreur 404';
 			self::$content = '<p>Page introuvable !</p>';
+		}
+		// Choix du thème à afficher
+		if($this->getData('pages', $this->getUrl(0), 'theme')) {
+			$theme = $this->getData('pages', $this->getUrl(0), 'theme');
+		}
+		elseif($this->getData('pages', $this->getUrl(1), 'theme')) {
+			$theme = $this->getData('pages', $this->getUrl(1), 'theme');
+		}
+		if(isset($theme)) {
+			$this->setData('config', 'theme', $theme);
 		}
 		// Choix du type de données à afficher
 		switch(self::$layout) {
@@ -530,8 +535,11 @@ class core
 				'col' => 2
 			]) .
 			template::newRow() .
+			template::hidden('oldTheme', [
+				'value' => $this->getData('pages', $this->getUrl(1), 'theme') ? $this->getData('pages', $this->getUrl(1), 'theme') : $this->getData('config', 'theme')
+			]) .
 			template::select('theme', helpers::listThemes('Thème par défaut'), [
-				'label' => 'Thème en mode public',
+				'label' => 'Thème de la page',
 				'selected' => $this->getData('pages', $this->getUrl(1), 'theme')
 			]) .
 			template::newRow() .
@@ -714,6 +722,9 @@ class core
 				'selected' => $this->getData('config', 'index')
 			]) .
 			template::newRow() .
+			template::hidden('oldTheme', [
+				'value' => $this->getData('config', 'theme')
+			]) .
 			template::select('theme', helpers::listThemes(), [
 				'label' => 'Thème par défaut',
 				'required' => true,
@@ -933,7 +944,7 @@ class helpers
 		}
 		$it = new DirectoryIterator('themes/');
 		foreach($it as $file) {
-			if($file->isFile() AND $file->getExtension() === 'css') {
+			if($file->isFile() AND $file->getExtension() === 'css' AND $file->getBasename() !== '_empty.css') {
 				$themes[$file->getBasename()] = $file->getBasename('.css');
 			}
 		}
