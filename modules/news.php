@@ -34,7 +34,7 @@ class newsAdm extends core
 			$this->setData($this->getUrl(1), $key, [
 				'title' => $this->getPost('title', helpers::STRING),
 				'date' => time(),
-				'content' => $this->getPost('content'),
+				'content' => $this->getPost('content')
 			]);
 			$this->saveData();
 			$this->setNotification('Nouvelle news créée avec succès !');
