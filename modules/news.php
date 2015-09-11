@@ -14,63 +14,72 @@
 
 class newsAdm extends core
 {
-	/**
-	 * @var string $name Nom du module
-	 */
+	/** @var string Nom du module */
 	public static $name = 'Gestionnaire de news';
 
-	/**
-	 * @var array $views Liste des vues du module
-	 */
+	/** @var array Liste des vues du module */
 	public static $views = ['delete', 'edit'];
 
-	/**
-	 * MODULE : Ajout de news & liste des news
-	 */
+	/** MODULE : Ajout de news & liste des news */
 	public function index()
 	{
+		// Traitement du formulaire
 		if($this->getPost('submit')) {
+			// Incrémente la clef de la news pour éviter les doublons
 			$key = helpers::increment($this->getPost('title', helpers::URL), $this->getData($this->getUrl(1)));
-			$this->setData($this->getUrl(1), $key, [
-				'title' => $this->getPost('title', helpers::STRING),
-				'date' => time(),
-				'content' => $this->getPost('content')
+			// Crée la news
+			$this->setData([
+				$this->getUrl(0),
+				$key,
+				[
+					'title' => $this->getPost('title', helpers::STRING),
+					'date' => time(),
+					'content' => $this->getPost('content')
+				]
 			]);
+			// Enregistre les données
 			$this->saveData();
+			// Notification de création
 			$this->setNotification('Nouvelle news créée avec succès !');
-			helpers::redirect('module/' . $this->getUrl(1));
+			// Redirection vers la première page des news
+			helpers::redirect('module/' . $this->getUrl(0));
 		}
-		if($this->getData($this->getUrl(1))) {
-			self::$content = '<h3>Liste des news</h3>';
-			$pagination = helpers::pagination($this->getData($this->getUrl(1)), $this->getUrl());
-			$news = helpers::arrayCollumn($this->getData($this->getUrl(1)), 'date', 'SORT_DESC');
+		// Liste les news
+		if($this->getData($this->getUrl(0))) {
+			// Crée une pagination (retourne la première news et dernière news de la page et la liste des pages
+			$pagination = helpers::pagination($this->getData($this->getUrl(0)), $this->getUrl());
+			// Liste les news en classant les classant par date en ordre décroissant
+			$news = helpers::arrayCollumn($this->getData($this->getUrl(0)), 'date', 'SORT_DESC');
+			// Crée l'affichage des news en fonction de la pagination
 			for($i = $pagination['first']; $i < $pagination['last']; $i++) {
 				self::$content .=
 					template::openRow() .
 					template::text('news[]', [
-						'value' => $this->getData($this->getUrl(1), $news[$i], 'title'),
+						'value' => $this->getData([$this->getUrl(0), $news[$i], 'title']),
 						'readonly' => true,
 						'col' => 8
 					]) .
 					template::button('edit[]', [
 						'value' => 'Modifier',
-						'href' => '?' . $this->getUrl(0) . '/' . $this->getUrl(1) . '/edit/' . $news[$i],
+						'href' => '?module/' . $this->getUrl(0) . '/edit/' . $news[$i],
 						'col' => 2
 					]) .
 					template::button('delete[]', [
 						'value' => 'Supprimer',
-						'href' => '?' . $this->getUrl(0) . '/' . $this->getUrl(1) . '/delete/' . $news[$i],
+						'href' => '?module/' . $this->getUrl(0) . '/delete/' . $news[$i],
 						'onclick' => 'return confirm(\'Êtes-vous certain de vouloir supprimer cette news ?\');',
 						'col' => 2
 					]) .
 					template::closeRow();
 
 			}
+			// Ajoute la liste des pages en dessous des news
 			self::$content .= $pagination['pages'];
 		}
+		// Contenu de la page
 		self::$content =
-			'<h3>Nouvelle news</h3>' .
 			template::openForm() .
+			template::title('Nouvelle news') .
 			template::openRow() .
 			template::text('title', [
 				'label' => 'Titre de la news',
@@ -87,7 +96,7 @@ class newsAdm extends core
 				'offset' => 10
 			]) .
 			template::closeRow() .
-			template::closeForm() .
+			template::title('Liste des news') .
 			self::$content .
 			template::openRow() .
 			template::button('back', [
@@ -95,50 +104,66 @@ class newsAdm extends core
 				'href' => '?edit/' . $this->getUrl(1),
 				'col' => 2
 			]) .
-			template::closeRow();
+			template::closeRow() .
+			template::closeForm();
 	}
 
 	/**
-	 * MODULE : Édition d'une news
-	 */
+	 * MODULE : Édition d'une news */
 	public function edit()
 	{
-		if(!$this->getData($this->getUrl(1), $this->getUrl(3))) {
+		// Erreur 404
+		if(!$this->getData([$this->getUrl(0), $this->getUrl(2)])) {
 			return false;
 		}
+		// Traitement du formulaire
 		elseif($this->getPost('submit')) {
-			$key = $this->getPost('title') ? $this->getPost('title', helpers::URL) : $this->getUrl(3);
-			$date = $this->getData($this->getUrl(1), $this->getUrl(3), 'date');
-			if($key !== $this->getUrl(3)) {
-				$key = helpers::increment($key, $this->getData($this->getUrl(1)));
-				$this->removeData($this->getUrl(1), $this->getUrl(3));
+			// Modifie la clef de la news si le titre a été modifié
+			$key = $this->getPost('title') ? $this->getPost('title', helpers::URL) : $this->getUrl(2);
+			// Sauvegarde la date de création de la news
+			$date = $this->getData([$this->getUrl(0), $this->getUrl(2), 'date']);
+			// Si la clef à changée
+			if($key !== $this->getUrl(2)) {
+				// Incrémente la nouvelle clef de la news pour éviter les doublons
+				$key = helpers::increment($key, $this->getData($this->getUrl(0)));
+				// Supprime l'ancienne news
+				$this->removeData($this->getUrl(0), $this->getUrl(2));
 			}
-			$this->setData($this->getUrl(1), $key, [
-				'title' => $this->getPost('title', helpers::STRING),
-				'date' => $date,
-				'content' => $this->getPost('content')
+			// Modifie la news ou en crée une nouvelle si la clef a changée
+			$this->setData([
+				$this->getUrl(0),
+				$key,
+				[
+					'title' => $this->getPost('title', helpers::STRING),
+					'date' => $date,
+					'content' => $this->getPost('content')
+				]
 			]);
+			// Enregistre les données
 			$this->saveData();
+			// Notification de modification
 			$this->setNotification('News modifiée avec succès !');
-			helpers::redirect('module/' . $this->getUrl(1) . '/' . $this->getUrl(2) . '/' . $key);
+			// Redirige vers l'édition de la nouvelle news si la clef à changée ou sinon vers l'ancienne
+			helpers::redirect('module/' . $this->getUrl(0) . '/edit/' . $key);
 		}
+		// Contenu de la page
 		self::$content =
 			template::openForm() .
 			template::openRow() .
 			template::text('title', [
 				'label' => 'Titre de la news',
-				'value' => $this->getData($this->getUrl(1), $this->getUrl(3), 'title'),
+				'value' => $this->getData([$this->getUrl(0), $this->getUrl(2), 'title']),
 				'required' => true
 			]) .
 			template::newRow() .
 			template::textarea('content', [
 				'class' => 'editor',
-				'value' => $this->getData($this->getUrl(1), $this->getUrl(3), 'content')
+				'value' => $this->getData([$this->getUrl(0), $this->getUrl(2), 'content'])
 			]) .
 			template::newRow() .
 			template::button('back', [
 				'value' => 'Retour',
-				'href' => '?module/' . $this->getUrl(1),
+				'href' => '?module/' . $this->getUrl(0),
 				'col' => 2
 			]) .
 			template::submit('submit', [
@@ -149,39 +174,50 @@ class newsAdm extends core
 			template::closeForm();
 	}
 
-	/**
-	 * MODULE : Suppression d'une news
-	 */
+	/** MODULE : Suppression d'une news */
 	public function delete()
 	{
-		if(!$this->getData($this->getUrl(1), $this->getUrl(3))) {
+		// Erreur 404
+		if(!$this->getData([$this->getUrl(0), $this->getUrl(2)])) {
 			return false;
 		}
+		// Suppression de la news
 		else {
-			$this->removeData($this->getUrl(1), $this->getUrl(3));
+			// Supprime la news
+			$this->removeData($this->getUrl(0), $this->getUrl(2));
+			// Enregistre les données
 			$this->saveData();
+			// Notification de suppression
 			$this->setNotification('News supprimée avec succès !');
+			// Redirige vers le module de la page
+			helpers::redirect('module/' . $this->getUrl(0));
 		}
-		helpers::redirect('module/' . $this->getUrl(1));
 	}
 }
 
 class newsMod extends core
 {
-	/**
-	 * MODULE : Liste des news
-	 */
+	/** MODULE : Liste des news */
 	public function index()
 	{
-		if($this->getData($this->getUrl(0))) {
-  			$pagination = helpers::pagination($this->getData($this->getUrl(0)), $this->getUrl());
+		// Erreur 404
+		if(!$this->getData($this->getUrl(0))) {
+			return false;
+		}
+		// Contenu de la page
+		else {
+			// Crée une pagination (retourne la première news et dernière news de la page et la liste des pages
+			$pagination = helpers::pagination($this->getData($this->getUrl(0)), $this->getUrl());
+			// Liste les news en classant les classant par date en ordre décroissant
 			$news = helpers::arrayCollumn($this->getData($this->getUrl(0)), 'date', 'SORT_DESC');
+			// Crée l'affichage des news en fonction de la pagination
 			for($i = $pagination['first']; $i < $pagination['last']; $i++) {
 				self::$content .=
-					'<h3>' . $this->getData($this->getUrl(0), $news[$i], 'title') . '</h3>' .
-					'<h4>' . date('d/m/Y - H:i', $this->getData($this->getUrl(0), $news[$i], 'date')) . '</h4>' .
-					$this->getData($this->getUrl(0), $news[$i], 'content');
+					template::title($this->getData([$this->getUrl(0), $news[$i], 'title'])) .
+					template::subTitle(date('d/m/Y - H:i', $this->getData([$this->getUrl(0), $news[$i], 'date']))).
+					$this->getData([$this->getUrl(0), $news[$i], 'content']);
 			}
+			// Ajoute la liste des pages en dessous des news
 			self::$content .= $pagination['pages'];
 		}
 	}

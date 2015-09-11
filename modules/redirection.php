@@ -14,33 +14,35 @@
 
 class redirectionAdm extends core
 {
-	/**
-	 * @var string $name Nom du module
-	 */
+	/** @var string Nom du module */
 	public static $name = 'URL de redirection';
 
-	/**
-	 * MODULE : Configuration de la redirection
-	 */
+	/** MODULE : Configuration de la redirection*/
 	public function index()
 	{
+		// Traitement du formulaire
 		if($this->getPost('submit')) {
-			$this->setData($this->getUrl(1), 'url', $this->getPost('url', helpers::URL));
+			// Modifie l'URL de redirection
+			$this->setData([$this->getUrl(0), 'url', $this->getPost('url', helpers::URL)]);
+			// Enregistre les données
 			$this->saveData();
+			// Notification de succès
 			$this->setNotification('Configuration du module enregistrée avec succès !');
+			// Redirige vers l'URL courante
 			helpers::redirect($this->getUrl());
 		}
+		// Contenu de la page
 		self::$content =
 			template::openForm() .
 			template::openRow() .
 			template::text('url', [
 				'label' => 'URL de redirection',
-				'value' => $this->getData($this->getUrl(1), 'url')
+				'value' => $this->getData([$this->getUrl(0), 'url'])
 			]) .
 			template::newRow() .
 			template::button('back', [
 				'value' => 'Retour',
-				'href' => '?edit/' . $this->getUrl(1),
+				'href' => '?edit/' . $this->getUrl(0),
 				'col' => 2
 			]) .
 			template::submit('submit', [
@@ -54,12 +56,11 @@ class redirectionAdm extends core
 
 class redirectionMod extends core
 {
-	/**
-	 * MODULE : Redirection
-	 */
+	/** MODULE : Redirection */
 	public function index()
 	{
-		$url = $this->getData($this->getUrl(0), 'url');
+		// Redirection vers l'URL saisie
+		$url = $this->getData([$this->getUrl(0), 'url']);
 		if($url) {
 			helpers::redirect($url, false);
 		}

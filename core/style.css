@@ -1,4 +1,16 @@
 /**
+ * This file is part of ZwiiCMS.
+ *
+ * For full copyright and license information, please see the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @author Rémi Jean <remi.jean@outlook.com>
+ * @copyright Copyright (C) 2008-2015, Rémi Jean
+ * @license GNU General Public License, version 3
+ * @link http://zwiicms.com/
+ */
+
+/**
  * Éléments spécifiques
  */
 
@@ -161,6 +173,23 @@ ul,
 ol,
 form {
 	margin: 15px 0;
+}
+
+/* Zone de remplacement */
+.placeholder {
+	background: #DDD;
+	opacity: .2;
+}
+
+/* Style rapide */
+.none {
+	display: none;
+}
+.left {
+	text-align: left;
+}
+.right {
+	text-align: right;
 }
 
 /**
@@ -334,17 +363,8 @@ input[type='radio']:not(:checked):active + label:before {
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
-.none {
-	display: none;
-}
 .row {
 	margin: 0 -10px;
-}
-.row:first-of-type {
-	margin-top: -10px;
-}
-.row:last-of-type {
-	margin-bottom: -10px;
 }
 .col1,
 .col2,
