@@ -111,20 +111,23 @@ a {
 
 /* Boutons */
 input[type='submit'],
-.button {
+.button,
+.pagination > a {
 	background: #008DAB;
 	color: #FFF;
 }
 
 /* Boutons survolés */
 input[type='submit']:hover,
-.button:hover {
+.button:hover,
+.pagination > a:hover {
 	background: #007A98;
 }
 
 /* Boutons appuyés */
 input[type='submit']:active,
-.button:active {
+.button:active,
+.pagination > a:active {
 	background: #00708C;
 }
 

@@ -74,15 +74,18 @@ a:hover {}
 
 /* Boutons */
 input[type='submit'],
-.button {}
+.button,
+.pagination > a {}
 
 /* Boutons survolés */
 input[type='submit']:hover,
-.button:hover {}
+.button:hover,
+.pagination > a:hover {}
 
 /* Boutons appuyés */
 input[type='submit']:active,
-.button:active {}
+.button:active,
+.pagination > a:active {}
 
 /* Cases à cocher cochées */
 input[type='checkbox']:checked + label:before,

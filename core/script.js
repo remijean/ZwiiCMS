@@ -66,6 +66,7 @@ $('#module').on('change', function() {
 				}
 				else {
 					config.removeClass('disabled');
+					config.attr('target', '_blank')
 				}
 			},
 			error: function() {

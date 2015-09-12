@@ -19,6 +19,9 @@ class core
 	/** @var array Liste des vues pour les modules */
 	public static $views = [];
 
+	/** @var bool Autorise ou non la mise en cache pour les modules */
+	public static $cache = true;
+
 	/** @var string Titre de la page */
 	public static $title = '';
 
@@ -179,7 +182,6 @@ class core
 					}
 				}
 			}
-			//die();
 			file_put_contents('core/data.json', json_encode($this->getData()));
 		}
 	}
@@ -295,13 +297,14 @@ class core
 	 */
 	public function getPost($keys, $filter = null)
 	{
-		// Transforme la clé en tableau
+		// Si la clef n'est pas un tableau
 		if(!is_array($keys)) {
+			// Erreur champ obligatoire
+			if(empty($_POST[$keys])) {
+				return template::getRequired($keys);
+			}
+			// Transforme la clé en tableau
 			$keys = [$keys];
-		}
-		// Erreur champ obligatoire
-		if(empty($_POST[$keys[0]])) {
-			return template::getRequired($keys[0]);
 		}
 		// Décent dans les niveaux de la variable HTTP POST
 		$post = $_POST;
@@ -357,6 +360,8 @@ class core
 				$module = new $module;
 				$method = in_array($this->getUrl(1), $module::$views) ? $this->getUrl(1) : 'index';
 				$module->$method();
+				// Mise en cache en fonction du module
+				self::$cache = $module::$cache;
 			}
 			// Désactive le mode édition si il est actif
 			$this->setMode(false);
@@ -406,8 +411,19 @@ class core
 	{
 		// Remplace les / de l'URL par des _
 		$url = str_replace('/', '_', $this->getUrl());
-		// Crée le cache si l'utilisateur est sur une page, qu'il n'est pas connecté, que le fichier de cache n'existe toujours et layout LAYOUT utilisé
-		if($this->getData(['pages', $this->getUrl(0)]) AND !$this->getCookie() AND !file_exists('core/cache/' . $url . '.html') AND self::$layout === 'LAYOUT') {
+		// Crée le cache si :
+		// - l'utilisateur est sur une page
+		// - le module ne bloque pas la mise en cache
+		// - l'utilisateur n'est pas connecté
+		// - le fichier de cache n'existe pas
+		// - le layout utilisé est LAYOUT
+		if(
+			$this->getData(['pages', $this->getUrl(0)])
+			AND self::$cache
+			AND !$this->getCookie()
+			AND !file_exists('core/cache/' . $url . '.html')
+			AND self::$layout === 'LAYOUT'
+		) {
 			// Récupère le contenu de la page mis en cache dans la méthode $this->router()
 			$cache = ob_get_clean();
 			// Crée le fichier et colle le contenu du cache
@@ -610,7 +626,6 @@ class core
 			template::button('config', [
 				'value' => 'Administrer',
 				'href' => '?module/' . $this->getUrl(0),
-				'target' => '_blank',
 				'disabled' => $this->getData(['pages', $this->getUrl(0), 'module']) ? false : true,
 				'col' => 2
 			]) .
@@ -867,6 +882,8 @@ class core
 			else {
 				$this->setNotification('Mot de passe incorrect !');
 			}
+			// Passe en mode édition
+			$this->setMode(true);
 			// Redirection vers l'URL courante
 			helpers::redirect($this->getUrl());
 		}
@@ -938,22 +955,34 @@ class helpers
 	}
 
 	/**
-	 * Incrément une clé en fonction des clés ou des valeurs d'un tableau
-	 * @param  string $key   Clé à incrémenter
+	 * Incrémente une clé en fonction des clés ou des valeurs d'un tableau
+	 * @param  mixed  $key   Clé à incrémenter
 	 * @param  array  $array Tableau à vérifier
 	 * @return string
 	 */
 	public static function increment($key, $array)
 	{
+		// Pas besoin d'incrémenter Si la clef n'existe pas
 		if(empty($array)) {
 			return $key;
 		}
+		// Incrémente la clef
 		else {
-			$i = 2;
-			$newKey = $key;
-			while(array_key_exists($newKey, $array) OR in_array($newKey, $array)) {
-				$newKey = $key . '-' . $i;
-				$i++;
+			// Si la clef est numérique elle est incrémentée
+			if(is_numeric($key)) {
+				$newKey = $key;
+				while(array_key_exists($newKey, $array) OR in_array($newKey, $array)) {
+					$newKey++;
+				}
+			}
+			// Sinon l'incrémentation est ajoutée après la clef
+			else {
+				$i = 2;
+				$newKey = $key;
+				while(array_key_exists($newKey, $array) OR in_array($newKey, $array)) {
+					$newKey = $key . '-' . $i;
+					$i++;
+				}
 			}
 			return $newKey;
 		}
@@ -1018,13 +1047,14 @@ class helpers
 		$pages = false;
 		for($i = 1; $i <= $nbPage; $i++)
 		{
-			$pages .= ($i === $currentPage) ? ' ' . $i . ' ' : ' <a href="?' . $urlCurrent . '/' . $i . '">' . $i . '</a> ';
+			$disabled = ($i === $currentPage) ? ' class="disabled"' : false;
+			$pages .= '<a href="?' . $urlCurrent . '/' . $i . '"' . $disabled . '>' . $i . '</a>';
 		}
 		// Retourne un tableau contenant les informations sur la pagination
 		return [
 			'first' => $firstElement,
 			'last' => $lastElement,
-			'pages' => '<p>Pages : ' . $pages . '</p>'
+			'pages' => '<div class="pagination">' . $pages . '</div>'
 		];
 	}
 
@@ -1726,6 +1756,30 @@ class template
 			$attributes['disabled'] ? ' disabled' : false,
 			$attributes['value']
 		);
+		// Fin col
+		$html .= '</div>';
+		// Retourne le html
+		return $html;
+	}
+
+	/**
+	 * Crée une liste
+	 * @param  array  $list       Liste des éléments à inclure
+	 * @param  array  $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @return string
+	 */
+	public static function background($text, array $attributes = [])
+	{
+		// Attributs possibles
+		$attributes = array_merge([
+			'class' => '',
+			'col' => 12,
+			'offset' => 0
+		], $attributes);
+		// Début col
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		// Bloc de fond
+		$html .= '<div class="background ' . $attributes['class']. '">' . $text . '</div>';
 		// Fin col
 		$html .= '</div>';
 		// Retourne le html

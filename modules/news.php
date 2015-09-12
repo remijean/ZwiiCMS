@@ -26,7 +26,7 @@ class newsAdm extends core
 		// Traitement du formulaire
 		if($this->getPost('submit')) {
 			// Incrémente la clef de la news pour éviter les doublons
-			$key = helpers::increment($this->getPost('title', helpers::URL), $this->getData($this->getUrl(1)));
+			$key = helpers::increment($this->getPost('title', helpers::URL), $this->getData($this->getUrl(0)));
 			// Crée la news
 			$this->setData([
 				$this->getUrl(0),
@@ -48,7 +48,7 @@ class newsAdm extends core
 		if($this->getData($this->getUrl(0))) {
 			// Crée une pagination (retourne la première news et dernière news de la page et la liste des pages
 			$pagination = helpers::pagination($this->getData($this->getUrl(0)), $this->getUrl());
-			// Liste les news en classant les classant par date en ordre décroissant
+			// Liste les news en les classant par date en ordre décroissant
 			$news = helpers::arrayCollumn($this->getData($this->getUrl(0)), 'date', 'SORT_DESC');
 			// Crée l'affichage des news en fonction de la pagination
 			for($i = $pagination['first']; $i < $pagination['last']; $i++) {
@@ -101,7 +101,7 @@ class newsAdm extends core
 			template::openRow() .
 			template::button('back', [
 				'value' => 'Retour',
-				'href' => '?edit/' . $this->getUrl(1),
+				'href' => '?edit/' . $this->getUrl(0),
 				'col' => 2
 			]) .
 			template::closeRow() .
@@ -127,7 +127,7 @@ class newsAdm extends core
 				// Incrémente la nouvelle clef de la news pour éviter les doublons
 				$key = helpers::increment($key, $this->getData($this->getUrl(0)));
 				// Supprime l'ancienne news
-				$this->removeData($this->getUrl(0), $this->getUrl(2));
+				$this->removeData([$this->getUrl(0), $this->getUrl(2)]);
 			}
 			// Modifie la news ou en crée une nouvelle si la clef a changée
 			$this->setData([
@@ -184,7 +184,7 @@ class newsAdm extends core
 		// Suppression de la news
 		else {
 			// Supprime la news
-			$this->removeData($this->getUrl(0), $this->getUrl(2));
+			$this->removeData([$this->getUrl(0), $this->getUrl(2)]);
 			// Enregistre les données
 			$this->saveData();
 			// Notification de suppression
