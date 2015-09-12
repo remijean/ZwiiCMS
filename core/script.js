@@ -82,6 +82,14 @@ $('#module').on('change', function() {
  */
 $('#theme').on('change', function() {
 	var oldTheme = $('#oldTheme');
-	$('link[href="themes/' + oldTheme.val() + '"]').attr('href', 'themes/' + $(this).val());
-	oldTheme.val($(this).val());
+	var defaultTheme = $('#defaultTheme');
+	var theme = $(this);
+	// Attribut le thème par défaut
+	if(theme.val() == '') {
+		theme = defaultTheme;
+	}
+	// Change le thème en cherchant l'ancien thème
+	$('link[href="themes/' + oldTheme.val() + '"]').attr('href', 'themes/' + theme.val());
+	// Enregistre le thème pour une future recherche
+	oldTheme.val(theme.val());
 });

@@ -630,6 +630,9 @@ class core
 				'col' => 2
 			]) .
 			template::newRow() .
+			template::hidden('defaultTheme', [
+				'value' => $this->getData(['config', 'theme'])
+			]) .
 			template::hidden('oldTheme', [
 				'value' => $this->getData(['pages', $this->getUrl(0), 'theme']) ? $this->getData(['pages', $this->getUrl(0), 'theme']) : $this->getData(['config', 'theme'])
 			]) .
