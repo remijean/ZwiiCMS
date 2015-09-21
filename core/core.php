@@ -1766,8 +1766,8 @@ class template
 	}
 
 	/**
-	 * Crée une liste
-	 * @param  array  $list       Liste des éléments à inclure
+	 * Crée un background
+	 * @param  array  $text       Test à afficher dans le background
 	 * @param  array  $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
 	 * @return string
 	 */
@@ -1781,7 +1781,7 @@ class template
 		], $attributes);
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
-		// Bloc de fond
+		// Background
 		$html .= '<div class="background ' . $attributes['class']. '">' . $text . '</div>';
 		// Fin col
 		$html .= '</div>';
