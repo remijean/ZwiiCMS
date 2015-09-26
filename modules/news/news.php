@@ -26,13 +26,13 @@ class newsAdm extends core
 		// Traitement du formulaire
 		if($this->getPost('submit')) {
 			// Incrémente la clef de la news pour éviter les doublons
-			$key = helpers::increment($this->getPost('title', helpers::URL), $this->getData($this->getUrl(0)));
+			$key = helper::increment($this->getPost('title', helper::URL), $this->getData($this->getUrl(0)));
 			// Crée la news
 			$this->setData([
 				$this->getUrl(0),
 				$key,
 				[
-					'title' => $this->getPost('title', helpers::STRING),
+					'title' => $this->getPost('title', helper::STRING),
 					'date' => time(),
 					'content' => $this->getPost('content')
 				]
@@ -42,21 +42,21 @@ class newsAdm extends core
 			// Notification de création
 			$this->setNotification('Nouvelle news créée avec succès !');
 			// Redirection vers la première page des news
-			helpers::redirect('module/' . $this->getUrl(0));
+			helper::redirect('module/' . $this->getUrl(0));
 		}
 		// Liste les news
 		if($this->getData($this->getUrl(0))) {
 			// Crée une pagination (retourne la première news et dernière news de la page et la liste des pages
-			$pagination = helpers::pagination($this->getData($this->getUrl(0)), $this->getUrl());
+			$pagination = helper::pagination($this->getData($this->getUrl(0)), $this->getUrl());
 			// Liste les news en les classant par date en ordre décroissant
-			$news = helpers::arrayCollumn($this->getData($this->getUrl(0)), 'date', 'SORT_DESC');
+			$news = helper::arrayCollumn($this->getData($this->getUrl(0)), 'date', 'SORT_DESC');
 			// Crée l'affichage des news en fonction de la pagination
 			for($i = $pagination['first']; $i < $pagination['last']; $i++) {
 				self::$content .=
 					template::openRow() .
 					template::text('news[]', [
 						'value' => $this->getData([$this->getUrl(0), $news[$i], 'title']),
-						'readonly' => true,
+						'readonly' => 'readonly',
 						'col' => 8
 					]) .
 					template::button('edit[]', [
@@ -67,7 +67,7 @@ class newsAdm extends core
 					template::button('delete[]', [
 						'value' => 'Supprimer',
 						'href' => '?module/' . $this->getUrl(0) . '/delete/' . $news[$i],
-						'onclick' => 'return confirm(\'Êtes-vous certain de vouloir supprimer cette news ?\');',
+						'onclick' => 'return confirm(\'Êtes-vous sûr de vouloir supprimer cette news ?\');',
 						'col' => 2
 					]) .
 					template::closeRow();
@@ -83,7 +83,7 @@ class newsAdm extends core
 			template::openRow() .
 			template::text('title', [
 				'label' => 'Titre de la news',
-				'required' => true
+				'required' => 'required'
 			]) .
 			template::newRow() .
 			template::textarea('content', [
@@ -119,13 +119,13 @@ class newsAdm extends core
 		// Traitement du formulaire
 		elseif($this->getPost('submit')) {
 			// Modifie la clef de la news si le titre a été modifié
-			$key = $this->getPost('title') ? $this->getPost('title', helpers::URL) : $this->getUrl(2);
+			$key = $this->getPost('title') ? $this->getPost('title', helper::URL) : $this->getUrl(2);
 			// Sauvegarde la date de création de la news
 			$date = $this->getData([$this->getUrl(0), $this->getUrl(2), 'date']);
 			// Si la clef à changée
 			if($key !== $this->getUrl(2)) {
 				// Incrémente la nouvelle clef de la news pour éviter les doublons
-				$key = helpers::increment($key, $this->getData($this->getUrl(0)));
+				$key = helper::increment($key, $this->getData($this->getUrl(0)));
 				// Supprime l'ancienne news
 				$this->removeData([$this->getUrl(0), $this->getUrl(2)]);
 			}
@@ -134,7 +134,7 @@ class newsAdm extends core
 				$this->getUrl(0),
 				$key,
 				[
-					'title' => $this->getPost('title', helpers::STRING),
+					'title' => $this->getPost('title', helper::STRING),
 					'date' => $date,
 					'content' => $this->getPost('content')
 				]
@@ -144,7 +144,7 @@ class newsAdm extends core
 			// Notification de modification
 			$this->setNotification('News modifiée avec succès !');
 			// Redirige vers l'édition de la nouvelle news si la clef à changée ou sinon vers l'ancienne
-			helpers::redirect('module/' . $this->getUrl(0) . '/edit/' . $key);
+			helper::redirect('module/' . $this->getUrl(0) . '/edit/' . $key);
 		}
 		// Contenu de la page
 		self::$content =
@@ -153,7 +153,7 @@ class newsAdm extends core
 			template::text('title', [
 				'label' => 'Titre de la news',
 				'value' => $this->getData([$this->getUrl(0), $this->getUrl(2), 'title']),
-				'required' => true
+				'required' => 'required'
 			]) .
 			template::newRow() .
 			template::textarea('content', [
@@ -190,7 +190,7 @@ class newsAdm extends core
 			// Notification de suppression
 			$this->setNotification('News supprimée avec succès !');
 			// Redirige vers le module de la page
-			helpers::redirect('module/' . $this->getUrl(0));
+			helper::redirect('module/' . $this->getUrl(0));
 		}
 	}
 }
@@ -207,9 +207,9 @@ class newsMod extends core
 		// Contenu de la page
 		else {
 			// Crée une pagination (retourne la première news et dernière news de la page et la liste des pages
-			$pagination = helpers::pagination($this->getData($this->getUrl(0)), $this->getUrl());
+			$pagination = helper::pagination($this->getData($this->getUrl(0)), $this->getUrl());
 			// Liste les news en classant les classant par date en ordre décroissant
-			$news = helpers::arrayCollumn($this->getData($this->getUrl(0)), 'date', 'SORT_DESC');
+			$news = helper::arrayCollumn($this->getData($this->getUrl(0)), 'date', 'SORT_DESC');
 			// Crée l'affichage des news en fonction de la pagination
 			for($i = $pagination['first']; $i < $pagination['last']; $i++) {
 				self::$content .=

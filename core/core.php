@@ -34,6 +34,9 @@ class core
 	/** @var string Type de layout à afficher (LAYOUT : layout et mise cache - JSON : tableau JSON - BLANK : page vide) */
 	public static $layout = 'LAYOUT';
 
+	/** @var array Langue du site */
+	public static $language = [];
+
 	/** @var array Base de données */
 	private $data;
 
@@ -57,7 +60,7 @@ class core
 	{
 		$this->data = json_decode(file_get_contents('core/data.json'), true);
 		$this->url = empty($_SERVER['QUERY_STRING']) ? $this->getData(['config', 'index']) : $_SERVER['QUERY_STRING'];
-		$this->url = helpers::filter($this->url, helpers::URL);
+		$this->url = helper::filter($this->url, helper::URL);
 		$this->url = explode('/', $this->url);
 		$this->error = empty($_SESSION['ERROR']) ? '' : $_SESSION['ERROR'];
 		$this->success = empty($_SESSION['SUCCESS']) ? '' : $_SESSION['SUCCESS'];
@@ -69,9 +72,25 @@ class core
 	 */
 	public static function autoload($className)
 	{
-		$classPath = 'modules/' . substr($className, 0, -3) . '.php';
+		$className = substr($className, 0, -3);
+		$classPath = 'modules/' . $className . '/' . $className . '.php';
 		if(is_readable($classPath)) {
 			require $classPath;
+		}
+	}
+
+	/** Importe les fichiers de langue du site */
+	public function language()
+	{
+		// Importe le fichier langue système
+		$language = 'core/languages/' . $this->getData(['config', 'language']);
+		if(is_file($language)) {
+			self::$language = json_decode(file_get_contents($language), true);
+		}
+		// Importe le fichier langue pour le module de la page
+		$language = 'modules/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '/languages/' . $this->getData(['config', 'language']);
+		if(is_file($language)) {
+			self::$language = array_merge(self::$language, json_decode(file_get_contents($language), true));
 		}
 	}
 
@@ -207,7 +226,7 @@ class core
 				array_splice($url, 0, 1);
 			}
 			// Retourne l'URL filtrée
-			return empty($url[$key]) ? '' : helpers::filter($url[$key], helpers::URL);
+			return empty($url[$key]) ? '' : helper::filter($url[$key], helper::URL);
 		}
 
 	}
@@ -228,7 +247,7 @@ class core
 	 */
 	public function setCookie($password, $time)
 	{
-		setcookie('PASSWORD', helpers::filter($password, helpers::PASSWORD), $time);
+		setcookie('PASSWORD', helper::filter($password, helper::PASSWORD), $time);
 	}
 
 	/** Supprime le cookie contenant le mot de passe */
@@ -245,17 +264,29 @@ class core
 	{
 		// Si une notice existe affiche un message pour prévenir l'utilisateur
 		if(template::$notices) {
-			return '<div id="notification" class="error">Impossible d\'enregistrer les données, le formulaire contient des erreurs !</div>';
+			return template::div([
+				'id' => 'notification',
+				'class' => 'error',
+				'text' => 'Impossible de soumettre le formulaire, car il contient des erreurs !'
+			]);
 		}
 		// Affiche un message d'erreur si il en existe un
 		elseif($this->error) {
 			unset($_SESSION['ERROR']);
-			return '<div id="notification" class="error">' . $this->error . '</div>';
+			return template::div([
+				'id' => 'notification',
+				'class' => 'error',
+				'text' => $this->error
+			]);
 		}
 		// Affiche un message de succès si il en existe un
 		elseif($this->success) {
 			unset($_SESSION['SUCCESS']);
-			return '<div id="notification" class="success">' . $this->success . '</div>';
+			return template::div([
+				'id' => 'notification',
+				'class' => 'success',
+				'text' => $this->success
+			]);
 		}
 	}
 
@@ -314,7 +345,7 @@ class core
 			}
 		}
 		// Applique le filtre et retourne la valeur
-		return ($filter !== null) ? helpers::filter($post, $filter) : $post;
+		return ($filter !== null) ? helper::filter($post, $filter) : $post;
 	}
 
 	/**
@@ -373,8 +404,8 @@ class core
 		// Erreur 404
 		if(!self::$content) {
 			header("HTTP/1.0 404 Not Found");
-			self::$title = 'Erreur 404';
-			self::$content = '<p>Page introuvable !</p>';
+			self::$title = helper::translate('Erreur 404');
+			self::$content = '<p>' . helper::translate('Page introuvable !') . '</p>';
 		}
 		// Choix du thème à afficher
 		$theme = $this->getData(['pages', $this->getUrl(0), 'theme']);
@@ -441,18 +472,39 @@ class core
 	{
 		// Crée le panneau seulement si l'utilisateur est connecté
 		if($this->getCookie() === $this->getData(['config', 'password'])) {
-			$li = '<li><select onchange="$(location).attr(\'href\', $(this).val());">';
-			$li .= ($this->getUrl(0, false) === 'config') ? '<option value="">Choisissez une page</option>' : false;
-			$pages = helpers::arrayCollumn($this->getData('pages'), 'title', 'SORT_ASC', true);
+			$li = '<li>';
+			$li .= '<select onchange="$(location).attr(\'href\', $(this).val());">';
+			// Affiche l'option "Choisissez une page" seulement pour la page de configuration
+			if($this->getUrl(0, false) === 'config') {
+				$li .= '<option value="">' . helper::translate('Choisissez une page') . '</option>';
+			}
+			// Crée des options pour les pages en les triant par titre
+			$pages = helper::arrayCollumn($this->getData('pages'), 'title', 'SORT_ASC', true);
 			foreach($pages as $key => $page) {
 				$current = ($key === $this->getUrl(0)) ? ' selected' : false;
 				$li .= '<option value="?' . $this->getMode() . $key . '"' . $current . '>' . $page . '</option>';
 			}
-			$li .= '</select></li>';
-			$li .= '<li><a href="?create">Créer une page</a></li>';
-			$li .= ($this->getUrl(0, false) !== 'config') ? '<li><a href="?mode/' . $this->getUrl(null, false) . '">Mode ' . ($this->getMode() ? 'public' : 'édition') . '</a></li>' : false;
-			$li .= '<li><a href="?config">Configuration</a></li>';
-			$li .= '<li><a href="?logout" onclick="return confirm(\'Êtes-vous certain de vouloir vous déconnecter ?\');">Déconnexion</a></li>';
+			$li .= '</select>';
+			$li .= '</li>';
+			$li .= '<li>';
+			$li .= '<a href="?create">' . helper::translate('Créer une page') . '</a>';
+			$li .= '</li>';
+			// Affiche le switch de mode pour toutes les pages sauf configuration
+			if($this->getUrl(0, false) !== 'config') {
+				$li .= '<li>';
+				$li .= '<a href="?mode/' . $this->getUrl(null, false) . '">';
+				$li .= $this->getMode() ? helper::translate('Mode public') : helper::translate('Mode édition');
+				$li .= '</a>';
+				$li .= '</li>';
+			};
+			$li .= '<li>';
+			$li .= '<a href="?config">' . helper::translate('Configuration') . '</a>';
+			$li .= '</li>';
+			$li .= '<li>';
+			$li .= '<a href="?logout" onclick="return confirm(\'' . helper::translate('Êtes-vous sûr de vouloir vous déconnecter ?') . '\');">';
+			$li .= helper::translate('Déconnexion');
+			$li .= '</a>';
+			$li .= '</li>';
 			return '<ul id="panel">' . $li . '</ul>';
 		}
 	}
@@ -466,7 +518,7 @@ class core
 		// Ajout edit/ à l'URL si l'utilisateur est en mode édition
 		$edit = ($this->getCookie() === $this->getData(['config', 'password'])) ? $this->getMode() : false;
 		// Liste les items du menu en classant les pages par position en ordre croissant
-		$pages = helpers::arrayCollumn($this->getData('pages'), 'position', 'SORT_ASC');
+		$pages = helper::arrayCollumn($this->getData('pages'), 'position', 'SORT_ASC');
 		// Génère les items du menu en fonction des pages
 		$items = false;
 		foreach($pages as $page) {
@@ -485,8 +537,8 @@ class core
 	public function js()
 	{
 		// Check l'existance d'un fichier js pour le module de la page et l'import
-		$module = 'modules/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '.js';
-		if(file_exists($module)) {
+		$module = 'modules/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '.js';
+		if(is_file($module)) {
 			return '<script src="' . $module . '"></script>';
 		}
 	}
@@ -498,29 +550,32 @@ class core
 	public function css()
 	{
 		// Check l'existance d'un fichier css pour le module de la page et l'import
-		$module = 'modules/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '.css';
-		if(file_exists($module)) {
+		$module = 'modules/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '.css';
+		if(is_file($module)) {
 			return '<link rel="stylesheet" href="' . $module . '.css">';
 		}
 	}
 
+
 	/** MODULE : Création d'une page */
 	public function create()
 	{
+		// Titre de la nouvelle page
+		$title = helper::translate('Nouvelle page');
 		// Incrémente la clef de la page pour éviter les doublons
-		$key = helpers::increment('nouvelle-page', $this->getData('pages'));
+		$key = helper::increment(helper::filter($title, helper::URL), $this->getData('pages'));
 		// Crée la page
 		$this->setData([
 			'pages',
 			$key,
 			[
-				'title' => 'Nouvelle page',
+				'title' => $title,
 				'description' => false,
 				'position' => '0',
 				'blank' => false,
 				'theme' => false,
 				'module' => false,
-				'content' => '<p>Contenu de la page.</p>'
+				'content' => '<p>' . helper::translate('Contenu de la page.') . '</p>'
 			]
 		]);
 		// Enregistre les données
@@ -528,7 +583,7 @@ class core
 		// Notification de création
 		$this->setNotification('Nouvelle page créée avec succès !');
 		// Redirection vers l'édition de la page
-		helpers::redirect('edit/' . $key);
+		helper::redirect('edit/' . $key);
 	}
 
 	/** MODULE : Édition de page */
@@ -541,14 +596,14 @@ class core
 		// Traitement du formulaire
 		elseif($this->getPost('submit')) {
 			// Modifie la clef de la page si le titre a été modifié
-			$key = $this->getPost('title') ? $this->getPost('title', helpers::URL) : $this->getUrl(0);
+			$key = $this->getPost('title') ? $this->getPost('title', helper::URL) : $this->getUrl(0);
 			// Sauvegarde le module de la page
 			$module = $this->getData(['pages', $this->getUrl(0), 'module']);
 			// Si la clef à changée
 			if($key !== $this->getUrl(0)) {
 				// Incrémente la nouvelle clef de la page pour éviter les doublons
-				$key = helpers::increment($key, $this->getData('pages'));
-				$key = helpers::increment($key, self::$modules); // Evite à une page d'avoir la même clef qu'un module système
+				$key = helper::increment($key, $this->getData('pages'));
+				$key = helper::increment($key, self::$modules); // Evite à une page d'avoir la même clef qu'un module système
 				// Supprime l'ancienne page
 				$this->removeData(['pages', $this->getUrl(0)]);
 				// Crée les nouvelles données du module de la page (avec la nouvelle clef) en copiant les anciennes
@@ -565,11 +620,11 @@ class core
 				'pages',
 				$key,
 				[
-					'title' => $this->getPost('title', helpers::STRING),
-					'description' => $this->getPost('description', helpers::STRING),
-					'position' => $this->getPost('position', helpers::INT),
-					'blank' => $this->getPost('blank', helpers::BOOLEAN),
-					'theme' => $this->getPost('theme', helpers::STRING),
+					'title' => $this->getPost('title', helper::STRING),
+					'description' => $this->getPost('description', helper::STRING),
+					'position' => $this->getPost('position', helper::INT),
+					'blank' => $this->getPost('blank', helper::BOOLEAN),
+					'theme' => $this->getPost('theme', helper::STRING),
 					'module' => $module,
 					'content' => $this->getPost('content')
 				]
@@ -583,7 +638,7 @@ class core
 			// Notification de modification
 			$this->setNotification('Page modifiée avec succès !');
 			// Redirige vers la l'édition de la nouvelle page si la clef à changée ou sinon vers l'ancienne
-			helpers::redirect('edit/' . $key);
+			helper::redirect('edit/' . $key);
 		}
 		// Contenu de la page
 		$this->setMode(true);
@@ -598,7 +653,8 @@ class core
 			]) .
 			template::newRow() .
 			template::text('position', [
-				'label' => 'Position dans le menu' . template::help('Le classement se fait par ordre croissant. Si le champ est vide, la page ne s\'affiche pas dans le menu.'),
+				'label' => 'Position dans le menu',
+				'help' => 'Le classement se fait par ordre croissant. Si le champ est vide, la page ne s\'affiche pas dans le menu.',
 				'value' => $this->getData(['pages', $this->getUrl(0), 'position'])
 			]) .
 			template::newRow() .
@@ -608,7 +664,8 @@ class core
 			]) .
 			template::newRow() .
 			template::textarea('description', [
-				'label' => 'Description de la page' . template::help('Si le champ est vide, la description du site est utilisée.'),
+				'label' => 'Description de la page',
+				'help' => 'Si le champ est vide, la description du site est utilisée.',
 				'value' => $this->getData(['pages', $this->getUrl(0), 'description'])
 			]) .
 			template::newRow() .
@@ -618,15 +675,16 @@ class core
 			template::hidden('oldModule', [
 				'value' => $this->getData(['pages', $this->getUrl(0), 'module'])
 			]) .
-			template::select('module', helpers::listModules('Aucun module'), [
-				'label' => 'Inclure un module' . template::help('En cas de changement de module, les données rattachées au module précédent seront supprimées.'),
+			template::select('module', helper::listModules('Aucun module'), [
+				'label' => 'Inclure le module',
+				'help' => 'En cas de changement de module, les données du module précédent seront supprimées.',
 				'selected' => $this->getData(['pages', $this->getUrl(0), 'module']),
 				'col' => 10
 			]) .
 			template::button('config', [
 				'value' => 'Administrer',
 				'href' => '?module/' . $this->getUrl(0),
-				'disabled' => $this->getData(['pages', $this->getUrl(0), 'module']) ? false : true,
+				'disabled' => $this->getData(['pages', $this->getUrl(0), 'module']) ? '' : 'disabled',
 				'col' => 2
 			]) .
 			template::newRow() .
@@ -636,7 +694,7 @@ class core
 			template::hidden('oldTheme', [
 				'value' => $this->getData(['pages', $this->getUrl(0), 'theme']) ? $this->getData(['pages', $this->getUrl(0), 'theme']) : $this->getData(['config', 'theme'])
 			]) .
-			template::select('theme', helpers::listThemes('Thème par défaut'), [
+			template::select('theme', helper::listThemes('Thème par défaut'), [
 				'label' => 'Thème de la page',
 				'selected' => $this->getData(['pages', $this->getUrl(0), 'theme'])
 			]) .
@@ -648,7 +706,7 @@ class core
 			template::button('delete', [
 				'value' => 'Supprimer',
 				'href' => '?delete/' . $this->getUrl(0),
-				'onclick' => 'return confirm(\'Êtes-vous certain de vouloir supprimer cette page ?\');',
+				'onclick' => 'return confirm(\'' . helper::translate('Êtes-vous sûr de vouloir supprimer cette page ?') . '\');',
 				'col' => 2,
 				'offset' => 8
 			]) .
@@ -680,7 +738,7 @@ class core
 				'position' => $this->getData(['pages', $this->getUrl(0), 'position']),
 				'blank' => $this->getData(['pages', $this->getUrl(0), 'blank']),
 				'theme' => $this->getData(['pages', $this->getUrl(0), 'theme']),
-				'module' => $this->getPost('module', helpers::STRING),
+				'module' => $this->getPost('module', helper::STRING),
 				'content' => $this->getData(['pages', $this->getUrl(0), 'content'])
 			]
 		]);
@@ -725,7 +783,7 @@ class core
 		// Notification de suppression
 		$this->setNotification('Page supprimée avec succès !');
 		// Redirige vers l'édition de la page d'accueil du site
-		helpers::redirect('edit/' . $this->getData(['config', 'index']));
+		helper::redirect('edit/' . $this->getData(['config', 'index']));
 	}
 
 	/** MODULE : Vide le cache des pages publiques */
@@ -734,7 +792,7 @@ class core
 		// Sauvegarde les données en supprimant le cache
 		$this->saveData(true);
 		// Redirige vers la page de configuration
-		helpers::redirect('config');
+		helper::redirect('config');
 	}
 
 	/** MODULE : Exporte le fichier de données */
@@ -764,7 +822,7 @@ class core
 			$url = $this->getUrl();
 		}
 		// Applique la redirection
-		helpers::redirect($url);
+		helper::redirect($url);
 	}
 
 	/** MODULE : Configuration */
@@ -776,12 +834,12 @@ class core
 			if($this->getPost('password')) {
 				// Change le mot de passe si la confirmation correspond au mot de passe
 				if($this->getPost('password') === $this->getPost('confirm')) {
-					$password = $this->getPost('password', helpers::PASSWORD);
+					$password = $this->getPost('password', helper::PASSWORD);
 				}
 				// Ne change pas le mot de passe et crée une notice si la confirmation ne correspond pas au mot de passe
 				else {
 					$password = $this->getData(['config', 'password']);
-					template::$notices['confirm'] = 'La confirmation ne correspond pas au nouveau mot de passe';
+					template::$notices['confirm'] = 'La confirmation du mot de passe ne correspond pas au mot de passe';
 				}
 			}
 			// Sinon conserve le mot de passe d'origine
@@ -792,11 +850,12 @@ class core
 			$this->setData([
 				'config',
 				[
-					'title' => $this->getPost('title', helpers::STRING),
-					'description' => $this->getPost('description', helpers::STRING),
+					'title' => $this->getPost('title', helper::STRING),
+					'description' => $this->getPost('description', helper::STRING),
 					'password' => $password,
-					'index' => $this->getPost('index', helpers::STRING),
-					'theme' => $this->getPost('theme', helpers::STRING)
+					'index' => $this->getPost('index', helper::STRING),
+					'theme' => $this->getPost('theme', helper::STRING),
+					'language' => $this->getPost('language', helper::STRING)
 				]
 			]);
 			// Enregistre les données et supprime le cache
@@ -804,22 +863,22 @@ class core
 			// Notification de modification
 			$this->setNotification('Configuration enregistrée avec succès !');
 			// Redirige vers l'URL courante
-			helpers::redirect($this->getUrl());
+			helper::redirect($this->getUrl());
 		}
 		// Contenu de la page
-		self::$title = 'Configuration';
+		self::$title = helper::translate('Configuration');
 		self::$content =
 			template::openForm() .
 			template::openRow() .
 			template::text('title', [
 				'label' => 'Titre du site',
-				'required' => true,
+				'required' => 'required',
 				'value' => $this->getData(['config', 'title'])
 			]) .
 			template::newRow() .
 			template::textarea('description', [
 				'label' => 'Description du site',
-				'required' => true,
+				'required' => 'required',
 				'value' => $this->getData(['config', 'description'])
 			]) .
 			template::newRow() .
@@ -832,25 +891,31 @@ class core
 				'col' => 6
 			]) .
 			template::newRow() .
-			template::select('index', helpers::arrayCollumn($this->getData('pages'), 'title', 'SORT_ASC', true), [
+			template::select('index', helper::arrayCollumn($this->getData('pages'), 'title', 'SORT_ASC', true), [
 				'label' => 'Page d\'accueil',
-				'required' => true,
+				'required' => 'required',
 				'selected' => $this->getData(['config', 'index'])
 			]) .
 			template::newRow() .
 			template::hidden('oldTheme', [
 				'value' => $this->getData(['config', 'theme'])
 			]) .
-			template::select('theme', helpers::listThemes(), [
+			template::select('theme', helper::listThemes(), [
 				'label' => 'Thème par défaut',
-				'required' => true,
+				'required' => 'required',
 				'selected' => $this->getData(['config', 'theme'])
+			]) .
+			template::newRow() .
+			template::select('language', helper::listLanguages(), [
+				'label' => 'Traduire le site en',
+				'required' => 'required',
+				'selected' => $this->getData(['config', 'language'])
 			]) .
 			template::newRow() .
 			template::text('version', [
 				'label' => 'Version de ZwiiCMS',
 				'value' => self::$version,
-				'disabled' => true
+				'disabled' => 'disabled'
 			]) .
 			template::newRow() .
 			template::button('clean', [
@@ -877,7 +942,7 @@ class core
 		// Traitement du formulaire
 		if($this->getPost('submit')) {
 			// Crée un cookie (de durée infinie si la case est cochée) si le mot de passe est correct
-			if($this->getPost('password', helpers::PASSWORD) === $this->getData(['config', 'password'])) {
+			if($this->getPost('password', helper::PASSWORD) === $this->getData(['config', 'password'])) {
 				$time = $this->getPost('time') ? 0 : time() + 10 * 365 * 24 * 60 * 60;
 				$this->setCookie($this->getPost('password'), $time);
 			}
@@ -888,10 +953,10 @@ class core
 			// Passe en mode édition
 			$this->setMode(true);
 			// Redirection vers l'URL courante
-			helpers::redirect($this->getUrl());
+			helper::redirect($this->getUrl());
 		}
 		// Contenu de la page
-		self::$title = 'Connexion';
+		self::$title = helper::translate('Connexion');
 		self::$content =
 			template::openForm() .
 			template::openRow() .
@@ -899,7 +964,7 @@ class core
 				'col' => 4
 			]) .
 			template::newRow() .
-			template::checkbox('time', true, 'Me connecter automatiquement lors de mes prochaines visites.').
+			template::checkbox('time', true, 'Me connecter automatiquement à chaque visite.').
 			template::newRow() .
 			template::submit('submit', [
 				'value' => 'Me connecter',
@@ -915,12 +980,12 @@ class core
 		// Supprime le cookie de connexion
 		$this->removeCookie();
 		// Redirige vers la page d'accueil du site
-		helpers::redirect('./', false);
+		helper::redirect('./', false);
 	}
 
 }
 
-class helpers
+class helper
 {
 	/** Filtres personnalisés */
 	const PASSWORD = 'FILTER_SANITIZE_PASSWORD';
@@ -931,6 +996,18 @@ class helpers
 	const FLOAT = FILTER_SANITIZE_NUMBER_FLOAT;
 	const INT = FILTER_SANITIZE_NUMBER_INT;
 
+	/**
+	 * Traduit les textes
+	 * @param  string $text Texte à traduire
+	 * @return string
+	 */
+	public static function translate($text) {
+		if(array_key_exists($text, core::$language)) {
+			$text = core::$language[$text];
+		}
+		return $text;
+	}
+	
 	/**
 	 * Filtre et incrémente une chaîne en fonction d'un tableau de données
 	 * @param  string     $text   Chaîne à filtrer
@@ -1070,7 +1147,7 @@ class helpers
 	{
 		$themes = [];
 		if($default) {
-			$themes[''] = $default;
+			$themes[''] = self::translate($default);
 		}
 		$it = new DirectoryIterator('themes/');
 		foreach($it as $file) {
@@ -1090,17 +1167,37 @@ class helpers
 	{
 		$modules = [];
 		if($default) {
-			$modules[''] = $default;
+			$modules[''] = self::translate($default);
 		}
 		$it = new DirectoryIterator('modules/');
-		foreach($it as $file) {
-			if($file->isFile() AND $file->getExtension() === 'php') {
-				$module = $file->getBasename('.php') . 'Adm';
+		foreach($it as $dir) {
+			if($dir->isDir() AND $dir->getBasename() !== '.' AND $dir->getBasename() !== '..') {
+				$module = $dir->getBasename() . 'Adm';
 				$module = new $module;
-				$modules[$file->getBasename('.php')] = $module::$name;
+				$modules[$dir->getBasename()] = $module::$name;
 			}
 		}
 		return $modules;
+	}
+
+	/**
+	 * Crée une liste des langues (format : fichier.json => fichier)
+	 * @param  mixed $default Valeur par défaut
+	 * @return array
+	 */
+	public static function listLanguages($default = false)
+	{
+		$languages = [];
+		if($default) {
+			$languages[''] = self::translate($default);
+		}
+		$it = new DirectoryIterator('core/languages/');
+		foreach($it as $file) {
+			if($file->isFile() AND $file->getExtension() === 'json') {
+				$languages[$file->getBasename()] = $file->getBasename('.json');
+			}
+		}
+		return $languages;
 	}
 
 	/**
@@ -1186,6 +1283,15 @@ class template
 	}
 
 	/**
+	 * Retourne et met en forme une notice depuis une $id
+	 * @param  string $id Id du champ
+	 * @return string
+	 */
+	private static function getNotice($id) {
+		return '<div class="notice">' . helper::translate(self::$notices[$id]) . '</div>';
+	}
+
+	/**
 	 * Enregistre un champ comme obligatoire
 	 * @param string $id        Id du champ
 	 * @param array $attributes Transmet l'attribut "required" à la méthode
@@ -1214,7 +1320,7 @@ class template
 	 */
 	private static function sprintAttributes(array $array = [], array $exclude = [])
 	{
-		$exclude = array_merge(['col', 'offset', 'label', 'readonly', 'disabled', 'required'], $exclude);
+		$exclude = array_merge(['col', 'offset', 'label', 'help', 'selected'], $exclude);
 		$attributes = [];
 		foreach($array as $key => $value) {
 			if($value AND !in_array($key, $exclude)) {
@@ -1289,7 +1395,7 @@ class template
 	 */
 	public static function title($text)
 	{
-		return '<h3>' . $text . '</h3>';
+		return '<h3>' . helper::translate($text) . '</h3>';
 	}
 
 	/**
@@ -1299,7 +1405,7 @@ class template
 	 */
 	public static function subTitle($text)
 	{
-		return '<h4>' . $text . '</h4>';
+		return '<h4>' . helper::translate($text) . '</h4>';
 	}
 
 	/**
@@ -1317,8 +1423,8 @@ class template
 			'data-1' => '',
 			'data-2' => '',
 			'data-3' => '',
-			'col' => '',
-			'offset' => ''
+			'col' => 0,
+			'offset' => 0
 		], $attributes);
 		// Retourne le html
 		return sprintf(
@@ -1327,7 +1433,7 @@ class template
 			$attributes['offset'],
 			$attributes['class'],
 			self::sprintAttributes($attributes, ['class', 'text']),
-			$attributes['text']
+			helper::translate($attributes['text'])
 		);
 	}
 
@@ -1343,8 +1449,15 @@ class template
 		// Attributs possibles
 		$attributes = array_merge([
 			'for' => $for,
+			'help' => '',
 			'class' => ''
 		], $attributes);
+		// Traduit le text
+		$text = helper::translate($text);
+		// Ajout d'une aide
+		if(!empty($attributes['help'])) {
+			$text = $text . self::help($attributes['help']);
+		}
 		// Retourne le html
 		return sprintf(
 			'<label %s>%s</label>',
@@ -1392,10 +1505,11 @@ class template
 			'name' => $nameId,
 			'value' => '',
 			'placeholder' => '',
-			'disabled' => false,
-			'readonly' => false,
-			'required' => false,
+			'disabled' => '',
+			'readonly' => '',
+			'required' => '',
 			'label' => '',
+			'help' => '',
 			'class' => '',
 			'col' => 12,
 			'offset' => 0
@@ -1410,20 +1524,19 @@ class template
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
 		if($attributes['label']) {
-			$html .= self::label($nameId, $attributes['label']);
+			$html .= self::label($nameId, $attributes['label'], [
+				'help' => $attributes['help']
+			]);
 		}
 		// Notice
 		if(!empty(self::$notices[$nameId])) {
-			$html .= '<div class="notice">' . self::$notices[$nameId] . '</div>';
+			$html .= self::getNotice($nameId);
 			$attributes['class'] .= ' notice';
 		}
 		// Texte
 		$html .= sprintf(
-			'<input type="text" %s%s%s%s>',
-			self::sprintAttributes($attributes),
-			$attributes['disabled'] ? ' disabled' : false,
-			$attributes['readonly'] ? ' readonly' : false,
-			$attributes['required'] ? ' required' : false
+			'<input type="text" %s>',
+			self::sprintAttributes($attributes)
 		);
 		// Fin col
 		$html .= '</div>';
@@ -1444,10 +1557,11 @@ class template
 			'id' => $nameId,
 			'name' => $nameId,
 			'value' => '',
-			'disabled' => false,
-			'readonly' => false,
-			'required' => false,
+			'disabled' => '',
+			'readonly' => '',
+			'required' => '',
 			'label' => '',
+			'help' => '',
 			'class' => '',
 			'col' => 12,
 			'offset' => 0
@@ -1462,20 +1576,19 @@ class template
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
 		if($attributes['label']) {
-			$html .= self::label($nameId, $attributes['label']);
+			$html .= self::label($nameId, $attributes['label'], [
+				'help' => $attributes['help']
+			]);
 		}
 		// Notice
 		if(!empty(self::$notices[$nameId])) {
-			$html .= '<div class="notice">' . self::$notices[$nameId] . '</div>';
+			$html .= self::getNotice($nameId);
 			$attributes['class'] .= ' notice';
 		}
 		// Texte long
 		$html .= sprintf(
-			'<textarea %s%s%s%s>%s</textarea>',
+			'<textarea %s>%s</textarea>',
 			self::sprintAttributes($attributes, ['value']),
-			$attributes['disabled'] ? ' disabled' : false,
-			$attributes['readonly'] ? ' readonly' : false,
-			$attributes['required'] ? ' required' : false,
 			$attributes['value']
 		);
 		// Fin col
@@ -1497,10 +1610,11 @@ class template
 			'id' => $nameId,
 			'name' => $nameId,
 			'placeholder' => '',
-			'disabled' => false,
-			'readonly' => false,
-			'required' => false,
+			'disabled' => '',
+			'readonly' => '',
+			'required' => '',
 			'label' => '',
+			'help' => '',
 			'class' => '',
 			'col' => 12,
 			'offset' => 0
@@ -1511,20 +1625,19 @@ class template
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
 		if($attributes['label']) {
-			$html .= self::label($nameId, $attributes['label']);
+			$html .= self::label($nameId, $attributes['label'], [
+				'help' => $attributes['help']
+			]);
 		}
 		// Notice
 		if(!empty(self::$notices[$nameId])) {
-			$html .= '<div class="notice">' . self::$notices[$nameId] . '</div>';
+			$html .= self::getNotice($nameId);
 			$attributes['class'] .= ' notice';
 		}
 		// Mot de passe
 		$html .= sprintf(
-			'<input type="password" %s%s%s%s>',
-			self::sprintAttributes($attributes),
-			$attributes['disabled'] ? ' disabled' : false,
-			$attributes['readonly'] ? ' readonly' : false,
-			$attributes['required'] ? ' required' : false
+			'<input type="password" %s>',
+			self::sprintAttributes($attributes)
 		);
 		// Fin col
 		$html .= '</div>';
@@ -1546,9 +1659,10 @@ class template
 			'id' => $nameId,
 			'name' => $nameId,
 			'selected' => '',
-			'disabled' => false,
-			'required' => false,
+			'disabled' => '',
+			'required' => '',
 			'label' => '',
+			'help' => '',
 			'class' => '',
 			'col' => 12,
 			'offset' => 0
@@ -1563,24 +1677,26 @@ class template
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
 		if($attributes['label']) {
-			$html .= self::label($nameId, $attributes['label']);
+			$html .= self::label($nameId, $attributes['label'], [
+				'help' => $attributes['help']
+			]);
 		}
 		// Notice
 		if(!empty(self::$notices[$nameId])) {
-			$html .= '<div class="notice">' . self::$notices[$nameId] . '</div>';
+			$html .= self::getNotice($nameId);
 			$attributes['class'] .= ' notice';
 		}
 		// Début sélection
-		$html .= sprintf('<select %s>', self::sprintAttributes($attributes, ['selected']));
+		$html .= sprintf('<select %s>',
+			self::sprintAttributes($attributes)
+		);
 		// Options
 		foreach($options as $value => $text) {
 			$html .= sprintf(
-				'<option value="%s"%s%s%s>%s</option>',
+				'<option value="%s"%s>%s</option>',
 				$value,
-				$attributes['selected'] === $value ? ' selected' : false,
-				$attributes['disabled'] ? ' disabled' : false,
-				$attributes['required'] ? ' required' : false,
-				$text
+				$attributes['selected'] === $value ? ' selected' : '',
+				helper::translate($text)
 			);
 		}
 		// Fin sélection
@@ -1603,9 +1719,10 @@ class template
 	{
 		// Attributs possibles
 		$attributes = array_merge([
-			'checked' => false,
-			'disabled' => false,
-			'required' => false,
+			'checked' => '',
+			'disabled' => '',
+			'required' => '',
+			'help' => '',
 			'class' => '',
 			'col' => 12,
 			'offset' => 0
@@ -1616,22 +1733,21 @@ class template
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Notice
 		if(!empty(self::$notices[$nameId])) {
-			$html .= '<div class="notice">' . self::$notices[$nameId] . '</div>';
+			$html .= self::getNotice($nameId);
 			$attributes['class'] .= ' notice';
 		}
 		// Case à cocher
 		$html .= sprintf(
-			'<input type="checkbox" id="%s" name="%s" value="%s" %s%s%s%s>',
+			'<input type="checkbox" id="%s" name="%s" value="%s" %s>',
 			$nameId . '_' . $value,
 			$nameId . '[]',
 			$value,
-			self::sprintAttributes($attributes, ['checked']),
-			$attributes['checked'] ? ' checked' : false,
-			$attributes['disabled'] ? ' disabled' : false,
-			$attributes['required'] ? ' required' : false
+			self::sprintAttributes($attributes)
 		);
 		// Label
-		$html .= self::label($nameId . '_' . $value, $label);
+		$html .= self::label($nameId . '_' . $value, $label, [
+			'help' => $attributes['help']
+		]);
 		// Fin col
 		$html .= '</div>';
 		// Retourne le html
@@ -1650,9 +1766,10 @@ class template
 	{
 		// Attributs possibles
 		$attributes = array_merge([
-			'checked' => false,
-			'disabled' => false,
-			'required' => false,
+			'checked' => '',
+			'disabled' => '',
+			'required' => '',
+			'help' => '',
 			'class' => '',
 			'col' => 12,
 			'offset' => 0
@@ -1663,22 +1780,21 @@ class template
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Notice
 		if(!empty(self::$notices[$nameId])) {
-			$html .= '<div class="notice">' . self::$notices[$nameId] . '</div>';
+			$html .= self::getNotice($nameId);
 			$attributes['class'] .= ' notice';
 		}
 		// Case à cocher
 		$html .= sprintf(
-			'<input type="radio" id="%s" name="%s" value="%s" %s%s%s%s>',
+			'<input type="radio" id="%s" name="%s" value="%s" %s>',
 			$nameId . '_' . $value,
 			$nameId . '[]',
 			$value,
-			self::sprintAttributes($attributes, ['checked']),
-			$attributes['checked'] ? ' checked' : false,
-			$attributes['disabled'] ? ' disabled' : false,
-			$attributes['required'] ? ' required' : false
+			self::sprintAttributes($attributes)
 		);
 		// Label
-		$html .= self::label($nameId . '_' . $value, $label);
+		$html .= self::label($nameId . '_' . $value, $label, [
+			'help' => $attributes['help']
+		]);
 		// Fin col
 		$html .= '</div>';
 		// Retourne le html
@@ -1698,23 +1814,18 @@ class template
 			'id' => $nameId,
 			'name' => $nameId,
 			'value' => 'Enregistrer',
-			'disabled' => false,
-			'label' => '',
+			'disabled' => '',
 			'class' => '',
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
-		// Label
-		if($attributes['label']) {
-			$html .= self::label($nameId, $attributes['label']);
-		}
 		// Bouton
 		$html .= sprintf(
-			'<input type="submit" %s%s>',
-			self::sprintAttributes($attributes),
-			$attributes['disabled'] ? ' disabled' : false
+			'<input type="submit" value="%s" %s>',
+			helper::translate($attributes['value']),
+			self::sprintAttributes($attributes, ['value'])
 		);
 		// Fin col
 		$html .= '</div>';
@@ -1738,8 +1849,7 @@ class template
 			'href' => 'javascript:void(0);',
 			'target' => '',
 			'onclick' => '',
-			'disabled' => false,
-			'label' => '',
+			'disabled' => '',
 			'class' => '',
 			'col' => 12,
 			'offset' => 0
@@ -1747,17 +1857,12 @@ class template
 
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
-		// Label
-		if($attributes['label']) {
-			$html .= self::label($nameId, $attributes['label']);
-		}
 		// Bouton
 		$html .= sprintf(
-			'<a %s class="button %s%s">%s</a>',
+			'<a %s class="button %s">%s</a>',
 			self::sprintAttributes($attributes, ['value', 'class']),
 			$attributes['class'],
-			$attributes['disabled'] ? ' disabled' : false,
-			$attributes['value']
+			helper::translate($attributes['value'])
 		);
 		// Fin col
 		$html .= '</div>';
@@ -1782,7 +1887,7 @@ class template
 		// Début col
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Background
-		$html .= '<div class="background ' . $attributes['class']. '">' . $text . '</div>';
+		$html .= '<div class="background ' . $attributes['class']. '">' . helper::translate($text) . '</div>';
 		// Fin col
 		$html .= '</div>';
 		// Retourne le html
@@ -1796,6 +1901,6 @@ class template
 	 */
 	public static function help($text)
 	{
-		return '<span class="helpButton">?<span class="helpContent">' . $text . '</span></span>';
+		return '<span class="helpButton">?<span class="helpContent">' . helper::translate($text) . '</span></span>';
 	}
 }

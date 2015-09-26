@@ -23,13 +23,13 @@ class redirectionAdm extends core
 		// Traitement du formulaire
 		if($this->getPost('submit')) {
 			// Modifie l'URL de redirection
-			$this->setData([$this->getUrl(0), 'url', $this->getPost('url', helpers::URL)]);
+			$this->setData([$this->getUrl(0), 'url', $this->getPost('url', helper::URL)]);
 			// Enregistre les données
 			$this->saveData();
 			// Notification de succès
-			$this->setNotification('Configuration du module enregistrée avec succès !');
+			$this->setNotification('URL de redirection enregistrée avec succès !');
 			// Redirige vers l'URL courante
-			helpers::redirect($this->getUrl());
+			helper::redirect($this->getUrl());
 		}
 		// Contenu de la page
 		self::$content =
@@ -62,7 +62,7 @@ class redirectionMod extends core
 		// Redirection vers l'URL saisie
 		$url = $this->getData([$this->getUrl(0), 'url']);
 		if($url) {
-			helpers::redirect($url, false);
+			helper::redirect($url, false);
 		}
 	}
 }

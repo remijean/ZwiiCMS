@@ -25,5 +25,6 @@ if(version_compare(PHP_VERSION, '5.4.0', '<')) {
 require 'core/core.php';
 $core = new core;
 spl_autoload_register('core::autoload');
+$core->language();
 $core->router();
 echo $core->cache();

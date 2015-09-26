@@ -373,7 +373,7 @@ input[type='radio']:not(:checked):active + label:before {
 	position: absolute;
 	margin: 30px 0 0 -30px;
 	text-align: left;
-	background: rgba(221, 221, 221, .6);
+	background: rgba(221, 221, 221, .8);
 	padding: 10px;
 	z-index: 10;
 }
@@ -427,6 +427,7 @@ input[type='radio']:not(:checked):active + label:before {
 	}
 }
 @media (min-width: 992px) {
+	.col0 {}
 	.col1 {
 		width: 8.33333333%;
 	}
@@ -463,9 +464,7 @@ input[type='radio']:not(:checked):active + label:before {
 	.col12 {
 		width: 100%;
 	}
-	.offset0 {
-		margin-left: 0;
-	}
+	.offset0 {}
 	.offset1 {
 		margin-left: 8.33333333%;
 	}

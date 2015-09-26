@@ -53,18 +53,18 @@ class formAdm extends core
 				$this->getUrl(0),
 				'config',
 				[
-					'mail' => $this->getPost('mail', helpers::EMAIL)
+					'mail' => $this->getPost('mail', helper::EMAIL)
 				]
 			]);
 			// Génération des champs
 			$inputs = [];
 			foreach($this->getPost('position') as $key => $value) {
 				$inputs[] = [
-					'position' => helpers::filter($value, helpers::INT),
-					'name' => $this->getPost(['name', $key], helpers::STRING),
-					'type' => $this->getPost(['type', $key], helpers::STRING),
-					'values' => $this->getPost(['values', $key], helpers::STRING),
-					'width' => $this->getPost(['width', $key], helpers::INT)
+					'position' => helper::filter($value, helper::INT),
+					'name' => $this->getPost(['name', $key], helper::STRING),
+					'type' => $this->getPost(['type', $key], helper::STRING),
+					'values' => $this->getPost(['values', $key], helper::STRING),
+					'width' => $this->getPost(['width', $key], helper::INT)
 				];
 			}
 			// Supprime le premier élément (= le champ caché pour la copie)
@@ -74,14 +74,14 @@ class formAdm extends core
 			// Enregistre les données
 			$this->saveData();
 			// Notification de succès
-			$this->setNotification('Configuration du module enregistrée avec succès !');
+			$this->setNotification('Formulaire enregistré avec succès !');
 			// Redirige vers l'URL courante
-			helpers::redirect($this->getUrl());
+			helper::redirect($this->getUrl());
 		}
 		// Liste des champs
 		if($this->getData([$this->getUrl(0), 'inputs'])) {
 			// Liste les champs en les classant par position en ordre croissant
-			$inputs = helpers::arrayCollumn($this->getData([$this->getUrl(0), 'inputs']), 'position', 'SORT_ASC');
+			$inputs = helper::arrayCollumn($this->getData([$this->getUrl(0), 'inputs']), 'position', 'SORT_ASC');
 			// Crée l'affichage des champs en fonction
 			for($i = 0; $i < count($inputs); $i++) {
 				self::$content .=
@@ -206,7 +206,7 @@ class formAdm extends core
 		// Liste données saisies
 		if($this->getData([$this->getUrl(0), 'data'])) {
 			// Crée une pagination (retourne la première news et dernière news de la page et la liste des pages
-			$pagination = helpers::pagination($this->getData([$this->getUrl(0), 'data']), $this->getUrl());
+			$pagination = helper::pagination($this->getData([$this->getUrl(0), 'data']), $this->getUrl());
 			// Inverse l'ordre du tableau pour afficher les données en ordre décroissant
 			$inputs = array_reverse($this->getData([$this->getUrl(0), 'data']));
 			// Crée l'affichage des données en fonction de la pagination
@@ -308,22 +308,22 @@ class formMod extends core
 				$mail .= '<li>' . $this->getData([$this->getUrl(0), 'inputs', $key + 1, 'name']) . ' : ' . $value . '</li>';
 			}
 			// Crée les données
-			$this->setData([$this->getUrl(0), 'data', helpers::increment(1, $this->getData([$this->getUrl(0), 'data'])), $data]);
+			$this->setData([$this->getUrl(0), 'data', helper::increment(1, $this->getData([$this->getUrl(0), 'data'])), $data]);
 			// Enregistre les données
 			$this->saveData();
 			// Envoi du mail
 			if($this->getData([$this->getUrl(0), 'config', 'mail'])) {
-				helpers::mail(
+				helper::mail(
 					false,
 					$this->getData([$this->getUrl(0), 'config', 'mail']),
-					'Mail de votre site ZwiiCMS',
-					'<h1>Mail en provenance de votre site ZwiiCMS</h1>' . $mail . '</ul>'
+					helper::translate('Mail de votre site ZwiiCMS'),
+					'<h1>' . helper::translate('Mail en provenance de votre site ZwiiCMS') . '</h1>' . $mail . '</ul>'
 				);
 			}
 			// Notification de soumission
 			$this->setNotification('Formulaire soumis avec succès !');
 			// Redirige vers la page courante
-			helpers::redirect($this->getUrl());
+			helper::redirect($this->getUrl());
 		}
 		// Génère les inputs
 		if($this->getData([$this->getUrl(0), 'inputs'])) {
