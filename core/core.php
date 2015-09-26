@@ -480,9 +480,9 @@ class core
 			}
 			// Crée des options pour les pages en les triant par titre
 			$pages = helper::arrayCollumn($this->getData('pages'), 'title', 'SORT_ASC', true);
-			foreach($pages as $key => $page) {
-				$current = ($key === $this->getUrl(0)) ? ' selected' : false;
-				$li .= '<option value="?' . $this->getMode() . $key . '"' . $current . '>' . $page . '</option>';
+			foreach($pages as $pageKey => $pageTitle) {
+				$current = ($pageKey === $this->getUrl(0)) ? ' selected' : false;
+				$li .= '<option value="?' . $this->getMode() . $pageKey . '"' . $current . '>' . $pageTitle . '</option>';
 			}
 			$li .= '</select>';
 			$li .= '</li>';
@@ -518,13 +518,13 @@ class core
 		// Ajout edit/ à l'URL si l'utilisateur est en mode édition
 		$edit = ($this->getCookie() === $this->getData(['config', 'password'])) ? $this->getMode() : false;
 		// Liste les items du menu en classant les pages par position en ordre croissant
-		$pages = helper::arrayCollumn($this->getData('pages'), 'position', 'SORT_ASC');
+		$pageKeys = helper::arrayCollumn($this->getData('pages'), 'position', 'SORT_ASC');
 		// Génère les items du menu en fonction des pages
 		$items = false;
-		foreach($pages as $page) {
-			$current = ($page === $this->getUrl(0)) ? ' class="current"' : false;
-			$blank = ($this->getData(['pages', $page, 'blank']) AND !$this->getMode()) ? ' target="_blank"' : false;
-			$items .= '<li><a href="?' . $edit . $page . '"' . $current . $blank . '>' . $this->getData(['pages', $page, 'title']) . '</a></li>';
+		foreach($pageKeys as $pageKey) {
+			$current = ($pageKey === $this->getUrl(0)) ? ' class="current"' : false;
+			$blank = ($this->getData(['pages', $pageKey, 'blank']) AND !$this->getMode()) ? ' target="_blank"' : false;
+			$items .= '<li><a href="?' . $edit . $pageKey . '"' . $current . $blank . '>' . $this->getData(['pages', $pageKey, 'title']) . '</a></li>';
 		}
 		// Retourne les items du menu
 		return $items;
@@ -615,6 +615,21 @@ class core
 					$this->setData(['config', 'index', $key]);
 				}
 			}
+			// Change la positions des pages suivantes si la position de la page à changée
+			$position = $this->getPost('position', helper::INT);
+			if($position AND $position !== $this->getData(['pages', $this->getUrl(0), 'position'])) {
+				// Nouvelle position des pages
+				$newPosition = $position;
+				// Liste les pages en les triant par position en ordre croissant
+				$pages = array_flip(helper::arrayCollumn($this->getData('pages'), 'position', 'SORT_ASC', true));
+				// Incrémente la position des pages suivante
+				foreach($pages as $pagePosition => $pageKey) {
+					if($pagePosition >= $position) {
+						$newPosition++;
+						$this->setData(['pages', $pageKey, 'position', $newPosition]);
+					}
+				}
+			}
 			// Modifie la page ou en crée une nouvelle si la clef à changée
 			$this->setData([
 				'pages',
@@ -622,7 +637,7 @@ class core
 				[
 					'title' => $this->getPost('title', helper::STRING),
 					'description' => $this->getPost('description', helper::STRING),
-					'position' => $this->getPost('position', helper::INT),
+					'position' => $position,
 					'blank' => $this->getPost('blank', helper::BOOLEAN),
 					'theme' => $this->getPost('theme', helper::STRING),
 					'module' => $module,
@@ -640,6 +655,24 @@ class core
 			// Redirige vers la l'édition de la nouvelle page si la clef à changée ou sinon vers l'ancienne
 			helper::redirect('edit/' . $key);
 		}
+		// Liste les pages en les triant par position
+		$listPages = ['Ne pas afficher', 'Au début'];
+		$selected = 0;
+		$pagePositionPrevious = 1;
+		$pages = array_flip(helper::arrayCollumn($this->getData('pages'), 'position', 'SORT_ASC', true));
+		foreach($pages as $pagePosition => $pageKey) {
+			// Si la page est la page courante on ne l'affiche pas et on selection l'élément précédent (pas de - 1 à $pagePosition car + 1 dans $listPages)
+			if($pageKey === $this->getUrl(0)) {
+				$selected = $pagePositionPrevious;
+			}
+			// Sinon ajoute la page à la liste
+			else {
+				// Ajoute à la liste
+				$listPages[$pagePosition + 1] = helper::translate('Après') . ' "' . $this->getData(['pages', $pageKey, 'title']) . '"';
+				// Enregistre la position de cette page afin de la sélectionner si la prochaine page de la liste est la page en train d'être éditée
+				$pagePositionPrevious = $pagePosition + 1;
+			}
+		}
 		// Contenu de la page
 		$this->setMode(true);
 		self::$title = $this->getData(['pages', $this->getUrl(0), 'title']);
@@ -652,10 +685,9 @@ class core
 				'required' => true
 			]) .
 			template::newRow() .
-			template::text('position', [
+			template::select('position', $listPages, [
 				'label' => 'Position dans le menu',
-				'help' => 'Le classement se fait par ordre croissant. Si le champ est vide, la page ne s\'affiche pas dans le menu.',
-				'value' => $this->getData(['pages', $this->getUrl(0), 'position'])
+				'selected' => $selected
 			]) .
 			template::newRow() .
 			template::textarea('content', [
@@ -775,13 +807,15 @@ class core
 		elseif($this->getUrl(0) === $this->getData(['config', 'index'])) {
 			$this->setNotification('Impossible de supprimer la page d\'accueil !', true);
 		}
-		// Supprime la page et les données du module ratachées à la page
-		$this->removeData(['pages', $this->getUrl(0)]);
-		$this->removeData($this->getUrl(0));
-		// Enregistre les données
-		$this->saveData();
-		// Notification de suppression
-		$this->setNotification('Page supprimée avec succès !');
+		else {
+			// Supprime la page et les données du module ratachées à la page
+			$this->removeData(['pages', $this->getUrl(0)]);
+			$this->removeData($this->getUrl(0));
+			// Enregistre les données
+			$this->saveData();
+			// Notification de suppression
+			$this->setNotification('Page supprimée avec succès !');
+		}
 		// Redirige vers l'édition de la page d'accueil du site
 		helper::redirect('edit/' . $this->getData(['config', 'index']));
 	}
@@ -906,9 +940,8 @@ class core
 				'selected' => $this->getData(['config', 'theme'])
 			]) .
 			template::newRow() .
-			template::select('language', helper::listLanguages(), [
-				'label' => 'Traduire le site en',
-				'required' => 'required',
+			template::select('language', helper::listLanguages('Ne pas traduire'), [
+				'label' => 'Traduire le site',
 				'selected' => $this->getData(['config', 'language'])
 			]) .
 			template::newRow() .
@@ -1276,19 +1309,10 @@ class template
 	 */
 	public static function getRequired($key)
 	{
-		if(!empty($_SESSION['REQUIRED']) AND in_array($key . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED'])) {
+		if(!empty($_SESSION['REQUIRED']) AND array_key_exists($key . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED'])) {
 			self::$notices[$key] = 'Ce champ est requis';
 		}
 		return false;
-	}
-
-	/**
-	 * Retourne et met en forme une notice depuis une $id
-	 * @param  string $id Id du champ
-	 * @return string
-	 */
-	private static function getNotice($id) {
-		return '<div class="notice">' . helper::translate(self::$notices[$id]) . '</div>';
 	}
 
 	/**
@@ -1298,9 +1322,21 @@ class template
 	 */
 	private static function setRequired($id, $attributes)
 	{
-		if($attributes['required'] AND (empty($_SESSION['REQUIRED']) OR !in_array($id . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED']))) {
-			$_SESSION['REQUIRED'][] = $id . '.' . md5($_SERVER['QUERY_STRING']);
+		if(!empty($attributes['required']) AND (empty($_SESSION['REQUIRED']) OR !array_key_exists($id . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED']))) {
+			$_SESSION['REQUIRED'][$id . '.' . md5($_SERVER['QUERY_STRING'])] = true;
 		}
+		elseif(!empty($_SESSION['REQUIRED']) AND array_key_exists($id . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED'])) {
+			unset($_SESSION['REQUIRED'][$id . '.' . md5($_SERVER['QUERY_STRING'])]);
+		}
+	}
+
+	/**
+	 * Retourne et met en forme une notice depuis une $id
+	 * @param  string $id Id du champ
+	 * @return string
+	 */
+	private static function getNotice($id) {
+		return '<div class="notice">' . helper::translate(self::$notices[$id]) . '</div>';
 	}
 
 	/**
