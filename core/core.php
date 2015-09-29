@@ -1067,7 +1067,8 @@ class helper
 	 * @return string
 	 */
 	public static function translate($text) {
-		if(array_key_exists($text, core::$language)) {
+		// Traduit le texte en cherchant dans le tableau de langue (ajout d'un (string) au cas ou un $key est vide)
+		if(array_key_exists((string) $text, core::$language)) {
 			$text = core::$language[$text];
 		}
 		return $text;

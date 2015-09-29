@@ -53,7 +53,8 @@ class formAdm extends core
 				$this->getUrl(0),
 				'config',
 				[
-					'mail' => $this->getPost('mail', helper::EMAIL)
+					'mail' => $this->getPost('mail', helper::EMAIL),
+					'button' => $this->getPost('button', helper::STRING)
 				]
 			]);
 			// Génération des champs
@@ -132,6 +133,10 @@ class formAdm extends core
 				'label' => 'Recevoir à chaque validation un mail contenant les données saisies',
 				'value' => $this->getData([$this->getUrl(0), 'config', 'mail'])
 			]) .
+			template::text('button', [
+				'label' => 'Personnaliser le texte du bouton',
+				'value' => $this->getData([$this->getUrl(0), 'config', 'button'])
+			]) .
 			template::closeRow() .
 			template::title('Liste des champs') .
 			template::div([
@@ -209,10 +214,12 @@ class formAdm extends core
 			$pagination = helper::pagination($this->getData([$this->getUrl(0), 'data']), $this->getUrl());
 			// Inverse l'ordre du tableau pour afficher les données en ordre décroissant
 			$inputs = array_reverse($this->getData([$this->getUrl(0), 'data']));
+			// Check si l'id du premier résultat est paire
+			$firstPair = ($pagination['first'] % 2 === 0);
 			// Crée l'affichage des données en fonction de la pagination
 			for($i = $pagination['first']; $i < $pagination['last']; $i++) {
-				// Ouvre une row tous nombres paires
-				if($i % 2 === 0) {
+				// Ouvre la row ouverte à chaque id paire/impaire (dépend du premier résultat)
+				if(($firstPair AND $i % 2 === 0) OR (!$firstPair AND $i % 2 === 1)) {
 					self::$content .= template::openRow();
 				}
 				// Formatage des données
@@ -223,8 +230,8 @@ class formAdm extends core
 				self::$content .= template::background($content, [
 					'col' => 6
 				]);
-				// Ferme la row ouverte tous les nombres impaires
-				if($i % 2 === 1) {
+				// Ferme la row ouverte à chaque id paire/impaire (dépend du premier résultat) ou pour le dernier champ
+				if(($firstPair AND $i % 2 === 1) OR (!$firstPair AND $i % 2 === 0) OR !isset($inputs[$i + 1])) {
 					self::$content .= template::closeRow();
 				}
 			}
@@ -252,7 +259,7 @@ class formMod extends core
 
 	/**
 	 * Génère un champ en fonction de son type
-	 * @param $input  array Input à générer
+	 * @param  $input array Input à générer
 	 * @return string
 	 */
 	private function generateInput($input)
@@ -330,16 +337,21 @@ class formMod extends core
 			foreach($this->getData([$this->getUrl(0), 'inputs']) as $input) {
 				self::$content .= $this->generateInput($input);
 			}
+			// Texte du bouton de validation
+			$submitText = $this->getData([$this->getUrl(0), 'config', 'button']);
+			// Ajout du bouton de validation
+			self::$content .=
+				template::openRow() .
+				template::submit('submit', [
+					'value' => $submitText ? $submitText : 'Enregistrer',
+					'col' => 2
+				]) .
+				template::closeRow();
 		}
 		// Contenu de la page
 		self::$content =
 			template::openForm() .
 			self::$content .
-			template::openRow() .
-			template::submit('submit', [
-				'col' => 2
-			]) .
-			template::closeRow();
 			template::closeForm();
 	}
 }
