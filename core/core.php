@@ -83,12 +83,12 @@ class core
 	public function language()
 	{
 		// Importe le fichier langue système
-		$language = 'core/languages/' . $this->getData(['config', 'language']);
+		$language = 'core/langs/' . $this->getData(['config', 'language']);
 		if(is_file($language)) {
 			self::$language = json_decode(file_get_contents($language), true);
 		}
 		// Importe le fichier langue pour le module de la page
-		$language = 'modules/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '/languages/' . $this->getData(['config', 'language']);
+		$language = 'modules/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '/langs/' . $this->getData(['config', 'language']);
 		if(is_file($language)) {
 			self::$language = array_merge(self::$language, json_decode(file_get_contents($language), true));
 		}
@@ -1256,7 +1256,7 @@ class helper
 		if($default) {
 			$languages[''] = self::translate($default);
 		}
-		$it = new DirectoryIterator('core/languages/');
+		$it = new DirectoryIterator('core/langs/');
 		foreach($it as $file) {
 			if($file->isFile() AND $file->getExtension() === 'json') {
 				$languages[$file->getBasename()] = $file->getBasename('.json');
