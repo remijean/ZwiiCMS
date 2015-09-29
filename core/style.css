@@ -349,6 +349,10 @@ input[type='radio']:checked:hover + label:before,
 input[type='radio']:not(:checked):active + label:before {
 	background: #AAA;
 }
+input[type='checkbox']:disabled + label:before,
+input[type='radio']:disabled + label:before {
+	background: #EEE;
+}
 
 /* Aides */
 .helpButton {

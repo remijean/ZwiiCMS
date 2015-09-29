@@ -184,12 +184,12 @@ class formAdm extends core
 			template::newRow() .
 			template::button('back', [
 				'value' => 'Retour',
-				'href' => '?edit/' . $this->getUrl(0),
+				'href' => helper::baseUrl() . 'edit/' . $this->getUrl(0),
 				'col' => 2
 			]) .
 			template::button('data', [
 				'value' => 'Données saisies',
-				'href' => '?' . $this->getUrl() . '/data',
+				'href' => helper::baseUrl() . $this->getUrl() . '/data',
 				'col' => 2,
 				'offset' => 6
 			]) .
@@ -238,7 +238,7 @@ class formAdm extends core
 			template::openRow() .
 			template::button('back', [
 				'value' => 'Retour',
-				'href' => '?module/' . $this->getUrl(0),
+				'href' => helper::baseUrl() . 'module/' . $this->getUrl(0),
 				'col' => 2
 			]) .
 			template::closeRow();

@@ -42,7 +42,7 @@ class redirectionAdm extends core
 			template::newRow() .
 			template::button('back', [
 				'value' => 'Retour',
-				'href' => '?edit/' . $this->getUrl(0),
+				'href' => helper::baseUrl() . 'edit/' . $this->getUrl(0),
 				'col' => 2
 			]) .
 			template::submit('submit', [

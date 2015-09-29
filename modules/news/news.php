@@ -61,12 +61,12 @@ class newsAdm extends core
 					]) .
 					template::button('edit[]', [
 						'value' => 'Modifier',
-						'href' => '?module/' . $this->getUrl(0) . '/edit/' . $news[$i],
+						'href' => helper::baseUrl() . 'module/' . $this->getUrl(0) . '/edit/' . $news[$i],
 						'col' => 2
 					]) .
 					template::button('delete[]', [
 						'value' => 'Supprimer',
-						'href' => '?module/' . $this->getUrl(0) . '/delete/' . $news[$i],
+						'href' => helper::baseUrl() . 'module/' . $this->getUrl(0) . '/delete/' . $news[$i],
 						'onclick' => 'return confirm(\'Êtes-vous sûr de vouloir supprimer cette news ?\');',
 						'col' => 2
 					]) .
@@ -101,7 +101,7 @@ class newsAdm extends core
 			template::openRow() .
 			template::button('back', [
 				'value' => 'Retour',
-				'href' => '?edit/' . $this->getUrl(0),
+				'href' => helper::baseUrl() . 'edit/' . $this->getUrl(0),
 				'col' => 2
 			]) .
 			template::closeRow() .
@@ -163,7 +163,7 @@ class newsAdm extends core
 			template::newRow() .
 			template::button('back', [
 				'value' => 'Retour',
-				'href' => '?module/' . $this->getUrl(0),
+				'href' => helper::baseUrl() . 'module/' . $this->getUrl(0),
 				'col' => 2
 			]) .
 			template::submit('submit', [

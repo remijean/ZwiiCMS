@@ -1,0 +1,3 @@
+# Test que l'URL rewriting est bien activée
+RewriteEngine on
+RewriteRule .* check

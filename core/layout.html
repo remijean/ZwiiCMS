@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
+    <meta charset="utf-8">
 	<title><?php echo self::$title; ?> - <?php echo $this->getData(['config', 'title']); ?></title>
 	<meta name="description" content="<?php echo self::$description; ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="core/vendor/normalize.min.css">
-	<link rel="stylesheet" href="core/vendor/jquery-ui/jquery-ui.min.css">
-	<link rel="stylesheet" href="core/vendor/trumbowyg/trumbowyg.min.css">
-	<link rel="stylesheet" href="core/style.css">
-	<link rel="stylesheet" href="themes/<?php echo $this->getData(['config', 'theme']); ?>">
+	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/vendor/normalize.min.css">
+	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/vendor/jquery-ui/jquery-ui.min.css">
+	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/vendor/trumbowyg/trumbowyg.min.css">
+	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/style.css">
+	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>themes/<?php echo $this->getData(['config', 'theme']); ?>">
 	<?php echo $this->css(); ?>
 </head>
 <body>
@@ -22,13 +22,13 @@
 		<h2><?php echo self::$title; ?></h2>
 		<?php echo self::$content; ?>
 	</div>
-	<div id="footer"><?php echo helper::translate('Motorisé par'); ?> <a href="http://zwiicms.com/" target="_blank">ZwiiCMS</a> | <a href="?config"><?php echo helper::translate('Administration'); ?></a></div>
+	<div id="footer"><?php echo helper::translate('Motorisé par'); ?> <a href="http://zwiicms.com/" target="_blank">ZwiiCMS</a> | <a href="<?php echo helper::baseUrl(); ?>config"><?php echo helper::translate('Administration'); ?></a></div>
 </div>
-<script src="core/vendor/jquery.min.js"></script>
-<script src="core/vendor/jquery-ui/jquery-ui.min.js"></script>
-<script src="core/vendor/jquery-ui/jquery-ui.touch-punch.min.js"></script>
-<script src="core/vendor/trumbowyg/trumbowyg.min.js"></script>
-<script src="core/script.js"></script>
+<script src="<?php echo helper::baseUrl(false); ?>core/vendor/jquery.min.js"></script>
+<script src="<?php echo helper::baseUrl(false); ?>core/vendor/jquery-ui/jquery-ui.min.js"></script>
+<script src="<?php echo helper::baseUrl(false); ?>core/vendor/jquery-ui/jquery-ui.touch-punch.min.js"></script>
+<script src="<?php echo helper::baseUrl(false); ?>core/vendor/trumbowyg/trumbowyg.min.js"></script>
+<script src="<?php echo helper::baseUrl(false); ?>core/script.js"></script>
 <script>$('.editor').trumbowyg();</script>
 <?php echo $this->js(); ?>
 </body>

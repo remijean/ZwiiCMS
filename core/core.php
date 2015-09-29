@@ -180,7 +180,7 @@ class core
 
 	/**
 	 * Enregistre le tableau de données et supprime les fichiers de cache
-	 * @param boolean $removeAllCache Supprime l'ensemble des fichiers cache, sinon supprime juste les fichiers cache en rapport avec le module courant
+	 * @param bool $removeAllCache Supprime l'ensemble des fichiers cache, sinon supprime juste les fichiers cache en rapport avec le module courant
 	 */
 	public function saveData($removeAllCache = false)
 	{
@@ -207,8 +207,8 @@ class core
 
 	/**
 	 * Accède à une valeur de l'URL ou à l'URL complète (la clef 0 est toujours égale à la page sauf si splice est à false)
-	 * @param  int     $key    Clé de l'URL
-	 * @param  boolean $splice Supprime la première clef si elle correspond à un module système
+	 * @param  int    $key    Clé de l'URL
+	 * @param  bool   $splice Supprime la première clef si elle correspond à un module système
 	 * @return string
 	 */
 	public function getUrl($key = null, $splice = true)
@@ -292,8 +292,8 @@ class core
 
 	/**
 	 * Modifie la notification
-	 * @param string  $notification Notification
-	 * @param boolean $error        Message d'erreur ou non
+	 * @param string $notification Notification
+	 * @param bool   $error        Message d'erreur ou non
 	 */
 	public function setNotification($notification, $error = false)
 	{
@@ -313,7 +313,7 @@ class core
 
 	/**
 	 * Modifie le mode d'affichage
-	 * @param boolean $mode True pour activer le mode édition ou false pour le désactiver
+	 * @param bool $mode True pour activer le mode édition ou false pour le désactiver
 	 */
 	public function setMode($mode)
 	{
@@ -482,26 +482,26 @@ class core
 			$pages = helper::arrayCollumn($this->getData('pages'), 'title', 'SORT_ASC', true);
 			foreach($pages as $pageKey => $pageTitle) {
 				$current = ($pageKey === $this->getUrl(0)) ? ' selected' : false;
-				$li .= '<option value="?' . $this->getMode() . $pageKey . '"' . $current . '>' . $pageTitle . '</option>';
+				$li .= '<option value="' . helper::baseUrl() . $this->getMode() . $pageKey . '"' . $current . '>' . $pageTitle . '</option>';
 			}
 			$li .= '</select>';
 			$li .= '</li>';
 			$li .= '<li>';
-			$li .= '<a href="?create">' . helper::translate('Créer une page') . '</a>';
+			$li .= '<a href="' . helper::baseUrl() . 'create">' . helper::translate('Créer une page') . '</a>';
 			$li .= '</li>';
 			// Affiche le switch de mode pour toutes les pages sauf configuration
 			if($this->getUrl(0, false) !== 'config') {
 				$li .= '<li>';
-				$li .= '<a href="?mode/' . $this->getUrl(null, false) . '">';
+				$li .= '<a href="' . helper::baseUrl() . 'mode/' . $this->getUrl(null, false) . '">';
 				$li .= $this->getMode() ? helper::translate('Mode public') : helper::translate('Mode édition');
 				$li .= '</a>';
 				$li .= '</li>';
 			};
 			$li .= '<li>';
-			$li .= '<a href="?config">' . helper::translate('Configuration') . '</a>';
+			$li .= '<a href="' . helper::baseUrl() . 'config">' . helper::translate('Configuration') . '</a>';
 			$li .= '</li>';
 			$li .= '<li>';
-			$li .= '<a href="?logout" onclick="return confirm(\'' . helper::translate('Êtes-vous sûr de vouloir vous déconnecter ?') . '\');">';
+			$li .= '<a href="' . helper::baseUrl() . 'logout" onclick="return confirm(\'' . helper::translate('Êtes-vous sûr de vouloir vous déconnecter ?') . '\');">';
 			$li .= helper::translate('Déconnexion');
 			$li .= '</a>';
 			$li .= '</li>';
@@ -524,7 +524,7 @@ class core
 		foreach($pageKeys as $pageKey) {
 			$current = ($pageKey === $this->getUrl(0)) ? ' class="current"' : false;
 			$blank = ($this->getData(['pages', $pageKey, 'blank']) AND !$this->getMode()) ? ' target="_blank"' : false;
-			$items .= '<li><a href="?' . $edit . $pageKey . '"' . $current . $blank . '>' . $this->getData(['pages', $pageKey, 'title']) . '</a></li>';
+			$items .= '<li><a href="' . helper::baseUrl() . $edit . $pageKey . '"' . $current . $blank . '>' . $this->getData(['pages', $pageKey, 'title']) . '</a></li>';
 		}
 		// Retourne les items du menu
 		return $items;
@@ -715,7 +715,7 @@ class core
 			]) .
 			template::button('config', [
 				'value' => 'Administrer',
-				'href' => '?module/' . $this->getUrl(0),
+				'href' => helper::baseUrl() . 'module/' . $this->getUrl(0),
 				'disabled' => $this->getData(['pages', $this->getUrl(0), 'module']) ? '' : 'disabled',
 				'col' => 2
 			]) .
@@ -737,7 +737,7 @@ class core
 			template::newRow() .
 			template::button('delete', [
 				'value' => 'Supprimer',
-				'href' => '?delete/' . $this->getUrl(0),
+				'href' => helper::baseUrl() . 'delete/' . $this->getUrl(0),
 				'onclick' => 'return confirm(\'' . helper::translate('Êtes-vous sûr de vouloir supprimer cette page ?') . '\');',
 				'col' => 2,
 				'offset' => 8
@@ -880,6 +880,19 @@ class core
 			else {
 				$password = $this->getData(['config', 'password']);
 			}
+			// Active l'URL rewriting
+			if($this->getPost('rewriting')) {
+				// Check que l'URL rewriting fonctionne sur le serveur
+				if(get_headers(helper::baseUrl(false) . 'core/rewrite/test')[0] === 'HTTP/1.1 200 OK') {
+					rename('.htaccess', '.simple');
+					rename('.rewriting', '.htaccess');
+				}
+			}
+			// Désactive l'URL rewriting
+			else {
+				rename('.htaccess', '.rewriting');
+				rename('.simple', '.htaccess');
+			}
 			// Modifie la configuration
 			$this->setData([
 				'config',
@@ -945,6 +958,12 @@ class core
 				'selected' => $this->getData(['config', 'language'])
 			]) .
 			template::newRow() .
+			template::checkbox('rewriting', true, 'Activer la réécriture d\'URL', [
+				'checked' => file_exists('.simple'),
+				'help' => 'Supprime le point d\'interrogation de l\'URL (si vous n\'arrivez pas à cocher la case, vérifiez que le module d\'URL rewriting de votre serveur soit bien activé).',
+				'disabled' => (get_headers(helper::baseUrl(false) . 'core/rewrite/test')[0] !== 'HTTP/1.1 200 OK') ? 'disabled' : '' // Check que l'URL rewriting fonctionne sur le serveur
+			]) .
+			template::newRow() .
 			template::text('version', [
 				'label' => 'Version de ZwiiCMS',
 				'value' => self::$version,
@@ -953,13 +972,13 @@ class core
 			template::newRow() .
 			template::button('clean', [
 				'value' => 'Vider le cache',
-				'href' => '?clean',
+				'href' => helper::baseUrl() . 'clean',
 				'col' => 3,
 				'offset' => 4
 			]) .
 			template::button('export', [
 				'value' => 'Exporter les données',
-				'href' => '?export',
+				'href' => helper::baseUrl() . 'export',
 				'col' => 3
 			]) .
 			template::submit('submit', [
@@ -997,7 +1016,7 @@ class core
 				'col' => 4
 			]) .
 			template::newRow() .
-			template::checkbox('time', true, 'Me connecter automatiquement à chaque visite.').
+			template::checkbox('time', true, 'Me connecter automatiquement à chaque visite') .
 			template::newRow() .
 			template::submit('submit', [
 				'value' => 'Me connecter',
@@ -1030,6 +1049,19 @@ class helper
 	const INT = FILTER_SANITIZE_NUMBER_INT;
 
 	/**
+	 * Retourne l'URL de base du site avec ou sans le point d'interrogation
+	 * @param  bool   $queryString Affiche ou non le point d'interrogation
+	 * @return string
+	 */
+	public static function baseUrl($queryString = true) {
+		$currentPath = $_SERVER['PHP_SELF'];
+		$pathInfo = pathinfo($currentPath);
+		$hostName = $_SERVER['HTTP_HOST'];
+		$protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"], 0, 5)) == 'https://' ? 'https://' : 'http://';
+		return $protocol . $hostName . rtrim($pathInfo['dirname'], ' \/') . '/' . (($queryString AND file_exists('.rewriting')) ? '?' : '');
+	}
+
+	/**
 	 * Traduit les textes
 	 * @param  string $text Texte à traduire
 	 * @return string
@@ -1040,7 +1072,7 @@ class helper
 		}
 		return $text;
 	}
-	
+
 	/**
 	 * Filtre et incrémente une chaîne en fonction d'un tableau de données
 	 * @param  string     $text   Chaîne à filtrer
@@ -1106,7 +1138,7 @@ class helper
 	 * @param  array   $array     Tableau cible
 	 * @param  string  $columnKey Clé à extraire
 	 * @param  string  $sort      Type de tri à appliquer au tableau (SORT_ASC, SORT_DESC, ou vide)
-	 * @param  boolean $keep      Conserve le format clés => valeurs
+	 * @param  bool    $keep      Conserve le format clés => valeurs
 	 * @return array
 	 */
 	public static function arrayCollumn($array, $columnKey, $sort = '', $keep = false)
@@ -1161,7 +1193,7 @@ class helper
 		for($i = 1; $i <= $nbPage; $i++)
 		{
 			$disabled = ($i === $currentPage) ? ' class="disabled"' : false;
-			$pages .= '<a href="?' . $urlCurrent . '/' . $i . '"' . $disabled . '>' . $i . '</a>';
+			$pages .= '<a href="' . helper::baseUrl() . $urlCurrent . '/' . $i . '"' . $disabled . '>' . $i . '</a>';
 		}
 		// Retourne un tableau contenant les informations sur la pagination
 		return [
@@ -1235,10 +1267,10 @@ class helper
 
 	/**
 	 * Redirige vers une page du site ou une page externe et sauvegarde les données du formulaire si il existe des notices
-	 * @param string $url    Url de destination
-	 * @param string $prefix Ajoute ou non un préfixe à l'url
+	 * @param string  $url     Url de destination
+	 * @param bool    $baseUrl Ajoute ou non l'URL de base à la redirection
 	 */
-	public static function redirect($url, $prefix = '?')
+	public static function redirect($url, $baseUrl = true)
 	{
 		// Sauvegarde des données en méthode POST si une notice existe
 		if(template::$notices) {
@@ -1247,7 +1279,7 @@ class helper
 		// Sinon redirection
 		else {
 			header('Status: 301 Moved Permanently', false, 301);
-			header('Location: ' . $prefix . $url);
+			header('Location: ' . ($baseUrl ? self::baseUrl() : false) . $url);
 			exit();
 		}
 	}
@@ -1258,7 +1290,7 @@ class helper
 	 * @param  string $to      Destinataire
 	 * @param  string $subject Sujet
 	 * @param  string $message Message
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function mail($from, $to, $subject, $message)
 	{
@@ -1305,7 +1337,7 @@ class template
 	/**
 	 * Retourne une notice pour les champs obligatoires (à appeler après avoir vérifié que le champ est vide, retourne false car cette fonction intervient quand un champ est vide)
 	 * @param  string|int $key
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function getRequired($key)
 	{
