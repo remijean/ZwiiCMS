@@ -49,7 +49,7 @@ $(window).on('resize', function() {
  */
 $('#module').on('change', function() {
 	var newModule = $('#module').val();
-	var config = $('#config');
+	var admin = $('#admin');
 	var ok = true;
 	if($('#oldModule').val() != '') {
 		ok = confirm('Si vous confirmez, les données du module précédent seront supprimées !');
@@ -62,16 +62,16 @@ $('#module').on('change', function() {
 			success: function() {
 				$('#oldModule').val(newModule);
 				if(newModule == '') {
-					config.addClass('disabled');
+					admin.addClass('disabled');
 				}
 				else {
-					config.removeClass('disabled');
-					config.attr('target', '_blank')
+					admin.removeClass('disabled');
+					admin.attr('target', '_blank')
 				}
 			},
 			error: function() {
 				alert('Impossible d\'enregistrer le module !');
-				config.addClass('disabled');
+				admin.addClass('disabled');
 			}
 		});
 	}

@@ -713,7 +713,7 @@ class core
 				'selected' => $this->getData(['pages', $this->getUrl(0), 'module']),
 				'col' => 10
 			]) .
-			template::button('config', [
+			template::button('admin', [
 				'value' => 'Administrer',
 				'href' => helper::baseUrl() . 'module/' . $this->getUrl(0),
 				'disabled' => $this->getData(['pages', $this->getUrl(0), 'module']) ? '' : 'disabled',
@@ -1927,8 +1927,9 @@ class template
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Bouton
 		$html .= sprintf(
-			'<a %s class="button %s">%s</a>',
-			self::sprintAttributes($attributes, ['value', 'class']),
+			'<a %s class="button %s %s">%s</a>',
+			self::sprintAttributes($attributes, ['value', 'class', 'disabled']),
+			$attributes['disabled'] ? 'disabled' : '',
 			$attributes['class'],
 			helper::translate($attributes['value'])
 		);
