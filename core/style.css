@@ -302,7 +302,9 @@ label {
 /* Cases à cocher */
 input[type='checkbox'],
 input[type='radio'] {
-	display: none;
+	opacity: 0; /* Pas de display none sinon le hover ne fonctionne pas sous Chrome */
+	height: 0;
+	width: 0;
 }
 input[type='checkbox'] + label,
 input[type='radio'] + label {
