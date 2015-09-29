@@ -89,7 +89,7 @@ $('#theme').on('change', function() {
 		theme = defaultTheme;
 	}
 	// Change le thème en cherchant l'ancien thème
-	$('link[href="themes/' + oldTheme.val() + '"]').attr('href', 'themes/' + theme.val());
+	$('link[href$="themes/' + oldTheme.val() + '"]').attr('href', 'themes/' + theme.val());
 	// Enregistre le thème pour une future recherche
 	oldTheme.val(theme.val());
 });
