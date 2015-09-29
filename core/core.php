@@ -363,6 +363,11 @@ class core
 			if($this->getData(['config', 'password']) === $this->getCookie()) {
 				$method = $this->getUrl(0, false);
 				$this->$method();
+				// Passe en mode édition
+				// Sauf pour le module de configuration afin de ne pas changer de mode en cliquant sur configuration dans le panneau admin
+				if($this->getUrl(0, false) !== 'config') {
+					$this->setMode(true);
+				}
 			}
 			// Sinon il doit s'identifier
 			else {
@@ -394,7 +399,7 @@ class core
 				// Mise en cache en fonction du module
 				self::$cache = $module::$cache;
 			}
-			// Désactive le mode édition si il est actif
+			// Passe en mode public
 			$this->setMode(false);
 			// Titre, contenu et description de la page
 			self::$title = $this->getData(['pages', $this->getUrl(0, false), 'title']);
@@ -673,8 +678,6 @@ class core
 				$pagePositionPrevious = $pagePosition + 1;
 			}
 		}
-		// Contenu de la page
-		$this->setMode(true);
 		self::$title = $this->getData(['pages', $this->getUrl(0), 'title']);
 		self::$content =
 			template::openForm() .
@@ -840,7 +843,7 @@ class core
 		self::$layout = 'JSON';
 	}
 
-	/** MODULE : Change le mode d'administration */
+	/** MODULE : Redirige vers le bon mode */
 	public function mode()
 	{
 		// Redirection vers mode édition si page en mode public
@@ -1002,8 +1005,6 @@ class core
 			else {
 				$this->setNotification('Mot de passe incorrect !');
 			}
-			// Passe en mode édition
-			$this->setMode(true);
 			// Redirection vers l'URL courante
 			helper::redirect($this->getUrl());
 		}
