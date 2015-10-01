@@ -828,6 +828,8 @@ class core
 	{
 		// Sauvegarde les données en supprimant le cache
 		$this->saveData(true);
+		// Notification de suppression
+		$this->setNotification('Cache vidé avec succès !');
 		// Redirige vers la page de configuration
 		helper::redirect('config');
 	}
