@@ -77,7 +77,7 @@ class formAdm extends core
 			// Notification de succès
 			$this->setNotification('Formulaire enregistré avec succès !');
 			// Redirige vers l'URL courante
-			helper::redirect($this->getUrl());
+			//helper::redirect($this->getUrl());
 		}
 		// Liste des champs
 		if($this->getData([$this->getUrl(0), 'inputs'])) {

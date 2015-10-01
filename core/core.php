@@ -332,7 +332,7 @@ class core
 		if(!is_array($keys)) {
 			// Erreur champ obligatoire
 			if(empty($_POST[$keys])) {
-				return template::getRequired($keys);
+				template::getRequired($keys);
 			}
 			// Transforme la clé en tableau
 			$keys = [$keys];
@@ -340,8 +340,13 @@ class core
 		// Décent dans les niveaux de la variable HTTP POST
 		$post = $_POST;
 		foreach($keys as $key) {
-			if(array_key_exists($key, $post)) {
+			// Retourne une valeur si la clef n'existe pas (sinon bug avec les cases à cocher non cochées)
+			if(isset($post[$key])) {
 				$post = $post[$key];
+			}
+			else {
+				$post = '';
+				break;
 			}
 		}
 		// Applique le filtre et retourne la valeur
@@ -885,22 +890,6 @@ class core
 			else {
 				$password = $this->getData(['config', 'password']);
 			}
-			// Active/désactive l'URL rewriting
-			if(!template::$notices) {
-				// Active l'URL rewriting
-				if($this->getPost('rewriting') AND file_exists('.rewriting')) {
-					// Check que l'URL rewriting fonctionne sur le serveur
-					if(get_headers(helper::baseUrl(false) . 'core/rewrite/test')[0] === 'HTTP/1.1 200 OK') {
-						rename('.htaccess', '.simple');
-						rename('.rewriting', '.htaccess');
-					}
-				}
-				// Désactive l'URL rewriting
-				elseif(!$this->getPost('rewriting') AND file_exists('.simple')) {
-					rename('.htaccess', '.rewriting');
-					rename('.simple', '.htaccess');
-				}
-			}
 			// Modifie la configuration
 			$this->setData([
 				'config',
@@ -913,6 +902,22 @@ class core
 					'language' => $this->getPost('language', helper::STRING)
 				]
 			]);
+			// Active/désactive l'URL rewriting
+			if(!template::$notices) {
+				// Active l'URL rewriting
+				if($this->getPost('rewriting', helper::BOOLEAN) AND file_exists('.rewriting')) {
+					// Check que l'URL rewriting fonctionne sur le serveur
+					if(get_headers(helper::baseUrl(false) . 'core/rewrite/test')[0] === 'HTTP/1.1 200 OK') {
+						rename('.htaccess', '.simple');
+						rename('.rewriting', '.htaccess');
+					}
+				}
+				// Désactive l'URL rewriting
+				elseif(!$this->getPost('rewriting', helper::BOOLEAN) AND file_exists('.simple')) {
+					rename('.htaccess', '.rewriting');
+					rename('.simple', '.htaccess');
+				}
+			}
 			// Enregistre les données et supprime le cache
 			$this->saveData(true);
 			// Notification de modification
@@ -1019,6 +1024,7 @@ class core
 			template::openForm() .
 			template::openRow() .
 			template::password('password', [
+				'required' => 'required',
 				'col' => 4
 			]) .
 			template::newRow() .
@@ -1336,36 +1342,36 @@ class helper
 class template
 {
 	/** @var array Notices rattachées à des champs ($input => $notice) */
-	static $notices = [];
+	public static $notices = [];
 
 	/** @var array Valeur des champs avant validation et erreur dans le formulaire */
-	static $before = [];
+	public static $before = [];
 
 	/**
-	 * Retourne une notice pour les champs obligatoires (à appeler après avoir vérifié que le champ est vide, retourne false car cette fonction intervient quand un champ est vide)
+	 * Retourne une notice pour les champs obligatoires
 	 * @param  string|int $key
-	 * @return bool
 	 */
 	public static function getRequired($key)
 	{
 		if(!empty($_SESSION['REQUIRED']) AND array_key_exists($key . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED'])) {
 			self::$notices[$key] = 'Ce champ est requis';
 		}
-		return false;
 	}
 
 	/**
 	 * Enregistre un champ comme obligatoire
-	 * @param string $id        Id du champ
-	 * @param array $attributes Transmet l'attribut "required" à la méthode
+	 * @param string $id         Id du champ
+	 * @param array  $attributes Transmet l'attribut "required" à la méthode
 	 */
 	private static function setRequired($id, $attributes)
 	{
+		// Supprime l'id du champs si il existe déjà (au cas ou un champ devient non obligatoire)
+		if(!empty($_SESSION['REQUIRED']) AND array_key_exists($id . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED'])) {
+			unset($_SESSION['REQUIRED'][$id . '.' . md5($_SERVER['QUERY_STRING'])]);
+		}
+		// Enregistre l'id du champ comme obligatoire
 		if(!empty($attributes['required']) AND (empty($_SESSION['REQUIRED']) OR !array_key_exists($id . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED']))) {
 			$_SESSION['REQUIRED'][$id . '.' . md5($_SERVER['QUERY_STRING'])] = true;
-		}
-		elseif(!empty($_SESSION['REQUIRED']) AND array_key_exists($id . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED'])) {
-			unset($_SESSION['REQUIRED'][$id . '.' . md5($_SERVER['QUERY_STRING'])]);
 		}
 	}
 
@@ -1381,10 +1387,10 @@ class template
 	/**
 	 * Valeur du champ avant validation et erreur dans le formulaire
 	 * @param  string $nameId Nom ou id du champ
-	 * @return string
+	 * @return mixed
 	 */
 	private static function getBefore($nameId) {
-		return empty(self::$before[$nameId]) ? '' : self::$before[$nameId];
+		return array_key_exists($nameId, self::$before) ? self::$before[$nameId] : null;
 	}
 
 	/**
@@ -1395,7 +1401,8 @@ class template
 	 */
 	private static function sprintAttributes(array $array = [], array $exclude = [])
 	{
-		$exclude = array_merge(['col', 'offset', 'label', 'help', 'selected'], $exclude);
+		// Required est exclu pour privilégier le système de champs requis du système
+		$exclude = array_merge(['col', 'offset', 'label', 'help', 'selected', 'required'], $exclude);
 		$attributes = [];
 		foreach($array as $key => $value) {
 			if($value AND !in_array($key, $exclude)) {
@@ -1557,7 +1564,7 @@ class template
 			'class' => ''
 		], $attributes);
 		// Sauvegarde des données en cas d'erreur
-		if($value = self::getBefore($nameId)) {
+		if(($value = self::getBefore($nameId)) !== null) {
 			$attributes['value'] = $value;
 		}
 		// Texte
@@ -1592,7 +1599,7 @@ class template
 		// Champ requis
 		self::setRequired($nameId, $attributes);
 		// Sauvegarde des données en cas d'erreur
-		if($value = self::getBefore($nameId)) {
+		if(($value = self::getBefore($nameId)) !== null) {
 			$attributes['value'] = $value;
 		}
 		// Début col
@@ -1644,7 +1651,7 @@ class template
 		// Champ requis
 		self::setRequired($nameId, $attributes);
 		// Sauvegarde des données en cas d'erreur
-		if($value = self::getBefore($nameId)) {
+		if(($value = self::getBefore($nameId)) !== null) {
 			$attributes['value'] = $value;
 		}
 		// Début col
