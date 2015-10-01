@@ -1,6 +1,26 @@
 ZwiiCMS 7
 =========
 
+## 7.2.0
+* Correction de plusieurs bugs
+* Correction d'un bug de redirections infinies au changement de mode
+* Correction d'un bug au changement de mode
+* Correction d'un bug qui bloquait le css au survole des checkboxs sous Chrome
+* Correction d'erreurs dans les PHPDoc
+* Ajout d'un message de confirmation après la suppression du cache
+* Ajout d'une page d'exemple de formulaire
+* Ajout de l'URL rewriting
+* Ajout du support d'autres langues et de la traduction en anglais
+* Ajout du module de génération de formulaire et suppression du module de contact
+* Ajout de jQuery-UI
+* Ajout d'un import de css/js pour les modules
+* Ajout d'un aperçu du thème lors de sa sélection
+* Ajout du choix du layout à l'affichage des données
+* Enregistrement du module des pages en AJAX pour éviter de recharger la page
+* Amélioration de la pagination
+* Amélioration de champ pour choisir la position de la page dans le menu
+* Réécriture du code
+
 ## 7.1.6
 * Correction du mail de l'expéditeur qui n'était pas utilisé dans le module de contact
 * Correction d'un texte
