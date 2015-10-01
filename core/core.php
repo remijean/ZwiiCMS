@@ -883,18 +883,21 @@ class core
 			else {
 				$password = $this->getData(['config', 'password']);
 			}
-			// Active l'URL rewriting
-			if($this->getPost('rewriting')) {
-				// Check que l'URL rewriting fonctionne sur le serveur
-				if(get_headers(helper::baseUrl(false) . 'core/rewrite/test')[0] === 'HTTP/1.1 200 OK') {
-					rename('.htaccess', '.simple');
-					rename('.rewriting', '.htaccess');
+			// Active/désactive l'URL rewriting
+			if(!template::$notices) {
+				// Active l'URL rewriting
+				if($this->getPost('rewriting') AND file_exists('.rewriting')) {
+					// Check que l'URL rewriting fonctionne sur le serveur
+					if(get_headers(helper::baseUrl(false) . 'core/rewrite/test')[0] === 'HTTP/1.1 200 OK') {
+						rename('.htaccess', '.simple');
+						rename('.rewriting', '.htaccess');
+					}
 				}
-			}
-			// Désactive l'URL rewriting
-			else {
-				rename('.htaccess', '.rewriting');
-				rename('.simple', '.htaccess');
+				// Désactive l'URL rewriting
+				elseif(!$this->getPost('rewriting') AND file_exists('.simple')) {
+					rename('.htaccess', '.rewriting');
+					rename('.simple', '.htaccess');
+				}
 			}
 			// Modifie la configuration
 			$this->setData([
