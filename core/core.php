@@ -858,7 +858,7 @@ class core
 		}
 		// Sinon redirection vers URL courante
 		else {
-			$url = $this->getUrl();
+			$url = $this->getUrl(0); // Voir commentaire du elseif précédent pour l'utilisation du 0
 		}
 		// Applique la redirection
 		helper::redirect($url);
