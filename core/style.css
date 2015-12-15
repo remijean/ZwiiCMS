@@ -181,11 +181,6 @@ form {
 	background: rgba(221, 221, 221, .2);
 }
 
-/* Cacher un élément */
-.none {
-	display: none;
-}
-
 /**
  * Inputs génériques
  */
@@ -433,7 +428,6 @@ input[type='radio']:disabled + label:before {
 	}
 }
 @media (min-width: 992px) {
-	.col0 {}
 	.col1 {
 		width: 8.33333333%;
 	}
@@ -470,7 +464,6 @@ input[type='radio']:disabled + label:before {
 	.col12 {
 		width: 100%;
 	}
-	.offset0 {}
 	.offset1 {
 		margin-left: 8.33333333%;
 	}
@@ -512,4 +505,13 @@ input[type='radio']:disabled + label:before {
 	#container {
 		width: 1170px;
 	}
+}
+
+/**
+ * Classes rapides
+ */
+
+/* Cacher un élément */
+.hide {
+	display: none;
 }

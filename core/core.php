@@ -1505,7 +1505,7 @@ class template
 			'data-1' => '',
 			'data-2' => '',
 			'data-3' => '',
-			'col' => 0,
+			'col' => 12,
 			'offset' => 0
 		], $attributes);
 		// Retourne le html

@@ -57,6 +57,10 @@ class formAdm extends core
 					'button' => $this->getPost('button', helper::STRING)
 				]
 			]);
+			// Liste des champs à partir de l'input caché position
+			$position = $this->getPost('position');
+			// Supprime le premier élément (= le champ caché pour la copie)
+			unset($position[0]);
 			// Génération des champs
 			$inputs = [];
 			foreach($this->getPost('position') as $key => $value) {
@@ -68,8 +72,7 @@ class formAdm extends core
 					'width' => $this->getPost(['width', $key], helper::INT)
 				];
 			}
-			// Supprime le premier élément (= le champ caché pour la copie)
-			unset($inputs[0]);
+
 			// Crée les champs
 			$this->setData([$this->getUrl(0), 'inputs', $inputs]);
 			// Enregistre les données
@@ -77,7 +80,7 @@ class formAdm extends core
 			// Notification de succès
 			$this->setNotification('Formulaire enregistré avec succès !');
 			// Redirige vers l'URL courante
-			//helper::redirect($this->getUrl());
+			helper::redirect($this->getUrl());
 		}
 		// Liste des champs
 		if($this->getData([$this->getUrl(0), 'inputs'])) {
@@ -141,11 +144,12 @@ class formAdm extends core
 			template::title('Liste des champs') .
 			template::div([
 				'id' => 'copy',
-				'class' => 'none',
+				'class' => 'hide',
 				'text' =>
 					template::openRow() .
 					template::hidden('position[]', [
-						'class' => 'position'
+						'class' => 'position',
+						'value' => 0
 					]) .
 					template::button('move[]', [
 						'value' => '&#8597;',
