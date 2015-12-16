@@ -60,6 +60,12 @@ body {
 #panel > li > a:active {
 	background: #111;
 }
+#panel > li > a.edit {
+	background: #E74C3C;
+}
+#panel > li > a.edit:hover {
+	background: #E53E2D;
+}
 #panel > li > select {
 	width: 250px;
 	padding: 5px;

@@ -502,9 +502,7 @@ class core
 			// Affiche le switch de mode pour toutes les pages sauf configuration
 			if($this->getUrl(0, false) !== 'config') {
 				$li .= '<li>';
-				$li .= '<a href="' . helper::baseUrl() . 'mode/' . $this->getUrl(null, false) . '">';
-				$li .= $this->getMode() ? helper::translate('Mode public') : helper::translate('Mode édition');
-				$li .= '</a>';
+				$li .= '<a href="' . helper::baseUrl() . 'mode/' . $this->getUrl(null, false) . '"' . ($this->getMode() ? ' class="edit"' : '') . '>Mode édition</a>';
 				$li .= '</li>';
 			};
 			$li .= '<li>';
