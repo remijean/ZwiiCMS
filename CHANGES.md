@@ -1,6 +1,14 @@
 ZwiiCMS 7
 =========
 
+## 7.3.0
+* Correction d'un bug du générateur de formulaires avec certains navigateurs
+* Amélioration du switch entre le mode édition/public
+* Suppression des thèmes
+* Ajout d'options de configuration du design (choix des couleurs, image & co)
+* Mise à jour de Trumbowyg
+* Ajout d'un gestionnaire de fichiers
+
 ## 7.2.0
 * Correction de plusieurs bugs
 * Correction d'un bug de redirections infinies au changement de mode
