@@ -914,9 +914,9 @@ class core
 					'themeElement' => $this->getPost('themeElement', helper::STRING),
 					'themeColor' => $this->getPost('themeColor', helper::STRING),
 					'themeBackground' => $this->getPost('themeBackground', helper::STRING),
-					'themeMargin' => $this->getPost('themeMargin', helper::INT),
-					'themeRadius' => $this->getPost('themeRadius', helper::INT),
-					'themeShadow' => $this->getPost('themeShadow', helper::INT)
+					'themeMargin' => $this->getPost('themeMargin', helper::BOOLEAN),
+					'themeRadius' => $this->getPost('themeRadius', helper::BOOLEAN),
+					'themeShadow' => $this->getPost('themeShadow', helper::BOOLEAN)
 				]
 			]);
 			// Active/désactive l'URL rewriting
