@@ -8,11 +8,11 @@
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/vendor/normalize.min.css">
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/vendor/jquery-ui/jquery-ui.min.css">
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/vendor/trumbowyg/trumbowyg.min.css">
-	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/style.css">
-	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>themes/<?php echo $this->getData(['config', 'theme']); ?>">
+	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/theme.css">
+	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/layout.css">
 	<?php echo $this->css(); ?>
 </head>
-<body>
+<body class="<?php echo $this->getTheme(); ?>">
 <?php echo $this->panel() . $this->getNotification(); ?>
 <div id="container">
 	<h1 id="header"><?php echo $this->getData(['config', 'title']); ?></h1>
@@ -29,7 +29,6 @@
 <script src="<?php echo helper::baseUrl(false); ?>core/vendor/jquery-ui/jquery-ui.touch-punch.min.js"></script>
 <script src="<?php echo helper::baseUrl(false); ?>core/vendor/trumbowyg/trumbowyg.min.js"></script>
 <script src="<?php echo helper::baseUrl(false); ?>core/script.js"></script>
-<script>$('.editor').trumbowyg();</script>
 <?php echo $this->js(); ?>
 </body>
 </html>

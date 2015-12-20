@@ -78,18 +78,42 @@ $('#module').on('change', function() {
 });
 
 /**
- * Change le thème en direct
+ * Charge l'éditeur de texte
+ */
+$('.editor').trumbowyg();
+
+/**
+ * Sélecteur de couleur
+ */
+$('.colorPicker div').on('click', function() {
+	var color = $(this);
+	var colorPicker = color.parents('.colorPicker');
+	// Sélectionne la couleur
+	colorPicker.find('.selected').removeClass('selected');
+	$(this).addClass('selected');
+	// Ajoute la couleur sélectionnée dans l'input caché
+	colorPicker.find('input[type=hidden]').val(color.data('color')).trigger('change');
+});
+
+/**
+ * Aperçu de la personnalisation en direct
  */
 $('#theme').on('change', function() {
-	var oldTheme = $('#oldTheme');
-	var defaultTheme = $('#defaultTheme');
-	var theme = $(this);
-	// Attribut le thème par défaut
-	if(theme.val() == '') {
-		theme = defaultTheme;
-	}
-	// Change le thème en cherchant l'ancien thème
-	$('link[href$="themes/' + oldTheme.val() + '"]').attr('href', 'themes/' + theme.val());
-	// Enregistre le thème pour une future recherche
-	oldTheme.val(theme.val());
+	var body = $('body');
+	// Supprime les anciennes classes
+	body.removeClass();
+	// Ajoute les nouvelles classes
+	$(this).find('input').each(function() {
+		var input = $(this);
+		// Cas spécifique pour les checkbox
+		if(input.is(':checkbox')) {
+			if(input.is(':checked')) {
+				body.addClass(input.attr('name').substring(5).toLowerCase().replace('[]', ''));
+			}
+		}
+		// Cas simple
+		else {
+			body.addClass(input.attr('id').substring(5).toLowerCase() + input.val());
+		}
+	});
 });

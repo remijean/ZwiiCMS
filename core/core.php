@@ -52,7 +52,7 @@ class core
 	/** @var array Liste des modules */
 	private static $modules = ['create', 'edit', 'ajax', 'module', 'delete', 'clean', 'export', 'mode', 'config', 'logout'];
 
-	/** Version de ZwiiCMS*/
+	/** Version de ZwiiCMS */
 	private static $version = '7.2.0';
 
 	/** Constructeur de la classe */
@@ -354,6 +354,39 @@ class core
 	}
 
 	/**
+	 * Met en forme la liste des classes du thème
+	 * @return string
+	 */
+	public function getTheme()
+	{
+		// Liste des couleurs
+		$class = [];
+		// Check la couleur de la bannière
+		$header = $this->getData(['config', 'themeHeader']) ? $this->getData(['config', 'themeHeader']) : 'White';
+		$class[] = 'header' . $header;
+		// Check de la couleur des éléments du site
+		$element = $this->getData(['config', 'themeElement']) ? $this->getData(['config', 'themeElement']) : 'PeterRiver';
+		$class[] = 'element' . $element;
+		// Check la couleur du menu
+		$menu = $this->getData(['config', 'themeMenu']) ? $this->getData(['config', 'themeMenu']) : 'PeterRiver';
+		$class[] = 'menu' . $menu;
+		// Check la couleur du background
+		$background = $this->getData(['config', 'themeBackground']) ? $this->getData(['config', 'themeBackground']) : 'Clouds';
+		$class[] = 'background' . $background;
+		// Check la marge autour du menu et de la bannière
+		$margin = $this->getData(['config', 'themeMargin']) ? 'margin' : '';
+		$class[] = $margin;
+		// Check les coins arrondis
+		$radius = $this->getData(['config', 'themeRadius']) ? 'radius' : '';
+		$class[] = $radius;
+		// Check l'ombre autour du site
+		$shadow = $this->getData(['config', 'themeShadow']) ? 'shadow' : '';
+		$class[] = $shadow;
+		// Mise en forme des classes
+		return implode($class, ' ');
+	}
+
+	/**
 	 * Crée la connexion entre les modules et le système afin d'afficher le contenu de la page
 	 */
 	public function router()
@@ -416,11 +449,6 @@ class core
 			header("HTTP/1.0 404 Not Found");
 			self::$title = helper::translate('Erreur 404');
 			self::$content = '<p>' . helper::translate('Page introuvable !') . '</p>';
-		}
-		// Choix du thème à afficher
-		$theme = $this->getData(['pages', $this->getUrl(0), 'theme']);
-		if($theme) {
-			$this->setData(['config', 'theme', $theme]);
 		}
 		// Choix du type de données à afficher
 		switch(self::$layout) {
@@ -581,7 +609,6 @@ class core
 				'description' => false,
 				'position' => '0',
 				'blank' => false,
-				'theme' => false,
 				'module' => false,
 				'content' => '<p>' . helper::translate('Contenu de la page.') . '</p>'
 			]
@@ -647,7 +674,6 @@ class core
 					'description' => $this->getPost('description', helper::STRING),
 					'position' => $position,
 					'blank' => $this->getPost('blank', helper::BOOLEAN),
-					'theme' => $this->getPost('theme', helper::STRING),
 					'module' => $module,
 					'content' => $this->getPost('content')
 				]
@@ -726,17 +752,6 @@ class core
 				'col' => 2
 			]) .
 			template::newRow() .
-			template::hidden('defaultTheme', [
-				'value' => $this->getData(['config', 'theme'])
-			]) .
-			template::hidden('oldTheme', [
-				'value' => $this->getData(['pages', $this->getUrl(0), 'theme']) ? $this->getData(['pages', $this->getUrl(0), 'theme']) : $this->getData(['config', 'theme'])
-			]) .
-			template::select('theme', helper::listThemes('Thème par défaut'), [
-				'label' => 'Thème de la page',
-				'selected' => $this->getData(['pages', $this->getUrl(0), 'theme'])
-			]) .
-			template::newRow() .
 			template::checkbox('blank', true, 'Ouvrir dans un nouvel onglet en mode public', [
 				'checked' => $this->getData(['pages', $this->getUrl(0), 'blank'])
 			]) .
@@ -775,7 +790,6 @@ class core
 				'description' => $this->getData(['pages', $this->getUrl(0), 'description']),
 				'position' => $this->getData(['pages', $this->getUrl(0), 'position']),
 				'blank' => $this->getData(['pages', $this->getUrl(0), 'blank']),
-				'theme' => $this->getData(['pages', $this->getUrl(0), 'theme']),
 				'module' => $this->getPost('module', helper::STRING),
 				'content' => $this->getData(['pages', $this->getUrl(0), 'content'])
 			]
@@ -896,8 +910,13 @@ class core
 					'description' => $this->getPost('description', helper::STRING),
 					'password' => $password,
 					'index' => $this->getPost('index', helper::STRING),
-					'theme' => $this->getPost('theme', helper::STRING),
-					'language' => $this->getPost('language', helper::STRING)
+					'language' => $this->getPost('language', helper::STRING),
+					'themeElement' => $this->getPost('themeElement', helper::STRING),
+					'themeColor' => $this->getPost('themeColor', helper::STRING),
+					'themeBackground' => $this->getPost('themeBackground', helper::STRING),
+					'themeMargin' => $this->getPost('themeMargin', helper::INT),
+					'themeRadius' => $this->getPost('themeRadius', helper::INT),
+					'themeShadow' => $this->getPost('themeShadow', helper::INT)
 				]
 			]);
 			// Active/désactive l'URL rewriting
@@ -927,6 +946,7 @@ class core
 		self::$title = helper::translate('Configuration');
 		self::$content =
 			template::openForm() .
+			template::title('Paramètres généraux') .
 			template::openRow() .
 			template::text('title', [
 				'label' => 'Titre du site',
@@ -955,15 +975,6 @@ class core
 				'selected' => $this->getData(['config', 'index'])
 			]) .
 			template::newRow() .
-			template::hidden('oldTheme', [
-				'value' => $this->getData(['config', 'theme'])
-			]) .
-			template::select('theme', helper::listThemes(), [
-				'label' => 'Thème par défaut',
-				'required' => 'required',
-				'selected' => $this->getData(['config', 'theme'])
-			]) .
-			template::newRow() .
 			template::select('language', helper::listLanguages('Ne pas traduire'), [
 				'label' => 'Traduire le site',
 				'selected' => $this->getData(['config', 'language'])
@@ -980,7 +991,51 @@ class core
 				'value' => self::$version,
 				'disabled' => 'disabled'
 			]) .
-			template::newRow() .
+			template::closeRow() .
+			template::title('Paramètres de personnalisation') .
+			template::div([
+				'id' => 'theme',
+				'text' =>
+				template::openRow() .
+				template::colorPicker('themeHeader', [
+					'label' => 'Couleur de la bannière',
+					'ignore' => ['Clouds'],
+					'selected' => $this->getData(['config', 'themeHeader']) ? $this->getData(['config', 'themeHeader']) : 'White',
+					'col' => 6
+				]) .
+				template::colorPicker('themeMenu', [
+					'label' => 'Couleur du menu',
+					'ignore' => ['Clouds', 'White'],
+					'selected' => $this->getData(['config', 'themeMenu']) ? $this->getData(['config', 'themeMenu']) : 'PeterRiver',
+					'col' => 6
+				]) .
+				template::newRow() .
+				template::colorPicker('themeElement', [
+					'label' => 'Couleur des éléments du site',
+					'ignore' => ['Clouds', 'White'],
+					'selected' => $this->getData(['config', 'themeElement']) ? $this->getData(['config', 'themeElement']) : 'PeterRiver',
+					'col' => 6
+				]) .
+				template::colorPicker('themeBackground', [
+					'label' => 'Couleur du fond',
+					'ignore' => ['White'],
+					'selected' => $this->getData(['config', 'themeBackground']) ? $this->getData(['config', 'themeBackground']) : 'Clouds',
+					'col' => 6
+				]) .
+				template::newRow() .
+				template::checkbox('themeMargin', true, 'Ajouter une marge autour de la bannière et du menu', [
+					'checked' => $this->getData(['config', 'themeMargin']),
+				]) .
+				template::newRow() .
+				template::checkbox('themeRadius', true, 'Arrondir les coins du site', [
+					'checked' => $this->getData(['config', 'themeRadius']),
+				]) .
+				template::checkbox('themeShadow', true, 'Ajouter une ombre autour du site', [
+					'checked' => $this->getData(['config', 'themeShadow']),
+				]) .
+				template::closeRow()
+			]) .
+			template::openRow() .
 			template::button('clean', [
 				'value' => 'Vider le cache',
 				'href' => helper::baseUrl() . 'clean',
@@ -1212,26 +1267,6 @@ class helper
 			'last' => $lastElement,
 			'pages' => '<div class="pagination">' . $pages . '</div>'
 		];
-	}
-
-	/**
-	 * Crée une liste des thèmes (format : fichier.css => fichier)
-	 * @param  mixed $default Valeur par défaut
-	 * @return array
-	 */
-	public static function listThemes($default = false)
-	{
-		$themes = [];
-		if($default) {
-			$themes[''] = self::translate($default);
-		}
-		$it = new DirectoryIterator('themes/');
-		foreach($it as $file) {
-			if($file->isFile() AND $file->getExtension() === 'css' AND $file->getBasename() !== '_empty.css') {
-				$themes[$file->getBasename()] = $file->getBasename('.css');
-			}
-		}
-		return $themes;
 	}
 
 	/**
@@ -1503,7 +1538,7 @@ class template
 			'data-1' => '',
 			'data-2' => '',
 			'data-3' => '',
-			'col' => 12,
+			'col' => 0,
 			'offset' => 0
 		], $attributes);
 		// Retourne le html
@@ -1726,6 +1761,59 @@ class template
 	}
 
 	/**
+	 * Crée un champ d'upload de fichier
+	 * @param  string $nameId     Nom & id du champ texte court
+	 * @param  array  $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @return string
+	 */
+	public static function file($nameId, array $attributes = [])
+	{
+		// Attributs possibles
+		$attributes = array_merge([
+			'id' => $nameId,
+			'name' => $nameId,
+			'value' => '',
+			'placeholder' => '',
+			'disabled' => '',
+			'readonly' => '',
+			'required' => '',
+			'label' => '',
+			'help' => '',
+			'class' => '',
+			'col' => 12,
+			'offset' => 0
+		], $attributes);
+		// Champ requis
+		self::setRequired($nameId, $attributes);
+		// Sauvegarde des données en cas d'erreur
+		if(($value = self::getBefore($nameId)) !== null) {
+			$attributes['value'] = $value;
+		}
+		// Début col
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		// Label
+		if($attributes['label']) {
+			$html .= self::label($nameId, $attributes['label'], [
+				'help' => $attributes['help']
+			]);
+		}
+		// Notice
+		if(!empty(self::$notices[$nameId])) {
+			$html .= self::getNotice($nameId);
+			$attributes['class'] .= ' notice';
+		}
+		// Texte
+		$html .= sprintf(
+			'<input type="text" %s>',
+			self::sprintAttributes($attributes)
+		);
+		// Fin col
+		$html .= '</div>';
+		// Retourne le html
+		return $html;
+	}
+
+	/**
 	 * Crée un champ sélection
 	 * @param  string $nameId     Nom & id du champ de sélection
 	 * @param  array  $options    Liste des options du champ de sélection ($value => $text)
@@ -1781,6 +1869,100 @@ class template
 		}
 		// Fin sélection
 		$html .= '</select>';
+		// Fin col
+		$html .= '</div>';
+		// Retourne le html
+		return $html;
+	}
+
+	/**
+	 * Crée un sélecteur de couleur
+	 * @param  string $nameId     Nom & id du sélecteur de couleur
+	 * @param  array  $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @return string
+	 */
+	public static function colorPicker($nameId, array $attributes = [])
+	{
+		// Attributs possibles
+		$attributes = array_merge([
+			'id' => $nameId,
+			'name' => $nameId,
+			'selected' => '',
+			'required' => '',
+			'ignore' => [],
+			'label' => '',
+			'help' => '',
+			'class' => '',
+			'col' => 12,
+			'offset' => 0
+		], $attributes);
+		// Champ requis
+		self::setRequired($nameId, $attributes);
+		// Sauvegarde des données en cas d'erreur
+		if($selected = self::getBefore($nameId)) {
+			$attributes['selected'] = $selected;
+		}
+		// Liste des couleurs
+		$colors = [
+			'#1ABC9C' => 'Turquoise',
+			'#16A085' => 'GreenSea',
+			'#2ECC71' => 'Emerald',
+			'#27AE60' => 'Nephritis',
+			'#3498DB' => 'PeterRiver',
+			'#2980B9' => 'BelizeHole',
+			'#9B59B6' => 'Amethyst',
+			'#8E44AD' => 'Wisteria',
+			'#34495E' => 'WetAsphalt',
+			'#2C3E50' => 'MidnightBlue',
+			'#F1C40F' => 'SunFlower',
+			'#F39C12' => 'Orange',
+			'#E67E22' => 'Carrot',
+			'#D35400' => 'Pumpkin',
+			'#E74C3C' => 'Alizarin',
+			'#C0392B' => 'Pomegranate',
+			'#ECF0F1' => 'Clouds',
+			'#BDC3C7' => 'Silver',
+			'#95A5A6' => 'Concrete',
+			'#7F8C8D' => 'Asbestos',
+			'#FFFFFF' => 'White'
+		];
+		// Supprime les couleurs à ignorer
+		$colors = array_diff($colors, $attributes['ignore']);
+		// Début col
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		// Label
+		if($attributes['label']) {
+			$html .= self::label($nameId, $attributes['label'], [
+				'help' => $attributes['help']
+			]);
+		}
+		// Notice
+		if(!empty(self::$notices[$nameId])) {
+			$html .= self::getNotice($nameId);
+			$attributes['class'] .= ' notice';
+		}
+		// Début sélecteur de couleur
+		$html .= sprintf(
+			'<div id="%sColorPicker" class="colorPicker %s" %s>',
+			$attributes['id'],
+			$attributes['class'],
+			self::sprintAttributes($attributes, ['class', 'name', 'id', 'ignore'])
+		);
+		// Liste des couleurs
+		foreach($colors as $hex => $color) {
+			$html .= sprintf(
+				'<div data-color="%s" style="background:%s"%s></div>',
+				$color,
+				$hex,
+				$attributes['selected'] === $color ? ' class="selected"' : ''
+			);
+		}
+		// Champ caché contenant la couleur sélectionnée
+		$html .= self::hidden($nameId, [
+			'value' => $attributes['selected']
+		]);
+		// Fin sélecteur de couleur
+		$html .= '</div>';
 		// Fin col
 		$html .= '</div>';
 		// Retourne le html
@@ -1984,4 +2166,5 @@ class template
 	{
 		return '<span class="helpButton">?<span class="helpContent">' . helper::translate($text) . '</span></span>';
 	}
+
 }
