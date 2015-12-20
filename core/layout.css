@@ -86,11 +86,14 @@ body {
 
 /* Haut de page */
 #header {
+	height: 160px;
+	line-height: 160px;
 	margin: 0;
 	text-align: center;
-	padding: 50px 0;
 	font-size: 1.8em;
 	color: #FFF;
+	background-position: center;
+	background-repeat: no-repeat;
 }
 
 /* Menu */
@@ -228,6 +231,10 @@ select:disabled,
 textarea:disabled {
 	background: #ECF0F1 !important;
 	color: #8AA3A9 !important;
+}
+input[type='file'] {
+	padding: 6px 9px;
+	max-height: 40px;
 }
 input[type='submit'] {
 	width: 100%;
@@ -389,15 +396,11 @@ input[type='radio']:disabled + label:before {
 
 /* Sélecteur de couleur */
 .colorPicker {
-	padding: 10px;
 	font-size: 0; /* fix espacement en trop */
-	background: #ECF0F1;
-	text-align: center;
-	margin: 1px;
 }
 .colorPicker div {
-	height: 18px;
-	width: 24px;
+	height: 40px;
+	width: 25px;
 	display: inline-block;
 	cursor: pointer;
 	border: 4px solid transparent;

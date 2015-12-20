@@ -7,7 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/vendor/normalize.min.css">
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/vendor/jquery-ui/jquery-ui.min.css">
-	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/vendor/trumbowyg/ui/trumbowyg.min.css">
+	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/vendor/trumbowyg/trumbowyg.min.css">
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/theme.css">
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/layout.css">
 	<?php echo $this->css(); ?>
@@ -15,7 +15,7 @@
 <body class="<?php echo $this->getTheme(); ?>">
 <?php echo $this->panel() . $this->getNotification(); ?>
 <div id="container">
-	<h1 id="header"><?php echo $this->getData(['config', 'title']); ?></h1>
+	<h1 id="header" style="<?php echo $this->getThemeImage(); ?>"><?php echo $this->getData(['config', 'title']); ?></h1>
 	<div id="toggle"><span></span></div>
 	<ul id="menu"><?php echo $this->menu(); ?></ul>
 	<div id="section">
@@ -28,9 +28,10 @@
 <script src="<?php echo helper::baseUrl(false); ?>core/vendor/jquery-ui/jquery-ui.min.js"></script>
 <script src="<?php echo helper::baseUrl(false); ?>core/vendor/jquery-ui/jquery-ui.touch-punch.min.js"></script>
 <script src="<?php echo helper::baseUrl(false); ?>core/vendor/trumbowyg/trumbowyg.min.js"></script>
-<script src="<?php echo helper::baseUrl(false); ?>core/vendor/trumbowyg/plugins/upload/trumbowyg.upload.min.js"></script>
-<script src="<?php echo helper::baseUrl(false); ?>core/vendor/trumbowyg/plugins/colors/trumbowyg.colors.min.js"></script>
-<script src="<?php echo helper::baseUrl(false); ?>core/vendor/trumbowyg/plugins/editlink/trumbowyg.editlink.min.js"></script>
+<script src="<?php echo helper::baseUrl(false); ?>core/vendor/trumbowyg/trumbowyg.upload.min.js"></script>
+<script>
+	var baseUrl = '<?php echo helper::baseUrl(); ?>';
+</script>
 <script src="<?php echo helper::baseUrl(false); ?>core/script.js"></script>
 <?php echo $this->js(); ?>
 </body>

@@ -56,8 +56,8 @@ $('#module').on('change', function() {
 	}
 	if(ok) {
 		$.ajax({
-			type: "POST",
-			url: '?ajax/' + $("#key").val(),
+			type: 'POST',
+			url: '?save/' + $('#key').val(),
 			data: {module: newModule},
 			success: function() {
 				$('#oldModule').val(newModule);
@@ -80,6 +80,11 @@ $('#module').on('change', function() {
 /**
  * Charge l'éditeur de texte
  */
+$.extend(true, $.trumbowyg.upload, {
+	serverPath: baseUrl + 'upload',
+	fileFieldName: 'file',
+	urlPropertyName: 'link'
+});
 $('.editor').trumbowyg({
 	btnsDef: {
 		image: {
@@ -125,12 +130,12 @@ $('#theme').on('change', function() {
 		// Cas spécifique pour les checkbox
 		if(input.is(':checkbox')) {
 			if(input.is(':checked')) {
-				body.addClass(input.attr('name').substring(5).toLowerCase().replace('[]', ''));
+				body.addClass(input.attr('name').replace('[]', ''));
 			}
 		}
 		// Cas simple
 		else {
-			body.addClass(input.attr('id').substring(5).toLowerCase() + input.val());
+			body.addClass(input.val());
 		}
 	});
 });

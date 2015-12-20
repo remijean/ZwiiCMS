@@ -13,28 +13,35 @@
 /**
  * Marge autour de la bannière et du menu
  */
-.margin #container {
+.themeMargin #container {
 	padding: 20px;
 }
-.margin #section {
+.themeMargin #section {
 	margin: 20px 0;
 }
-.margin #footer {
+.themeMargin #footer {
 	padding: 0;
 }
 
 /**
  * Coins arrondis
  */
-.radius #container {
+.themeRadius #container {
 	border-radius: 20px;
 }
 
 /**
  * Ombre autour du site
  */
-.shadow #container {
+.themeShadow #container {
 	box-shadow: 1px 1px 10px #2C3E50;
+}
+
+/**
+ * Cache le titre de la bannière après l'ajout d'une image
+ */
+.themeImage #header {
+	font-size: 0;
 }
 
 /*
@@ -42,55 +49,55 @@
  */
 
 /* Couleur normale */
-.backgroundTurquoise,
-.menuTurquoise #toggle,
-.menuTurquoise #menu,
-.elementTurquoise input[type='submit'],
-.elementTurquoise .button,
-.elementTurquoise .pagination > a,
-.elementTurquoise input[type='checkbox']:checked + label:before,
-.elementTurquoise input[type='radio']:checked + label:before,
-.elementTurquoise .helpButton,
-.elementTurquoise .helpContent,
-.headerTurquoise #header {
-	background: #1ABC9C;
+.themeBackgroundTurquoise,
+.themeMenuTurquoise #toggle,
+.themeMenuTurquoise #menu,
+.themeElementTurquoise input[type='submit'],
+.themeElementTurquoise .button,
+.themeElementTurquoise .pagination > a,
+.themeElementTurquoise input[type='checkbox']:checked + label:before,
+.themeElementTurquoise input[type='radio']:checked + label:before,
+.themeElementTurquoise .helpButton,
+.themeElementTurquoise .helpContent,
+.themeHeaderTurquoise #header {
+	background-color: #1ABC9C;
 }
-.elementTurquoise h2,
-.elementTurquoise h4,
-.elementTurquoise h6,
-.elementTurquoise a {
+.themeElementTurquoise h2,
+.themeElementTurquoise h4,
+.themeElementTurquoise h6,
+.themeElementTurquoise a {
 	color: #1ABC9C;
 }
-.elementTurquoise input[type='text']:hover,
-.elementTurquoise input[type='password']:hover,
-.elementTurquoise input[type='file']:hover,
-.elementTurquoise select:hover,
-.elementTurquoise textarea:hover {
+.themeElementTurquoise input[type='text']:hover,
+.themeElementTurquoise input[type='password']:hover,
+.themeElementTurquoise input[type='file']:hover,
+.themeElementTurquoise select:hover,
+.themeElementTurquoise textarea:hover {
 	border: 1px solid #1ABC9C;
 }
 
 /* Couleur foncée */
-.menuTurquoise #toggle:hover,
-.menuTurquoise #menu > li > a:hover,
-.elementTurquoise input[type='submit']:hover,
-.elementTurquoise .button:hover,
-.elementTurquoise .pagination > a:hover,
-.elementTurquoise input[type='checkbox']:not(:active):checked:hover + label:before,
-.elementTurquoise input[type='checkbox']:active + label:before,
-.elementTurquoise input[type='radio']:checked:hover + label:before,
-.elementTurquoise input[type='radio']:not(:checked):active + label:before,
-.elementTurquoise .helpButton:hover {
-	background: #18AD90;
+.themeMenuTurquoise #toggle:hover,
+.themeMenuTurquoise #menu > li > a:hover,
+.themeElementTurquoise input[type='submit']:hover,
+.themeElementTurquoise .button:hover,
+.themeElementTurquoise .pagination > a:hover,
+.themeElementTurquoise input[type='checkbox']:not(:active):checked:hover + label:before,
+.themeElementTurquoise input[type='checkbox']:active + label:before,
+.themeElementTurquoise input[type='radio']:checked:hover + label:before,
+.themeElementTurquoise input[type='radio']:not(:checked):active + label:before,
+.themeElementTurquoise .helpButton:hover {
+	background-color: #18AD90;
 }
 
 /* Couleur très foncée */
-.menuTurquoise #toggle:active,
-.menuTurquoise #menu > li > a:active,
-.menuTurquoise #menu > li > a.current,
-.elementTurquoise input[type='submit']:active,
-.elementTurquoise .button:active,
-.elementTurquoise .pagination > a:active {
-	background: #169E83;
+.themeMenuTurquoise #toggle:active,
+.themeMenuTurquoise #menu > li > a:active,
+.themeMenuTurquoise #menu > li > a.current,
+.themeElementTurquoise input[type='submit']:active,
+.themeElementTurquoise .button:active,
+.themeElementTurquoise .pagination > a:active {
+	background-color: #169E83;
 }
 
 /*
@@ -98,55 +105,55 @@
  */
 
 /* Couleur normale */
-.backgroundGreenSea,
-.menuGreenSea #toggle,
-.menuGreenSea #menu,
-.elementGreenSea input[type='submit'],
-.elementGreenSea .button,
-.elementGreenSea .pagination > a,
-.elementGreenSea input[type='checkbox']:checked + label:before,
-.elementGreenSea input[type='radio']:checked + label:before,
-.elementGreenSea .helpButton,
-.elementGreenSea .helpContent,
-.headerGreenSea #header {
-	background: #16A085;
+.themeBackgroundGreenSea,
+.themeMenuGreenSea #toggle,
+.themeMenuGreenSea #menu,
+.themeElementGreenSea input[type='submit'],
+.themeElementGreenSea .button,
+.themeElementGreenSea .pagination > a,
+.themeElementGreenSea input[type='checkbox']:checked + label:before,
+.themeElementGreenSea input[type='radio']:checked + label:before,
+.themeElementGreenSea .helpButton,
+.themeElementGreenSea .helpContent,
+.themeHeaderGreenSea #header {
+	background-color: #16A085;
 }
-.elementGreenSea h2,
-.elementGreenSea h4,
-.elementGreenSea h6,
-.elementGreenSea a {
+.themeElementGreenSea h2,
+.themeElementGreenSea h4,
+.themeElementGreenSea h6,
+.themeElementGreenSea a {
 	color: #16A085;
 }
-.elementGreenSea input[type='text']:hover,
-.elementGreenSea input[type='password']:hover,
-.elementGreenSea input[type='file']:hover,
-.elementGreenSea select:hover,
-.elementGreenSea textarea:hover {
+.themeElementGreenSea input[type='text']:hover,
+.themeElementGreenSea input[type='password']:hover,
+.themeElementGreenSea input[type='file']:hover,
+.themeElementGreenSea select:hover,
+.themeElementGreenSea textarea:hover {
 	border: 1px solid #16A085;
 }
 
 /* Couleur foncée */
-.menuGreenSea #toggle:hover,
-.menuGreenSea #menu > li > a:hover,
-.elementGreenSea input[type='submit']:hover,
-.elementGreenSea .button:hover,
-.elementGreenSea .pagination > a:hover,
-.elementGreenSea input[type='checkbox']:not(:active):checked:hover + label:before,
-.elementGreenSea input[type='checkbox']:active + label:before,
-.elementGreenSea input[type='radio']:checked:hover + label:before,
-.elementGreenSea input[type='radio']:not(:checked):active + label:before,
-.elementGreenSea .helpButton:hover {
-	background: #149179;
+.themeMenuGreenSea #toggle:hover,
+.themeMenuGreenSea #menu > li > a:hover,
+.themeElementGreenSea input[type='submit']:hover,
+.themeElementGreenSea .button:hover,
+.themeElementGreenSea .pagination > a:hover,
+.themeElementGreenSea input[type='checkbox']:not(:active):checked:hover + label:before,
+.themeElementGreenSea input[type='checkbox']:active + label:before,
+.themeElementGreenSea input[type='radio']:checked:hover + label:before,
+.themeElementGreenSea input[type='radio']:not(:checked):active + label:before,
+.themeElementGreenSea .helpButton:hover {
+	background-color: #149179;
 }
 
 /* Couleur très foncée */
-.menuGreenSea #toggle:active,
-.menuGreenSea #menu > li > a:active,
-.menuGreenSea #menu > li > a.current,
-.elementGreenSea input[type='submit']:active,
-.elementGreenSea .button:active,
-.elementGreenSea .pagination > a:active {
-	background: #12826C;
+.themeMenuGreenSea #toggle:active,
+.themeMenuGreenSea #menu > li > a:active,
+.themeMenuGreenSea #menu > li > a.current,
+.themeElementGreenSea input[type='submit']:active,
+.themeElementGreenSea .button:active,
+.themeElementGreenSea .pagination > a:active {
+	background-color: #12826C;
 }
 
 /*
@@ -154,55 +161,55 @@
  */
 
 /* Couleur normale */
-.backgroundEmerald,
-.menuEmerald #toggle,
-.menuEmerald #menu,
-.elementEmerald input[type='submit'],
-.elementEmerald .button,
-.elementEmerald .pagination > a,
-.elementEmerald input[type='checkbox']:checked + label:before,
-.elementEmerald input[type='radio']:checked + label:before,
-.elementEmerald .helpButton,
-.elementEmerald .helpContent,
-.headerEmerald #header {
-	background: #2ECC71;
+.themeBackgroundEmerald,
+.themeMenuEmerald #toggle,
+.themeMenuEmerald #menu,
+.themeElementEmerald input[type='submit'],
+.themeElementEmerald .button,
+.themeElementEmerald .pagination > a,
+.themeElementEmerald input[type='checkbox']:checked + label:before,
+.themeElementEmerald input[type='radio']:checked + label:before,
+.themeElementEmerald .helpButton,
+.themeElementEmerald .helpContent,
+.themeHeaderEmerald #header {
+	background-color: #2ECC71;
 }
-.elementEmerald h2,
-.elementEmerald h4,
-.elementEmerald h6,
-.elementEmerald a {
+.themeElementEmerald h2,
+.themeElementEmerald h4,
+.themeElementEmerald h6,
+.themeElementEmerald a {
 	color: #2ECC71;
 }
-.elementEmerald input[type='text']:hover,
-.elementEmerald input[type='password']:hover,
-.elementEmerald input[type='file']:hover,
-.elementEmerald select:hover,
-.elementEmerald textarea:hover {
+.themeElementEmerald input[type='text']:hover,
+.themeElementEmerald input[type='password']:hover,
+.themeElementEmerald input[type='file']:hover,
+.themeElementEmerald select:hover,
+.themeElementEmerald textarea:hover {
 	border: 1px solid #2ECC71;
 }
 
 /* Couleur foncée */
-.menuEmerald #toggle:hover,
-.menuEmerald #menu > li > a:hover,
-.elementEmerald input[type='submit']:hover,
-.elementEmerald .button:hover,
-.elementEmerald .pagination > a:hover,
-.elementEmerald input[type='checkbox']:not(:active):checked:hover + label:before,
-.elementEmerald input[type='checkbox']:active + label:before,
-.elementEmerald input[type='radio']:checked:hover + label:before,
-.elementEmerald input[type='radio']:not(:checked):active + label:before,
-.elementEmerald .helpButton:hover {
-	background: #2BBE69;
+.themeMenuEmerald #toggle:hover,
+.themeMenuEmerald #menu > li > a:hover,
+.themeElementEmerald input[type='submit']:hover,
+.themeElementEmerald .button:hover,
+.themeElementEmerald .pagination > a:hover,
+.themeElementEmerald input[type='checkbox']:not(:active):checked:hover + label:before,
+.themeElementEmerald input[type='checkbox']:active + label:before,
+.themeElementEmerald input[type='radio']:checked:hover + label:before,
+.themeElementEmerald input[type='radio']:not(:checked):active + label:before,
+.themeElementEmerald .helpButton:hover {
+	background-color: #2BBE69;
 }
 
 /* Couleur très foncée */
-.menuEmerald #toggle:active,
-.menuEmerald #menu > li > a:active,
-.menuEmerald #menu > li > a.current,
-.elementEmerald input[type='submit']:active,
-.elementEmerald .button:active,
-.elementEmerald .pagination > a:active {
-	background: #28B062;
+.themeMenuEmerald #toggle:active,
+.themeMenuEmerald #menu > li > a:active,
+.themeMenuEmerald #menu > li > a.current,
+.themeElementEmerald input[type='submit']:active,
+.themeElementEmerald .button:active,
+.themeElementEmerald .pagination > a:active {
+	background-color: #28B062;
 }
 
 /*
@@ -210,55 +217,55 @@
  */
 
 /* Couleur normale */
-.backgroundNephritis,
-.menuNephritis #toggle,
-.menuNephritis #menu,
-.elementNephritis input[type='submit'],
-.elementNephritis .button,
-.elementNephritis .pagination > a,
-.elementNephritis input[type='checkbox']:checked + label:before,
-.elementNephritis input[type='radio']:checked + label:before,
-.elementNephritis .helpButton,
-.elementNephritis .helpContent,
-.headerNephritis #header {
-	background: #27AE60;
+.themeBackgroundNephritis,
+.themeMenuNephritis #toggle,
+.themeMenuNephritis #menu,
+.themeElementNephritis input[type='submit'],
+.themeElementNephritis .button,
+.themeElementNephritis .pagination > a,
+.themeElementNephritis input[type='checkbox']:checked + label:before,
+.themeElementNephritis input[type='radio']:checked + label:before,
+.themeElementNephritis .helpButton,
+.themeElementNephritis .helpContent,
+.themeHeaderNephritis #header {
+	background-color: #27AE60;
 }
-.elementNephritis h2,
-.elementNephritis h4,
-.elementNephritis h6,
-.elementNephritis a {
+.themeElementNephritis h2,
+.themeElementNephritis h4,
+.themeElementNephritis h6,
+.themeElementNephritis a {
 	color: #27AE60;
 }
-.elementNephritis input[type='text']:hover,
-.elementNephritis input[type='password']:hover,
-.elementNephritis input[type='file']:hover,
-.elementNephritis select:hover,
-.elementNephritis textarea:hover {
+.themeElementNephritis input[type='text']:hover,
+.themeElementNephritis input[type='password']:hover,
+.themeElementNephritis input[type='file']:hover,
+.themeElementNephritis select:hover,
+.themeElementNephritis textarea:hover {
 	border: 1px solid #27AE60;
 }
 
 /* Couleur foncée */
-.menuNephritis #toggle:hover,
-.menuNephritis #menu > li > a:hover,
-.elementNephritis input[type='submit']:hover,
-.elementNephritis .button:hover,
-.elementNephritis .pagination > a:hover,
-.elementNephritis input[type='checkbox']:not(:active):checked:hover + label:before,
-.elementNephritis input[type='checkbox']:active + label:before,
-.elementNephritis input[type='radio']:checked:hover + label:before,
-.elementNephritis input[type='radio']:not(:checked):active + label:before,
-.elementNephritis .helpButton:hover {
-	background: #24A058;
+.themeMenuNephritis #toggle:hover,
+.themeMenuNephritis #menu > li > a:hover,
+.themeElementNephritis input[type='submit']:hover,
+.themeElementNephritis .button:hover,
+.themeElementNephritis .pagination > a:hover,
+.themeElementNephritis input[type='checkbox']:not(:active):checked:hover + label:before,
+.themeElementNephritis input[type='checkbox']:active + label:before,
+.themeElementNephritis input[type='radio']:checked:hover + label:before,
+.themeElementNephritis input[type='radio']:not(:checked):active + label:before,
+.themeElementNephritis .helpButton:hover {
+	background-color: #24A058;
 }
 
 /* Couleur très foncée */
-.menuNephritis #toggle:active,
-.menuNephritis #menu > li > a:active,
-.menuNephritis #menu > li > a.current,
-.elementNephritis input[type='submit']:active,
-.elementNephritis .button:active,
-.elementNephritis .pagination > a:active {
-	background: #219251;
+.themeMenuNephritis #toggle:active,
+.themeMenuNephritis #menu > li > a:active,
+.themeMenuNephritis #menu > li > a.current,
+.themeElementNephritis input[type='submit']:active,
+.themeElementNephritis .button:active,
+.themeElementNephritis .pagination > a:active {
+	background-color: #219251;
 }
 
 /*
@@ -266,55 +273,55 @@
  */
 
 /* Couleur normale */
-.backgroundPeterRiver,
-.menuPeterRiver #toggle,
-.menuPeterRiver #menu,
-.elementPeterRiver input[type='submit'],
-.elementPeterRiver .button,
-.elementPeterRiver .pagination > a,
-.elementPeterRiver input[type='checkbox']:checked + label:before,
-.elementPeterRiver input[type='radio']:checked + label:before,
-.elementPeterRiver .helpButton,
-.elementPeterRiver .helpContent,
-.headerPeterRiver #header {
-	background: #3498DB;
+.themeBackgroundPeterRiver,
+.themeMenuPeterRiver #toggle,
+.themeMenuPeterRiver #menu,
+.themeElementPeterRiver input[type='submit'],
+.themeElementPeterRiver .button,
+.themeElementPeterRiver .pagination > a,
+.themeElementPeterRiver input[type='checkbox']:checked + label:before,
+.themeElementPeterRiver input[type='radio']:checked + label:before,
+.themeElementPeterRiver .helpButton,
+.themeElementPeterRiver .helpContent,
+.themeHeaderPeterRiver #header {
+	background-color: #3498DB;
 }
-.elementPeterRiver h2,
-.elementPeterRiver h4,
-.elementPeterRiver h6,
-.elementPeterRiver a {
+.themeElementPeterRiver h2,
+.themeElementPeterRiver h4,
+.themeElementPeterRiver h6,
+.themeElementPeterRiver a {
 	color: #3498DB;
 }
-.elementPeterRiver input[type='text']:hover,
-.elementPeterRiver input[type='password']:hover,
-.elementPeterRiver input[type='file']:hover,
-.elementPeterRiver select:hover,
-.elementPeterRiver textarea:hover {
+.themeElementPeterRiver input[type='text']:hover,
+.themeElementPeterRiver input[type='password']:hover,
+.themeElementPeterRiver input[type='file']:hover,
+.themeElementPeterRiver select:hover,
+.themeElementPeterRiver textarea:hover {
 	border: 1px solid #3498DB;
 }
 
 /* Couleur foncée */
-.menuPeterRiver #toggle:hover,
-.menuPeterRiver #menu > li > a:hover,
-.elementPeterRiver input[type='submit']:hover,
-.elementPeterRiver .button:hover,
-.elementPeterRiver .pagination > a:hover,
-.elementPeterRiver input[type='checkbox']:not(:active):checked:hover + label:before,
-.elementPeterRiver input[type='checkbox']:active + label:before,
-.elementPeterRiver input[type='radio']:checked:hover + label:before,
-.elementPeterRiver input[type='radio']:not(:checked):active + label:before,
-.elementPeterRiver .helpButton:hover {
-	background: #2691D8;
+.themeMenuPeterRiver #toggle:hover,
+.themeMenuPeterRiver #menu > li > a:hover,
+.themeElementPeterRiver input[type='submit']:hover,
+.themeElementPeterRiver .button:hover,
+.themeElementPeterRiver .pagination > a:hover,
+.themeElementPeterRiver input[type='checkbox']:not(:active):checked:hover + label:before,
+.themeElementPeterRiver input[type='checkbox']:active + label:before,
+.themeElementPeterRiver input[type='radio']:checked:hover + label:before,
+.themeElementPeterRiver input[type='radio']:not(:checked):active + label:before,
+.themeElementPeterRiver .helpButton:hover {
+	background-color: #2691D8;
 }
 
 /* Couleur très foncée */
-.menuPeterRiver #toggle:active,
-.menuPeterRiver #menu > li > a:active,
-.menuPeterRiver #menu > li > a.current,
-.elementPeterRiver input[type='submit']:active,
-.elementPeterRiver .button:active,
-.elementPeterRiver .pagination > a:active {
-	background: #2487C9;
+.themeMenuPeterRiver #toggle:active,
+.themeMenuPeterRiver #menu > li > a:active,
+.themeMenuPeterRiver #menu > li > a.current,
+.themeElementPeterRiver input[type='submit']:active,
+.themeElementPeterRiver .button:active,
+.themeElementPeterRiver .pagination > a:active {
+	background-color: #2487C9;
 }
 
 /*
@@ -322,55 +329,55 @@
  */
 
 /* Couleur normale */
-.backgroundBelizeHole,
-.menuBelizeHole #toggle,
-.menuBelizeHole #menu,
-.elementBelizeHole input[type='submit'],
-.elementBelizeHole .button,
-.elementBelizeHole .pagination > a,
-.elementBelizeHole input[type='checkbox']:checked + label:before,
-.elementBelizeHole input[type='radio']:checked + label:before,
-.elementBelizeHole .helpButton,
-.elementBelizeHole .helpContent,
-.headerBelizeHole #header {
-	background: #2980B9;
+.themeBackgroundBelizeHole,
+.themeMenuBelizeHole #toggle,
+.themeMenuBelizeHole #menu,
+.themeElementBelizeHole input[type='submit'],
+.themeElementBelizeHole .button,
+.themeElementBelizeHole .pagination > a,
+.themeElementBelizeHole input[type='checkbox']:checked + label:before,
+.themeElementBelizeHole input[type='radio']:checked + label:before,
+.themeElementBelizeHole .helpButton,
+.themeElementBelizeHole .helpContent,
+.themeHeaderBelizeHole #header {
+	background-color: #2980B9;
 }
-.elementBelizeHole h2,
-.elementBelizeHole h4,
-.elementBelizeHole h6,
-.elementBelizeHole a {
+.themeElementBelizeHole h2,
+.themeElementBelizeHole h4,
+.themeElementBelizeHole h6,
+.themeElementBelizeHole a {
 	color: #2980B9;
 }
-.elementBelizeHole input[type='text']:hover,
-.elementBelizeHole input[type='password']:hover,
-.elementBelizeHole input[type='file']:hover,
-.elementBelizeHole select:hover,
-.elementBelizeHole textarea:hover {
+.themeElementBelizeHole input[type='text']:hover,
+.themeElementBelizeHole input[type='password']:hover,
+.themeElementBelizeHole input[type='file']:hover,
+.themeElementBelizeHole select:hover,
+.themeElementBelizeHole textarea:hover {
 	border: 1px solid #2980B9;
 }
 
 /* Couleur foncée */
-.menuBelizeHole #toggle:hover,
-.menuBelizeHole #menu > li > a:hover,
-.elementBelizeHole input[type='submit']:hover,
-.elementBelizeHole .button:hover,
-.elementBelizeHole .pagination > a:hover,
-.elementBelizeHole input[type='checkbox']:not(:active):checked:hover + label:before,
-.elementBelizeHole input[type='checkbox']:active + label:before,
-.elementBelizeHole input[type='radio']:checked:hover + label:before,
-.elementBelizeHole input[type='radio']:not(:checked):active + label:before,
-.elementBelizeHole .helpButton:hover {
-	background: #2676AB;
+.themeMenuBelizeHole #toggle:hover,
+.themeMenuBelizeHole #menu > li > a:hover,
+.themeElementBelizeHole input[type='submit']:hover,
+.themeElementBelizeHole .button:hover,
+.themeElementBelizeHole .pagination > a:hover,
+.themeElementBelizeHole input[type='checkbox']:not(:active):checked:hover + label:before,
+.themeElementBelizeHole input[type='checkbox']:active + label:before,
+.themeElementBelizeHole input[type='radio']:checked:hover + label:before,
+.themeElementBelizeHole input[type='radio']:not(:checked):active + label:before,
+.themeElementBelizeHole .helpButton:hover {
+	background-color: #2676AB;
 }
 
 /* Couleur très foncée */
-.menuBelizeHole #toggle:active,
-.menuBelizeHole #menu > li > a:active,
-.menuBelizeHole #menu > li > a.current,
-.elementBelizeHole input[type='submit']:active,
-.elementBelizeHole .button:active,
-.elementBelizeHole .pagination > a:active {
-	background: #236D9D;
+.themeMenuBelizeHole #toggle:active,
+.themeMenuBelizeHole #menu > li > a:active,
+.themeMenuBelizeHole #menu > li > a.current,
+.themeElementBelizeHole input[type='submit']:active,
+.themeElementBelizeHole .button:active,
+.themeElementBelizeHole .pagination > a:active {
+	background-color: #236D9D;
 }
 
 /*
@@ -378,55 +385,55 @@
  */
 
 /* Couleur normale */
-.backgroundAmethyst,
-.menuAmethyst #toggle,
-.menuAmethyst #menu,
-.elementAmethyst input[type='submit'],
-.elementAmethyst .button,
-.elementAmethyst .pagination > a,
-.elementAmethyst input[type='checkbox']:checked + label:before,
-.elementAmethyst input[type='radio']:checked + label:before,
-.elementAmethyst .helpButton,
-.elementAmethyst .helpContent,
-.headerAmethyst #header {
-	background: #9B59B6;
+.themeBackgroundAmethyst,
+.themeMenuAmethyst #toggle,
+.themeMenuAmethyst #menu,
+.themeElementAmethyst input[type='submit'],
+.themeElementAmethyst .button,
+.themeElementAmethyst .pagination > a,
+.themeElementAmethyst input[type='checkbox']:checked + label:before,
+.themeElementAmethyst input[type='radio']:checked + label:before,
+.themeElementAmethyst .helpButton,
+.themeElementAmethyst .helpContent,
+.themeHeaderAmethyst #header {
+	background-color: #9B59B6;
 }
-.elementAmethyst h2,
-.elementAmethyst h4,
-.elementAmethyst h6,
-.elementAmethyst a {
+.themeElementAmethyst h2,
+.themeElementAmethyst h4,
+.themeElementAmethyst h6,
+.themeElementAmethyst a {
 	color: #9B59B6;
 }
-.elementAmethyst input[type='text']:hover,
-.elementAmethyst input[type='password']:hover,
-.elementAmethyst input[type='file']:hover,
-.elementAmethyst select:hover,
-.elementAmethyst textarea:hover {
+.themeElementAmethyst input[type='text']:hover,
+.themeElementAmethyst input[type='password']:hover,
+.themeElementAmethyst input[type='file']:hover,
+.themeElementAmethyst select:hover,
+.themeElementAmethyst textarea:hover {
 	border: 1px solid #9B59B6;
 }
 
 /* Couleur foncée */
-.menuAmethyst #toggle:hover,
-.menuAmethyst #menu > li > a:hover,
-.elementAmethyst input[type='submit']:hover,
-.elementAmethyst .button:hover,
-.elementAmethyst .pagination > a:hover,
-.elementAmethyst input[type='checkbox']:not(:active):checked:hover + label:before,
-.elementAmethyst input[type='checkbox']:active + label:before,
-.elementAmethyst input[type='radio']:checked:hover + label:before,
-.elementAmethyst input[type='radio']:not(:checked):active + label:before,
-.elementAmethyst .helpButton:hover {
-	background: #944EB0;
+.themeMenuAmethyst #toggle:hover,
+.themeMenuAmethyst #menu > li > a:hover,
+.themeElementAmethyst input[type='submit']:hover,
+.themeElementAmethyst .button:hover,
+.themeElementAmethyst .pagination > a:hover,
+.themeElementAmethyst input[type='checkbox']:not(:active):checked:hover + label:before,
+.themeElementAmethyst input[type='checkbox']:active + label:before,
+.themeElementAmethyst input[type='radio']:checked:hover + label:before,
+.themeElementAmethyst input[type='radio']:not(:checked):active + label:before,
+.themeElementAmethyst .helpButton:hover {
+	background-color: #944EB0;
 }
 
 /* Couleur très foncée */
-.menuAmethyst #toggle:active,
-.menuAmethyst #menu > li > a:active,
-.menuAmethyst #menu > li > a.current,
-.elementAmethyst input[type='submit']:active,
-.elementAmethyst .button:active,
-.elementAmethyst .pagination > a:active {
-	background: #8A48A5;
+.themeMenuAmethyst #toggle:active,
+.themeMenuAmethyst #menu > li > a:active,
+.themeMenuAmethyst #menu > li > a.current,
+.themeElementAmethyst input[type='submit']:active,
+.themeElementAmethyst .button:active,
+.themeElementAmethyst .pagination > a:active {
+	background-color: #8A48A5;
 }
 
 /*
@@ -434,55 +441,55 @@
  */
 
 /* Couleur normale */
-.backgroundWisteria,
-.menuWisteria #toggle,
-.menuWisteria #menu,
-.elementWisteria input[type='submit'],
-.elementWisteria .button,
-.elementWisteria .pagination > a,
-.elementWisteria input[type='checkbox']:checked + label:before,
-.elementWisteria input[type='radio']:checked + label:before,
-.elementWisteria .helpButton,
-.elementWisteria .helpContent,
-.headerWisteria #header {
-	background: #8E44AD;
+.themeBackgroundWisteria,
+.themeMenuWisteria #toggle,
+.themeMenuWisteria #menu,
+.themeElementWisteria input[type='submit'],
+.themeElementWisteria .button,
+.themeElementWisteria .pagination > a,
+.themeElementWisteria input[type='checkbox']:checked + label:before,
+.themeElementWisteria input[type='radio']:checked + label:before,
+.themeElementWisteria .helpButton,
+.themeElementWisteria .helpContent,
+.themeHeaderWisteria #header {
+	background-color: #8E44AD;
 }
-.elementWisteria h2,
-.elementWisteria h4,
-.elementWisteria h6,
-.elementWisteria a {
+.themeElementWisteria h2,
+.themeElementWisteria h4,
+.themeElementWisteria h6,
+.themeElementWisteria a {
 	color: #8E44AD;
 }
-.elementWisteria input[type='text']:hover,
-.elementWisteria input[type='password']:hover,
-.elementWisteria input[type='file']:hover,
-.elementWisteria select:hover,
-.elementWisteria textarea:hover {
+.themeElementWisteria input[type='text']:hover,
+.themeElementWisteria input[type='password']:hover,
+.themeElementWisteria input[type='file']:hover,
+.themeElementWisteria select:hover,
+.themeElementWisteria textarea:hover {
 	border: 1px solid #8E44AD;
 }
 
 /* Couleur foncée */
-.menuWisteria #toggle:hover,
-.menuWisteria #menu > li > a:hover,
-.elementWisteria input[type='submit']:hover,
-.elementWisteria .button:hover,
-.elementWisteria .pagination > a:hover,
-.elementWisteria input[type='checkbox']:not(:active):checked:hover + label:before,
-.elementWisteria input[type='checkbox']:active + label:before,
-.elementWisteria input[type='radio']:checked:hover + label:before,
-.elementWisteria input[type='radio']:not(:checked):active + label:before,
-.elementWisteria .helpButton:hover {
-	background: #843FA1;
+.themeMenuWisteria #toggle:hover,
+.themeMenuWisteria #menu > li > a:hover,
+.themeElementWisteria input[type='submit']:hover,
+.themeElementWisteria .button:hover,
+.themeElementWisteria .pagination > a:hover,
+.themeElementWisteria input[type='checkbox']:not(:active):checked:hover + label:before,
+.themeElementWisteria input[type='checkbox']:active + label:before,
+.themeElementWisteria input[type='radio']:checked:hover + label:before,
+.themeElementWisteria input[type='radio']:not(:checked):active + label:before,
+.themeElementWisteria .helpButton:hover {
+	background-color: #843FA1;
 }
 
 /* Couleur très foncée */
-.menuWisteria #toggle:active,
-.menuWisteria #menu > li > a:active,
-.menuWisteria #menu > li > a.current,
-.elementWisteria input[type='submit']:active,
-.elementWisteria .button:active,
-.elementWisteria .pagination > a:active {
-	background: #7A3A95;
+.themeMenuWisteria #toggle:active,
+.themeMenuWisteria #menu > li > a:active,
+.themeMenuWisteria #menu > li > a.current,
+.themeElementWisteria input[type='submit']:active,
+.themeElementWisteria .button:active,
+.themeElementWisteria .pagination > a:active {
+	background-color: #7A3A95;
 }
 
 /*
@@ -490,55 +497,55 @@
  */
 
 /* Couleur normale */
-.backgroundWetAsphalt,
-.menuWetAsphalt #toggle,
-.menuWetAsphalt #menu,
-.elementWetAsphalt input[type='submit'],
-.elementWetAsphalt .button,
-.elementWetAsphalt .pagination > a,
-.elementWetAsphalt input[type='checkbox']:checked + label:before,
-.elementWetAsphalt input[type='radio']:checked + label:before,
-.elementWetAsphalt .helpButton,
-.elementWetAsphalt .helpContent,
-.headerWetAsphalt #header {
-	background: #34495E;
+.themeBackgroundWetAsphalt,
+.themeMenuWetAsphalt #toggle,
+.themeMenuWetAsphalt #menu,
+.themeElementWetAsphalt input[type='submit'],
+.themeElementWetAsphalt .button,
+.themeElementWetAsphalt .pagination > a,
+.themeElementWetAsphalt input[type='checkbox']:checked + label:before,
+.themeElementWetAsphalt input[type='radio']:checked + label:before,
+.themeElementWetAsphalt .helpButton,
+.themeElementWetAsphalt .helpContent,
+.themeHeaderWetAsphalt #header {
+	background-color: #34495E;
 }
-.elementWetAsphalt h2,
-.elementWetAsphalt h4,
-.elementWetAsphalt h6,
-.elementWetAsphalt a {
+.themeElementWetAsphalt h2,
+.themeElementWetAsphalt h4,
+.themeElementWetAsphalt h6,
+.themeElementWetAsphalt a {
 	color: #34495E;
 }
-.elementWetAsphalt input[type='text']:hover,
-.elementWetAsphalt input[type='password']:hover,
-.elementWetAsphalt input[type='file']:hover,
-.elementWetAsphalt select:hover,
-.elementWetAsphalt textarea:hover {
+.themeElementWetAsphalt input[type='text']:hover,
+.themeElementWetAsphalt input[type='password']:hover,
+.themeElementWetAsphalt input[type='file']:hover,
+.themeElementWetAsphalt select:hover,
+.themeElementWetAsphalt textarea:hover {
 	border: 1px solid #34495E;
 }
 
 /* Couleur foncée */
-.menuWetAsphalt #toggle:hover,
-.menuWetAsphalt #menu > li > a:hover,
-.elementWetAsphalt input[type='submit']:hover,
-.elementWetAsphalt .button:hover,
-.elementWetAsphalt .pagination > a:hover,
-.elementWetAsphalt input[type='checkbox']:not(:active):checked:hover + label:before,
-.elementWetAsphalt input[type='checkbox']:active + label:before,
-.elementWetAsphalt input[type='radio']:checked:hover + label:before,
-.elementWetAsphalt input[type='radio']:not(:checked):active + label:before,
-.elementWetAsphalt .helpButton:hover {
-	background: #2E4153;
+.themeMenuWetAsphalt #toggle:hover,
+.themeMenuWetAsphalt #menu > li > a:hover,
+.themeElementWetAsphalt input[type='submit']:hover,
+.themeElementWetAsphalt .button:hover,
+.themeElementWetAsphalt .pagination > a:hover,
+.themeElementWetAsphalt input[type='checkbox']:not(:active):checked:hover + label:before,
+.themeElementWetAsphalt input[type='checkbox']:active + label:before,
+.themeElementWetAsphalt input[type='radio']:checked:hover + label:before,
+.themeElementWetAsphalt input[type='radio']:not(:checked):active + label:before,
+.themeElementWetAsphalt .helpButton:hover {
+	background-color: #2E4153;
 }
 
 /* Couleur très foncée */
-.menuWetAsphalt #toggle:active,
-.menuWetAsphalt #menu > li > a:active,
-.menuWetAsphalt #menu > li > a.current,
-.elementWetAsphalt input[type='submit']:active,
-.elementWetAsphalt .button:active,
-.elementWetAsphalt .pagination > a:active {
-	background: #283848;
+.themeMenuWetAsphalt #toggle:active,
+.themeMenuWetAsphalt #menu > li > a:active,
+.themeMenuWetAsphalt #menu > li > a.current,
+.themeElementWetAsphalt input[type='submit']:active,
+.themeElementWetAsphalt .button:active,
+.themeElementWetAsphalt .pagination > a:active {
+	background-color: #283848;
 }
 
 /*
@@ -546,55 +553,55 @@
  */
 
 /* Couleur normale */
-.backgroundMidnightBlue,
-.menuMidnightBlue #toggle,
-.menuMidnightBlue #menu,
-.elementMidnightBlue input[type='submit'],
-.elementMidnightBlue .button,
-.elementMidnightBlue .pagination > a,
-.elementMidnightBlue input[type='checkbox']:checked + label:before,
-.elementMidnightBlue input[type='radio']:checked + label:before,
-.elementMidnightBlue .helpButton,
-.elementMidnightBlue .helpContent,
-.headerMidnightBlue #header {
-	background: #2C3E50;
+.themeBackgroundMidnightBlue,
+.themeMenuMidnightBlue #toggle,
+.themeMenuMidnightBlue #menu,
+.themeElementMidnightBlue input[type='submit'],
+.themeElementMidnightBlue .button,
+.themeElementMidnightBlue .pagination > a,
+.themeElementMidnightBlue input[type='checkbox']:checked + label:before,
+.themeElementMidnightBlue input[type='radio']:checked + label:before,
+.themeElementMidnightBlue .helpButton,
+.themeElementMidnightBlue .helpContent,
+.themeHeaderMidnightBlue #header {
+	background-color: #2C3E50;
 }
-.elementMidnightBlue h2,
-.elementMidnightBlue h4,
-.elementMidnightBlue h6,
-.elementMidnightBlue a {
+.themeElementMidnightBlue h2,
+.themeElementMidnightBlue h4,
+.themeElementMidnightBlue h6,
+.themeElementMidnightBlue a {
 	color: #2C3E50;
 }
-.elementMidnightBlue input[type='text']:hover,
-.elementMidnightBlue input[type='password']:hover,
-.elementMidnightBlue input[type='file']:hover,
-.elementMidnightBlue select:hover,
-.elementMidnightBlue textarea:hover {
+.themeElementMidnightBlue input[type='text']:hover,
+.themeElementMidnightBlue input[type='password']:hover,
+.themeElementMidnightBlue input[type='file']:hover,
+.themeElementMidnightBlue select:hover,
+.themeElementMidnightBlue textarea:hover {
 	border: 1px solid #2C3E50;
 }
 
 /* Couleur foncée */
-.menuMidnightBlue #toggle:hover,
-.menuMidnightBlue #menu > li > a:hover,
-.elementMidnightBlue input[type='submit']:hover,
-.elementMidnightBlue .button:hover,
-.elementMidnightBlue .pagination > a:hover,
-.elementMidnightBlue input[type='checkbox']:not(:active):checked:hover + label:before,
-.elementMidnightBlue input[type='checkbox']:active + label:before,
-.elementMidnightBlue input[type='radio']:checked:hover + label:before,
-.elementMidnightBlue input[type='radio']:not(:checked):active + label:before,
-.elementMidnightBlue .helpButton:hover {
-	background: #263645;
+.themeMenuMidnightBlue #toggle:hover,
+.themeMenuMidnightBlue #menu > li > a:hover,
+.themeElementMidnightBlue input[type='submit']:hover,
+.themeElementMidnightBlue .button:hover,
+.themeElementMidnightBlue .pagination > a:hover,
+.themeElementMidnightBlue input[type='checkbox']:not(:active):checked:hover + label:before,
+.themeElementMidnightBlue input[type='checkbox']:active + label:before,
+.themeElementMidnightBlue input[type='radio']:checked:hover + label:before,
+.themeElementMidnightBlue input[type='radio']:not(:checked):active + label:before,
+.themeElementMidnightBlue .helpButton:hover {
+	background-color: #263645;
 }
 
 /* Couleur très foncée */
-.menuMidnightBlue #toggle:active,
-.menuMidnightBlue #menu > li > a:active,
-.menuMidnightBlue #menu > li > a.current,
-.elementMidnightBlue input[type='submit']:active,
-.elementMidnightBlue .button:active,
-.elementMidnightBlue .pagination > a:active {
-	background: #202D3A;
+.themeMenuMidnightBlue #toggle:active,
+.themeMenuMidnightBlue #menu > li > a:active,
+.themeMenuMidnightBlue #menu > li > a.current,
+.themeElementMidnightBlue input[type='submit']:active,
+.themeElementMidnightBlue .button:active,
+.themeElementMidnightBlue .pagination > a:active {
+	background-color: #202D3A;
 }
 
 /*
@@ -602,55 +609,55 @@
  */
 
 /* Couleur normale */
-.backgroundSunFlower,
-.menuSunFlower #toggle,
-.menuSunFlower #menu,
-.elementSunFlower input[type='submit'],
-.elementSunFlower .button,
-.elementSunFlower .pagination > a,
-.elementSunFlower input[type='checkbox']:checked + label:before,
-.elementSunFlower input[type='radio']:checked + label:before,
-.elementSunFlower .helpButton,
-.elementSunFlower .helpContent,
-.headerSunFlower #header {
-	background: #F1C40F;
+.themeBackgroundSunFlower,
+.themeMenuSunFlower #toggle,
+.themeMenuSunFlower #menu,
+.themeElementSunFlower input[type='submit'],
+.themeElementSunFlower .button,
+.themeElementSunFlower .pagination > a,
+.themeElementSunFlower input[type='checkbox']:checked + label:before,
+.themeElementSunFlower input[type='radio']:checked + label:before,
+.themeElementSunFlower .helpButton,
+.themeElementSunFlower .helpContent,
+.themeHeaderSunFlower #header {
+	background-color: #F1C40F;
 }
-.elementSunFlower h2,
-.elementSunFlower h4,
-.elementSunFlower h6,
-.elementSunFlower a {
+.themeElementSunFlower h2,
+.themeElementSunFlower h4,
+.themeElementSunFlower h6,
+.themeElementSunFlower a {
 	color: #F1C40F;
 }
-.elementSunFlower input[type='text']:hover,
-.elementSunFlower input[type='password']:hover,
-.elementSunFlower input[type='file']:hover,
-.elementSunFlower select:hover,
-.elementSunFlower textarea:hover {
+.themeElementSunFlower input[type='text']:hover,
+.themeElementSunFlower input[type='password']:hover,
+.themeElementSunFlower input[type='file']:hover,
+.themeElementSunFlower select:hover,
+.themeElementSunFlower textarea:hover {
 	border: 1px solid #F1C40F;
 }
 
 /* Couleur foncée */
-.menuSunFlower #toggle:hover,
-.menuSunFlower #menu > li > a:hover,
-.elementSunFlower input[type='submit']:hover,
-.elementSunFlower .button:hover,
-.elementSunFlower .pagination > a:hover,
-.elementSunFlower input[type='checkbox']:not(:active):checked:hover + label:before,
-.elementSunFlower input[type='checkbox']:active + label:before,
-.elementSunFlower input[type='radio']:checked:hover + label:before,
-.elementSunFlower input[type='radio']:not(:checked):active + label:before,
-.elementSunFlower .helpButton:hover {
-	background: #E2B70D;
+.themeMenuSunFlower #toggle:hover,
+.themeMenuSunFlower #menu > li > a:hover,
+.themeElementSunFlower input[type='submit']:hover,
+.themeElementSunFlower .button:hover,
+.themeElementSunFlower .pagination > a:hover,
+.themeElementSunFlower input[type='checkbox']:not(:active):checked:hover + label:before,
+.themeElementSunFlower input[type='checkbox']:active + label:before,
+.themeElementSunFlower input[type='radio']:checked:hover + label:before,
+.themeElementSunFlower input[type='radio']:not(:checked):active + label:before,
+.themeElementSunFlower .helpButton:hover {
+	background-color: #E2B70D;
 }
 
 /* Couleur très foncée */
-.menuSunFlower #toggle:active,
-.menuSunFlower #menu > li > a:active,
-.menuSunFlower #menu > li > a.current,
-.elementSunFlower input[type='submit']:active,
-.elementSunFlower .button:active,
-.elementSunFlower .pagination > a:active {
-	background: #D2AA0C;
+.themeMenuSunFlower #toggle:active,
+.themeMenuSunFlower #menu > li > a:active,
+.themeMenuSunFlower #menu > li > a.current,
+.themeElementSunFlower input[type='submit']:active,
+.themeElementSunFlower .button:active,
+.themeElementSunFlower .pagination > a:active {
+	background-color: #D2AA0C;
 }
 
 /*
@@ -658,55 +665,55 @@
  */
 
 /* Couleur normale */
-.backgroundOrange,
-.menuOrange #toggle,
-.menuOrange #menu,
-.elementOrange input[type='submit'],
-.elementOrange .button,
-.elementOrange .pagination > a,
-.elementOrange input[type='checkbox']:checked + label:before,
-.elementOrange input[type='radio']:checked + label:before,
-.elementOrange .helpButton,
-.elementOrange .helpContent,
-.headerOrange #header {
-	background: #F39C12;
+.themeBackgroundOrange,
+.themeMenuOrange #toggle,
+.themeMenuOrange #menu,
+.themeElementOrange input[type='submit'],
+.themeElementOrange .button,
+.themeElementOrange .pagination > a,
+.themeElementOrange input[type='checkbox']:checked + label:before,
+.themeElementOrange input[type='radio']:checked + label:before,
+.themeElementOrange .helpButton,
+.themeElementOrange .helpContent,
+.themeHeaderOrange #header {
+	background-color: #F39C12;
 }
-.elementOrange h2,
-.elementOrange h4,
-.elementOrange h6,
-.elementOrange a {
+.themeElementOrange h2,
+.themeElementOrange h4,
+.themeElementOrange h6,
+.themeElementOrange a {
 	color: #F39C12;
 }
-.elementOrange input[type='text']:hover,
-.elementOrange input[type='password']:hover,
-.elementOrange input[type='file']:hover,
-.elementOrange select:hover,
-.elementOrange textarea:hover {
+.themeElementOrange input[type='text']:hover,
+.themeElementOrange input[type='password']:hover,
+.themeElementOrange input[type='file']:hover,
+.themeElementOrange select:hover,
+.themeElementOrange textarea:hover {
 	border: 1px solid #F39C12;
 }
 
 /* Couleur foncée */
-.menuOrange #toggle:hover,
-.menuOrange #menu > li > a:hover,
-.elementOrange input[type='submit']:hover,
-.elementOrange .button:hover,
-.elementOrange .pagination > a:hover,
-.elementOrange input[type='checkbox']:not(:active):checked:hover + label:before,
-.elementOrange input[type='checkbox']:active + label:before,
-.elementOrange input[type='radio']:checked:hover + label:before,
-.elementOrange input[type='radio']:not(:checked):active + label:before,
-.elementOrange .helpButton:hover {
-	background: #E8930C;
+.themeMenuOrange #toggle:hover,
+.themeMenuOrange #menu > li > a:hover,
+.themeElementOrange input[type='submit']:hover,
+.themeElementOrange .button:hover,
+.themeElementOrange .pagination > a:hover,
+.themeElementOrange input[type='checkbox']:not(:active):checked:hover + label:before,
+.themeElementOrange input[type='checkbox']:active + label:before,
+.themeElementOrange input[type='radio']:checked:hover + label:before,
+.themeElementOrange input[type='radio']:not(:checked):active + label:before,
+.themeElementOrange .helpButton:hover {
+	background-color: #E8930C;
 }
 
 /* Couleur très foncée */
-.menuOrange #toggle:active,
-.menuOrange #menu > li > a:active,
-.menuOrange #menu > li > a.current,
-.elementOrange input[type='submit']:active,
-.elementOrange .button:active,
-.elementOrange .pagination > a:active {
-	background: #D8890B;
+.themeMenuOrange #toggle:active,
+.themeMenuOrange #menu > li > a:active,
+.themeMenuOrange #menu > li > a.current,
+.themeElementOrange input[type='submit']:active,
+.themeElementOrange .button:active,
+.themeElementOrange .pagination > a:active {
+	background-color: #D8890B;
 }
 
 /*
@@ -714,55 +721,55 @@
  */
 
 /* Couleur normale */
-.backgroundCarrot,
-.menuCarrot #toggle,
-.menuCarrot #menu,
-.elementCarrot input[type='submit'],
-.elementCarrot .button,
-.elementCarrot .pagination > a,
-.elementCarrot input[type='checkbox']:checked + label:before,
-.elementCarrot input[type='radio']:checked + label:before,
-.elementCarrot .helpButton,
-.elementCarrot .helpContent,
-.headerCarrot #header {
-	background: #E67E22;
+.themeBackgroundCarrot,
+.themeMenuCarrot #toggle,
+.themeMenuCarrot #menu,
+.themeElementCarrot input[type='submit'],
+.themeElementCarrot .button,
+.themeElementCarrot .pagination > a,
+.themeElementCarrot input[type='checkbox']:checked + label:before,
+.themeElementCarrot input[type='radio']:checked + label:before,
+.themeElementCarrot .helpButton,
+.themeElementCarrot .helpContent,
+.themeHeaderCarrot #header {
+	background-color: #E67E22;
 }
-.elementCarrot h2,
-.elementCarrot h4,
-.elementCarrot h6,
-.elementCarrot a {
+.themeElementCarrot h2,
+.themeElementCarrot h4,
+.themeElementCarrot h6,
+.themeElementCarrot a {
 	color: #E67E22;
 }
-.elementCarrot input[type='text']:hover,
-.elementCarrot input[type='password']:hover,
-.elementCarrot input[type='file']:hover,
-.elementCarrot select:hover,
-.elementCarrot textarea:hover {
+.themeElementCarrot input[type='text']:hover,
+.themeElementCarrot input[type='password']:hover,
+.themeElementCarrot input[type='file']:hover,
+.themeElementCarrot select:hover,
+.themeElementCarrot textarea:hover {
 	border: 1px solid #E67E22;
 }
 
 /* Couleur foncée */
-.menuCarrot #toggle:hover,
-.menuCarrot #menu > li > a:hover,
-.elementCarrot input[type='submit']:hover,
-.elementCarrot .button:hover,
-.elementCarrot .pagination > a:hover,
-.elementCarrot input[type='checkbox']:not(:active):checked:hover + label:before,
-.elementCarrot input[type='checkbox']:active + label:before,
-.elementCarrot input[type='radio']:checked:hover + label:before,
-.elementCarrot input[type='radio']:not(:checked):active + label:before,
-.elementCarrot .helpButton:hover {
-	background: #DE7519;
+.themeMenuCarrot #toggle:hover,
+.themeMenuCarrot #menu > li > a:hover,
+.themeElementCarrot input[type='submit']:hover,
+.themeElementCarrot .button:hover,
+.themeElementCarrot .pagination > a:hover,
+.themeElementCarrot input[type='checkbox']:not(:active):checked:hover + label:before,
+.themeElementCarrot input[type='checkbox']:active + label:before,
+.themeElementCarrot input[type='radio']:checked:hover + label:before,
+.themeElementCarrot input[type='radio']:not(:checked):active + label:before,
+.themeElementCarrot .helpButton:hover {
+	background-color: #DE7519;
 }
 
 /* Couleur très foncée */
-.menuCarrot #toggle:active,
-.menuCarrot #menu > li > a:active,
-.menuCarrot #menu > li > a.current,
-.elementCarrot input[type='submit']:active,
-.elementCarrot .button:active,
-.elementCarrot .pagination > a:active {
-	background: #CF6D17;
+.themeMenuCarrot #toggle:active,
+.themeMenuCarrot #menu > li > a:active,
+.themeMenuCarrot #menu > li > a.current,
+.themeElementCarrot input[type='submit']:active,
+.themeElementCarrot .button:active,
+.themeElementCarrot .pagination > a:active {
+	background-color: #CF6D17;
 }
 
 /*
@@ -770,55 +777,55 @@
  */
 
 /* Couleur normale */
-.backgroundPumpkin,
-.menuPumpkin #toggle,
-.menuPumpkin #menu,
-.elementPumpkin input[type='submit'],
-.elementPumpkin .button,
-.elementPumpkin .pagination > a,
-.elementPumpkin input[type='checkbox']:checked + label:before,
-.elementPumpkin input[type='radio']:checked + label:before,
-.elementPumpkin .helpButton,
-.elementPumpkin .helpContent,
-.headerPumpkin #header {
-	background: #D35400;
+.themeBackgroundPumpkin,
+.themeMenuPumpkin #toggle,
+.themeMenuPumpkin #menu,
+.themeElementPumpkin input[type='submit'],
+.themeElementPumpkin .button,
+.themeElementPumpkin .pagination > a,
+.themeElementPumpkin input[type='checkbox']:checked + label:before,
+.themeElementPumpkin input[type='radio']:checked + label:before,
+.themeElementPumpkin .helpButton,
+.themeElementPumpkin .helpContent,
+.themeHeaderPumpkin #header {
+	background-color: #D35400;
 }
-.elementPumpkin h2,
-.elementPumpkin h4,
-.elementPumpkin h6,
-.elementPumpkin a {
+.themeElementPumpkin h2,
+.themeElementPumpkin h4,
+.themeElementPumpkin h6,
+.themeElementPumpkin a {
 	color: #D35400;
 }
-.elementPumpkin input[type='text']:hover,
-.elementPumpkin input[type='password']:hover,
-.elementPumpkin input[type='file']:hover,
-.elementPumpkin select:hover,
-.elementPumpkin textarea:hover {
+.themeElementPumpkin input[type='text']:hover,
+.themeElementPumpkin input[type='password']:hover,
+.themeElementPumpkin input[type='file']:hover,
+.themeElementPumpkin select:hover,
+.themeElementPumpkin textarea:hover {
 	border: 1px solid #D35400;
 }
 
 /* Couleur foncée */
-.menuPumpkin #toggle:hover,
-.menuPumpkin #menu > li > a:hover,
-.elementPumpkin input[type='submit']:hover,
-.elementPumpkin .button:hover,
-.elementPumpkin .pagination > a:hover,
-.elementPumpkin input[type='checkbox']:not(:active):checked:hover + label:before,
-.elementPumpkin input[type='checkbox']:active + label:before,
-.elementPumpkin input[type='radio']:checked:hover + label:before,
-.elementPumpkin input[type='radio']:not(:checked):active + label:before,
-.elementPumpkin .helpButton:hover {
-	background: #C24D00;
+.themeMenuPumpkin #toggle:hover,
+.themeMenuPumpkin #menu > li > a:hover,
+.themeElementPumpkin input[type='submit']:hover,
+.themeElementPumpkin .button:hover,
+.themeElementPumpkin .pagination > a:hover,
+.themeElementPumpkin input[type='checkbox']:not(:active):checked:hover + label:before,
+.themeElementPumpkin input[type='checkbox']:active + label:before,
+.themeElementPumpkin input[type='radio']:checked:hover + label:before,
+.themeElementPumpkin input[type='radio']:not(:checked):active + label:before,
+.themeElementPumpkin .helpButton:hover {
+	background-color: #C24D00;
 }
 
 /* Couleur très foncée */
-.menuPumpkin #toggle:active,
-.menuPumpkin #menu > li > a:active,
-.menuPumpkin #menu > li > a.current,
-.elementPumpkin input[type='submit']:active,
-.elementPumpkin .button:active,
-.elementPumpkin .pagination > a:active {
-	background: #B14600;
+.themeMenuPumpkin #toggle:active,
+.themeMenuPumpkin #menu > li > a:active,
+.themeMenuPumpkin #menu > li > a.current,
+.themeElementPumpkin input[type='submit']:active,
+.themeElementPumpkin .button:active,
+.themeElementPumpkin .pagination > a:active {
+	background-color: #B14600;
 }
 
 /*
@@ -826,55 +833,55 @@
  */
 
 /* Couleur normale */
-.backgroundAlizarin,
-.menuAlizarin #toggle,
-.menuAlizarin #menu,
-.elementAlizarin input[type='submit'],
-.elementAlizarin .button,
-.elementAlizarin .pagination > a,
-.elementAlizarin input[type='checkbox']:checked + label:before,
-.elementAlizarin input[type='radio']:checked + label:before,
-.elementAlizarin .helpButton,
-.elementAlizarin .helpContent,
-.headerAlizarin #header {
-	background: #E74C3C;
+.themeBackgroundAlizarin,
+.themeMenuAlizarin #toggle,
+.themeMenuAlizarin #menu,
+.themeElementAlizarin input[type='submit'],
+.themeElementAlizarin .button,
+.themeElementAlizarin .pagination > a,
+.themeElementAlizarin input[type='checkbox']:checked + label:before,
+.themeElementAlizarin input[type='radio']:checked + label:before,
+.themeElementAlizarin .helpButton,
+.themeElementAlizarin .helpContent,
+.themeHeaderAlizarin #header {
+	background-color: #E74C3C;
 }
-.elementAlizarin h2,
-.elementAlizarin h4,
-.elementAlizarin h6,
-.elementAlizarin a {
+.themeElementAlizarin h2,
+.themeElementAlizarin h4,
+.themeElementAlizarin h6,
+.themeElementAlizarin a {
 	color: #E74C3C;
 }
-.elementAlizarin input[type='text']:hover,
-.elementAlizarin input[type='password']:hover,
-.elementAlizarin input[type='file']:hover,
-.elementAlizarin select:hover,
-.elementAlizarin textarea:hover {
+.themeElementAlizarin input[type='text']:hover,
+.themeElementAlizarin input[type='password']:hover,
+.themeElementAlizarin input[type='file']:hover,
+.themeElementAlizarin select:hover,
+.themeElementAlizarin textarea:hover {
 	border: 1px solid #E74C3C;
 }
 
 /* Couleur foncée */
-.menuAlizarin #toggle:hover,
-.menuAlizarin #menu > li > a:hover,
-.elementAlizarin input[type='submit']:hover,
-.elementAlizarin .button:hover,
-.elementAlizarin .pagination > a:hover,
-.elementAlizarin input[type='checkbox']:not(:active):checked:hover + label:before,
-.elementAlizarin input[type='checkbox']:active + label:before,
-.elementAlizarin input[type='radio']:checked:hover + label:before,
-.elementAlizarin input[type='radio']:not(:checked):active + label:before,
-.elementAlizarin .helpButton:hover {
-	background: #E53E2D;
+.themeMenuAlizarin #toggle:hover,
+.themeMenuAlizarin #menu > li > a:hover,
+.themeElementAlizarin input[type='submit']:hover,
+.themeElementAlizarin .button:hover,
+.themeElementAlizarin .pagination > a:hover,
+.themeElementAlizarin input[type='checkbox']:not(:active):checked:hover + label:before,
+.themeElementAlizarin input[type='checkbox']:active + label:before,
+.themeElementAlizarin input[type='radio']:checked:hover + label:before,
+.themeElementAlizarin input[type='radio']:not(:checked):active + label:before,
+.themeElementAlizarin .helpButton:hover {
+	background-color: #E53E2D;
 }
 
 /* Couleur très foncée */
-.menuAlizarin #toggle:active,
-.menuAlizarin #menu > li > a:active,
-.menuAlizarin #menu > li > a.current,
-.elementAlizarin input[type='submit']:active,
-.elementAlizarin .button:active,
-.elementAlizarin .pagination > a:active {
-	background: #E3301E;
+.themeMenuAlizarin #toggle:active,
+.themeMenuAlizarin #menu > li > a:active,
+.themeMenuAlizarin #menu > li > a.current,
+.themeElementAlizarin input[type='submit']:active,
+.themeElementAlizarin .button:active,
+.themeElementAlizarin .pagination > a:active {
+	background-color: #E3301E;
 }
 
 /*
@@ -882,63 +889,63 @@
  */
 
 /* Couleur normale */
-.backgroundPomegranate,
-.menuPomegranate #toggle,
-.menuPomegranate #menu,
-.elementPomegranate input[type='submit'],
-.elementPomegranate .button,
-.elementPomegranate .pagination > a,
-.elementPomegranate input[type='checkbox']:checked + label:before,
-.elementPomegranate input[type='radio']:checked + label:before,
-.elementPomegranate .helpButton,
-.elementPomegranate .helpContent,
-.headerPomegranate #header {
-	background: #C0392B;
+.themeBackgroundPomegranate,
+.themeMenuPomegranate #toggle,
+.themeMenuPomegranate #menu,
+.themeElementPomegranate input[type='submit'],
+.themeElementPomegranate .button,
+.themeElementPomegranate .pagination > a,
+.themeElementPomegranate input[type='checkbox']:checked + label:before,
+.themeElementPomegranate input[type='radio']:checked + label:before,
+.themeElementPomegranate .helpButton,
+.themeElementPomegranate .helpContent,
+.themeHeaderPomegranate #header {
+	background-color: #C0392B;
 }
-.elementPomegranate h2,
-.elementPomegranate h4,
-.elementPomegranate h6,
-.elementPomegranate a {
+.themeElementPomegranate h2,
+.themeElementPomegranate h4,
+.themeElementPomegranate h6,
+.themeElementPomegranate a {
 	color: #C0392B;
 }
-.elementPomegranate input[type='text']:hover,
-.elementPomegranate input[type='password']:hover,
-.elementPomegranate input[type='file']:hover,
-.elementPomegranate select:hover,
-.elementPomegranate textarea:hover {
+.themeElementPomegranate input[type='text']:hover,
+.themeElementPomegranate input[type='password']:hover,
+.themeElementPomegranate input[type='file']:hover,
+.themeElementPomegranate select:hover,
+.themeElementPomegranate textarea:hover {
 	border: 1px solid #C0392B;
 }
 
 /* Couleur foncée */
-.menuPomegranate #toggle:hover,
-.menuPomegranate #menu > li > a:hover,
-.elementPomegranate input[type='submit']:hover,
-.elementPomegranate .button:hover,
-.elementPomegranate .pagination > a:hover,
-.elementPomegranate input[type='checkbox']:not(:active):checked:hover + label:before,
-.elementPomegranate input[type='checkbox']:active + label:before,
-.elementPomegranate input[type='radio']:checked:hover + label:before,
-.elementPomegranate input[type='radio']:not(:checked):active + label:before,
-.elementPomegranate .helpButton:hover {
-	background: #B23528;
+.themeMenuPomegranate #toggle:hover,
+.themeMenuPomegranate #menu > li > a:hover,
+.themeElementPomegranate input[type='submit']:hover,
+.themeElementPomegranate .button:hover,
+.themeElementPomegranate .pagination > a:hover,
+.themeElementPomegranate input[type='checkbox']:not(:active):checked:hover + label:before,
+.themeElementPomegranate input[type='checkbox']:active + label:before,
+.themeElementPomegranate input[type='radio']:checked:hover + label:before,
+.themeElementPomegranate input[type='radio']:not(:checked):active + label:before,
+.themeElementPomegranate .helpButton:hover {
+	background-color: #B23528;
 }
 
 /* Couleur très foncée */
-.menuPomegranate #toggle:active,
-.menuPomegranate #menu > li > a:active,
-.menuPomegranate #menu > li > a.current,
-.elementPomegranate input[type='submit']:active,
-.elementPomegranate .button:active,
-.elementPomegranate .pagination > a:active {
-	background: #A43125;
+.themeMenuPomegranate #toggle:active,
+.themeMenuPomegranate #menu > li > a:active,
+.themeMenuPomegranate #menu > li > a.current,
+.themeElementPomegranate input[type='submit']:active,
+.themeElementPomegranate .button:active,
+.themeElementPomegranate .pagination > a:active {
+	background-color: #A43125;
 }
 
 /*
  * Clouds
  */
 
-.backgroundClouds {
-	background: #ECF0F1;
+.themeBackgroundClouds {
+	background-color: #ECF0F1;
 }
 
 /*
@@ -946,55 +953,55 @@
  */
 
 /* Couleur normale */
-.backgroundSilver,
-.menuSilver #toggle,
-.menuSilver #menu,
-.elementSilver input[type='submit'],
-.elementSilver .button,
-.elementSilver .pagination > a,
-.elementSilver input[type='checkbox']:checked + label:before,
-.elementSilver input[type='radio']:checked + label:before,
-.elementSilver .helpButton,
-.elementSilver .helpContent,
-.headerSilver #header {
-	background: #BDC3C7;
+.themeBackgroundSilver,
+.themeMenuSilver #toggle,
+.themeMenuSilver #menu,
+.themeElementSilver input[type='submit'],
+.themeElementSilver .button,
+.themeElementSilver .pagination > a,
+.themeElementSilver input[type='checkbox']:checked + label:before,
+.themeElementSilver input[type='radio']:checked + label:before,
+.themeElementSilver .helpButton,
+.themeElementSilver .helpContent,
+.themeHeaderSilver #header {
+	background-color: #BDC3C7;
 }
-.elementSilver h2,
-.elementSilver h4,
-.elementSilver h6,
-.elementSilver a {
+.themeElementSilver h2,
+.themeElementSilver h4,
+.themeElementSilver h6,
+.themeElementSilver a {
 	color: #BDC3C7;
 }
-.elementSilver input[type='text']:hover,
-.elementSilver input[type='password']:hover,
-.elementSilver input[type='file']:hover,
-.elementSilver select:hover,
-.elementSilver textarea:hover {
+.themeElementSilver input[type='text']:hover,
+.themeElementSilver input[type='password']:hover,
+.themeElementSilver input[type='file']:hover,
+.themeElementSilver select:hover,
+.themeElementSilver textarea:hover {
 	border: 1px solid #BDC3C7;
 }
 
 /* Couleur foncée */
-.menuSilver #toggle:hover,
-.menuSilver #menu > li > a:hover,
-.elementSilver input[type='submit']:hover,
-.elementSilver .button:hover,
-.elementSilver .pagination > a:hover,
-.elementSilver input[type='checkbox']:not(:active):checked:hover + label:before,
-.elementSilver input[type='checkbox']:active + label:before,
-.elementSilver input[type='radio']:checked:hover + label:before,
-.elementSilver input[type='radio']:not(:checked):active + label:before,
-.elementSilver .helpButton:hover {
-	background: #B4BBBF;
+.themeMenuSilver #toggle:hover,
+.themeMenuSilver #menu > li > a:hover,
+.themeElementSilver input[type='submit']:hover,
+.themeElementSilver .button:hover,
+.themeElementSilver .pagination > a:hover,
+.themeElementSilver input[type='checkbox']:not(:active):checked:hover + label:before,
+.themeElementSilver input[type='checkbox']:active + label:before,
+.themeElementSilver input[type='radio']:checked:hover + label:before,
+.themeElementSilver input[type='radio']:not(:checked):active + label:before,
+.themeElementSilver .helpButton:hover {
+	background-color: #B4BBBF;
 }
 
 /* Couleur très foncée */
-.menuSilver #toggle:active,
-.menuSilver #menu > li > a:active,
-.menuSilver #menu > li > a.current,
-.elementSilver input[type='submit']:active,
-.elementSilver .button:active,
-.elementSilver .pagination > a:active {
-	background: #ABB2B7;
+.themeMenuSilver #toggle:active,
+.themeMenuSilver #menu > li > a:active,
+.themeMenuSilver #menu > li > a.current,
+.themeElementSilver input[type='submit']:active,
+.themeElementSilver .button:active,
+.themeElementSilver .pagination > a:active {
+	background-color: #ABB2B7;
 }
 
 /*
@@ -1002,55 +1009,55 @@
  */
 
 /* Couleur normale */
-.backgroundConcrete,
-.menuConcrete #toggle,
-.menuConcrete #menu,
-.elementConcrete input[type='submit'],
-.elementConcrete .button,
-.elementConcrete .pagination > a,
-.elementConcrete input[type='checkbox']:checked + label:before,
-.elementConcrete input[type='radio']:checked + label:before,
-.elementConcrete .helpButton,
-.elementConcrete .helpContent,
-.headerConcrete #header {
-	background: #95A5A6;
+.themeBackgroundConcrete,
+.themeMenuConcrete #toggle,
+.themeMenuConcrete #menu,
+.themeElementConcrete input[type='submit'],
+.themeElementConcrete .button,
+.themeElementConcrete .pagination > a,
+.themeElementConcrete input[type='checkbox']:checked + label:before,
+.themeElementConcrete input[type='radio']:checked + label:before,
+.themeElementConcrete .helpButton,
+.themeElementConcrete .helpContent,
+.themeHeaderConcrete #header {
+	background-color: #95A5A6;
 }
-.elementConcrete h2,
-.elementConcrete h4,
-.elementConcrete h6,
-.elementConcrete a {
+.themeElementConcrete h2,
+.themeElementConcrete h4,
+.themeElementConcrete h6,
+.themeElementConcrete a {
 	color: #95A5A6;
 }
-.elementConcrete input[type='text']:hover,
-.elementConcrete input[type='password']:hover,
-.elementConcrete input[type='file']:hover,
-.elementConcrete select:hover,
-.elementConcrete textarea:hover {
+.themeElementConcrete input[type='text']:hover,
+.themeElementConcrete input[type='password']:hover,
+.themeElementConcrete input[type='file']:hover,
+.themeElementConcrete select:hover,
+.themeElementConcrete textarea:hover {
 	border: 1px solid #95A5A6;
 }
 
 /* Couleur foncée */
-.menuConcrete #toggle:hover,
-.menuConcrete #menu > li > a:hover,
-.elementConcrete input[type='submit']:hover,
-.elementConcrete .button:hover,
-.elementConcrete .pagination > a:hover,
-.elementConcrete input[type='checkbox']:not(:active):checked:hover + label:before,
-.elementConcrete input[type='checkbox']:active + label:before,
-.elementConcrete input[type='radio']:checked:hover + label:before,
-.elementConcrete input[type='radio']:not(:checked):active + label:before,
-.elementConcrete .helpButton:hover {
-	background: #8C9D9E;
+.themeMenuConcrete #toggle:hover,
+.themeMenuConcrete #menu > li > a:hover,
+.themeElementConcrete input[type='submit']:hover,
+.themeElementConcrete .button:hover,
+.themeElementConcrete .pagination > a:hover,
+.themeElementConcrete input[type='checkbox']:not(:active):checked:hover + label:before,
+.themeElementConcrete input[type='checkbox']:active + label:before,
+.themeElementConcrete input[type='radio']:checked:hover + label:before,
+.themeElementConcrete input[type='radio']:not(:checked):active + label:before,
+.themeElementConcrete .helpButton:hover {
+	background-color: #8C9D9E;
 }
 
 /* Couleur très foncée */
-.menuConcrete #toggle:active,
-.menuConcrete #menu > li > a:active,
-.menuConcrete #menu > li > a.current,
-.elementConcrete input[type='submit']:active,
-.elementConcrete .button:active,
-.elementConcrete .pagination > a:active {
-	background: #839596;
+.themeMenuConcrete #toggle:active,
+.themeMenuConcrete #menu > li > a:active,
+.themeMenuConcrete #menu > li > a.current,
+.themeElementConcrete input[type='submit']:active,
+.themeElementConcrete .button:active,
+.themeElementConcrete .pagination > a:active {
+	background-color: #839596;
 }
 
 /*
@@ -1058,62 +1065,62 @@
  */
 
 /* Couleur normale */
-.backgroundAsbestos,
-.menuAsbestos #toggle,
-.menuAsbestos #menu,
-.elementAsbestos input[type='submit'],
-.elementAsbestos .button,
-.elementAsbestos .pagination > a,
-.elementAsbestos input[type='checkbox']:checked + label:before,
-.elementAsbestos input[type='radio']:checked + label:before,
-.elementAsbestos .helpButton,
-.elementAsbestos .helpContent,
-.headerAsbestos #header {
-	background: #7F8C8D;
+.themeBackgroundAsbestos,
+.themeMenuAsbestos #toggle,
+.themeMenuAsbestos #menu,
+.themeElementAsbestos input[type='submit'],
+.themeElementAsbestos .button,
+.themeElementAsbestos .pagination > a,
+.themeElementAsbestos input[type='checkbox']:checked + label:before,
+.themeElementAsbestos input[type='radio']:checked + label:before,
+.themeElementAsbestos .helpButton,
+.themeElementAsbestos .helpContent,
+.themeHeaderAsbestos #header {
+	background-color: #7F8C8D;
 }
-.elementAsbestos h2,
-.elementAsbestos h4,
-.elementAsbestos h6,
-.elementAsbestos a {
+.themeElementAsbestos h2,
+.themeElementAsbestos h4,
+.themeElementAsbestos h6,
+.themeElementAsbestos a {
 	color: #7F8C8D;
 }
-.elementAsbestos input[type='text']:hover,
-.elementAsbestos input[type='password']:hover,
-.elementAsbestos input[type='file']:hover,
-.elementAsbestos select:hover,
-.elementAsbestos textarea:hover {
+.themeElementAsbestos input[type='text']:hover,
+.themeElementAsbestos input[type='password']:hover,
+.themeElementAsbestos input[type='file']:hover,
+.themeElementAsbestos select:hover,
+.themeElementAsbestos textarea:hover {
 	border: 1px solid #7F8C8D;
 }
 
 /* Couleur foncée */
-.menuAsbestos #toggle:hover,
-.menuAsbestos #menu > li > a:hover,
-.elementAsbestos input[type='submit']:hover,
-.elementAsbestos .button:hover,
-.elementAsbestos .pagination > a:hover,
-.elementAsbestos input[type='checkbox']:not(:active):checked:hover + label:before,
-.elementAsbestos input[type='checkbox']:active + label:before,
-.elementAsbestos input[type='radio']:checked:hover + label:before,
-.elementAsbestos input[type='radio']:not(:checked):active + label:before,
-.elementAsbestos .helpButton:hover {
-	background: #768485;
+.themeMenuAsbestos #toggle:hover,
+.themeMenuAsbestos #menu > li > a:hover,
+.themeElementAsbestos input[type='submit']:hover,
+.themeElementAsbestos .button:hover,
+.themeElementAsbestos .pagination > a:hover,
+.themeElementAsbestos input[type='checkbox']:not(:active):checked:hover + label:before,
+.themeElementAsbestos input[type='checkbox']:active + label:before,
+.themeElementAsbestos input[type='radio']:checked:hover + label:before,
+.themeElementAsbestos input[type='radio']:not(:checked):active + label:before,
+.themeElementAsbestos .helpButton:hover {
+	background-color: #768485;
 }
 
 /* Couleur très foncée */
-.menuAsbestos #toggle:active,
-.menuAsbestos #menu > li > a:active,
-.menuAsbestos #menu > li > a.current,
-.elementAsbestos input[type='submit']:active,
-.elementAsbestos .button:active,
-.elementAsbestos .pagination > a:active {
-	background: #6E7B7C;
+.themeMenuAsbestos #toggle:active,
+.themeMenuAsbestos #menu > li > a:active,
+.themeMenuAsbestos #menu > li > a.current,
+.themeElementAsbestos input[type='submit']:active,
+.themeElementAsbestos .button:active,
+.themeElementAsbestos .pagination > a:active {
+	background-color: #6E7B7C;
 }
 
 /**
  * White
  */
 
-.headerWhite #header {
-	background: #FFFFFF;
+.themeHeaderWhite #header {
+	background-color: #FFFFFF;
 	color: #2C3E50;
 }

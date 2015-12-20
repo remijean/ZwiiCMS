@@ -50,7 +50,7 @@ class core
 	private $success;
 
 	/** @var array Liste des modules */
-	private static $modules = ['create', 'edit', 'ajax', 'module', 'delete', 'clean', 'export', 'mode', 'config', 'logout'];
+	private static $modules = ['create', 'edit', 'save', 'module', 'delete', 'clean', 'export', 'mode', 'config', 'files', 'upload', 'logout'];
 
 	/** Version de ZwiiCMS */
 	private static $version = '7.2.0';
@@ -362,28 +362,32 @@ class core
 		// Liste des couleurs
 		$class = [];
 		// Check la couleur de la bannière
-		$header = $this->getData(['config', 'themeHeader']) ? $this->getData(['config', 'themeHeader']) : 'White';
-		$class[] = 'header' . $header;
+		$class[] = $this->getData(['config', 'themeHeader']) ? $this->getData(['config', 'themeHeader']) : 'themeHeaderWhite';
 		// Check de la couleur des éléments du site
-		$element = $this->getData(['config', 'themeElement']) ? $this->getData(['config', 'themeElement']) : 'PeterRiver';
-		$class[] = 'element' . $element;
+		$class[] = $this->getData(['config', 'themeElement']) ? $this->getData(['config', 'themeElement']) : 'themeElementPeterRiver';
 		// Check la couleur du menu
-		$menu = $this->getData(['config', 'themeMenu']) ? $this->getData(['config', 'themeMenu']) : 'PeterRiver';
-		$class[] = 'menu' . $menu;
+		$class[] = $this->getData(['config', 'themeMenu']) ? $this->getData(['config', 'themeMenu']) : 'themeMenuPeterRiver';
 		// Check la couleur du background
-		$background = $this->getData(['config', 'themeBackground']) ? $this->getData(['config', 'themeBackground']) : 'Clouds';
-		$class[] = 'background' . $background;
+		$class[] = $this->getData(['config', 'themeBackground']) ? $this->getData(['config', 'themeBackground']) : 'themeBackgroundClouds';
+		// Check l'affichage du titre après l'ajout d'une image dans la bannière
+		$class[] = $this->getData(['config', 'themeImage']) ? 'themeImage' : '';
 		// Check la marge autour du menu et de la bannière
-		$margin = $this->getData(['config', 'themeMargin']) ? 'margin' : '';
-		$class[] = $margin;
+		$class[] = $this->getData(['config', 'themeMargin']) ? 'themeMargin' : '';
 		// Check les coins arrondis
-		$radius = $this->getData(['config', 'themeRadius']) ? 'radius' : '';
-		$class[] = $radius;
+		$class[] = $this->getData(['config', 'themeRadius']) ? 'themeRadius' : '';
 		// Check l'ombre autour du site
-		$shadow = $this->getData(['config', 'themeShadow']) ? 'shadow' : '';
-		$class[] = $shadow;
+		$class[] = $this->getData(['config', 'themeShadow']) ? 'themeShadow' : '';
 		// Mise en forme des classes
 		return implode($class, ' ');
+	}
+
+	/**
+	 * Met en forme l'image de la bannière
+	 * @return string
+	 */
+	public function getThemeImage()
+	{
+		return $this->getData(['config', 'themeImage']) ? 'background-image:url(\'' . $this->getData(['config', 'themeImage']) . '\')' : '';
 	}
 
 	/**
@@ -402,8 +406,8 @@ class core
 				$method = $this->getUrl(0, false);
 				$this->$method();
 				// Passe en mode édition
-				// Sauf pour le module de configuration afin de ne pas changer de mode en cliquant sur configuration dans le panneau admin
-				if($this->getUrl(0, false) !== 'config') {
+				// Sauf pour le module de configuration et le gestionnaire de fichiers afin de ne pas changer de mode en cliquant sur leur lien dans le panneau admin
+				if(!in_array($this->getUrl(0, false), ['config', 'files'])) {
 					$this->setMode(true);
 				}
 			}
@@ -446,7 +450,7 @@ class core
 		}
 		// Erreur 404
 		if(!self::$content) {
-			header("HTTP/1.0 404 Not Found");
+			http_response_code(404);
 			self::$title = helper::translate('Erreur 404');
 			self::$content = '<p>' . helper::translate('Page introuvable !') . '</p>';
 		}
@@ -512,8 +516,8 @@ class core
 		if($this->getCookie() === $this->getData(['config', 'password'])) {
 			$li = '<li>';
 			$li .= '<select onchange="$(location).attr(\'href\', $(this).val());">';
-			// Affiche l'option "Choisissez une page" seulement pour la page de configuration
-			if($this->getUrl(0, false) === 'config') {
+			// Affiche l'option "Choisissez une page" seulement pour le module de configuration et le gestionnaire de fichier
+			if(in_array($this->getUrl(0, false), ['config', 'files'])) {
 				$li .= '<option value="">' . helper::translate('Choisissez une page') . '</option>';
 			}
 			// Crée des options pour les pages en les triant par titre
@@ -527,12 +531,15 @@ class core
 			$li .= '<li>';
 			$li .= '<a href="' . helper::baseUrl() . 'create">' . helper::translate('Créer une page') . '</a>';
 			$li .= '</li>';
-			// Affiche le switch de mode pour toutes les pages sauf configuration
-			if($this->getUrl(0, false) !== 'config') {
+			// Affiche le switch de mode pour toutes les pages sauf le module de configuration et le gestionnaire de fichiers
+			if(!in_array($this->getUrl(0, false), ['config', 'files'])) {
 				$li .= '<li>';
 				$li .= '<a href="' . helper::baseUrl() . 'mode/' . $this->getUrl(null, false) . '"' . ($this->getMode() ? ' class="edit"' : '') . '>Mode édition</a>';
 				$li .= '</li>';
 			};
+			$li .= '<li>';
+			$li .= '<a href="' . helper::baseUrl() . 'files">' . helper::translate('Gestionnaire de fichiers') . '</a>';
+			$li .= '</li>';
 			$li .= '<li>';
 			$li .= '<a href="' . helper::baseUrl() . 'config">' . helper::translate('Configuration') . '</a>';
 			$li .= '</li>';
@@ -771,7 +778,7 @@ class core
 	}
 
 	/** MODULE : Enregistrement du module en ajax */
-	public function ajax()
+	public function save()
 	{
 		// Erreur 404
 		if(!$this->getData(['pages', $this->getUrl(0)])) {
@@ -816,28 +823,45 @@ class core
 		self::$title = $this->getData(['pages', $this->getUrl(0), 'title']);
 	}
 
-	/** MODULE : Suppression de page */
+	/** MODULE : Suppression de page et de fichier */
 	public function delete()
 	{
 		// Erreur 404
-		if(!$this->getData(['pages', $this->getUrl(0)])) {
+		if(!$this->getData(['pages', $this->getUrl(0)]) AND !is_file('core/uploads/' . $this->getUrl(0))) {
 			return false;
 		}
-		// La page est utilisée comme page d'accueil et ne peut être supprimée
-		elseif($this->getUrl(0) === $this->getData(['config', 'index'])) {
-			$this->setNotification('Impossible de supprimer la page d\'accueil !', true);
+		// Pour les pages
+		elseif($this->getData(['pages', $this->getUrl(0)])) {
+			// La page est utilisée comme page d'accueil et ne peut être supprimée
+			if($this->getUrl(0) === $this->getData(['config', 'index'])) {
+				$this->setNotification('Impossible de supprimer la page d\'accueil !', true);
+			}
+			elseif(!$this->getData(['pages', $this->getUrl(0)])) {
+				// Supprime la page et les données du module rattachées à la page
+				$this->removeData(['pages', $this->getUrl(0)]);
+				$this->removeData($this->getUrl(0));
+				// Enregistre les données
+				$this->saveData();
+				// Notification de suppression
+				$this->setNotification('Page supprimée avec succès !');
+			}
+			// Redirige vers l'édition de la page d'accueil du site
+			helper::redirect('edit/' . $this->getData(['config', 'index']));
 		}
+		// Pour les fichiers
 		else {
-			// Supprime la page et les données du module ratachées à la page
-			$this->removeData(['pages', $this->getUrl(0)]);
-			$this->removeData($this->getUrl(0));
-			// Enregistre les données
-			$this->saveData();
-			// Notification de suppression
-			$this->setNotification('Page supprimée avec succès !');
+			// Tente de supprimer le fichier
+			if(@unlink('core/uploads/' . $this->getUrl(0))) {
+				// Notification de suppression
+				$this->setNotification('Fichier supprimé avec succès !');
+			}
+			else {
+				// Notification de suppression
+				$this->setNotification('Impossible de supprimer le fichier demandé !');
+			}
+			// Redirige vers le gestionnaire de fichiers
+			helper::redirect('files');
 		}
-		// Redirige vers l'édition de la page d'accueil du site
-		helper::redirect('edit/' . $this->getData(['config', 'index']));
 	}
 
 	/** MODULE : Vide le cache des pages publiques */
@@ -911,9 +935,11 @@ class core
 					'password' => $password,
 					'index' => $this->getPost('index', helper::STRING),
 					'language' => $this->getPost('language', helper::STRING),
+					'themeHeader' => $this->getPost('themeHeader', helper::STRING),
 					'themeElement' => $this->getPost('themeElement', helper::STRING),
-					'themeColor' => $this->getPost('themeColor', helper::STRING),
+					'themeMenu' => $this->getPost('themeMenu', helper::STRING),
 					'themeBackground' => $this->getPost('themeBackground', helper::STRING),
+					'themeImage' => $this->getPost('themeImage', helper::URL),
 					'themeMargin' => $this->getPost('themeMargin', helper::BOOLEAN),
 					'themeRadius' => $this->getPost('themeRadius', helper::BOOLEAN),
 					'themeShadow' => $this->getPost('themeShadow', helper::BOOLEAN)
@@ -946,7 +972,7 @@ class core
 		self::$title = helper::translate('Configuration');
 		self::$content =
 			template::openForm() .
-			template::title('Paramètres généraux') .
+			template::title('Configuration générale') .
 			template::openRow() .
 			template::text('title', [
 				'label' => 'Titre du site',
@@ -992,7 +1018,7 @@ class core
 				'disabled' => 'disabled'
 			]) .
 			template::closeRow() .
-			template::title('Paramètres de personnalisation') .
+			template::title('Configuration du thème') .
 			template::div([
 				'id' => 'theme',
 				'text' =>
@@ -1000,27 +1026,33 @@ class core
 				template::colorPicker('themeHeader', [
 					'label' => 'Couleur de la bannière',
 					'ignore' => ['Clouds'],
-					'selected' => $this->getData(['config', 'themeHeader']) ? $this->getData(['config', 'themeHeader']) : 'White',
+					'selected' => $this->getData(['config', 'themeHeader']) ? $this->getData(['config', 'themeHeader']) : 'themeHeaderWhite',
 					'col' => 6
 				]) .
 				template::colorPicker('themeMenu', [
 					'label' => 'Couleur du menu',
 					'ignore' => ['Clouds', 'White'],
-					'selected' => $this->getData(['config', 'themeMenu']) ? $this->getData(['config', 'themeMenu']) : 'PeterRiver',
+					'selected' => $this->getData(['config', 'themeMenu']) ? $this->getData(['config', 'themeMenu']) : 'themeMenuPeterRiver',
 					'col' => 6
 				]) .
 				template::newRow() .
 				template::colorPicker('themeElement', [
 					'label' => 'Couleur des éléments du site',
 					'ignore' => ['Clouds', 'White'],
-					'selected' => $this->getData(['config', 'themeElement']) ? $this->getData(['config', 'themeElement']) : 'PeterRiver',
+					'selected' => $this->getData(['config', 'themeElement']) ? $this->getData(['config', 'themeElement']) : 'themeElementPeterRiver',
 					'col' => 6
 				]) .
 				template::colorPicker('themeBackground', [
 					'label' => 'Couleur du fond',
 					'ignore' => ['White'],
-					'selected' => $this->getData(['config', 'themeBackground']) ? $this->getData(['config', 'themeBackground']) : 'Clouds',
+					'selected' => $this->getData(['config', 'themeBackground']) ? $this->getData(['config', 'themeBackground']) : 'themeBackgroundClouds',
 					'col' => 6
+				]) .
+				template::newRow() .
+				template::select('themeImage', helper::listUploads('Aucune image', ['png', 'jpeg', 'jpg', 'gif']), [
+					'label' => 'Afficher une image à la place du texte dans la bannière',
+					'help' => 'Vous pouvez afficher une image de votre gestionnaire de fichiers dans votre bannière (formats autorisés : png, gif, jpg, jpeg).',
+					'selected' => $this->getData(['config', 'themeImage'])
 				]) .
 				template::newRow() .
 				template::checkbox('themeMargin', true, 'Ajouter une marge autour de la bannière et du menu', [
@@ -1052,6 +1084,123 @@ class core
 			]) .
 			template::closeRow() .
 			template::closeForm();
+	}
+
+	/** MODULE : Gestionnaire de fichiers */
+	public function files()
+	{
+		// Traitement du formulaire
+		if($this->getPost('submit')) {
+			$this->upload(['png', 'gif', 'jpg', 'jpeg', 'txt', 'pdf', 'zip', 'rar', '7z', 'css', 'html', 'xml']);
+		}
+		// Liste les fichiers
+		foreach(helper::listUploads() as $path => $file) {
+			self::$content .=
+				template::openRow() .
+				template::text('file[]', [
+					'value' => $file,
+					'readonly' => 'readonly',
+					'col' => 8
+				]) .
+				template::button('preview[]', [
+					'value' => 'Aperçu',
+					'href' => $path,
+					'target' => '_blank',
+					'col' => 2
+				]) .
+				template::button('delete[]', [
+					'value' => 'Supprimer',
+					'href' => helper::baseUrl() . 'delete/' . $file,
+					'onclick' => 'return confirm(\'' . helper::translate('Êtes-vous sûr de vouloir supprimer ce fichier ?') . '\');',
+					'col' => 2
+				]) .
+				template::closeRow();
+		}
+		// Contenu de la page
+		self::$title = helper::translate('Gestionnaire de fichiers');
+		self::$content =
+			template::title('Envoyer un fichier') .
+			template::openForm('form', [
+				'enctype' => 'multipart/form-data'
+			]) .
+			template::openRow() .
+			template::file('file', [
+				'label' => 'Parcourir mes fichiers',
+				'help' => 'Envoyez vos fichier sur votre site (formats autorisés : png, gif, jpg, jpeg, txt, pdf, zip, rar, 7z, css, html, xml).',
+				'col' => '10'
+			]) .
+			template::submit('submit', [
+				'value' => 'Envoyer',
+				'col' => '2'
+			]) .
+			template::closeRow() .
+			template::closeForm() .
+			template::title('Liste des fichiers') .
+			self::$content;
+	}
+
+	/**
+	 * MODULE : Upload d'un fichier en POST et en AJAX
+	 * A importer entre un if($this->getPost()) en POST ; A appeler depuis un fichier JS en AJAX
+	 * @param array $extensions Extensions autorisées, par défaut seule les fichiers images sont autorisés
+	 * @return bool
+	 */
+	public function upload(array $extensions = ['png', 'gif', 'jpg', 'jpeg'])
+	{
+		// Erreur 404
+		if(!isset($_FILES['file'])) {
+			return false;
+		}
+		$target = 'core/uploads/' . basename($_FILES['file']['name']);
+		// Check la taille du fichier (limité à environs 100 mo)
+		if($_FILES['file']['size'] > 100000000) {
+			$data['error'] = 'Fichier trop volumineux !';
+		}
+		// Check le type de fichier
+		elseif(!in_array(strtolower(pathinfo($target, PATHINFO_EXTENSION)), $extensions)) {
+			$data['error'] = 'Format du fichier non autorisé !';
+		}
+		// Check les erreurs au chargement du fichier
+		elseif($_FILES['file']['error']) {
+			$data['error'] = 'Erreur au chargement du fichier !';
+		}
+		// Check qu'il n'existe aucune notice
+		if(empty($data['error'])) {
+			// Tente de déplacer le fichier dans le bon dossier
+			if(@move_uploaded_file($_FILES['file']['tmp_name'], $target)) {
+				$data['success'] = 'Fichier envoyé avec succès !';
+				$data['link'] = helper::baseUrl(false) . $target;
+			}
+			else {
+				$data['error'] = 'Impossible de communiquer avec le serveur !';
+			}
+		}
+		// Pour une requête en AJAX
+		if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+			// En cas de succès retourne les données
+			if(isset($data['success'])) {
+				self::$layout = 'JSON';
+				self::$content = $data;
+			}
+			// Sinon statut de requête incorrecte
+			else {
+				http_response_code(400);
+			}
+		}
+		// Pour une requête en POST
+		else {
+			// En cas de succès
+			if(isset($data['success'])) {
+				// Notification d'upload
+				$this->setNotification($data['success']);
+				// Redirige vers la page courante
+				helper::redirect($this->getUrl());
+			}
+			// Sinon crée une notice en cas d'erreur
+			else {
+				template::$notices['file'] = $data['error'];
+			}
+		}
 	}
 
 	/** MODULE : Connexion */
@@ -1292,7 +1441,7 @@ class helper
 	}
 
 	/**
-	 * Crée une liste des langues (format : fichier.json => fichier)
+	 * Crée une liste des langues (format : fichier et extension => fichier)
 	 * @param  mixed $default Valeur par défaut
 	 * @return array
 	 */
@@ -1312,6 +1461,27 @@ class helper
 	}
 
 	/**
+	 * Crée une liste des fichiers uploadés (format : chemin du fichier => fichier)
+	 * @param  mixed $default    Valeur par défaut
+	 * @param  mixed $extensions N'autorise que certains extensions
+	 * @return array
+	 */
+	public static function listUploads($default = false, array $extensions = [])
+	{
+		$uploads = [];
+		if($default) {
+			$uploads[''] = self::translate($default);
+		}
+		$it = new DirectoryIterator('core/uploads/');
+		foreach($it as $file) {
+			if($file->isFile() AND $file->getBasename() !== '.gitkeep' AND (empty($extensions) || in_array(strtolower($file->getExtension()), $extensions))) {
+				$uploads[helper::baseUrl(false) . 'core/uploads/' . $file->getBasename()] = $file->getBasename();
+			}
+		}
+		return $uploads;
+	}
+
+	/**
 	 * Redirige vers une page du site ou une page externe et sauvegarde les données du formulaire si il existe des notices
 	 * @param string  $url     Url de destination
 	 * @param bool    $baseUrl Ajoute ou non l'URL de base à la redirection
@@ -1324,7 +1494,7 @@ class helper
 		}
 		// Sinon redirection
 		else {
-			header('Status: 301 Moved Permanently', false, 301);
+			http_response_code(301);
 			header('Location: ' . ($baseUrl ? self::baseUrl() : false) . $url);
 			exit();
 		}
@@ -1484,7 +1654,6 @@ class template
 		$attributes = array_merge([
 			'id' => $nameId,
 			'name' => $nameId,
-			'target' => '',
 			'action' => '',
 			'method' => 'post',
 			'enctype' => '',
@@ -1762,7 +1931,7 @@ class template
 
 	/**
 	 * Crée un champ d'upload de fichier
-	 * @param  string $nameId     Nom & id du champ texte court
+	 * @param  string $nameId     Nom & id du champ d'upload de fichier
 	 * @param  array  $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
 	 * @return string
 	 */
@@ -1773,9 +1942,7 @@ class template
 			'id' => $nameId,
 			'name' => $nameId,
 			'value' => '',
-			'placeholder' => '',
 			'disabled' => '',
-			'readonly' => '',
 			'required' => '',
 			'label' => '',
 			'help' => '',
@@ -1804,7 +1971,7 @@ class template
 		}
 		// Texte
 		$html .= sprintf(
-			'<input type="text" %s>',
+			'<input type="file" %s>',
 			self::sprintAttributes($attributes)
 		);
 		// Fin col
@@ -1920,11 +2087,11 @@ class template
 			'#D35400' => 'Pumpkin',
 			'#E74C3C' => 'Alizarin',
 			'#C0392B' => 'Pomegranate',
+			'#FFFFFF' => 'White',
 			'#ECF0F1' => 'Clouds',
 			'#BDC3C7' => 'Silver',
 			'#95A5A6' => 'Concrete',
-			'#7F8C8D' => 'Asbestos',
-			'#FFFFFF' => 'White'
+			'#7F8C8D' => 'Asbestos'
 		];
 		// Supprime les couleurs à ignorer
 		$colors = array_diff($colors, $attributes['ignore']);
@@ -1951,10 +2118,10 @@ class template
 		// Liste des couleurs
 		foreach($colors as $hex => $color) {
 			$html .= sprintf(
-				'<div data-color="%s" style="background:%s"%s></div>',
+				'<div data-color="' . $nameId . '%s" style="background:%s"%s></div>',
 				$color,
 				$hex,
-				$attributes['selected'] === $color ? ' class="selected"' : ''
+				$attributes['selected'] === $nameId . $color ? ' class="selected"' : ''
 			);
 		}
 		// Champ caché contenant la couleur sélectionnée

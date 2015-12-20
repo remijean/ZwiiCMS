@@ -1,5 +1,11 @@
 # Dossier de cache
 core/cache/
 
+# Fichiers uploadés
+core/uploads/*
+
+# Autorise les dossiers vides
+!.gitkeep
+
 # Configuration de PHPStorm
 .idea/
