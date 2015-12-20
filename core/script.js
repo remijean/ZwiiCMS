@@ -80,7 +80,24 @@ $('#module').on('change', function() {
 /**
  * Charge l'éditeur de texte
  */
-$('.editor').trumbowyg();
+$('.editor').trumbowyg({
+	btnsDef: {
+		image: {
+			dropdown: ['insertImage', 'upload'],
+			ico: 'insertImage'
+		}
+	},
+	btns: [
+		'viewHTML',
+		'|', 'formatting',
+		'|', 'btnGrp-design',
+		'|', 'link',
+		'|', 'image',
+		'|', 'btnGrp-justify',
+		'|', 'btnGrp-lists',
+		'|', 'horizontalRule'
+	]
+});
 
 /**
  * Sélecteur de couleur

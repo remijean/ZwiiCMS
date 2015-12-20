@@ -410,6 +410,12 @@ input[type='radio']:disabled + label:before {
 	border-color: #000;
 }
 
+/* Éditeur de texte */
+.trumbowyg-box:not(.trumbowyg-fullscreen) {
+	width: auto;
+	margin: auto;
+}
+
 /**
  * Grille
  */
