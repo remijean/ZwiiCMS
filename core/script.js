@@ -125,6 +125,10 @@ $('#theme').on('change', function() {
 	// Supprime les anciennes classes
 	body.removeClass();
 	// Ajoute les nouvelles classes
+	// Pour le select d'ajout d'image dans la bannière
+	$('#header').css('background-image', 'url(' + $('#themeImage option:selected').val() + ')');
+	body.addClass('themeImage');
+	// Pour les inputs
 	$(this).find('input').each(function() {
 		var input = $(this);
 		// Cas spécifique pour les checkbox

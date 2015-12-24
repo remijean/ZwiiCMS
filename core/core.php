@@ -1475,7 +1475,7 @@ class helper
 		$it = new DirectoryIterator('core/uploads/');
 		foreach($it as $file) {
 			if($file->isFile() AND $file->getBasename() !== '.gitkeep' AND (empty($extensions) || in_array(strtolower($file->getExtension()), $extensions))) {
-				$uploads[helper::baseUrl(false) . 'core/uploads/' . $file->getBasename()] = $file->getBasename();
+				$uploads['core/uploads/' . $file->getBasename()] = $file->getBasename();
 			}
 		}
 		return $uploads;
