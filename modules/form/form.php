@@ -57,20 +57,20 @@ class formAdm extends core
 					'button' => $this->getPost('button', helper::STRING)
 				]
 			]);
-			// Liste des champs à partir de l'input caché position
-			$position = $this->getPost('position');
-			// Supprime le premier élément (= le champ caché pour la copie)
-			unset($position[0]);
 			// Génération des champs
 			$inputs = [];
 			foreach($this->getPost('position') as $key => $value) {
-				$inputs[] = [
-					'position' => helper::filter($value, helper::INT),
-					'name' => $this->getPost(['name', $key], helper::STRING),
-					'type' => $this->getPost(['type', $key], helper::STRING),
-					'values' => $this->getPost(['values', $key], helper::STRING),
-					'width' => $this->getPost(['width', $key], helper::INT)
-				];
+				$value = helper::filter($value, helper::INT);
+				// Supprime le premier élément (= le champ caché pour la copie)
+				if(!empty($value)) {
+					$inputs[] = [
+						'position' => $value,
+						'name' => $this->getPost(['name', $key], helper::STRING),
+						'type' => $this->getPost(['type', $key], helper::STRING),
+						'values' => $this->getPost(['values', $key], helper::STRING),
+						'width' => $this->getPost(['width', $key], helper::INT)
+					];
+				}
 			}
 
 			// Crée les champs
@@ -148,8 +148,7 @@ class formAdm extends core
 				'text' =>
 					template::openRow() .
 					template::hidden('position[]', [
-						'class' => 'position',
-						'value' => 0
+						'class' => 'position'
 					]) .
 					template::button('move[]', [
 						'value' => '&#8597;',
