@@ -1,6 +1,14 @@
 ZwiiCMS 7
 =========
 
+## 7.3.1
+* Correction d'une duplication de champ dans le générateur de formulaires
+* Correction d'une URL incorrecte pour importer le JS des modules lorsque l'URL Rewriting est activée
+* Correction de plusieurs messages d'erreur apparaissant en tant que messages de succès
+* Correction du disfonctionnement de l'aperçu en direct de l'image dans la bannière
+* Correction d'un bug empêchant l'ajout de module avec l'URL Rewriting
+* Mise à jour du readme
+
 ## 7.3.0
 * Correction d'un bug du générateur de formulaires avec certains navigateurs
 * Amélioration du switch entre le mode édition/public
