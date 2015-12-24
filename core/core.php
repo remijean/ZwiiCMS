@@ -857,7 +857,7 @@ class core
 			}
 			else {
 				// Notification de suppression
-				$this->setNotification('Impossible de supprimer le fichier demandé !');
+				$this->setNotification('Impossible de supprimer le fichier demandé !', true);
 			}
 			// Redirige vers le gestionnaire de fichiers
 			helper::redirect('files');
@@ -1215,7 +1215,7 @@ class core
 			}
 			// Notification d'échec si le mot de passe incorrect
 			else {
-				$this->setNotification('Mot de passe incorrect !');
+				$this->setNotification('Mot de passe incorrect !', true);
 			}
 			// Redirection vers l'URL courante
 			helper::redirect($this->getUrl());
