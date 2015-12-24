@@ -57,7 +57,7 @@ $('#module').on('change', function() {
 	if(ok) {
 		$.ajax({
 			type: 'POST',
-			url: '?save/' + $('#key').val(),
+			url: baseUrl + 'save/' + $('#key').val(),
 			data: {module: newModule},
 			success: function() {
 				$('#oldModule').val(newModule);
