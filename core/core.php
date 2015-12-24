@@ -582,7 +582,7 @@ class core
 		// Check l'existance d'un fichier js pour le module de la page et l'import
 		$module = 'modules/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '.js';
 		if(is_file($module)) {
-			return '<script src="' . $module . '"></script>';
+			return '<script src="' . helper::baseUrl(false) . $module . '"></script>';
 		}
 	}
 
