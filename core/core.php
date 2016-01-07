@@ -534,7 +534,7 @@ class core
 			// Affiche le switch de mode pour toutes les pages sauf le module de configuration et le gestionnaire de fichiers
 			if(!in_array($this->getUrl(0, false), ['config', 'files'])) {
 				$li .= '<li>';
-				$li .= '<a href="' . helper::baseUrl() . 'mode/' . $this->getUrl(null, false) . '"' . ($this->getMode() ? ' class="edit"' : '') . '>Mode édition</a>';
+				$li .= '<a href="' . helper::baseUrl() . 'mode/' . $this->getUrl(null, false) . '"' . ($this->getMode() ? ' class="edit"' : '') . '>' . helper::translate('Mode édition') . '</a>';
 				$li .= '</li>';
 			};
 			$li .= '<li>';
