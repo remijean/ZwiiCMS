@@ -1,11 +1,16 @@
 ZwiiCMS 7
 =========
 
+## 7.3.2
+* Correction de la traduction du texte "Mode édition" qui ne fonctionnait pas
+* Correction du titre du site qui disparaissait après le changement de couleur de la bannière
+* Correction du problème d'affichage des coins arrondis du site
+
 ## 7.3.1
 * Correction d'une duplication de champ dans le générateur de formulaires
 * Correction d'une URL incorrecte pour importer le JS des modules lorsque l'URL Rewriting est activée
 * Correction de plusieurs messages d'erreur apparaissant en tant que messages de succès
-* Correction du disfonctionnement de l'aperçu en direct de l'image dans la bannière
+* Correction du dysfonctionnement de l'aperçu en direct de l'image dans la bannière
 * Correction d'un bug empêchant l'ajout de module avec l'URL Rewriting
 * Mise à jour du readme
 
