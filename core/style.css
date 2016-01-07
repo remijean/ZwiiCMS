@@ -11,8 +11,551 @@
  */
 
 /**
- * Marge autour de la bannière et du menu
+ * Éléments spécifiques
  */
+
+@import url(http://fonts.googleapis.com/css?family=Lato|Oswald);
+body {
+	font-family: 'Lato', sans-serif;
+	color: #2C3E50;
+}
+
+/* Notification */
+#notification {
+	text-align: center;
+	padding: 15px;
+	color: #FFF;
+}
+#notification.success {
+	background: #1ABC9C;
+}
+#notification.error {
+	background: #E74C3C;
+}
+
+/* Notice */
+.notice {
+	margin-bottom: 2px;
+	color: #E74C3C;
+}
+
+/* Panneau */
+#panel {
+	background: #2C3E50;
+	padding: 0 5px;
+	margin: 0;
+	list-style: none;
+}
+#panel > li {
+	display: inline;
+}
+#panel > li > a {
+	display: inline-block;
+	color: #FFF;
+	padding: 10px;
+}
+#panel > li > a:hover {
+	background: #263645;
+	text-decoration: none;
+}
+#panel > li > a:active {
+	background: #263645;
+}
+#panel > li > a.edit {
+	background: #E74C3C;
+}
+#panel > li > a.edit:hover {
+	background: #E53E2D;
+}
+#panel > li > select {
+	width: 250px;
+	padding: 5px;
+	border: 0;
+}
+@media (max-width: 768px)
+{
+	#panel {
+		text-align: center;
+	}
+	#panel > li > select {
+		width: 100%;
+		margin-top: 5px;
+		display: inline-block;
+	}
+}
+
+/* Haut de page */
+#header {
+	height: 160px;
+	line-height: 160px;
+	margin: 0;
+	text-align: center;
+	font-size: 1.8em;
+	color: #FFF;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+/* Menu */
+#toggle {
+	cursor: pointer;
+	padding: 15px 10px;
+	text-align: right;
+	display: none;
+}
+#toggle > span:after {
+	content: '\2630';
+	font-weight: bold;
+	color: #FFF;
+}
+#menu {
+	display: block;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+#menu > li {
+	display: inline-block;
+}
+#menu > li > a {
+	display: inherit;
+	padding: 15px 10px;
+	color: #FFF;
+}
+#menu > li > a:hover {
+	text-decoration: none;
+}
+@media (max-width: 768px) {
+	#toggle {
+		display: block;
+	}
+	#menu {
+		display: none;
+		text-align: center;
+	}
+	#menu > li {
+		display: block;
+	}
+}
+
+/* Corps */
+#section {
+	margin: 20px;
+}
+#section img {
+	max-width: 100%;
+}
+
+/* Bas de page */
+
+#footer {
+	text-align: center;
+	font-size: 0.8em;
+	padding-bottom: 20px;
+}
+
+/* Liens */
+a {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+
+/* Titres */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: 'Oswald', sans-serif;
+	font-weight: normal;
+	text-transform: uppercase;
+}
+
+/* Listes */
+ul {
+	list-style: square;
+}
+
+/* Séparateur */
+hr {
+	border: 0;
+	border-top: 1px solid #C5D1D4;
+}
+
+/* Égalisation des margins */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+hr,
+ul,
+ol,
+form {
+	margin: 15px 0;
+}
+
+/* Zone de remplacement */
+.placeholder {
+	background: #ECF0F1;
+}
+
+/**
+ * Inputs génériques
+ */
+
+input[type='text'],
+input[type='password'],
+input[type='file'],
+select,
+textarea {
+	padding: 9px; /* -1px à cause des bordures */
+	background: #FFF;
+	border: 1px solid #C5D1D4;
+	width: 100%;
+}
+input[type='text'].notice,
+input[type='password'].notice,
+input[type='file'].notice,
+select.notice,
+textarea.notice {
+	border: 1px solid #E74C3C;
+}
+input:disabled,
+select:disabled,
+textarea:disabled {
+	background: #ECF0F1 !important;
+	color: #8AA3A9 !important;
+}
+input[type='file'] {
+	padding: 6px 9px;
+	max-height: 40px;
+}
+input[type='submit'] {
+	width: 100%;
+	padding: 10px;
+	border: 0;
+	color: #FFF;
+}
+textarea {
+	height: 100px;
+	resize: none;
+}
+label {
+	display: block;
+	margin-bottom: 2px;
+}
+
+/**
+ * Inputs spécifiques
+ */
+
+/* Bouton */
+.button {
+	width: 100%;
+	display: inline-block;
+	padding: 10px;
+	text-align: center;
+	color: #FFF !important; /* Important sinon la couleur des liens prend le dessus */
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.button:hover {
+	text-decoration: none;
+}
+.button.disabled {
+	pointer-events: none;
+	cursor: default;
+	background: #ECF0F1 !important;
+	color: #8AA3A9 !important;
+}
+
+/* Pagination */
+.pagination {
+	padding: 10px 0;
+}
+.pagination > a {
+	display: inline-block;
+	padding: 10px;
+	margin: 5px;
+	text-align: center;
+	color: #FFF;
+}
+.pagination > a:hover {
+	text-decoration: none;
+}
+.pagination > a.disabled {
+	pointer-events: none;
+	cursor: default;
+	background: #ECF0F1 !important;
+	color: #8AA3A9 !important;
+}
+.pagination > a:first-child {
+	margin-left: 0;
+}
+.pagination > a:last-child {
+	margin-right: 0;
+}
+
+/* Cases à cocher (pas de display none sinon le hover ne fonctionne pas sous Chrome) */
+input[type='checkbox'],
+input[type='radio'] {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	opacity: 0;
+	height: 0;
+	width: 0;
+}
+input[type='checkbox'] + label,
+input[type='radio'] + label {
+	display: inline-block;
+	margin-right: 10px;
+	cursor: pointer;
+}
+input[type='checkbox'] + label:before,
+input[type='radio'] + label:before {
+	content: '\2713';
+	display: inline-block;
+	text-align: center;
+	color: transparent;
+	margin-right: 5px;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	font-size: 10px;
+	font-weight: bold;
+	background: #D8E1E3;
+	vertical-align: top;
+}
+input[type='checkbox'].notice + label:before,
+input[type='radio'].notice + label:before {
+	background: #E74C3C;
+}
+input[type='radio'] + label:before {
+	border-radius: 50%;
+}
+input[type='checkbox']:checked + label:before,
+input[type='radio']:checked + label:before {
+	color: #FFF;
+}
+input[type='checkbox']:hover + label:before,
+input[type='checkbox']:checked:active + label:before,
+input[type='radio']:hover + label:before {
+	color: #FFF;
+	background: #C5D1D4;
+}
+input[type='checkbox']:disabled + label:before,
+input[type='radio']:disabled + label:before {
+	background: #ECF0F1 !important;
+}
+
+/* Aides */
+.helpButton {
+	display: inline-block;
+	border-radius: 50%;
+	text-align: center;
+	cursor: help;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	margin: 0 5px;
+	color: #FFF;
+}
+.helpButton:hover > .helpContent {
+	display: inline;
+}
+.helpContent {
+	display: none;
+	position: absolute;
+	margin: 30px 0 0 -30px;
+	text-align: left;
+	padding: 10px;
+	z-index: 10;
+}
+.helpButton,
+.helpContent {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+/* Background */
+.background {
+	background: #ECF0F1;
+	padding: 20px;
+}
+
+/* Sélecteur de couleur */
+.colorPicker {
+	font-size: 0; /* fix espacement en trop */
+}
+.colorPicker div {
+	height: 40px;
+	width: 25px;
+	display: inline-block;
+	cursor: pointer;
+	border: 4px solid transparent;
+	margin: 1px;
+}
+.colorPicker div:hover {
+	opacity: .5;
+}
+.colorPicker div.selected {
+	border-color: #000;
+}
+
+/* Éditeur de texte */
+.trumbowyg-box:not(.trumbowyg-fullscreen) {
+	width: auto;
+	margin: auto;
+}
+
+/**
+ * Grille
+ */
+
+*,
+*:before,
+*:after {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.row {
+	margin: 0 -10px;
+}
+.col1,
+.col2,
+.col3,
+.col4,
+.col5,
+.col6,
+.col7,
+.col8,
+.col9,
+.col10,
+.col11,
+.col12 {
+	display: inline-block;
+	vertical-align: bottom;
+	position: relative;
+	min-height: 1px;
+	padding: 10px;
+	width: 100%;
+}
+#container {
+	margin: 20px auto;
+	background: #FFF;
+	overflow: hidden;
+}
+@media (min-width: 768px) {
+	#container {
+		width: 750px;
+	}
+}
+@media (min-width: 992px) {
+	.col1 {
+		width: 8.33333333%;
+	}
+	.col2 {
+		width: 16.66666667%;
+	}
+	.col3 {
+		width: 25%;
+	}
+	.col4 {
+		width: 33.33333333%;
+	}
+	.col5 {
+		width: 41.66666667%;
+	}
+	.col6 {
+		width: 50%;
+	}
+	.col7 {
+		width: 58.33333333%;
+	}
+	.col8 {
+		width: 66.66666667%;
+	}
+	.col9 {
+		width: 75%;
+	}
+	.col10 {
+		width: 83.33333333%;
+	}
+	.col11 {
+		width: 91.66666667%;
+	}
+	.col12 {
+		width: 100%;
+	}
+	.offset1 {
+		margin-left: 8.33333333%;
+	}
+	.offset2 {
+		margin-left: 16.66666667%;
+	}
+	.offset3 {
+		margin-left: 25%;
+	}
+	.offset4 {
+		margin-left: 33.33333333%;
+	}
+	.offset5 {
+		margin-left: 41.66666667%;
+	}
+	.offset6 {
+		margin-left: 50%;
+	}
+	.offset7 {
+		margin-left: 58.33333333%;
+	}
+	.offset8 {
+		margin-left: 66.66666667%;
+	}
+	.offset9 {
+		margin-left: 75%;
+	}
+	.offset10 {
+		margin-left: 83.33333333%;
+	}
+	.offset11 {
+		margin-left: 91.66666667%;
+	}
+	#container {
+		width: 970px;
+	}
+}
+@media (min-width: 1200px) {
+	#container {
+		width: 1170px;
+	}
+}
+
+/**
+ * Classes rapides
+ */
+
+/* Cacher un élément */
+.hide {
+	display: none;
+}
+
+/**
+ * Thème
+ */
+
+/* Marge autour de la bannière et du menu */
 .themeMargin #container {
 	padding: 20px;
 }
@@ -30,23 +573,17 @@
 	border-radius: 20px;
 }
 
-/**
- * Ombre autour du site
- */
+/* Ombre autour du site */
 .themeShadow #container {
 	box-shadow: 1px 1px 10px #2C3E50;
 }
 
-/**
- * Cache le titre de la bannière après l'ajout d'une image
- */
+/* Cache le titre de la bannière après l'ajout d'une image */
 .themeImage #header {
 	font-size: 0;
 }
 
-/*
- * Turquoise
- */
+/* Turquoise */
 
 /* Couleur normale */
 .themeBackgroundTurquoise,
@@ -100,9 +637,7 @@
 	background-color: #169E83;
 }
 
-/*
- * GreenSea
- */
+/* GreenSea */
 
 /* Couleur normale */
 .themeBackgroundGreenSea,
@@ -156,9 +691,7 @@
 	background-color: #12826C;
 }
 
-/*
- * Emerald
- */
+/* Emerald */
 
 /* Couleur normale */
 .themeBackgroundEmerald,
@@ -212,9 +745,7 @@
 	background-color: #28B062;
 }
 
-/*
- * Nephritis
- */
+/* Nephritis */
 
 /* Couleur normale */
 .themeBackgroundNephritis,
@@ -268,9 +799,7 @@
 	background-color: #219251;
 }
 
-/*
- * PeterRiver
- */
+/* PeterRiver */
 
 /* Couleur normale */
 .themeBackgroundPeterRiver,
@@ -324,9 +853,7 @@
 	background-color: #2487C9;
 }
 
-/*
- * BelizeHole
- */
+/* BelizeHole */
 
 /* Couleur normale */
 .themeBackgroundBelizeHole,
@@ -380,9 +907,7 @@
 	background-color: #236D9D;
 }
 
-/*
- * Amethyst
- */
+/* Amethyst */
 
 /* Couleur normale */
 .themeBackgroundAmethyst,
@@ -436,9 +961,7 @@
 	background-color: #8A48A5;
 }
 
-/*
- * Wisteria
- */
+/* Wisteria */
 
 /* Couleur normale */
 .themeBackgroundWisteria,
@@ -492,9 +1015,7 @@
 	background-color: #7A3A95;
 }
 
-/*
- * WetAsphalt
- */
+/* WetAsphalt */
 
 /* Couleur normale */
 .themeBackgroundWetAsphalt,
@@ -548,9 +1069,7 @@
 	background-color: #283848;
 }
 
-/*
- * MidnightBlue
- */
+/* MidnightBlue */
 
 /* Couleur normale */
 .themeBackgroundMidnightBlue,
@@ -604,9 +1123,7 @@
 	background-color: #202D3A;
 }
 
-/*
- * SunFlower
- */
+/* SunFlower */
 
 /* Couleur normale */
 .themeBackgroundSunFlower,
@@ -660,9 +1177,7 @@
 	background-color: #D2AA0C;
 }
 
-/*
- * Orange
- */
+/* Orange */
 
 /* Couleur normale */
 .themeBackgroundOrange,
@@ -716,9 +1231,7 @@
 	background-color: #D8890B;
 }
 
-/*
- * Carrot
- */
+/* Carrot */
 
 /* Couleur normale */
 .themeBackgroundCarrot,
@@ -772,9 +1285,7 @@
 	background-color: #CF6D17;
 }
 
-/*
- * Pumpkin
- */
+/* Pumpkin */
 
 /* Couleur normale */
 .themeBackgroundPumpkin,
@@ -828,9 +1339,7 @@
 	background-color: #B14600;
 }
 
-/*
- * Alizarin
- */
+/* Alizarin */
 
 /* Couleur normale */
 .themeBackgroundAlizarin,
@@ -884,9 +1393,7 @@
 	background-color: #E3301E;
 }
 
-/*
- * Pomegranate
- */
+/* Pomegranate */
 
 /* Couleur normale */
 .themeBackgroundPomegranate,
@@ -940,17 +1447,14 @@
 	background-color: #A43125;
 }
 
-/*
- * Clouds
- */
+/* Clouds */
 
+/* Couleur normale */
 .themeBackgroundClouds {
 	background-color: #ECF0F1;
 }
 
-/*
- * Silver
- */
+/* Silver */
 
 /* Couleur normale */
 .themeBackgroundSilver,
@@ -1004,9 +1508,7 @@
 	background-color: #ABB2B7;
 }
 
-/*
- * Concrete
- */
+/* Concrete */
 
 /* Couleur normale */
 .themeBackgroundConcrete,
@@ -1060,9 +1562,7 @@
 	background-color: #839596;
 }
 
-/*
- * Asbestos
- */
+/* Asbestos */
 
 /* Couleur normale */
 .themeBackgroundAsbestos,
@@ -1116,10 +1616,9 @@
 	background-color: #6E7B7C;
 }
 
-/**
- * White
- */
+/* White */
 
+/* Couleur normale */
 .themeHeaderWhite #header {
 	background-color: #FFFFFF;
 	color: #2C3E50;
