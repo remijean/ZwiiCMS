@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  *
  * @author Rémi Jean <remi.jean@outlook.com>
- * @copyright Copyright (C) 2008-2015, Rémi Jean
+ * @copyright Copyright (C) 2008-2016, Rémi Jean
  * @license GNU General Public License, version 3
  * @link http://zwiicms.com/
  */

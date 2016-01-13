@@ -5,21 +5,21 @@
  * file that was distributed with this source code.
  *
  * @author Rémi Jean <remi.jean@outlook.com>
- * @copyright Copyright (C) 2008-2015, Rémi Jean
+ * @copyright Copyright (C) 2008-2016, Rémi Jean
  * @license GNU General Public License, version 3
  * @link http://zwiicms.com/
  */
 
 /**
- * Cache la notification après 4 secondes
+ * Scripts reliés aux modules
  */
+
+/* Cache la notification après 4 secondes */
 setTimeout(function() {
 	$('#notification').slideUp();
 }, 4000);
 
-/**
- * Modifications non enregistrées du formulaire
- */
+/* Modifications non enregistrées du formulaire */
 var form = $('form');
 form.data('serialize', form.serialize());
 $(window).on('beforeunload', function() {
@@ -31,9 +31,7 @@ form.submit(function() {
 	$(window).off('beforeunload');
 });
 
-/**
- * Affiche/cache le menu en mode responsive
- */
+/* Affiche/cache le menu en mode responsive */
 var menu = $('#menu');
 $('#toggle').on('click', function() {
 	menu.slideToggle();
@@ -44,9 +42,7 @@ $(window).on('resize', function() {
 	}
 });
 
-/**
- * Enregistrement en AJAX du module des page
- */
+/* Enregistrement en AJAX du module des page */
 $('#module').on('change', function() {
 	var newModule = $('#module').val();
 	var admin = $('#admin');
@@ -77,9 +73,7 @@ $('#module').on('change', function() {
 	}
 });
 
-/**
- * Charge l'éditeur de texte
- */
+/* Charge l'éditeur de texte */
 $.extend(true, $.trumbowyg.upload, {
 	serverPath: baseUrl + 'upload',
 	fileFieldName: 'file',
@@ -104,22 +98,7 @@ $('.editor').trumbowyg({
 	]
 });
 
-/**
- * Sélecteur de couleur
- */
-$('.colorPicker div').on('click', function() {
-	var color = $(this);
-	var colorPicker = color.parents('.colorPicker');
-	// Sélectionne la couleur
-	colorPicker.find('.selected').removeClass('selected');
-	$(this).addClass('selected');
-	// Ajoute la couleur sélectionnée dans l'input caché
-	colorPicker.find('input[type=hidden]').val(color.data('color')).trigger('change');
-});
-
-/**
- * Aperçu de la personnalisation en direct
- */
+/* Aperçu de la personnalisation en direct */
 $('#theme').on('change', function() {
 	var body = $('body');
 	// Supprime les anciennes classes
@@ -145,4 +124,19 @@ $('#theme').on('change', function() {
 			body.addClass(input.val());
 		}
 	});
+});
+
+/**
+ * Scripts reliés à la classe template
+ */
+
+/* Sélecteur de couleur */
+$('.colorPicker div').on('click', function() {
+	var color = $(this);
+	var colorPicker = color.parents('.colorPicker');
+	// Sélectionne la couleur
+	colorPicker.find('.selected').removeClass('selected');
+	$(this).addClass('selected');
+	// Ajoute la couleur sélectionnée dans l'input caché
+	colorPicker.find('input[type=hidden]').val(color.data('color')).trigger('change');
 });
