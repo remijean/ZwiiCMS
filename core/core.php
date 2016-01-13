@@ -1093,28 +1093,22 @@ class core
 		if($this->getPost('submit')) {
 			$this->upload(['png', 'gif', 'jpg', 'jpeg', 'txt', 'pdf', 'zip', 'rar', '7z', 'css', 'html', 'xml']);
 		}
-		// Liste les fichiers
+		// Met en forme les fichiers pour les afficher dans un tableau
+		$filesTable = [];
 		foreach(helper::listUploads() as $path => $file) {
-			self::$content .=
-				template::openRow() .
-				template::text('file[]', [
-					'value' => $file,
-					'readonly' => 'readonly',
-					'col' => 8
-				]) .
+			$filesTable[] = [
+				$file,
 				template::button('preview[]', [
 					'value' => 'Aperçu',
 					'href' => $path,
-					'target' => '_blank',
-					'col' => 2
-				]) .
+					'target' => '_blank'
+				]),
 				template::button('delete[]', [
 					'value' => 'Supprimer',
 					'href' => helper::baseUrl() . 'delete/' . $file,
-					'onclick' => 'return confirm(\'' . helper::translate('Êtes-vous sûr de vouloir supprimer ce fichier ?') . '\');',
-					'col' => 2
-				]) .
-				template::closeRow();
+					'onclick' => 'return confirm(\'' . helper::translate('Êtes-vous sûr de vouloir supprimer ce fichier ?') . '\');'
+				])
+			];
 		}
 		// Contenu de la page
 		self::$title = helper::translate('Gestionnaire de fichiers');
@@ -1136,7 +1130,16 @@ class core
 			template::closeRow() .
 			template::closeForm() .
 			template::title('Liste des fichiers') .
-			self::$content;
+			template::openRow() .
+			template::table(
+				[
+					['Fichier', 8],
+					['Aperçu', 2],
+					['Supprimer', 2]
+				],
+				$filesTable
+			) .
+			template::closeRow();
 	}
 
 	/**
@@ -1805,7 +1808,7 @@ class template
 			$attributes['value'] = $value;
 		}
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -1857,7 +1860,7 @@ class template
 			$attributes['value'] = $value;
 		}
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -1906,7 +1909,7 @@ class template
 		// Champ requis
 		self::setRequired($nameId, $attributes);
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -1957,7 +1960,7 @@ class template
 			$attributes['value'] = $value;
 		}
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -2009,7 +2012,7 @@ class template
 			$attributes['selected'] = $selected;
 		}
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -2096,7 +2099,7 @@ class template
 		// Supprime les couleurs à ignorer
 		$colors = array_diff($colors, $attributes['ignore']);
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -2159,7 +2162,7 @@ class template
 		// Champ requis
 		self::setRequired($nameId, $attributes);
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Notice
 		if(!empty(self::$notices[$nameId])) {
 			$html .= self::getNotice($nameId);
@@ -2206,7 +2209,7 @@ class template
 		// Champ requis
 		self::setRequired($nameId, $attributes);
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Notice
 		if(!empty(self::$notices[$nameId])) {
 			$html .= self::getNotice($nameId);
@@ -2249,7 +2252,7 @@ class template
 			'offset' => 0
 		], $attributes);
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Bouton
 		$html .= sprintf(
 			'<input type="submit" value="%s" %s>',
@@ -2285,7 +2288,7 @@ class template
 		], $attributes);
 
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Bouton
 		$html .= sprintf(
 			'<a %s class="button %s %s">%s</a>',
@@ -2315,7 +2318,7 @@ class template
 			'offset' => 0
 		], $attributes);
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Background
 		$html .= '<div class="background ' . $attributes['class']. '">' . helper::translate($text) . '</div>';
 		// Fin col
@@ -2332,6 +2335,54 @@ class template
 	public static function help($text)
 	{
 		return '<span class="helpButton">?<span class="helpContent">' . helper::translate($text) . '</span></span>';
+	}
+
+	/**
+	 * Crée un tableau
+	 * @param  array  $head       Entête du tableau (format: [[entête1, largeur], {entête2, largeur], [entête3, largeur], etc])
+	 * @param  array  $body       Contenu du tableau (format: [[contenu1, contenu2, contenu3, etc], [contenu1, contenu2, contenu3, etc]])
+	 * @param  array  $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @return string
+	 */
+	public static function table(array $head = [], array $body = [], array $attributes = []) {
+		// Attributs possibles
+		$attributes = array_merge([
+			'class' => '',
+			'col' => 12,
+			'offset' => 0
+		], $attributes);
+		// Début col
+		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		// Début tableau
+		$html .= '<table class="' . $attributes['class']. '">';
+		// Début entête
+		$html .= '<thead>';
+		$html .= '<tr>';
+		foreach($head as $th) {
+			$html .= '<th class="col-' . $th[1] . '">' . $th[0] . '</th>';
+		}
+		// Fin entête
+		$html .= '</tr>';
+		$html .= '</thead>';
+		// Début contenu
+		$html .= '<tbody>';
+		foreach($body as $tr) {
+			$html .= '<tr>';
+			foreach($tr as $td) {
+				$html .= '<td>' . $td . '</td>';
+			}
+			$html .= '</tr>';
+		}
+		// Fin contenu
+		$html .= '</tbody>';
+		// Début tableau
+		$html .= '<table class="' . $attributes['class']. '">';
+		// Fin tableau
+		$html .= '</table>';
+		// Fin col
+		$html .= '</div>';
+		// Retourne le html
+		return $html;
 	}
 
 }

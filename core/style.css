@@ -147,7 +147,6 @@ body {
 }
 
 /* Bas de page */
-
 #footer {
 	text-align: center;
 	font-size: 0.8em;
@@ -203,6 +202,29 @@ form {
 /* Zone de remplacement */
 .placeholder {
 	background: #ECF0F1;
+}
+
+/* Tableau */
+table {
+	width: 100%;
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+tr:nth-child(2n+2) {
+	background: #ECF0F1;
+}
+th {
+	color: #FFF;
+	font-weight: normal;
+	text-align: left;
+}
+th,
+td {
+	padding: 10px;
+}
+th > [class*='col-'],
+td > [class*='col-'] {
+	padding: 0 !important;
 }
 
 /**
@@ -433,24 +455,15 @@ input[type='radio']:disabled + label:before {
 .row {
 	margin: 0 -10px;
 }
-.col1,
-.col2,
-.col3,
-.col4,
-.col5,
-.col6,
-.col7,
-.col8,
-.col9,
-.col10,
-.col11,
-.col12 {
-	display: inline-block;
+[class*='col-'] {
 	vertical-align: bottom;
-	position: relative;
-	min-height: 1px;
 	padding: 10px;
 	width: 100%;
+}
+[class*='col-']:not(th) {
+	min-height: 1px;
+	position: relative;
+	display: inline-block;
 }
 #container {
 	margin: 20px auto;
@@ -463,73 +476,73 @@ input[type='radio']:disabled + label:before {
 	}
 }
 @media (min-width: 992px) {
-	.col1 {
+	.col-1 {
 		width: 8.33333333%;
 	}
-	.col2 {
+	.col-2 {
 		width: 16.66666667%;
 	}
-	.col3 {
+	.col-3 {
 		width: 25%;
 	}
-	.col4 {
+	.col-4 {
 		width: 33.33333333%;
 	}
-	.col5 {
+	.col-5 {
 		width: 41.66666667%;
 	}
-	.col6 {
+	.col-6 {
 		width: 50%;
 	}
-	.col7 {
+	.col-7 {
 		width: 58.33333333%;
 	}
-	.col8 {
+	.col-8 {
 		width: 66.66666667%;
 	}
-	.col9 {
+	.col-9 {
 		width: 75%;
 	}
-	.col10 {
+	.col-10 {
 		width: 83.33333333%;
 	}
-	.col11 {
+	.col-11 {
 		width: 91.66666667%;
 	}
-	.col12 {
+	.col-12 {
 		width: 100%;
 	}
-	.offset1 {
+	.offset-1 {
 		margin-left: 8.33333333%;
 	}
-	.offset2 {
+	.offset-2 {
 		margin-left: 16.66666667%;
 	}
-	.offset3 {
+	.offset-3 {
 		margin-left: 25%;
 	}
-	.offset4 {
+	.offset-4 {
 		margin-left: 33.33333333%;
 	}
-	.offset5 {
+	.offset-5 {
 		margin-left: 41.66666667%;
 	}
-	.offset6 {
+	.offset-6 {
 		margin-left: 50%;
 	}
-	.offset7 {
+	.offset-7 {
 		margin-left: 58.33333333%;
 	}
-	.offset8 {
+	.offset-8 {
 		margin-left: 66.66666667%;
 	}
-	.offset9 {
+	.offset-9 {
 		margin-left: 75%;
 	}
-	.offset10 {
+	.offset-10 {
 		margin-left: 83.33333333%;
 	}
-	.offset11 {
+	.offset-11 {
 		margin-left: 91.66666667%;
 	}
 	#container {
@@ -596,6 +609,7 @@ input[type='radio']:disabled + label:before {
 .themeElementTurquoise input[type='radio']:checked + label:before,
 .themeElementTurquoise .helpButton,
 .themeElementTurquoise .helpContent,
+.themeElementTurquoise th,
 .themeHeaderTurquoise #header {
 	background-color: #1ABC9C;
 }
@@ -650,6 +664,7 @@ input[type='radio']:disabled + label:before {
 .themeElementGreenSea input[type='radio']:checked + label:before,
 .themeElementGreenSea .helpButton,
 .themeElementGreenSea .helpContent,
+.themeHeaderGreenSea th,
 .themeHeaderGreenSea #header {
 	background-color: #16A085;
 }
@@ -704,6 +719,7 @@ input[type='radio']:disabled + label:before {
 .themeElementEmerald input[type='radio']:checked + label:before,
 .themeElementEmerald .helpButton,
 .themeElementEmerald .helpContent,
+.themeElementEmerald th,
 .themeHeaderEmerald #header {
 	background-color: #2ECC71;
 }
@@ -758,6 +774,7 @@ input[type='radio']:disabled + label:before {
 .themeElementNephritis input[type='radio']:checked + label:before,
 .themeElementNephritis .helpButton,
 .themeElementNephritis .helpContent,
+.themeElementNephritis th,
 .themeHeaderNephritis #header {
 	background-color: #27AE60;
 }
@@ -812,6 +829,7 @@ input[type='radio']:disabled + label:before {
 .themeElementPeterRiver input[type='radio']:checked + label:before,
 .themeElementPeterRiver .helpButton,
 .themeElementPeterRiver .helpContent,
+.themeElementPeterRiver th,
 .themeHeaderPeterRiver #header {
 	background-color: #3498DB;
 }
@@ -866,6 +884,7 @@ input[type='radio']:disabled + label:before {
 .themeElementBelizeHole input[type='radio']:checked + label:before,
 .themeElementBelizeHole .helpButton,
 .themeElementBelizeHole .helpContent,
+.themeElementBelizeHole th,
 .themeHeaderBelizeHole #header {
 	background-color: #2980B9;
 }
@@ -920,6 +939,7 @@ input[type='radio']:disabled + label:before {
 .themeElementAmethyst input[type='radio']:checked + label:before,
 .themeElementAmethyst .helpButton,
 .themeElementAmethyst .helpContent,
+.themeElementAmethyst th,
 .themeHeaderAmethyst #header {
 	background-color: #9B59B6;
 }
@@ -974,6 +994,7 @@ input[type='radio']:disabled + label:before {
 .themeElementWisteria input[type='radio']:checked + label:before,
 .themeElementWisteria .helpButton,
 .themeElementWisteria .helpContent,
+.themeElementWisteria th,
 .themeHeaderWisteria #header {
 	background-color: #8E44AD;
 }
@@ -1028,6 +1049,7 @@ input[type='radio']:disabled + label:before {
 .themeElementWetAsphalt input[type='radio']:checked + label:before,
 .themeElementWetAsphalt .helpButton,
 .themeElementWetAsphalt .helpContent,
+.themeElementWetAsphalt th,
 .themeHeaderWetAsphalt #header {
 	background-color: #34495E;
 }
@@ -1082,6 +1104,7 @@ input[type='radio']:disabled + label:before {
 .themeElementMidnightBlue input[type='radio']:checked + label:before,
 .themeElementMidnightBlue .helpButton,
 .themeElementMidnightBlue .helpContent,
+.themeElementMidnightBlue th,
 .themeHeaderMidnightBlue #header {
 	background-color: #2C3E50;
 }
@@ -1136,6 +1159,7 @@ input[type='radio']:disabled + label:before {
 .themeElementSunFlower input[type='radio']:checked + label:before,
 .themeElementSunFlower .helpButton,
 .themeElementSunFlower .helpContent,
+.themeElementSunFlower th,
 .themeHeaderSunFlower #header {
 	background-color: #F1C40F;
 }
@@ -1190,6 +1214,7 @@ input[type='radio']:disabled + label:before {
 .themeElementOrange input[type='radio']:checked + label:before,
 .themeElementOrange .helpButton,
 .themeElementOrange .helpContent,
+.themeElementOrange th,
 .themeHeaderOrange #header {
 	background-color: #F39C12;
 }
@@ -1244,6 +1269,7 @@ input[type='radio']:disabled + label:before {
 .themeElementCarrot input[type='radio']:checked + label:before,
 .themeElementCarrot .helpButton,
 .themeElementCarrot .helpContent,
+.themeElementCarrot th,
 .themeHeaderCarrot #header {
 	background-color: #E67E22;
 }
@@ -1298,6 +1324,7 @@ input[type='radio']:disabled + label:before {
 .themeElementPumpkin input[type='radio']:checked + label:before,
 .themeElementPumpkin .helpButton,
 .themeElementPumpkin .helpContent,
+.themeElementPumpkin th,
 .themeHeaderPumpkin #header {
 	background-color: #D35400;
 }
@@ -1352,6 +1379,7 @@ input[type='radio']:disabled + label:before {
 .themeElementAlizarin input[type='radio']:checked + label:before,
 .themeElementAlizarin .helpButton,
 .themeElementAlizarin .helpContent,
+.themeElementAlizarin th,
 .themeHeaderAlizarin #header {
 	background-color: #E74C3C;
 }
@@ -1406,6 +1434,7 @@ input[type='radio']:disabled + label:before {
 .themeElementPomegranate input[type='radio']:checked + label:before,
 .themeElementPomegranate .helpButton,
 .themeElementPomegranate .helpContent,
+.themeElementPomegranate th,
 .themeHeaderPomegranate #header {
 	background-color: #C0392B;
 }
@@ -1467,6 +1496,7 @@ input[type='radio']:disabled + label:before {
 .themeElementSilver input[type='radio']:checked + label:before,
 .themeElementSilver .helpButton,
 .themeElementSilver .helpContent,
+.themeElementSilver th,
 .themeHeaderSilver #header {
 	background-color: #BDC3C7;
 }
@@ -1521,6 +1551,7 @@ input[type='radio']:disabled + label:before {
 .themeElementConcrete input[type='radio']:checked + label:before,
 .themeElementConcrete .helpButton,
 .themeElementConcrete .helpContent,
+.themeElementConcrete th,
 .themeHeaderConcrete #header {
 	background-color: #95A5A6;
 }
@@ -1575,6 +1606,7 @@ input[type='radio']:disabled + label:before {
 .themeElementAsbestos input[type='radio']:checked + label:before,
 .themeElementAsbestos .helpButton,
 .themeElementAsbestos .helpContent,
+.themeElementAsbestos th,
 .themeHeaderAsbestos #header {
 	background-color: #7F8C8D;
 }

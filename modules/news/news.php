@@ -50,31 +50,33 @@ class newsAdm extends core
 			$pagination = helper::pagination($this->getData($this->getUrl(0)), $this->getUrl());
 			// Liste les news en les classant par date en ordre décroissant
 			$news = helper::arrayCollumn($this->getData($this->getUrl(0)), 'date', 'SORT_DESC');
-			// Crée l'affichage des news en fonction de la pagination
+			// Met en forme les news pour les afficher dans un tableau
+			$newsTable = [];
 			for($i = $pagination['first']; $i < $pagination['last']; $i++) {
-				self::$content .=
-					template::openRow() .
-					template::text('news[]', [
-						'value' => $this->getData([$this->getUrl(0), $news[$i], 'title']),
-						'readonly' => 'readonly',
-						'col' => 8
-					]) .
+				$newsTable[] = [
+					$this->getData([$this->getUrl(0), $news[$i], 'title']),
 					template::button('edit[]', [
 						'value' => 'Modifier',
-						'href' => helper::baseUrl() . 'module/' . $this->getUrl(0) . '/edit/' . $news[$i],
-						'col' => 2
-					]) .
+						'href' => helper::baseUrl() . 'module/' . $this->getUrl(0) . '/edit/' . $news[$i]
+					]),
 					template::button('delete[]', [
 						'value' => 'Supprimer',
 						'href' => helper::baseUrl() . 'module/' . $this->getUrl(0) . '/delete/' . $news[$i],
-						'onclick' => 'return confirm(\'Êtes-vous sûr de vouloir supprimer cette news ?\');',
-						'col' => 2
-					]) .
-					template::closeRow();
-
+						'onclick' => 'return confirm(\'Êtes-vous sûr de vouloir supprimer cette news ?\');'
+					])
+				];
 			}
 			// Ajoute la liste des pages en dessous des news
-			self::$content .= $pagination['pages'];
+			self::$content .=
+				template::table(
+					[
+						['News', 8],
+						['Aperçu', 2],
+						['Supprimer', 2]
+					],
+					$newsTable
+				) .
+				$pagination['pages'];
 		}
 		// Contenu de la page
 		self::$content =
@@ -97,8 +99,9 @@ class newsAdm extends core
 			]) .
 			template::closeRow() .
 			template::title('Liste des news') .
-			self::$content .
 			template::openRow() .
+			self::$content .
+			template::newRow() .
 			template::button('back', [
 				'value' => 'Retour',
 				'href' => helper::baseUrl() . 'edit/' . $this->getUrl(0),
