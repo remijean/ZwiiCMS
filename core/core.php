@@ -932,7 +932,8 @@ class core
 			]);
 			// Modifie le theme
 			$this->setData([
-				'theme' => [
+				'theme',
+				[
 					'header' => $this->getPost('themeHeader', helper::STRING),
 					'element' => $this->getPost('themeElement', helper::STRING),
 					'menu' => $this->getPost('themeMenu', helper::STRING),
