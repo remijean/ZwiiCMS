@@ -104,12 +104,27 @@ $('#theme').on('change', function() {
 	// Supprime les anciennes classes
 	body.removeClass();
 	// Ajoute les nouvelles classes
-	// Pour le select d'ajout d'image dans la bannière
-	var themeImageSelected = $('#themeImage option:selected').val();
-	$('#header').css('background-image', 'url(' + themeImageSelected + ')');
-	if(themeImageSelected) {
-		body.addClass('themeImage');
-	}
+	// Pour les selects
+	$(this).find('select').each(function() {
+		var select = $(this);
+		var option = select.find('option:selected').val();
+		// Pour le select d'ajout d'image dans la bannière
+		if(select.attr('id') === 'themeImage') {
+			$('#header').css('background-image', 'url(' + option + ')');
+			if(select.val() === '') {
+				body.removeClass('themeImage');
+			}
+			else {
+				body.addClass('themeImage');
+			}
+		}
+		// Pour les autres
+		else {
+			if(option) {
+				body.addClass(option);
+			}
+		}
+	});
 	// Pour les inputs
 	$(this).find('input').each(function() {
 		var input = $(this);

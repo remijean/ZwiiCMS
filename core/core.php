@@ -359,25 +359,18 @@ class core
 	 */
 	public function getTheme()
 	{
-		// Liste des couleurs
+		// Liste des classes
 		$class = [];
-		// Check la couleur de la bannière
-		$class[] = $this->getData(['config', 'themeHeader']) ? $this->getData(['config', 'themeHeader']) : 'themeHeaderWhite';
-		// Check de la couleur des éléments du site
-		$class[] = $this->getData(['config', 'themeElement']) ? $this->getData(['config', 'themeElement']) : 'themeElementPeterRiver';
-		// Check la couleur du menu
-		$class[] = $this->getData(['config', 'themeMenu']) ? $this->getData(['config', 'themeMenu']) : 'themeMenuPeterRiver';
-		// Check la couleur du background
-		$class[] = $this->getData(['config', 'themeBackground']) ? $this->getData(['config', 'themeBackground']) : 'themeBackgroundClouds';
-		// Check l'affichage du titre après l'ajout d'une image dans la bannière
-		$class[] = $this->getData(['config', 'themeImage']) ? 'themeImage' : '';
-		// Check la marge autour du menu et de la bannière
-		$class[] = $this->getData(['config', 'themeMargin']) ? 'themeMargin' : '';
-		// Check les coins arrondis
-		$class[] = $this->getData(['config', 'themeRadius']) ? 'themeRadius' : '';
-		// Check l'ombre autour du site
-		$class[] = $this->getData(['config', 'themeShadow']) ? 'themeShadow' : '';
-		// Mise en forme des classes
+		foreach($this->getData(['theme']) as $key => $value) {
+			// Pour les booleans
+			if($value === true) {
+				$class[] = 'theme' . ucfirst($key);
+			}
+			// Pour les autres
+			elseif($value) {
+				$class[] = $value;
+			}
+		}
 		return implode($class, ' ');
 	}
 
@@ -387,7 +380,7 @@ class core
 	 */
 	public function getThemeImage()
 	{
-		return $this->getData(['config', 'themeImage']) ? 'background-image:url(\'' . $this->getData(['config', 'themeImage']) . '\')' : '';
+		return $this->getData(['theme', 'image']) ? 'background-image:url(\'' . $this->getData(['theme', 'image']) . '\')' : '';
 	}
 
 	/**
@@ -934,15 +927,21 @@ class core
 					'description' => $this->getPost('description', helper::STRING),
 					'password' => $password,
 					'index' => $this->getPost('index', helper::STRING),
-					'language' => $this->getPost('language', helper::STRING),
-					'themeHeader' => $this->getPost('themeHeader', helper::STRING),
-					'themeElement' => $this->getPost('themeElement', helper::STRING),
-					'themeMenu' => $this->getPost('themeMenu', helper::STRING),
-					'themeBackground' => $this->getPost('themeBackground', helper::STRING),
-					'themeImage' => $this->getPost('themeImage', helper::URL),
-					'themeMargin' => $this->getPost('themeMargin', helper::BOOLEAN),
-					'themeRadius' => $this->getPost('themeRadius', helper::BOOLEAN),
-					'themeShadow' => $this->getPost('themeShadow', helper::BOOLEAN)
+					'language' => $this->getPost('language', helper::STRING)
+				]
+			]);
+			// Modifie le theme
+			$this->setData([
+				'theme' => [
+					'header' => $this->getPost('themeHeader', helper::STRING),
+					'element' => $this->getPost('themeElement', helper::STRING),
+					'menu' => $this->getPost('themeMenu', helper::STRING),
+					'background' => $this->getPost('themeBackground', helper::STRING),
+					'image' => $this->getPost('themeImage', helper::URL),
+					'width' => $this->getPost('themeWidth', helper::STRING),
+					'margin' => $this->getPost('themeMargin', helper::BOOLEAN),
+					'radius' => $this->getPost('themeRadius', helper::BOOLEAN),
+					'shadow' => $this->getPost('themeShadow', helper::BOOLEAN)
 				]
 			]);
 			// Active/désactive l'URL rewriting
@@ -1026,44 +1025,53 @@ class core
 				template::colorPicker('themeHeader', [
 					'label' => 'Couleur de la bannière',
 					'ignore' => ['Clouds'],
-					'selected' => $this->getData(['config', 'themeHeader']) ? $this->getData(['config', 'themeHeader']) : 'themeHeaderWhite',
+					'selected' => $this->getData(['theme', 'header']),
 					'col' => 6
 				]) .
 				template::colorPicker('themeMenu', [
 					'label' => 'Couleur du menu',
 					'ignore' => ['Clouds', 'White'],
-					'selected' => $this->getData(['config', 'themeMenu']) ? $this->getData(['config', 'themeMenu']) : 'themeMenuPeterRiver',
+					'selected' => $this->getData(['theme', 'menu']),
 					'col' => 6
 				]) .
 				template::newRow() .
 				template::colorPicker('themeElement', [
 					'label' => 'Couleur des éléments du site',
 					'ignore' => ['Clouds', 'White'],
-					'selected' => $this->getData(['config', 'themeElement']) ? $this->getData(['config', 'themeElement']) : 'themeElementPeterRiver',
+					'selected' => $this->getData(['theme', 'element']),
 					'col' => 6
 				]) .
 				template::colorPicker('themeBackground', [
 					'label' => 'Couleur du fond',
 					'ignore' => ['White'],
-					'selected' => $this->getData(['config', 'themeBackground']) ? $this->getData(['config', 'themeBackground']) : 'themeBackgroundClouds',
+					'selected' => $this->getData(['theme', 'background']),
 					'col' => 6
+				]) .
+				template::newRow() .
+				template::select('themeWidth', [
+					'themeWidthSmall' => 'Petit',
+					'themeWidthNormal' => 'Moyen',
+					'themeWidthLarge' => 'Large'
+				], [
+					'label' => 'Largeur du site',
+					'selected' => $this->getData(['theme', 'width'])
 				]) .
 				template::newRow() .
 				template::select('themeImage', helper::listUploads('Aucune image', ['png', 'jpeg', 'jpg', 'gif']), [
 					'label' => 'Afficher une image à la place du texte dans la bannière',
 					'help' => 'Vous pouvez afficher une image de votre gestionnaire de fichiers dans votre bannière (formats autorisés : png, gif, jpg, jpeg).',
-					'selected' => $this->getData(['config', 'themeImage'])
+					'selected' => $this->getData(['theme', 'image'])
 				]) .
 				template::newRow() .
 				template::checkbox('themeMargin', true, 'Ajouter une marge autour de la bannière et du menu', [
-					'checked' => $this->getData(['config', 'themeMargin']),
+					'checked' => $this->getData(['theme', 'margin']),
 				]) .
 				template::newRow() .
 				template::checkbox('themeRadius', true, 'Arrondir les coins du site', [
-					'checked' => $this->getData(['config', 'themeRadius']),
+					'checked' => $this->getData(['theme', 'radius']),
 				]) .
 				template::checkbox('themeShadow', true, 'Ajouter une ombre autour du site', [
-					'checked' => $this->getData(['config', 'themeShadow']),
+					'checked' => $this->getData(['theme', 'shadow']),
 				]) .
 				template::closeRow()
 			]) .
@@ -1072,12 +1080,12 @@ class core
 				'value' => 'Vider le cache',
 				'href' => helper::baseUrl() . 'clean',
 				'col' => 3,
-				'offset' => 4
+				'offset' => 5
 			]) .
 			template::button('export', [
-				'value' => 'Exporter les données',
+				'value' => 'Exporter',
 				'href' => helper::baseUrl() . 'export',
-				'col' => 3
+				'col' => 2
 			]) .
 			template::submit('submit', [
 				'col' => 2
@@ -1154,7 +1162,7 @@ class core
 		if(!isset($_FILES['file'])) {
 			return false;
 		}
-		$target = 'core/uploads/' . basename($_FILES['file']['name']);
+		$target = 'core/uploads/' . helper::filter(basename($_FILES['file']['name']), helper::URL);
 		// Check la taille du fichier (limité à environs 100 mo)
 		if($_FILES['file']['size'] > 100000000) {
 			$data['error'] = 'Fichier trop volumineux !';
@@ -1307,8 +1315,8 @@ class helper
 				$text = empty($text) ? false : true;
 				break;
 			case self::URL:
-				$search = explode(',', 'á,à,â,ä,ã,å,ç,é,è,ê,ë,í,ì,î,ï,ñ,ó,ò,ô,ö,õ,ú,ù,û,ü,ý,ÿ, ');
-				$replace = explode(',', 'a,a,a,a,a,a,c,e,e,e,e,i,i,i,i,n,o,o,o,o,o,u,u,u,u,y,y,-');
+				$search = explode(',', 'á,à,â,ä,ã,å,ç,é,è,ê,ë,í,ì,î,ï,ñ,ó,ò,ô,ö,õ,ú,ù,û,ü,ý,ÿ, ,\'');
+				$replace = explode(',', 'a,a,a,a,a,a,c,e,e,e,e,i,i,i,i,n,o,o,o,o,o,u,u,u,u,y,y,-,-');
 				$text = str_replace($search, $replace, mb_strtolower($text, 'UTF-8'));
 				break;
 			default:
@@ -1808,7 +1816,7 @@ class template
 			$attributes['value'] = $value;
 		}
 		// Début col
-		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -1860,7 +1868,7 @@ class template
 			$attributes['value'] = $value;
 		}
 		// Début col
-		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -1909,7 +1917,7 @@ class template
 		// Champ requis
 		self::setRequired($nameId, $attributes);
 		// Début col
-		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -1960,7 +1968,7 @@ class template
 			$attributes['value'] = $value;
 		}
 		// Début col
-		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -2012,7 +2020,7 @@ class template
 			$attributes['selected'] = $selected;
 		}
 		// Début col
-		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -2099,7 +2107,7 @@ class template
 		// Supprime les couleurs à ignorer
 		$colors = array_diff($colors, $attributes['ignore']);
 		// Début col
-		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -2162,7 +2170,7 @@ class template
 		// Champ requis
 		self::setRequired($nameId, $attributes);
 		// Début col
-		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Notice
 		if(!empty(self::$notices[$nameId])) {
 			$html .= self::getNotice($nameId);
@@ -2209,7 +2217,7 @@ class template
 		// Champ requis
 		self::setRequired($nameId, $attributes);
 		// Début col
-		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Notice
 		if(!empty(self::$notices[$nameId])) {
 			$html .= self::getNotice($nameId);
@@ -2252,7 +2260,7 @@ class template
 			'offset' => 0
 		], $attributes);
 		// Début col
-		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Bouton
 		$html .= sprintf(
 			'<input type="submit" value="%s" %s>',
@@ -2288,7 +2296,7 @@ class template
 		], $attributes);
 
 		// Début col
-		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Bouton
 		$html .= sprintf(
 			'<a %s class="button %s %s">%s</a>',
@@ -2318,7 +2326,7 @@ class template
 			'offset' => 0
 		], $attributes);
 		// Début col
-		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Background
 		$html .= '<div class="background ' . $attributes['class']. '">' . helper::translate($text) . '</div>';
 		// Fin col
@@ -2352,14 +2360,14 @@ class template
 			'offset' => 0
 		], $attributes);
 		// Début col
-		$html = '<div class="col-' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Début tableau
 		$html .= '<table class="' . $attributes['class']. '">';
 		// Début entête
 		$html .= '<thead>';
 		$html .= '<tr>';
 		foreach($head as $th) {
-			$html .= '<th class="col-' . $th[1] . '">' . $th[0] . '</th>';
+			$html .= '<th class="col' . $th[1] . '">' . $th[0] . '</th>';
 		}
 		// Fin entête
 		$html .= '</tr>';
