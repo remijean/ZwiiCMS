@@ -1,6 +1,14 @@
 ZwiiCMS 7
 =========
 
+## 7.4.0
+### Attention, cette version est incompatible avec les précédentes à cause de la refonte du système de thème !
+* Ajout du choix de la largeur du site et refonte du système de thème
+* Correction d'un bug bloquant la suppression des pages (merci Zyellyss)
+* Mise à jour du copyright
+* Ajout de tableaux dans le gestionnaire de fichiers et de news
+* Mise à jour de jQuery et jQuery-UI
+
 ## 7.3.2
 * Correction de la traduction du texte "Mode édition" qui ne fonctionnait pas
 * Correction du titre du site qui disparaissait après le changement de couleur de la bannière
