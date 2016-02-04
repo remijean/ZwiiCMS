@@ -836,7 +836,7 @@ class core
 			if($this->getUrl(0) === $this->getData(['config', 'index'])) {
 				$this->setNotification('Impossible de supprimer la page d\'accueil !', true);
 			}
-			elseif(!$this->getData(['pages', $this->getUrl(0)])) {
+			elseif($this->getData(['pages', $this->getUrl(0)])) {
 				// Supprime la page et les données du module rattachées à la page
 				$this->removeData(['pages', $this->getUrl(0)]);
 				$this->removeData($this->getUrl(0));
