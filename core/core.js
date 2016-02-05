@@ -11,7 +11,7 @@
  */
 
 /**
- * Scripts reliés aux modules
+ * Scripts reliés au coeur
  */
 
 /* Cache la notification après 4 secondes */
@@ -155,3 +155,27 @@ $('.colorPicker div').on('click', function() {
 	// Ajoute la couleur sélectionnée dans l'input caché
 	colorPicker.find('input[type=hidden]').val(color.data('color')).trigger('change');
 });
+
+/* Onglets */
+$('.tabTitle').on('click', function() {
+	var tabTitle = $(this);
+	// Aucune action pour le titre de l'onglet courant
+	if(tabTitle.hasClass('current') === false) {
+		// Sélectionne le titre de l'onglet courant
+		$('.tabTitle.current').removeClass('current');
+		tabTitle.addClass('current');
+		// Affiche le contenu de l'onglet courant
+		$('.tabContent:visible').hide();
+		$('.tabContent[data-1=' + tabTitle.attr('data-1') + ']').show();
+	}
+	// Ajoute le hash dans l'URL
+	window.location.hash = tabTitle.attr('data-1');
+});
+// Affiche le bon onglet si un hash est présent dans l'URL
+var hash = window.location.hash.substr(1);
+if(hash) {
+	var tabTitle = $('.tabTitle[data-1="' + hash + '"]');
+	if(tabTitle.length) {
+		tabTitle.trigger('click');
+	}
+}

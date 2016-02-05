@@ -709,64 +709,64 @@ class core
 		}
 		self::$title = $this->getData(['pages', $this->getUrl(0), 'title']);
 		self::$content =
-			template::openForm() .
-			template::openRow() .
+			template::openForm().
+			template::openRow().
 			template::text('title', [
 				'label' => 'Titre de la page',
 				'value' => $this->getData(['pages', $this->getUrl(0), 'title']),
 				'required' => true
-			]) .
-			template::newRow() .
+			]).
+			template::newRow().
 			template::select('position', $listPages, [
 				'label' => 'Position dans le menu',
 				'selected' => $selected
-			]) .
-			template::newRow() .
+			]).
+			template::newRow().
 			template::textarea('content', [
 				'value' => $this->getData(['pages', $this->getUrl(0), 'content']),
 				'class' => 'editor'
-			]) .
-			template::newRow() .
+			]).
+			template::newRow().
 			template::textarea('description', [
 				'label' => 'Description de la page',
 				'help' => 'Si le champ est vide, la description du site est utilisée.',
 				'value' => $this->getData(['pages', $this->getUrl(0), 'description'])
-			]) .
-			template::newRow() .
+			]).
+			template::newRow().
 			template::hidden('key', [
 				'value' => $this->getUrl(0)
-			]) .
+			]).
 			template::hidden('oldModule', [
 				'value' => $this->getData(['pages', $this->getUrl(0), 'module'])
-			]) .
+			]).
 			template::select('module', helper::listModules('Aucun module'), [
 				'label' => 'Inclure le module',
 				'help' => 'En cas de changement de module, les données du module précédent seront supprimées.',
 				'selected' => $this->getData(['pages', $this->getUrl(0), 'module']),
 				'col' => 10
-			]) .
+			]).
 			template::button('admin', [
 				'value' => 'Administrer',
 				'href' => helper::baseUrl() . 'module/' . $this->getUrl(0),
 				'disabled' => $this->getData(['pages', $this->getUrl(0), 'module']) ? '' : 'disabled',
 				'col' => 2
-			]) .
-			template::newRow() .
+			]).
+			template::newRow().
 			template::checkbox('blank', true, 'Ouvrir dans un nouvel onglet en mode public', [
 				'checked' => $this->getData(['pages', $this->getUrl(0), 'blank'])
-			]) .
-			template::newRow() .
+			]).
+			template::newRow().
 			template::button('delete', [
 				'value' => 'Supprimer',
 				'href' => helper::baseUrl() . 'delete/' . $this->getUrl(0),
 				'onclick' => 'return confirm(\'' . helper::translate('Êtes-vous sûr de vouloir supprimer cette page ?') . '\');',
 				'col' => 2,
 				'offset' => 8
-			]) .
+			]).
 			template::submit('submit', [
 				'col' => 2
-			]) .
-			template::closeRow() .
+			]).
+			template::closeRow().
 			template::closeForm();
 	}
 
@@ -971,127 +971,129 @@ class core
 		// Contenu de la page
 		self::$title = helper::translate('Configuration');
 		self::$content =
-			template::openForm() .
-			template::title('Configuration générale') .
-			template::openRow() .
-			template::text('title', [
-				'label' => 'Titre du site',
-				'required' => 'required',
-				'value' => $this->getData(['config', 'title'])
-			]) .
-			template::newRow() .
-			template::textarea('description', [
-				'label' => 'Description du site',
-				'required' => 'required',
-				'value' => $this->getData(['config', 'description'])
-			]) .
-			template::newRow() .
-			template::password('password', [
-				'label' => 'Nouveau mot de passe',
-				'col' => 6
-			]) .
-			template::password('confirm', [
-				'label' => 'Confirmation du mot de passe',
-				'col' => 6
-			]) .
-			template::newRow() .
-			template::select('index', helper::arrayCollumn($this->getData('pages'), 'title', 'SORT_ASC', true), [
-				'label' => 'Page d\'accueil',
-				'required' => 'required',
-				'selected' => $this->getData(['config', 'index'])
-			]) .
-			template::newRow() .
-			template::select('language', helper::listLanguages('Ne pas traduire'), [
-				'label' => 'Traduire le site',
-				'selected' => $this->getData(['config', 'language'])
-			]) .
-			template::newRow() .
-			template::checkbox('rewriting', true, 'Activer la réécriture d\'URL', [
-				'checked' => file_exists('.simple'),
-				'help' => 'Supprime le point d\'interrogation de l\'URL (si vous n\'arrivez pas à cocher la case, vérifiez que le module d\'URL rewriting de votre serveur soit bien activé).',
-				'disabled' => (get_headers(helper::baseUrl(false) . 'core/rewrite/test')[0] !== 'HTTP/1.1 200 OK') ? 'disabled' : '' // Check que l'URL rewriting fonctionne sur le serveur
-			]) .
-			template::newRow() .
-			template::text('version', [
-				'label' => 'Version de ZwiiCMS',
-				'value' => self::$version,
-				'disabled' => 'disabled'
-			]) .
-			template::closeRow() .
-			template::title('Configuration du thème') .
-			template::div([
-				'id' => 'theme',
-				'text' =>
-				template::openRow() .
-				template::colorPicker('themeHeader', [
-					'label' => 'Couleur de la bannière',
-					'ignore' => ['Clouds'],
-					'selected' => $this->getData(['theme', 'header']),
-					'col' => 6
-				]) .
-				template::colorPicker('themeMenu', [
-					'label' => 'Couleur du menu',
-					'ignore' => ['Clouds', 'White'],
-					'selected' => $this->getData(['theme', 'menu']),
-					'col' => 6
-				]) .
-				template::newRow() .
-				template::colorPicker('themeElement', [
-					'label' => 'Couleur des éléments du site',
-					'ignore' => ['Clouds', 'White'],
-					'selected' => $this->getData(['theme', 'element']),
-					'col' => 6
-				]) .
-				template::colorPicker('themeBackground', [
-					'label' => 'Couleur du fond',
-					'ignore' => ['White'],
-					'selected' => $this->getData(['theme', 'background']),
-					'col' => 6
-				]) .
-				template::newRow() .
-				template::select('themeWidth', [
-					'themeWidthSmall' => 'Petit',
-					'themeWidthNormal' => 'Moyen',
-					'themeWidthLarge' => 'Large'
-				], [
-					'label' => 'Largeur du site',
-					'selected' => $this->getData(['theme', 'width'])
-				]) .
-				template::newRow() .
-				template::select('themeImage', helper::listUploads('Aucune image', ['png', 'jpeg', 'jpg', 'gif']), [
-					'label' => 'Afficher une image à la place du texte dans la bannière',
-					'help' => 'Vous pouvez afficher une image de votre gestionnaire de fichiers dans votre bannière (formats autorisés : png, gif, jpg, jpeg).',
-					'selected' => $this->getData(['theme', 'image'])
-				]) .
-				template::newRow() .
-				template::checkbox('themeMargin', true, 'Ajouter une marge autour de la bannière et du menu', [
-					'checked' => $this->getData(['theme', 'margin']),
-				]) .
-				template::newRow() .
-				template::checkbox('themeRadius', true, 'Arrondir les coins du site', [
-					'checked' => $this->getData(['theme', 'radius']),
-				]) .
-				template::checkbox('themeShadow', true, 'Ajouter une ombre autour du site', [
-					'checked' => $this->getData(['theme', 'shadow']),
-				]) .
-				template::closeRow()
-			]) .
-			template::openRow() .
+			template::openForm().
+			template::tabs([
+				'Configuration générale' =>
+					template::openRow().
+					template::text('title', [
+						'label' => 'Titre du site',
+						'required' => 'required',
+						'value' => $this->getData(['config', 'title'])
+					]).
+					template::newRow().
+					template::textarea('description', [
+						'label' => 'Description du site',
+						'required' => 'required',
+						'value' => $this->getData(['config', 'description'])
+					]).
+					template::newRow().
+					template::password('password', [
+						'label' => 'Nouveau mot de passe',
+						'col' => 6
+					]).
+					template::password('confirm', [
+						'label' => 'Confirmation du mot de passe',
+						'col' => 6
+					]).
+					template::newRow().
+					template::select('index', helper::arrayCollumn($this->getData('pages'), 'title', 'SORT_ASC', true), [
+						'label' => 'Page d\'accueil',
+						'required' => 'required',
+						'selected' => $this->getData(['config', 'index'])
+					]).
+					template::newRow().
+					template::select('language', helper::listLanguages('Ne pas traduire'), [
+						'label' => 'Traduire le site',
+						'selected' => $this->getData(['config', 'language'])
+					]).
+					template::newRow().
+					template::checkbox('rewriting', true, 'Activer la réécriture d\'URL', [
+						'checked' => file_exists('.simple'),
+						'help' => 'Supprime le point d\'interrogation de l\'URL (si vous n\'arrivez pas à cocher la case, vérifiez que le module d\'URL rewriting de votre serveur soit bien activé).',
+						'disabled' => (get_headers(helper::baseUrl(false) . 'core/rewrite/test')[0] !== 'HTTP/1.1 200 OK') ? 'disabled' : '' // Check que l'URL rewriting fonctionne sur le serveur
+					]).
+					template::newRow().
+					template::text('version', [
+						'label' => 'Version de ZwiiCMS',
+						'value' => self::$version,
+						'disabled' => 'disabled'
+					]).
+					template::closeRow(),
+				'Configuration du thème' =>
+					template::div([
+						'id' => 'theme',
+						'text' =>
+						template::openRow().
+						template::colorPicker('themeHeader', [
+							'label' => 'Couleur de la bannière',
+							'ignore' => ['Clouds'],
+							'selected' => $this->getData(['theme', 'header']),
+							'col' => 6
+						]).
+						template::colorPicker('themeMenu', [
+							'label' => 'Couleur du menu',
+							'ignore' => ['Clouds', 'White'],
+							'selected' => $this->getData(['theme', 'menu']),
+							'col' => 6
+						]).
+						template::newRow().
+						template::colorPicker('themeElement', [
+							'label' => 'Couleur des éléments du site',
+							'ignore' => ['Clouds', 'White'],
+							'selected' => $this->getData(['theme', 'element']),
+							'col' => 6
+						]).
+						template::colorPicker('themeBackground', [
+							'label' => 'Couleur du fond',
+							'ignore' => ['White'],
+							'selected' => $this->getData(['theme', 'background']),
+							'col' => 6
+						]).
+						template::newRow().
+						template::select('themeWidth', [
+							'themeWidthSmall' => 'Petit',
+							'themeWidthNormal' => 'Moyen',
+							'themeWidthLarge' => 'Large'
+						], [
+							'label' => 'Largeur du site',
+							'selected' => $this->getData(['theme', 'width'])
+						]).
+						template::newRow().
+						template::select('themeImage', helper::listUploads('Aucune image', ['png', 'jpeg', 'jpg', 'gif']), [
+							'label' => 'Afficher une image à la place du texte dans la bannière',
+							'help' => 'Vous pouvez afficher une image de votre gestionnaire de fichiers dans votre bannière (formats autorisés : png, gif, jpg, jpeg).',
+							'selected' => $this->getData(['theme', 'image'])
+						]).
+						template::newRow().
+						template::checkbox('themeMargin', true, 'Ajouter une marge autour de la bannière et du menu', [
+							'checked' => $this->getData(['theme', 'margin']),
+						]).
+						template::newRow().
+						template::checkbox('themeRadius', true, 'Arrondir les coins du site', [
+							'checked' => $this->getData(['theme', 'radius']),
+						]).
+						template::checkbox('themeShadow', true, 'Ajouter une ombre autour du site', [
+							'checked' => $this->getData(['theme', 'shadow']),
+						]).
+						template::closeRow()
+					])
+			]).
+			template::openRow().
 			template::button('clean', [
 				'value' => 'Vider le cache',
 				'href' => helper::baseUrl() . 'clean',
 				'col' => 3,
 				'offset' => 5
-			]) .
+			]).
 			template::button('export', [
 				'value' => 'Exporter',
 				'href' => helper::baseUrl() . 'export',
 				'col' => 2
-			]) .
+			]).
 			template::submit('submit', [
 				'col' => 2
-			]) .
-			template::closeRow() .
+			]).
+			template::closeRow().
 			template::closeForm();
 	}
 
@@ -1119,36 +1121,35 @@ class core
 				])
 			];
 		}
+		if($filesTable) {
+			self::$content =
+				template::openRow() .
+				template::table([8, 2, 2], $filesTable) .
+				template::closeRow();
+		}
 		// Contenu de la page
 		self::$title = helper::translate('Gestionnaire de fichiers');
 		self::$content =
-			template::title('Envoyer un fichier') .
-			template::openForm('form', [
-				'enctype' => 'multipart/form-data'
-			]) .
-			template::openRow() .
-			template::file('file', [
-				'label' => 'Parcourir mes fichiers',
-				'help' => 'Envoyez vos fichier sur votre site (formats autorisés : png, gif, jpg, jpeg, txt, pdf, zip, rar, 7z, css, html, xml).',
-				'col' => '10'
-			]) .
-			template::submit('submit', [
-				'value' => 'Envoyer',
-				'col' => '2'
-			]) .
-			template::closeRow() .
-			template::closeForm() .
-			template::title('Liste des fichiers') .
-			template::openRow() .
-			template::table(
-				[
-					['Fichier', 8],
-					['Aperçu', 2],
-					['Supprimer', 2]
-				],
-				$filesTable
-			) .
-			template::closeRow();
+			template::tabs([
+				'Liste des fichiers' =>
+					(self::$content ? self::$content : template::subTitle('Aucun fichier...')),
+				'Envoyer un fichier' =>
+					template::openForm('form', [
+						'enctype' => 'multipart/form-data'
+					]).
+					template::openRow().
+					template::file('file', [
+						'label' => 'Parcourir mes fichiers',
+						'help' => 'Envoyez vos fichier sur votre site (formats autorisés : png, gif, jpg, jpeg, txt, pdf, zip, rar, 7z, css, html, xml).',
+						'col' => '10'
+					]).
+					template::submit('submit', [
+						'value' => 'Envoyer',
+						'col' => '2'
+					]).
+					template::closeRow().
+					template::closeForm()
+			]);
 	}
 
 	/**
@@ -1235,20 +1236,20 @@ class core
 		// Contenu de la page
 		self::$title = helper::translate('Connexion');
 		self::$content =
-			template::openForm() .
-			template::openRow() .
+			template::openForm().
+			template::openRow().
 			template::password('password', [
 				'required' => 'required',
 				'col' => 4
-			]) .
-			template::newRow() .
-			template::checkbox('time', true, 'Me connecter automatiquement à chaque visite') .
-			template::newRow() .
+			]).
+			template::newRow().
+			template::checkbox('time', true, 'Me connecter automatiquement à chaque visite').
+			template::newRow().
 			template::submit('submit', [
 				'value' => 'Me connecter',
 				'col' => 2
-			]) .
-			template::closeRow() .
+			]).
+			template::closeRow().
 			template::closeForm();
 	}
 
@@ -2348,12 +2349,12 @@ class template
 
 	/**
 	 * Crée un tableau
-	 * @param  array  $head       Entête du tableau (format: [[entête1, largeur], {entête2, largeur], [entête3, largeur], etc])
+	 * @param  array  $cols       Cols des colonnes du tableau (format: [col colonne1, col colonne2, col colonne3, etc])
 	 * @param  array  $body       Contenu du tableau (format: [[contenu1, contenu2, contenu3, etc], [contenu1, contenu2, contenu3, etc]])
 	 * @param  array  $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
 	 * @return string
 	 */
-	public static function table(array $head = [], array $body = [], array $attributes = []) {
+	public static function table(array $cols = [], array $body = [], array $attributes = []) {
 		// Attributs possibles
 		$attributes = array_merge([
 			'class' => '',
@@ -2364,21 +2365,14 @@ class template
 		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
 		// Début tableau
 		$html .= '<table class="' . $attributes['class']. '">';
-		// Début entête
-		$html .= '<thead>';
-		$html .= '<tr>';
-		foreach($head as $th) {
-			$html .= '<th class="col' . $th[1] . '">' . $th[0] . '</th>';
-		}
-		// Fin entête
-		$html .= '</tr>';
-		$html .= '</thead>';
 		// Début contenu
 		$html .= '<tbody>';
 		foreach($body as $tr) {
 			$html .= '<tr>';
+			$i = 0;
 			foreach($tr as $td) {
-				$html .= '<td>' . $td . '</td>';
+				$html .= '<td class="col' . $cols[$i] . '">' . $td . '</td>';
+				$i++;
 			}
 			$html .= '</tr>';
 		}
@@ -2392,6 +2386,33 @@ class template
 		$html .= '</div>';
 		// Retourne le html
 		return $html;
+	}
+
+	/**
+	 * Crée des onglets
+	 * @param  array  $tabs Onglets à créer (format: ['titre onglet 1' => 'contenu onglet 1', 'titre onglet 2' => 'contenu onglet 2', etc])
+	 * @return string
+	 */
+	public static function tabs(array $tabs = [])
+	{
+		$titles = '';
+		$contents = '';
+		$i = 1;
+		// Met en forme les onglets
+		foreach($tabs as $title => $content) {
+			$titles .= self::div([
+				'class' => 'tabTitle' . ($i === 1 ? ' current' : ''),
+				'data-1' => $i,
+				'text' => $title
+			]);
+			$contents .= self::div([
+				'class' => 'tabContent' . ($i === 1 ? '' : ' hide'),
+				'data-1' => $i,
+				'text' => $content
+			]);
+			$i++;
+		}
+		return $titles . $contents;
 	}
 
 }

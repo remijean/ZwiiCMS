@@ -189,6 +189,24 @@ h6 {
 	font-weight: normal;
 	text-transform: uppercase;
 }
+h1 {
+	font-size: 2em;
+}
+h2 {
+	font-size: 1.5em;
+}
+h3 {
+	font-size: 1.2em;
+}
+h4 {
+	font-size: 1em;
+}
+h5 {
+	font-size: .8em;
+}
+h6 {
+	font-size: .7em;
+}
 
 /* Listes */
 ul {
@@ -211,8 +229,7 @@ h6,
 p,
 hr,
 ul,
-ol,
-form {
+ol {
 	margin: 15px 0;
 }
 
@@ -226,6 +243,7 @@ table {
 	width: 100%;
 	border-spacing: 0;
 	border-collapse: collapse;
+	border: 1px solid #C5D1D4;
 }
 tr:nth-child(2n+2) {
 	background: #ECF0F1;
@@ -242,6 +260,24 @@ td {
 th > [class*='col'],
 td > [class*='col'] {
 	padding: 0 !important;
+}
+
+/* Onglet */
+.tabTitle {
+	font-family: 'Oswald', sans-serif;
+	text-transform: uppercase;
+	font-size: 1.2em;
+	display: inline-block;
+	margin-right: 20px;
+	cursor: pointer;
+	color: #2C3E50;
+}
+.tabTitle:hover {
+	text-decoration: underline;
+}
+.tabTitle.current {
+	cursor: auto;
+	text-decoration: none;
 }
 
 /**
@@ -472,18 +508,18 @@ input[type='radio']:disabled + label:before {
 .row {
 	margin: 0 -10px;
 }
-.col1:not(th),
-.col2:not(th),
-.col3:not(th),
-.col4:not(th),
-.col5:not(th),
-.col6:not(th),
-.col7:not(th),
-.col8:not(th),
-.col9:not(th),
-.col10:not(th),
-.col11:not(th),
-.col12:not(th) {
+.col1:not(td),
+.col2:not(td),
+.col3:not(td),
+.col4:not(td),
+.col5:not(td),
+.col6:not(td),
+.col7:not(td),
+.col8:not(td),
+.col9:not(td),
+.col10:not(td),
+.col11:not(td),
+.col12:not(td) {
 	vertical-align: bottom;
 	padding: 10px;
 	width: 100%;
@@ -492,73 +528,73 @@ input[type='radio']:disabled + label:before {
 	display: inline-block;
 }
 @media (min-width: 992px) {
-	.col1:not(th) {
+	.col1:not(td) {
 		width: 8.33333333%;
 	}
-	.col2:not(th) {
+	.col2:not(td) {
 		width: 16.66666667%;
 	}
-	.col3:not(th) {
+	.col3:not(td) {
 		width: 25%;
 	}
-	.col4:not(th) {
+	.col4:not(td) {
 		width: 33.33333333%;
 	}
-	.col5:not(th) {
+	.col5:not(td) {
 		width: 41.66666667%;
 	}
-	.col6:not(th) {
+	.col6:not(td) {
 		width: 50%;
 	}
-	.col7:not(th) {
+	.col7:not(td) {
 		width: 58.33333333%;
 	}
-	.col8:not(th) {
+	.col8:not(td) {
 		width: 66.66666667%;
 	}
-	.col9:not(th) {
+	.col9:not(td) {
 		width: 75%;
 	}
-	.col10:not(th) {
+	.col10:not(td) {
 		width: 83.33333333%;
 	}
-	.col11:not(th) {
+	.col11:not(td) {
 		width: 91.66666667%;
 	}
-	.col12:not(th) {
+	.col12:not(td) {
 		width: 100%;
 	}
-	.offset1:not(th) {
+	.offset1:not(td) {
 		margin-left: 8.33333333%;
 	}
-	.offset2:not(th) {
+	.offset2:not(td) {
 		margin-left: 16.66666667%;
 	}
-	.offset3:not(th) {
+	.offset3:not(td) {
 		margin-left: 25%;
 	}
-	.offset4:not(th) {
+	.offset4:not(td) {
 		margin-left: 33.33333333%;
 	}
-	.offset5:not(th) {
+	.offset5:not(td) {
 		margin-left: 41.66666667%;
 	}
-	.offset6:not(th) {
+	.offset6:not(td) {
 		margin-left: 50%;
 	}
-	.offset7:not(th) {
+	.offset7:not(td) {
 		margin-left: 58.33333333%;
 	}
-	.offset8:not(th) {
+	.offset8:not(td) {
 		margin-left: 66.66666667%;
 	}
-	.offset9:not(th) {
+	.offset9:not(td) {
 		margin-left: 75%;
 	}
-	.offset10:not(th) {
+	.offset10:not(td) {
 		margin-left: 83.33333333%;
 	}
-	.offset11:not(th) {
+	.offset11:not(td) {
 		margin-left: 91.66666667%;
 	}
 }
@@ -567,73 +603,73 @@ input[type='radio']:disabled + label:before {
  * Grille pour tableau
  */
 
-th.col1 {
+td.col1 {
 	width: 8.33333333%;
 }
-th.col2 {
+td.col2 {
 	width: 16.66666667%;
 }
-th.col3 {
+td.col3 {
 	width: 25%;
 }
-th.col4 {
+td.col4 {
 	width: 33.33333333%;
 }
-th.col5 {
+td.col5 {
 	width: 41.66666667%;
 }
-th.col6 {
+td.col6 {
 	width: 50%;
 }
-th.col7 {
+td.col7 {
 	width: 58.33333333%;
 }
-th.col8 {
+td.col8 {
 	width: 66.66666667%;
 }
-th.col9 {
+td.col9 {
 	width: 75%;
 }
-th.col10 {
+td.col10 {
 	width: 83.33333333%;
 }
-th.col11 {
+td.col11 {
 	width: 91.66666667%;
 }
-th.col12 {
+td.col12 {
 	width: 100%;
 }
-th.offset1 {
+td.offset1 {
 	margin-left: 8.33333333%;
 }
-th.offset2 {
+td.offset2 {
 	margin-left: 16.66666667%;
 }
-th.offset3 {
+td.offset3 {
 	margin-left: 25%;
 }
-th.offset4 {
+td.offset4 {
 	margin-left: 33.33333333%;
 }
-th.offset5 {
+td.offset5 {
 	margin-left: 41.66666667%;
 }
-th.offset6 {
+td.offset6 {
 	margin-left: 50%;
 }
-th.offset7 {
+td.offset7 {
 	margin-left: 58.33333333%;
 }
-th.offset8 {
+td.offset8 {
 	margin-left: 66.66666667%;
 }
-th.offset9 {
+td.offset9 {
 	margin-left: 75%;
 }
-th.offset10 {
+td.offset10 {
 	margin-left: 83.33333333%;
 }
-th.offset11 {
+td.offset11 {
 	margin-left: 91.66666667%;
 }
 
@@ -702,14 +738,14 @@ th.offset11 {
 .themeElementTurquoise input[type='radio']:checked + label:before,
 .themeElementTurquoise .helpButton,
 .themeElementTurquoise .helpContent,
-.themeElementTurquoise th,
 .themeHeaderTurquoise #header {
 	background-color: #1ABC9C;
 }
 .themeElementTurquoise h2,
 .themeElementTurquoise h4,
 .themeElementTurquoise h6,
-.themeElementTurquoise a {
+.themeElementTurquoise a,
+.themeElementTurquoise .tabTitle.current {
 	color: #1ABC9C;
 }
 .themeElementTurquoise input[type='text']:hover,
@@ -757,14 +793,14 @@ th.offset11 {
 .themeElementGreenSea input[type='radio']:checked + label:before,
 .themeElementGreenSea .helpButton,
 .themeElementGreenSea .helpContent,
-.themeHeaderGreenSea th,
 .themeHeaderGreenSea #header {
 	background-color: #16A085;
 }
 .themeElementGreenSea h2,
 .themeElementGreenSea h4,
 .themeElementGreenSea h6,
-.themeElementGreenSea a {
+.themeElementGreenSea a,
+.themeElementGreenSea .tabTitle.current {
 	color: #16A085;
 }
 .themeElementGreenSea input[type='text']:hover,
@@ -812,14 +848,14 @@ th.offset11 {
 .themeElementEmerald input[type='radio']:checked + label:before,
 .themeElementEmerald .helpButton,
 .themeElementEmerald .helpContent,
-.themeElementEmerald th,
 .themeHeaderEmerald #header {
 	background-color: #2ECC71;
 }
 .themeElementEmerald h2,
 .themeElementEmerald h4,
 .themeElementEmerald h6,
-.themeElementEmerald a {
+.themeElementEmerald a,
+.themeElementEmerald .tabTitle.current {
 	color: #2ECC71;
 }
 .themeElementEmerald input[type='text']:hover,
@@ -867,14 +903,14 @@ th.offset11 {
 .themeElementNephritis input[type='radio']:checked + label:before,
 .themeElementNephritis .helpButton,
 .themeElementNephritis .helpContent,
-.themeElementNephritis th,
 .themeHeaderNephritis #header {
 	background-color: #27AE60;
 }
 .themeElementNephritis h2,
 .themeElementNephritis h4,
 .themeElementNephritis h6,
-.themeElementNephritis a {
+.themeElementNephritis a,
+.themeElementNephritis .tabTitle.current {
 	color: #27AE60;
 }
 .themeElementNephritis input[type='text']:hover,
@@ -922,14 +958,14 @@ th.offset11 {
 .themeElementPeterRiver input[type='radio']:checked + label:before,
 .themeElementPeterRiver .helpButton,
 .themeElementPeterRiver .helpContent,
-.themeElementPeterRiver th,
 .themeHeaderPeterRiver #header {
 	background-color: #3498DB;
 }
 .themeElementPeterRiver h2,
 .themeElementPeterRiver h4,
 .themeElementPeterRiver h6,
-.themeElementPeterRiver a {
+.themeElementPeterRiver a,
+.themeElementPeterRiver .tabTitle.current {
 	color: #3498DB;
 }
 .themeElementPeterRiver input[type='text']:hover,
@@ -977,14 +1013,14 @@ th.offset11 {
 .themeElementBelizeHole input[type='radio']:checked + label:before,
 .themeElementBelizeHole .helpButton,
 .themeElementBelizeHole .helpContent,
-.themeElementBelizeHole th,
 .themeHeaderBelizeHole #header {
 	background-color: #2980B9;
 }
 .themeElementBelizeHole h2,
 .themeElementBelizeHole h4,
 .themeElementBelizeHole h6,
-.themeElementBelizeHole a {
+.themeElementBelizeHole a,
+.themeElementBelizeHole .tabTitle.current {
 	color: #2980B9;
 }
 .themeElementBelizeHole input[type='text']:hover,
@@ -1032,14 +1068,14 @@ th.offset11 {
 .themeElementAmethyst input[type='radio']:checked + label:before,
 .themeElementAmethyst .helpButton,
 .themeElementAmethyst .helpContent,
-.themeElementAmethyst th,
 .themeHeaderAmethyst #header {
 	background-color: #9B59B6;
 }
 .themeElementAmethyst h2,
 .themeElementAmethyst h4,
 .themeElementAmethyst h6,
-.themeElementAmethyst a {
+.themeElementAmethyst a,
+.themeElementAmethyst .tabTitle.current {
 	color: #9B59B6;
 }
 .themeElementAmethyst input[type='text']:hover,
@@ -1087,14 +1123,14 @@ th.offset11 {
 .themeElementWisteria input[type='radio']:checked + label:before,
 .themeElementWisteria .helpButton,
 .themeElementWisteria .helpContent,
-.themeElementWisteria th,
 .themeHeaderWisteria #header {
 	background-color: #8E44AD;
 }
 .themeElementWisteria h2,
 .themeElementWisteria h4,
 .themeElementWisteria h6,
-.themeElementWisteria a {
+.themeElementWisteria a,
+.themeElementWisteria .tabTitle.current {
 	color: #8E44AD;
 }
 .themeElementWisteria input[type='text']:hover,
@@ -1142,14 +1178,14 @@ th.offset11 {
 .themeElementWetAsphalt input[type='radio']:checked + label:before,
 .themeElementWetAsphalt .helpButton,
 .themeElementWetAsphalt .helpContent,
-.themeElementWetAsphalt th,
 .themeHeaderWetAsphalt #header {
 	background-color: #34495E;
 }
 .themeElementWetAsphalt h2,
 .themeElementWetAsphalt h4,
 .themeElementWetAsphalt h6,
-.themeElementWetAsphalt a {
+.themeElementWetAsphalt a,
+.themeElementWetAsphalt .tabTitle.current {
 	color: #34495E;
 }
 .themeElementWetAsphalt input[type='text']:hover,
@@ -1197,14 +1233,14 @@ th.offset11 {
 .themeElementMidnightBlue input[type='radio']:checked + label:before,
 .themeElementMidnightBlue .helpButton,
 .themeElementMidnightBlue .helpContent,
-.themeElementMidnightBlue th,
 .themeHeaderMidnightBlue #header {
 	background-color: #2C3E50;
 }
 .themeElementMidnightBlue h2,
 .themeElementMidnightBlue h4,
 .themeElementMidnightBlue h6,
-.themeElementMidnightBlue a {
+.themeElementMidnightBlue a,
+.themeElementMidnightBlue .tabTitle.current {
 	color: #2C3E50;
 }
 .themeElementMidnightBlue input[type='text']:hover,
@@ -1252,14 +1288,14 @@ th.offset11 {
 .themeElementSunFlower input[type='radio']:checked + label:before,
 .themeElementSunFlower .helpButton,
 .themeElementSunFlower .helpContent,
-.themeElementSunFlower th,
 .themeHeaderSunFlower #header {
 	background-color: #F1C40F;
 }
 .themeElementSunFlower h2,
 .themeElementSunFlower h4,
 .themeElementSunFlower h6,
-.themeElementSunFlower a {
+.themeElementSunFlower a,
+.themeElementSunFlower .tabTitle.current {
 	color: #F1C40F;
 }
 .themeElementSunFlower input[type='text']:hover,
@@ -1307,14 +1343,14 @@ th.offset11 {
 .themeElementOrange input[type='radio']:checked + label:before,
 .themeElementOrange .helpButton,
 .themeElementOrange .helpContent,
-.themeElementOrange th,
 .themeHeaderOrange #header {
 	background-color: #F39C12;
 }
 .themeElementOrange h2,
 .themeElementOrange h4,
 .themeElementOrange h6,
-.themeElementOrange a {
+.themeElementOrange a,
+.themeElementOrange .tabTitle.current {
 	color: #F39C12;
 }
 .themeElementOrange input[type='text']:hover,
@@ -1362,14 +1398,14 @@ th.offset11 {
 .themeElementCarrot input[type='radio']:checked + label:before,
 .themeElementCarrot .helpButton,
 .themeElementCarrot .helpContent,
-.themeElementCarrot th,
 .themeHeaderCarrot #header {
 	background-color: #E67E22;
 }
 .themeElementCarrot h2,
 .themeElementCarrot h4,
 .themeElementCarrot h6,
-.themeElementCarrot a {
+.themeElementCarrot a,
+.themeElementCarrot .tabTitle.current {
 	color: #E67E22;
 }
 .themeElementCarrot input[type='text']:hover,
@@ -1417,14 +1453,14 @@ th.offset11 {
 .themeElementPumpkin input[type='radio']:checked + label:before,
 .themeElementPumpkin .helpButton,
 .themeElementPumpkin .helpContent,
-.themeElementPumpkin th,
 .themeHeaderPumpkin #header {
 	background-color: #D35400;
 }
 .themeElementPumpkin h2,
 .themeElementPumpkin h4,
 .themeElementPumpkin h6,
-.themeElementPumpkin a {
+.themeElementPumpkin a,
+.themeElementPumpkin .tabTitle.current {
 	color: #D35400;
 }
 .themeElementPumpkin input[type='text']:hover,
@@ -1472,14 +1508,14 @@ th.offset11 {
 .themeElementAlizarin input[type='radio']:checked + label:before,
 .themeElementAlizarin .helpButton,
 .themeElementAlizarin .helpContent,
-.themeElementAlizarin th,
 .themeHeaderAlizarin #header {
 	background-color: #E74C3C;
 }
 .themeElementAlizarin h2,
 .themeElementAlizarin h4,
 .themeElementAlizarin h6,
-.themeElementAlizarin a {
+.themeElementAlizarin a,
+.themeElementAlizarin .tabTitle.current {
 	color: #E74C3C;
 }
 .themeElementAlizarin input[type='text']:hover,
@@ -1527,14 +1563,14 @@ th.offset11 {
 .themeElementPomegranate input[type='radio']:checked + label:before,
 .themeElementPomegranate .helpButton,
 .themeElementPomegranate .helpContent,
-.themeElementPomegranate th,
 .themeHeaderPomegranate #header {
 	background-color: #C0392B;
 }
 .themeElementPomegranate h2,
 .themeElementPomegranate h4,
 .themeElementPomegranate h6,
-.themeElementPomegranate a {
+.themeElementPomegranate a,
+.themeElementPomegranate .tabTitle.current {
 	color: #C0392B;
 }
 .themeElementPomegranate input[type='text']:hover,
@@ -1589,14 +1625,14 @@ th.offset11 {
 .themeElementSilver input[type='radio']:checked + label:before,
 .themeElementSilver .helpButton,
 .themeElementSilver .helpContent,
-.themeElementSilver th,
 .themeHeaderSilver #header {
 	background-color: #BDC3C7;
 }
 .themeElementSilver h2,
 .themeElementSilver h4,
 .themeElementSilver h6,
-.themeElementSilver a {
+.themeElementSilver a,
+.themeElementSilver .tabTitle.current {
 	color: #BDC3C7;
 }
 .themeElementSilver input[type='text']:hover,
@@ -1644,14 +1680,14 @@ th.offset11 {
 .themeElementConcrete input[type='radio']:checked + label:before,
 .themeElementConcrete .helpButton,
 .themeElementConcrete .helpContent,
-.themeElementConcrete th,
 .themeHeaderConcrete #header {
 	background-color: #95A5A6;
 }
 .themeElementConcrete h2,
 .themeElementConcrete h4,
 .themeElementConcrete h6,
-.themeElementConcrete a {
+.themeElementConcrete a,
+.themeElementConcrete .tabTitle.current {
 	color: #95A5A6;
 }
 .themeElementConcrete input[type='text']:hover,
@@ -1699,14 +1735,14 @@ th.offset11 {
 .themeElementAsbestos input[type='radio']:checked + label:before,
 .themeElementAsbestos .helpButton,
 .themeElementAsbestos .helpContent,
-.themeElementAsbestos th,
 .themeHeaderAsbestos #header {
 	background-color: #7F8C8D;
 }
 .themeElementAsbestos h2,
 .themeElementAsbestos h4,
 .themeElementAsbestos h6,
-.themeElementAsbestos a {
+.themeElementAsbestos a,
+.themeElementAsbestos .tabTitle.current {
 	color: #7F8C8D;
 }
 .themeElementAsbestos input[type='text']:hover,

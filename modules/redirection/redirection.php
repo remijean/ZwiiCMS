@@ -33,23 +33,23 @@ class redirectionAdm extends core
 		}
 		// Contenu de la page
 		self::$content =
-			template::openForm() .
-			template::openRow() .
+			template::openForm().
+			template::openRow().
 			template::text('url', [
 				'label' => 'URL de redirection',
 				'value' => $this->getData([$this->getUrl(0), 'url'])
-			]) .
-			template::newRow() .
+			]).
+			template::newRow().
 			template::button('back', [
 				'value' => 'Retour',
 				'href' => helper::baseUrl() . 'edit/' . $this->getUrl(0),
 				'col' => 2
-			]) .
+			]).
 			template::submit('submit', [
 				'col' => 2,
 				'offset' => 8
-			]) .
-			template::closeRow() .
+			]).
+			template::closeRow().
 			template::closeForm();
 	}
 }

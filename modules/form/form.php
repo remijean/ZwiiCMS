@@ -89,41 +89,41 @@ class formAdm extends core
 			// Crée l'affichage des champs en fonction
 			for($i = 0; $i < count($inputs); $i++) {
 				self::$content .=
-					template::openRow() .
+					template::openRow().
 					template::hidden('position[]', [
 						'value' => $this->getData([$this->getUrl(0), 'inputs', $inputs[$i], 'position']),
 						'class' => 'position'
-					]) .
+					]).
 					template::button('move[]', [
 						'value' => '&#8597;',
 						'class' => 'move',
 						'col' => 1
-					]) .
+					]).
 					template::text('name[]', [
 						'placeholder' => 'Nom',
 						'value' => $this->getData([$this->getUrl(0), 'inputs', $inputs[$i], 'name']),
 						'col' => 3
-					]) .
+					]).
 					template::select('type[]', self::$types, [
 						'selected'  => $this->getData([$this->getUrl(0), 'inputs', $inputs[$i], 'type']),
 						'class' => 'type',
 						'col' => 2
-					]) .
+					]).
 					template::text('values[]', [
 						'placeholder' => 'Liste des valeurs (valeur1,valeur2,...)',
 						'value' => $this->getData([$this->getUrl(0), 'inputs', $inputs[$i], 'values']),
 						'class' => 'values',
 						'col' => 3
-					]) .
+					]).
 					template::select('width[]', self::$widths, [
 						'selected' => (int) $this->getData([$this->getUrl(0), 'inputs', $inputs[$i], 'width']),
 						'col' => 2
-					]) .
+					]).
 					template::button('delete[]', [
 						'value' => '-',
 						'class' => 'delete',
 						'col' => 1
-					]) .
+					]).
 					template::closeRow();
 			}
 		}
@@ -133,78 +133,81 @@ class formAdm extends core
 				'id' => 'copy',
 				'class' => 'hide',
 				'text' =>
-					template::openRow() .
+					template::openRow().
 					template::hidden('position[]', [
 						'class' => 'position'
-					]) .
+					]).
 					template::button('move[]', [
 						'value' => '&#8597;',
 						'class' => 'move',
 						'col' => 1
-					]) .
+					]).
 					template::text('name[]', [
 						'placeholder' => 'Nom',
 						'col' => 3
-					]) .
+					]).
 					template::select('type[]', self::$types, [
 						'class' => 'type',
 						'col' => 2
-					]) .
+					]).
 					template::text('values[]', [
 						'placeholder' => 'Liste des valeurs (valeur1,valeur2,...)',
 						'class' => 'values',
 						'col' => 3
-					]) .
+					]).
 					template::select('width[]', self::$widths, [
 						'selected' => 12,
 						'col' => 2
-					]) .
+					]).
 					template::button('delete[]', [
 						'value' => '-',
 						'class' => 'delete',
 						'col' => 1
-					]) .
+					]).
 					template::closeRow()
-			]) .
-			template::openForm() .
-			template::title('Configuration') .
-			template::openRow() .
-			template::text('mail', [
-				'label' => 'Recevoir à chaque validation un mail contenant les données saisies',
-				'value' => $this->getData([$this->getUrl(0), 'config', 'mail'])
-			]) .
-			template::text('button', [
-				'label' => 'Personnaliser le texte du bouton',
-				'value' => $this->getData([$this->getUrl(0), 'config', 'button'])
-			]) .
-			template::closeRow() .
-			template::title('Liste des champs') .
-			template::div([
-				'id' => 'inputs',
-				'text' => self::$content
-			]) .
-			template::openRow() .
-			template::button('add', [
-				'value' => '+',
-				'col' => 1,
-				'offset' => 11
-			]) .
-			template::newRow() .
+			]).
+			template::openForm().
+			template::tabs([
+				'Liste des champs' =>
+					template::div([
+						'id' => 'inputs',
+						'text' => self::$content
+					]).
+					template::openRow().
+					template::button('add', [
+						'value' => '+',
+						'col' => 1,
+						'offset' => 11
+					]).
+					template::closeRow(),
+				'Configuration' =>
+					template::openRow().
+					template::text('mail', [
+						'label' => 'Recevoir à chaque validation un mail contenant les données saisies',
+						'value' => $this->getData([$this->getUrl(0), 'config', 'mail'])
+					]).
+					template::text('button', [
+						'label' => 'Personnaliser le texte du bouton',
+						'value' => $this->getData([$this->getUrl(0), 'config', 'button'])
+					]).
+					template::closeRow()
+			]).
+			template::openRow().
 			template::button('back', [
 				'value' => 'Retour',
 				'href' => helper::baseUrl() . 'edit/' . $this->getUrl(0),
 				'col' => 2
-			]) .
+			]).
 			template::button('data', [
 				'value' => 'Données saisies',
 				'href' => helper::baseUrl() . $this->getUrl() . '/data',
 				'col' => 2,
 				'offset' => 6
-			]) .
+			]).
 			template::submit('submit', [
 				'col' => 2
-			]) .
-			template::closeRow() .
+			]).
+			template::closeRow().
 			template::closeForm();
 	}
 
@@ -243,14 +246,14 @@ class formAdm extends core
 		}
 		// Contenu de la page
 		self::$content =
-			template::title('Données saisies') .
-			self::$content .
-			template::openRow() .
+			template::title('Données saisies').
+			(self::$content ? self::$content : template::subTitle('Aucune donnée...')).
+			template::openRow().
 			template::button('back', [
 				'value' => 'Retour',
 				'href' => helper::baseUrl() . 'module/' . $this->getUrl(0),
 				'col' => 2
-			]) .
+			]).
 			template::closeRow();
 	}
 }
@@ -271,20 +274,20 @@ class formMod extends core
 			case 'text':
 				// Génère le champ texte
 				return
-					template::openRow() .
+					template::openRow().
 					template::text('input[]', [
 						'label' => $input['name'],
 						'col' => $input['width']
-					]) .
+					]).
 					template::closeRow();
 			case 'textarea':
 				// Génère le grand champ texte
 				return
-					template::openRow() .
+					template::openRow().
 					template::textarea('input[]', [
 						'label' => $input['name'],
 						'col' => $input['width']
-					]) .
+					]).
 					template::closeRow();
 			case 'select':
 				// Génère un tableau sous forme value => value
@@ -294,11 +297,11 @@ class formMod extends core
 				}
 				// Génère le champ de sélection
 				return
-					template::openRow() .
+					template::openRow().
 					template::select('input[]', $values, [
 						'label' => $input['name'],
 						'col' => $input['width']
-					]) .
+					]).
 					template::closeRow();
 		}
 	}
@@ -344,17 +347,17 @@ class formMod extends core
 			$submitText = $this->getData([$this->getUrl(0), 'config', 'button']);
 			// Ajout du bouton de validation
 			self::$content .=
-				template::openRow() .
+				template::openRow().
 				template::submit('submit', [
 					'value' => $submitText ? $submitText : 'Enregistrer',
 					'col' => 2
-				]) .
+				]).
 				template::closeRow();
 		}
 		// Contenu de la page
 		self::$content =
-			template::openForm() .
-			self::$content .
+			template::openForm().
+			self::$content.
 			template::closeForm();
 	}
 }

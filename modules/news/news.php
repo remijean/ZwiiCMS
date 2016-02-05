@@ -68,47 +68,43 @@ class newsAdm extends core
 			}
 			// Ajoute la liste des pages en dessous des news
 			self::$content .=
-				template::table(
-					[
-						['News', 8],
-						['Aperçu', 2],
-						['Supprimer', 2]
-					],
-					$newsTable
-				) .
-				$pagination['pages'];
+				template::openRow().
+				template::table([8, 2, 2], $newsTable).
+				$pagination['pages'].
+				template::closeRow();
 		}
 		// Contenu de la page
 		self::$content =
-			template::openForm() .
-			template::title('Nouvelle news') .
-			template::openRow() .
-			template::text('title', [
-				'label' => 'Titre de la news',
-				'required' => 'required'
-			]) .
-			template::newRow() .
-			template::textarea('content', [
-				'class' => 'editor'
-			]) .
-			template::newRow() .
-			template::submit('submit', [
-				'value' => 'Créer',
-				'col' => 2,
-				'offset' => 10
-			]) .
-			template::closeRow() .
-			template::title('Liste des news') .
-			template::openRow() .
-			self::$content .
-			template::newRow() .
-			template::button('back', [
-				'value' => 'Retour',
-				'href' => helper::baseUrl() . 'edit/' . $this->getUrl(0),
-				'col' => 2
-			]) .
-			template::closeRow() .
-			template::closeForm();
+			template::tabs([
+				'Liste des news' =>
+					(self::$content ? self::$content : template::subTitle('Aucune news...')).
+					template::openRow().
+					template::button('back', [
+						'value' => 'Retour',
+						'href' => helper::baseUrl() . 'edit/' . $this->getUrl(0),
+						'col' => 2
+					]).
+					template::closeRow(),
+				'Nouvelle news' =>
+					template::openForm().
+					template::openRow().
+					template::text('title', [
+						'label' => 'Titre de la news',
+						'required' => 'required'
+					]).
+					template::newRow().
+					template::textarea('content', [
+						'class' => 'editor'
+					]).
+					template::newRow().
+					template::submit('submit', [
+						'value' => 'Créer',
+						'col' => 2,
+						'offset' => 10
+					]).
+					template::closeRow().
+					template::closeForm()
+			]);
 	}
 
 	/**
@@ -151,28 +147,28 @@ class newsAdm extends core
 		}
 		// Contenu de la page
 		self::$content =
-			template::openForm() .
-			template::openRow() .
+			template::openForm().
+			template::openRow().
 			template::text('title', [
 				'label' => 'Titre de la news',
 				'value' => $this->getData([$this->getUrl(0), $this->getUrl(2), 'title']),
 				'required' => 'required'
-			]) .
-			template::newRow() .
+			]).
+			template::newRow().
 			template::textarea('content', [
 				'class' => 'editor',
 				'value' => $this->getData([$this->getUrl(0), $this->getUrl(2), 'content'])
-			]) .
-			template::newRow() .
+			]).
+			template::newRow().
 			template::button('back', [
 				'value' => 'Retour',
 				'href' => helper::baseUrl() . 'module/' . $this->getUrl(0),
 				'col' => 2
-			]) .
+			]).
 			template::submit('submit', [
 				'col' => 2,
 				'offset' => 8
-			]) .
+			]).
 			template::closeRow();
 			template::closeForm();
 	}
@@ -216,7 +212,7 @@ class newsMod extends core
 			// Crée l'affichage des news en fonction de la pagination
 			for($i = $pagination['first']; $i < $pagination['last']; $i++) {
 				self::$content .=
-					template::title($this->getData([$this->getUrl(0), $news[$i], 'title'])) .
+					template::title($this->getData([$this->getUrl(0), $news[$i], 'title'])).
 					template::subTitle(date('d/m/Y - H:i', $this->getData([$this->getUrl(0), $news[$i], 'date']))).
 					$this->getData([$this->getUrl(0), $news[$i], 'content']);
 			}
