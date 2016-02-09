@@ -1066,14 +1066,13 @@ class core
 						]).
 						template::newRow().
 						template::checkbox('themeMargin', true, 'Ajouter une marge autour de la bannière et du menu', [
-							'checked' => $this->getData(['theme', 'margin']),
+							'checked' => $this->getData(['theme', 'margin'])
 						]).
-						template::newRow().
 						template::checkbox('themeRadius', true, 'Arrondir les coins du site', [
-							'checked' => $this->getData(['theme', 'radius']),
+							'checked' => $this->getData(['theme', 'radius'])
 						]).
 						template::checkbox('themeShadow', true, 'Ajouter une ombre autour du site', [
-							'checked' => $this->getData(['theme', 'shadow']),
+							'checked' => $this->getData(['theme', 'shadow'])
 						]).
 						template::closeRow()
 					])
