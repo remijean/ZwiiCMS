@@ -14,7 +14,9 @@
 <body class="<?php echo $this->getTheme(); ?>">
 <?php echo $this->panel() . $this->getNotification(); ?>
 <div id="container">
-	<h1 id="header" style="<?php echo $this->getThemeImage(); ?>"><?php echo $this->getData(['config', 'title']); ?></h1>
+	<div id="header" style="<?php echo $this->getThemeImage(); ?>">
+		<h1><?php echo $this->getData(['config', 'title']); ?></h1>
+	</div>
 	<div id="toggle"><span></span></div>
 	<ul id="menu"><?php echo $this->menu(); ?></ul>
 	<div id="section">
