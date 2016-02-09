@@ -110,7 +110,7 @@ $('#theme').on('change', function() {
 		var option = select.find('option:selected').val();
 		// Pour le select d'ajout d'image dans la bannière
 		if(select.attr('id') === 'themeImage') {
-			$('#header').css('background-image', 'url(' + option + ')');
+			$('#header').css('background-image', 'url("' + option + '")');
 			if(select.val() === '') {
 				body.removeClass('themeImage');
 			}

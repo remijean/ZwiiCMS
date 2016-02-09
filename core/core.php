@@ -362,8 +362,12 @@ class core
 		// Liste des classes
 		$class = [];
 		foreach($this->getData(['theme']) as $key => $value) {
+			// Pour l'image de la bannière
+			if($key === 'image') {
+				$class[] = 'themeImage';
+			}
 			// Pour les booleans
-			if($value === true) {
+			elseif($value === true) {
 				$class[] = 'theme' . ucfirst($key);
 			}
 			// Pour les autres
