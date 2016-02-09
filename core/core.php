@@ -1427,7 +1427,11 @@ class helper
 		return [
 			'first' => $firstElement,
 			'last' => $lastElement,
-			'pages' => '<div class="pagination">' . $pages . '</div>'
+			'pages' => template::div([
+				'text' => $pages,
+				'class' => 'pagination',
+				'col' => 12
+			])
 		];
 	}
 

@@ -361,7 +361,7 @@ label {
 	padding: 10px;
 	margin: 5px;
 	text-align: center;
-	color: #FFF;
+	color: #FFF !important;
 }
 .pagination > a:hover {
 	text-decoration: none;
