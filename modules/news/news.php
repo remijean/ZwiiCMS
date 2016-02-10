@@ -42,7 +42,7 @@ class newsAdm extends core
 			// Notification de création
 			$this->setNotification('Nouvelle news créée avec succès !');
 			// Redirection vers la première page des news
-			helper::redirect('module/' . $this->getUrl(0));
+			helper::redirect('module/' . $this->getUrl(0) . '#1'); // #1 pour forcer la redirection vers la liste des news
 		}
 		// Liste les news
 		if($this->getData($this->getUrl(0))) {
@@ -70,8 +70,8 @@ class newsAdm extends core
 			self::$content .=
 				template::openRow().
 				template::table([8, 2, 2], $newsTable).
-				$pagination['pages'].
-				template::closeRow();
+				template::closeRow().
+				$pagination['pages'];
 		}
 		// Contenu de la page
 		self::$content =
@@ -97,10 +97,15 @@ class newsAdm extends core
 						'class' => 'editor'
 					]).
 					template::newRow().
+					template::button('back', [
+						'value' => 'Retour',
+						'href' => helper::baseUrl() . 'edit/' . $this->getUrl(0),
+						'col' => 2
+					]).
 					template::submit('submit', [
 						'value' => 'Créer',
 						'col' => 2,
-						'offset' => 10
+						'offset' => 8
 					]).
 					template::closeRow().
 					template::closeForm()
@@ -142,8 +147,8 @@ class newsAdm extends core
 			$this->saveData();
 			// Notification de modification
 			$this->setNotification('News modifiée avec succès !');
-			// Redirige vers l'édition de la nouvelle news si la clef à changée ou sinon vers l'ancienne
-			helper::redirect('module/' . $this->getUrl(0) . '/edit/' . $key);
+			// Redirection vers la première page des news
+			helper::redirect('module/' . $this->getUrl(0));
 		}
 		// Contenu de la page
 		self::$content =

@@ -362,8 +362,8 @@ class core
 		// Liste des classes
 		$class = [];
 		foreach($this->getData(['theme']) as $key => $value) {
-			// Pour l'image de la bannière
-			if($key === 'image') {
+			// Cas spécifique pour l'image de la bannière
+			if($key === 'image' && !empty($value)) {
 				$class[] = 'themeImage';
 			}
 			// Pour les booleans
@@ -635,7 +635,7 @@ class core
 		// Traitement du formulaire
 		elseif($this->getPost('submit')) {
 			// Modifie la clef de la page si le titre a été modifié
-			$key = $this->getPost('title') ? $this->getPost('title', helper::URL) : $this->getUrl(0);
+			$key = $this->getPost('title') ? $this->getPost('title', helper::URL_STRICT) : $this->getUrl(0);
 			// Sauvegarde le module de la page
 			$module = $this->getData(['pages', $this->getUrl(0), 'module']);
 			// Si la clef à changée
@@ -977,7 +977,7 @@ class core
 		self::$content =
 			template::openForm().
 			template::tabs([
-				'Configuration générale' =>
+				'Générale' =>
 					template::openRow().
 					template::text('title', [
 						'label' => 'Titre du site',
@@ -1010,6 +1010,14 @@ class core
 						'label' => 'Traduire le site',
 						'selected' => $this->getData(['config', 'language'])
 					]).
+					template::closeRow(),
+				'Avancée' =>
+					template::openRow().
+					template::text('version', [
+						'label' => 'Version de ZwiiCMS',
+						'value' => self::$version,
+						'disabled' => 'disabled'
+					]).
 					template::newRow().
 					template::checkbox('rewriting', true, 'Activer la réécriture d\'URL', [
 						'checked' => file_exists('.simple'),
@@ -1017,13 +1025,18 @@ class core
 						'disabled' => (get_headers(helper::baseUrl(false) . 'core/rewrite/test')[0] !== 'HTTP/1.1 200 OK') ? 'disabled' : '' // Check que l'URL rewriting fonctionne sur le serveur
 					]).
 					template::newRow().
-					template::text('version', [
-						'label' => 'Version de ZwiiCMS',
-						'value' => self::$version,
-						'disabled' => 'disabled'
+					template::button('clean', [
+						'value' => 'Vider le cache',
+						'href' => helper::baseUrl() . 'clean',
+						'col' => 3,
+					]).
+					template::button('export', [
+						'value' => 'Exporter les données',
+						'href' => helper::baseUrl() . 'export',
+						'col' => 4
 					]).
 					template::closeRow(),
-				'Configuration du thème' =>
+				'Thème' =>
 					template::div([
 						'id' => 'theme',
 						'text' =>
@@ -1082,19 +1095,9 @@ class core
 					])
 			]).
 			template::openRow().
-			template::button('clean', [
-				'value' => 'Vider le cache',
-				'href' => helper::baseUrl() . 'clean',
-				'col' => 3,
-				'offset' => 5
-			]).
-			template::button('export', [
-				'value' => 'Exporter',
-				'href' => helper::baseUrl() . 'export',
-				'col' => 2
-			]).
 			template::submit('submit', [
-				'col' => 2
+				'col' => 2,
+				'offset' => 10
 			]).
 			template::closeRow().
 			template::closeForm();
@@ -1272,7 +1275,8 @@ class helper
 	/** Filtres personnalisés */
 	const PASSWORD = 'FILTER_SANITIZE_PASSWORD';
 	const BOOLEAN = 'FILTER_SANITIZE_BOOLEAN';
-	const URL = 'FILTER_SANITIZE_URL';
+	const URL = 'FILTER_SANITIZE_URL'; // N'utilise pas FILTER_SANITIZE_URL de PHP qui est trop efficace
+	const URL_STRICT = 'FILTER_SANITIZE_URL_STRICT'; // Supprime les "&", "?" et "/" (utile pour filtrer une partie d'URL, ne pas utiliser pour filtrer une URL complète)
 	const STRING = FILTER_SANITIZE_STRING;
 	const EMAIL = FILTER_SANITIZE_EMAIL;
 	const FLOAT = FILTER_SANITIZE_NUMBER_FLOAT;
@@ -1312,6 +1316,8 @@ class helper
 	 */
 	public static function filter($text, $filter)
 	{
+		$search = '€,$,£,á,à,â,ä,ã,å,ç,é,è,ê,ë,í,ì,î,ï,ñ,ó,ò,ô,ö,õ,ú,ù,û,ü,ý,ÿ, ,¨,\',",’,;';
+		$replace = 'e,s,l,a,a,a,a,a,a,c,e,e,e,e,i,i,i,i,n,o,o,o,o,o,u,u,u,u,y,y,-,-,-,-,-,-';
 		switch($filter) {
 			case self::PASSWORD:
 				$text = sha1($text);
@@ -1320,9 +1326,10 @@ class helper
 				$text = empty($text) ? false : true;
 				break;
 			case self::URL:
-				$search = explode(',', 'á,à,â,ä,ã,å,ç,é,è,ê,ë,í,ì,î,ï,ñ,ó,ò,ô,ö,õ,ú,ù,û,ü,ý,ÿ, ,\',’');
-				$replace = explode(',', 'a,a,a,a,a,a,c,e,e,e,e,i,i,i,i,n,o,o,o,o,o,u,u,u,u,y,y,-,-,-');
-				$text = str_replace($search, $replace, mb_strtolower($text, 'UTF-8'));
+				$text = str_replace(explode(',', $search), explode(',', $replace), mb_strtolower($text, 'UTF-8'));
+				break;
+			case self::URL_STRICT:
+				$text = str_replace(explode(',', $search . ',?,&,/'), explode(',', $replace . ',-,-,-'), mb_strtolower($text, 'UTF-8'));
 				break;
 			default:
 				$text = filter_var($text, $filter);
@@ -1432,8 +1439,7 @@ class helper
 			'last' => $lastElement,
 			'pages' => template::div([
 				'text' => $pages,
-				'class' => 'pagination',
-				'col' => 12
+				'class' => 'pagination'
 			])
 		];
 	}
