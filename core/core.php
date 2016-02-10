@@ -938,15 +938,21 @@ class core
 			$this->setData([
 				'theme',
 				[
-					'header' => $this->getPost('themeHeader', helper::STRING),
-					'element' => $this->getPost('themeElement', helper::STRING),
-					'menu' => $this->getPost('themeMenu', helper::STRING),
-					'background' => $this->getPost('themeBackground', helper::STRING),
-					'image' => $this->getPost('themeImage', helper::URL),
-					'width' => $this->getPost('themeWidth', helper::STRING),
-					'margin' => $this->getPost('themeMargin', helper::BOOLEAN),
-					'radius' => $this->getPost('themeRadius', helper::BOOLEAN),
-					'shadow' => $this->getPost('themeShadow', helper::BOOLEAN)
+					'backgroundColor' => $this->getPost('themeBackgroundColor', helper::STRING),
+					'elementColor' => $this->getPost('themeElementColor', helper::STRING),
+					'headerColor' => $this->getPost('themeHeaderColor', helper::STRING),
+					'headerHeight' => $this->getPost('themeHeaderHeight', helper::STRING),
+					'headerImage' => $this->getPost('themeHeaderImage', helper::URL),
+					'headerPosition' => $this->getPost('themeHeaderPosition', helper::STRING),
+					'headerTextAlign' => $this->getPost('themeHeaderTextAlign', helper::STRING),
+					'menuColor' => $this->getPost('themeMenuColor', helper::STRING),
+					'menuHeight' => $this->getPost('themeMenuHeight', helper::STRING),
+					'menuPosition' => $this->getPost('themeMenuPosition', helper::STRING),
+					'menuTextAlign' => $this->getPost('themeMenuTextAlign', helper::STRING),
+					'siteMargin' => $this->getPost('themeSiteMargin', helper::BOOLEAN),
+					'siteRadius' => $this->getPost('themeSiteRadius', helper::BOOLEAN),
+					'siteShadow' => $this->getPost('themeSiteShadow', helper::BOOLEAN),
+					'siteWidth' => $this->getPost('themeSiteWidth', helper::STRING)
 				]
 			]);
 			// Active/désactive l'URL rewriting
@@ -1037,62 +1043,121 @@ class core
 					]).
 					template::closeRow(),
 				'Thème' =>
-					template::div([
-						'id' => 'theme',
-						'text' =>
-						template::openRow().
-						template::colorPicker('themeHeader', [
-							'label' => 'Couleur de la bannière',
-							'ignore' => ['Clouds'],
-							'selected' => $this->getData(['theme', 'header']),
-							'col' => 6
-						]).
-						template::colorPicker('themeMenu', [
-							'label' => 'Couleur du menu',
-							'ignore' => ['Clouds', 'White'],
-							'selected' => $this->getData(['theme', 'menu']),
-							'col' => 6
-						]).
-						template::newRow().
-						template::colorPicker('themeElement', [
-							'label' => 'Couleur des éléments du site',
-							'ignore' => ['Clouds', 'White'],
-							'selected' => $this->getData(['theme', 'element']),
-							'col' => 6
-						]).
-						template::colorPicker('themeBackground', [
-							'label' => 'Couleur du fond',
-							'ignore' => ['White'],
-							'selected' => $this->getData(['theme', 'background']),
-							'col' => 6
-						]).
-						template::newRow().
-						template::select('themeWidth', [
-							'themeWidthSmall' => 'Petit',
-							'themeWidthNormal' => 'Moyen',
-							'themeWidthLarge' => 'Large'
-						], [
-							'label' => 'Largeur du site',
-							'selected' => $this->getData(['theme', 'width'])
-						]).
-						template::newRow().
-						template::select('themeImage', helper::listUploads('Aucune image', ['png', 'jpeg', 'jpg', 'gif']), [
-							'label' => 'Afficher une image à la place du texte dans la bannière',
-							'help' => 'Vous pouvez afficher une image de votre gestionnaire de fichiers dans votre bannière (formats autorisés : png, gif, jpg, jpeg).',
-							'selected' => $this->getData(['theme', 'image'])
-						]).
-						template::newRow().
-						template::checkbox('themeMargin', true, 'Ajouter une marge autour de la bannière et du menu', [
-							'checked' => $this->getData(['theme', 'margin'])
-						]).
-						template::checkbox('themeRadius', true, 'Arrondir les coins du site', [
-							'checked' => $this->getData(['theme', 'radius'])
-						]).
-						template::checkbox('themeShadow', true, 'Ajouter une ombre autour du site', [
-							'checked' => $this->getData(['theme', 'shadow'])
-						]).
-						template::closeRow()
-					])
+					template::subTitle('Couleurs et image').
+					template::openRow().
+					template::colorPicker('themeHeaderColor', [
+						'label' => 'Couleur de la bannière',
+						'ignore' => ['Clouds'],
+						'selected' => $this->getData(['theme', 'headerColor']),
+						'col' => 6
+					]).
+					template::colorPicker('themeMenuColor', [
+						'label' => 'Couleur du menu',
+						'ignore' => ['Clouds', 'White'],
+						'selected' => $this->getData(['theme', 'menuColor']),
+						'col' => 6
+					]).
+					template::newRow().
+					template::colorPicker('themeElementColor', [
+						'label' => 'Couleur des éléments du site',
+						'ignore' => ['Clouds', 'White'],
+						'selected' => $this->getData(['theme', 'elementColor']),
+						'col' => 6
+					]).
+					template::colorPicker('themeBackgroundColor', [
+						'label' => 'Couleur du fond',
+						'ignore' => ['White'],
+						'selected' => $this->getData(['theme', 'backgroundColor']),
+						'col' => 6
+					]).
+					template::newRow().
+					template::select('themeHeaderImage', helper::listUploads('Aucune image', ['png', 'jpeg', 'jpg', 'gif']), [
+						'label' => 'Afficher une image à la place du texte dans la bannière',
+						'help' => 'Seul les images png, gif, jpg ou jpeg de votre gestionnaire de fichiers peuvent être utilisées.',
+						'selected' => $this->getData(['theme', 'headerImage'])
+					]).
+					template::closeRow().
+					template::subTitle('Organisation du site').
+					template::openRow().
+					template::select('themeSiteWidth', [
+						'themeSiteWidthSmall' => 'Petit',
+						'themeSiteWidthMedium' => 'Moyen',
+						'themeSiteWidthLarge' => 'Large'
+					], [
+						'label' => 'Largeur du site',
+						'selected' => $this->getData(['theme', 'siteWidth'])
+					]).
+					template::newRow().
+					template::select('themeHeaderPosition', [
+						'themeHeaderPositionHide' => 'Invisible',
+						'themeHeaderPositionTop' => 'Dans le haut de la page',
+						'themeHeaderPositionSite' => 'Dans le site'
+					], [
+						'label' => 'Position de la bannière',
+						'selected' => $this->getData(['theme', 'headerPosition']),
+						'col' => 6
+					]).
+					template::select('themeMenuPosition', [
+						'themeMenuPositionTop' => 'Dans le haut de la page',
+						'themeMenuPositionSite' => 'Dans le site'
+					], [
+						'label' => 'Position du menu',
+						'selected' => $this->getData(['theme', 'menuPosition']),
+						'col' => 6
+					]).
+					template::newRow().
+					template::select('themeHeaderTextAlign', [
+						'themeHeaderTextAlignLeft' => 'Gauche',
+						'themeHeaderTextAlignCenter' => 'Centre',
+						'themeHeaderTextAlignRight' => 'Droite'
+					], [
+						'label' => 'Alignement du contenu de la bannière',
+						'selected' => $this->getData(['theme', 'headerTextAlign']),
+						'col' => 6
+					]).
+					template::select('themeMenuTextAlign', [
+						'themeMenuTextAlignLeft' => 'Gauche',
+						'themeMenuTextAlignCenter' => 'Centre',
+						'themeMenuTextAlignRight' => 'Droite'
+					], [
+						'label' => 'Alignement du contenu du menu',
+						'selected' => $this->getData(['theme', 'menuTextAlign']),
+						'col' => 6
+					]).
+					template::newRow().
+					template::select('themeHeaderHeight', [
+						'themeHeaderHeightSmall' => 'Petit',
+						'themeHeaderHeightMedium' => 'Moyen',
+						'themeHeaderHeightLarge' => 'Grand'
+					], [
+						'label' => 'Hauteur de la bannière',
+						'selected' => $this->getData(['theme', 'headerHeight']),
+						'col' => 6
+					]).
+					template::select('themeMenuHeight', [
+						'themeMenuHeightSmall' => 'Petit',
+						'themeMenuHeightMedium' => 'Moyen',
+						'themeMenuHeightLarge' => 'Grand'
+					], [
+						'label' => 'Hauteur du menu',
+						'selected' => $this->getData(['theme', 'menuHeight']),
+						'col' => 6
+					]).
+					template::closeRow().
+					template::subTitle('Effets supplémentaires').
+					template::openRow().
+					template::checkbox('themeSiteMargin', true, 'Ajouter dans le site une marge autour de la bannière et du menu', [
+						'checked' => $this->getData(['theme', 'margin'])
+					]).
+					template::newRow().
+					template::checkbox('themeSiteRadius', true, 'Arrondir les coins du site', [
+						'checked' => $this->getData(['theme', 'siteRadius'])
+					]).
+					template::newRow().
+					template::checkbox('themeSiteShadow', true, 'Ajouter une ombre autour du site', [
+						'checked' => $this->getData(['theme', 'siteShadow'])
+					]).
+					template::closeRow()
 			]).
 			template::openRow().
 			template::submit('submit', [
@@ -2425,7 +2490,12 @@ class template
 			]);
 			$i++;
 		}
-		return $titles . $contents;
+		return
+			self::div([
+				'class' => 'tabTitles',
+				'text' => $titles
+			]).
+			$contents;
 	}
 
 }

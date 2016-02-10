@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
+	<meta charset="utf-8">
 	<title><?php echo self::$title; ?> - <?php echo $this->getData(['config', 'title']); ?></title>
 	<meta name="description" content="<?php echo self::$description; ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,12 +13,17 @@
 </head>
 <body class="<?php echo $this->getTheme(); ?>">
 <?php echo $this->panel() . $this->getNotification(); ?>
+<div class="header" style="<?php echo $this->getThemeImage(); ?>">
+	<h1><?php echo $this->getData(['config', 'title']); ?></h1>
+</div>
+<div class="toggle"><span></span></div>
+<ul class="menu"><?php echo $this->menu(); ?></ul>
 <div id="container">
-	<div id="header" style="<?php echo $this->getThemeImage(); ?>">
+	<div class="header" style="<?php echo $this->getThemeImage(); ?>">
 		<h1><?php echo $this->getData(['config', 'title']); ?></h1>
 	</div>
-	<div id="toggle"><span></span></div>
-	<ul id="menu"><?php echo $this->menu(); ?></ul>
+	<div class="toggle"><span></span></div>
+	<ul class="menu"><?php echo $this->menu(); ?></ul>
 	<div id="section">
 		<h2><?php echo self::$title; ?></h2>
 		<?php echo self::$content; ?>

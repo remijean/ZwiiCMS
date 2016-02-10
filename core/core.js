@@ -32,8 +32,8 @@ form.submit(function() {
 });
 
 /* Affiche/cache le menu en mode responsive */
-var menu = $('#menu');
-$('#toggle').on('click', function() {
+var menu = $('.menu');
+$('.toggle').on('click', function() {
 	menu.slideToggle();
 });
 $(window).on('resize', function() {
@@ -99,7 +99,7 @@ $('.editor').trumbowyg({
 });
 
 /* Aperçu de la personnalisation en direct */
-$('#theme').on('change', function() {
+$('.tabContent[data-1=3]').on('change', function() {
 	var body = $('body');
 	// Supprime les anciennes classes
 	body.removeClass();
@@ -109,13 +109,13 @@ $('#theme').on('change', function() {
 		var select = $(this);
 		var option = select.find('option:selected').val();
 		// Pour le select d'ajout d'image dans la bannière
-		if(select.attr('id') === 'themeImage') {
-			$('#header').css('background-image', 'url("' + option + '")');
+		if(select.attr('id') === 'themeHeaderImage') {
+			$('.header').css('background-image', 'url("' + option + '")');
 			if(select.val() === '') {
-				body.removeClass('themeImage');
+				body.removeClass('themeHeaderImage');
 			}
 			else {
-				body.addClass('themeImage');
+				body.addClass('themeHeaderImage');
 			}
 		}
 		// Pour les autres
