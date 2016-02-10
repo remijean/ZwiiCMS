@@ -1,6 +1,17 @@
 ZwiiCMS 7
 =========
 
+## 7.4.1
+### Attention, à cause de l'amélioration du thème votre ancienne personnalisation n'est plus compatible, vous devrez simplement la recréer depuis l'administration.
+* Ajout d'onglets pour améliorer la navigation
+* Amélioration de la personnalisation du thème
+* Correction d'une dizaine de bugs mineurs
+* Correction d'un problème d'affichage de l'image de la bannière
+* Correction d'un bug avec le filtre d'URL
+* Correction d'une mauvaise réaction du titre en responsive
+* Correction de divers problèmes avec la pagination
+* Correction d'un bug lors de l'ajout d'un champ dans le générateur de formulaires
+
 ## 7.4.0
 ### Attention, cette version est incompatible avec les précédentes à cause de la refonte du système de thème !
 * Ajout du choix de la largeur du site et refonte du système de thème
