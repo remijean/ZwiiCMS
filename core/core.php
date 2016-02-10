@@ -983,7 +983,7 @@ class core
 		self::$content =
 			template::openForm().
 			template::tabs([
-				'Générale' =>
+				'Configuration générale' =>
 					template::openRow().
 					template::text('title', [
 						'label' => 'Titre du site',
@@ -1017,7 +1017,7 @@ class core
 						'selected' => $this->getData(['config', 'language'])
 					]).
 					template::closeRow(),
-				'Avancée' =>
+				'Configuration avancée' =>
 					template::openRow().
 					template::text('version', [
 						'label' => 'Version de ZwiiCMS',
@@ -1042,7 +1042,7 @@ class core
 						'col' => 4
 					]).
 					template::closeRow(),
-				'Thème' =>
+				'Personnalisation du thème' =>
 					template::subTitle('Couleurs et image').
 					template::openRow().
 					template::colorPicker('themeHeaderColor', [
