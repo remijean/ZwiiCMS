@@ -1066,7 +1066,6 @@ class core
 					]).
 					template::colorPicker('themeBackgroundColor', [
 						'label' => 'Couleur du fond',
-						'ignore' => ['White'],
 						'selected' => $this->getData(['theme', 'backgroundColor']),
 						'col' => 6
 					]).
