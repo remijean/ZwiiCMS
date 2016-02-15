@@ -1147,7 +1147,7 @@ class core
 					template::subTitle('Effets supplémentaires').
 					template::openRow().
 					template::checkbox('themeSiteMargin', true, 'Ajouter dans le site une marge autour de la bannière et du menu', [
-						'checked' => $this->getData(['theme', 'margin'])
+						'checked' => $this->getData(['theme', 'siteMargin'])
 					]).
 					template::newRow().
 					template::checkbox('themeSiteRadius', true, 'Arrondir les coins du site', [

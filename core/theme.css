@@ -767,8 +767,11 @@ td.offset11 {
 }
 
 /* Marge autour de la bannière et du menu */
+.themeSiteMargin #container {
+	padding-top: 20px;
+}
 .themeSiteMargin #container .header {
-	margin: 20px 20px 0;
+	margin: 0 20px;
 }
 .themeSiteMargin #container .menu,
 .themeSiteMargin #container .toggle {
