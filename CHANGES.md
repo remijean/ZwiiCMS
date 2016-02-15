@@ -1,6 +1,13 @@
 ZwiiCMS 7
 =========
 
+## 7.4.2
+* Ajout du blanc pour la couleur de fond
+* Correction d'un bug qui ne cachait pas le titre du site lorsqu'une image était appliquée à la bannière
+* Diminution des px des coins arrondis
+* Correction de plusieurs bugs avec l'ajout d'une marge à la bannière et au menu
+* Correction d'un problème à l'affichage de l'image de la bannière
+
 ## 7.4.1
 ### Attention, à cause de l'amélioration du thème votre ancienne personnalisation n'est plus compatible, vous devrez simplement la recréer depuis l'administration.
 * Ajout d'onglets pour améliorer la navigation
