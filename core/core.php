@@ -384,7 +384,7 @@ class core
 	 */
 	public function getThemeImage()
 	{
-		return $this->getData(['theme', 'image']) ? 'background-image:url(\'' . $this->getData(['theme', 'image']) . '\')' : '';
+		return $this->getData(['theme', 'headerImage']) ? 'background-image:url(\'' . $this->getData(['theme', 'headerImage']) . '\')' : '';
 	}
 
 	/**
