@@ -767,15 +767,19 @@ td.offset11 {
 }
 
 /* Marge autour de la bannière et du menu */
-.themeSiteMargin #container {
-	padding-top: 20px;
-}
 .themeSiteMargin #container .header {
-	margin: 0 20px;
+	margin: 20px 20px 0;
 }
 .themeSiteMargin #container .menu,
 .themeSiteMargin #container .toggle {
 	margin: 0 20px
+}
+/* Cas spécial si la bannière n'est pas dans le site */
+.themeSiteMargin.themeHeaderPositionTop #container .header {
+	margin-top: 0;
+}
+.themeSiteMargin.themeHeaderPositionTop #container .menu {
+	margin-top: 20px;
 }
 
 /* Coins arrondis */
@@ -1848,6 +1852,7 @@ td.offset11 {
 /* White */
 
 /* Couleur normale */
+.themeBackgroundColorWhite,
 .themeHeaderColorWhite .header {
 	background-color: #FFFFFF;
 }
