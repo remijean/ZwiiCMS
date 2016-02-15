@@ -363,8 +363,8 @@ class core
 		$class = [];
 		foreach($this->getData(['theme']) as $key => $value) {
 			// Cas spécifique pour l'image de la bannière
-			if($key === 'image' && !empty($value)) {
-				$class[] = 'themeImage';
+			if($key === 'headerImage' && !empty($value)) {
+				$class[] = 'themeHeaderImage';
 			}
 			// Pour les booleans
 			elseif($value === true) {
