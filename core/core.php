@@ -37,6 +37,9 @@ class core
 	/** @var array Langue du site */
 	public static $language = [];
 
+	/** @var string Code GUID Google Analytics */
+	public static $analytics = '';
+
 	/** @var array Base de données */
 	private $data;
 
@@ -596,6 +599,28 @@ class core
 		}
 	}
 
+	/**
+	 * Script Google Analytics
+	 * @return string
+	 */
+	public function analytics()
+	{
+		$guid = $this->getData(['config', 'analytics']);
+		// Check si ce n'est pas l'administrateur
+		if( !$this->getCookie() AND !empty( $guid ) ) {
+			$ga = '<script>';
+			$ga .= '(function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){';
+  			$ga .= '(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),';
+  			$ga .= 'm=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)';
+  			$ga .= '})(window,document,\'script\',\'//www.google-analytics.com/analytics.js\',\'ga\');';
+			$ga .= 'ga(\'create\', \'' . $guid . '\', \'auto\');';
+			$ga .= 'ga(\'send\', \'pageview\');';
+  			$ga .= '</script>';
+			return $ga;
+		}
+
+	}
+
 
 	/** MODULE : Création d'une page */
 	public function create()
@@ -931,7 +956,8 @@ class core
 					'description' => $this->getPost('description', helper::STRING),
 					'password' => $password,
 					'index' => $this->getPost('index', helper::STRING),
-					'language' => $this->getPost('language', helper::STRING)
+					'language' => $this->getPost('language', helper::STRING),
+					'analytics' => $this->getPost('analytics', helper::STRING)
 				]
 			]);
 			// Modifie le theme
@@ -1029,6 +1055,13 @@ class core
 						'checked' => file_exists('.simple'),
 						'help' => 'Supprime le point d\'interrogation de l\'URL (si vous n\'arrivez pas à cocher la case, vérifiez que le module d\'URL rewriting de votre serveur soit bien activé).',
 						'disabled' => (get_headers(helper::baseUrl(false) . 'core/rewrite/test')[0] !== 'HTTP/1.1 200 OK') ? 'disabled' : '' // Check que l'URL rewriting fonctionne sur le serveur
+					]).
+					template::newRow().
+					template::text('analytics', [
+						'label' => 'Code UID Google Analytics',
+						'value' => $this->getData(['config', 'analytics']),
+						'placeholder' => 'UA-XXXXXXXX-X',
+						'col' => 3
 					]).
 					template::newRow().
 					template::button('clean', [
