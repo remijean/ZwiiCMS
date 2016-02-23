@@ -17,7 +17,7 @@
 	"Largeur 12" : "Width 12",
 	"Formulaire enregistré avec succès !" : "Form successfully saved!",
 	"Nom" : "Name",
-	"Liste des valeurs (valeur1,valeur2,...)" : "Calues list ​​(value1, value2, ...) ",
+	"Liste des valeurs (valeur1,valeur2,...)" : "Values list ​​(value1, value2, ...) ",
 	"Configuration" : "Configuration",
 	"Recevoir à chaque validation un mail contenant les données saisies" : "Receive at each commit mail containing the data entered",
 	"Liste des champs" : "Input list",
@@ -25,7 +25,7 @@
 	"Retour" : "Return",
 	"Données saisies" : "Data entered",
 	"Aucune donnée...": "No data",
-	"Mail de votre site ZwiiCMS" : "Mail of your site ZwiiCMS",
-	"Mail en provenance de votre site ZwiiCMS" : "Mail from your site ZwiiCMS",
+	"Mail de votre site ZwiiCMS" : "Mail of your ZwiiCMS site",
+	"Mail en provenance de votre site ZwiiCMS" : "Mail from your ZwiiCMS site",
 	"Formulaire soumis avec succès !" : "Form successfully submitted!"
 }
