@@ -4,10 +4,10 @@
 	"Modifier" : "Edit",
 	"Êtes-vous sûr de vouloir supprimer cette news ?" : "Are you sure you want to delete this news?",
 	"Nouvelle news" : "New news",
-	"Titre de la news" : "News title",
-	"Créer" : "Create",
 	"Liste des news" : "News list",
 	"Retour" : "Return",
+	"Titre de la news" : "News title",
+	"Créer" : "Create",
 	"News modifiée avec succès !" : "News successfully edited!",
 	"News supprimée avec succès !" : "News successfully deleted!"
 }
