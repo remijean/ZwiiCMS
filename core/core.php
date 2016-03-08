@@ -37,9 +37,6 @@ class core
 	/** @var array Langue du site */
 	public static $language = [];
 
-	/** @var string Code GUID Google Analytics */
-	public static $analytics = '';
-
 	/** @var array Base de données */
 	private $data;
 
@@ -605,22 +602,18 @@ class core
 	 */
 	public function analytics()
 	{
-		$guid = $this->getData(['config', 'analytics']);
+		$code = $this->getData(['config', 'analytics']);
 		// Check si ce n'est pas l'administrateur
-		if( !$this->getCookie() AND !empty( $guid ) ) {
-			$ga = '<script>';
-			$ga .= '(function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){';
-  			$ga .= '(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),';
-  			$ga .= 'm=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)';
-  			$ga .= '})(window,document,\'script\',\'//www.google-analytics.com/analytics.js\',\'ga\');';
-			$ga .= 'ga(\'create\', \'' . $guid . '\', \'auto\');';
+		if(!$this->getCookie() AND !empty($code) ) {
+			$ga = '(function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){';
+			$ga .= '(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),';
+			$ga .= 'm=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)';
+			$ga .= '})(window,document,\'script\',\'//www.google-analytics.com/analytics.js\',\'ga\');';
+			$ga .= 'ga(\'create\', \'' . $code . '\', \'auto\');';
 			$ga .= 'ga(\'send\', \'pageview\');';
-  			$ga .= '</script>';
-			return $ga;
+			return '<script>' . $ga . '</script>';
 		}
-
 	}
-
 
 	/** MODULE : Création d'une page */
 	public function create()
@@ -1051,17 +1044,17 @@ class core
 						'disabled' => 'disabled'
 					]).
 					template::newRow().
-					template::checkbox('rewriting', true, 'Activer la réécriture d\'URL', [
-						'checked' => file_exists('.simple'),
-						'help' => 'Supprime le point d\'interrogation de l\'URL (si vous n\'arrivez pas à cocher la case, vérifiez que le module d\'URL rewriting de votre serveur soit bien activé).',
-						'disabled' => (get_headers(helper::baseUrl(false) . 'core/rewrite/test')[0] !== 'HTTP/1.1 200 OK') ? 'disabled' : '' // Check que l'URL rewriting fonctionne sur le serveur
+					template::text('analytics', [
+						'label' => 'Google Analytics',
+						'value' => $this->getData(['config', 'analytics']),
+						'help' => 'Saisissez l\'ID de suivi de votre propriété Google Analytics.',
+						'placeholder' => 'UA-XXXXXXXX-X',
 					]).
 					template::newRow().
-					template::text('analytics', [
-						'label' => 'Code UID Google Analytics',
-						'value' => $this->getData(['config', 'analytics']),
-						'placeholder' => 'UA-XXXXXXXX-X',
-						'col' => 3
+					template::checkbox('rewriting', true, 'Activer la réécriture d\'URL', [
+						'checked' => file_exists('.simple'),
+						'help' => 'Supprime le point d\'interrogation de l\'URL (si vous n\'arrivez pas à cocher la case, vérifiez que le module d\'URL rewriting de votre serveur est bien activé).',
+						'disabled' => (get_headers(helper::baseUrl(false) . 'core/rewrite/test')[0] !== 'HTTP/1.1 200 OK') ? 'disabled' : '' // Check que l'URL rewriting fonctionne sur le serveur
 					]).
 					template::newRow().
 					template::button('clean', [
