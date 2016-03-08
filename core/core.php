@@ -979,7 +979,7 @@ class core
 				// Active l'URL rewriting
 				if($this->getPost('rewriting', helper::BOOLEAN) AND file_exists('.rewriting')) {
 					// Check que l'URL rewriting fonctionne sur le serveur
-					if(get_headers(helper::baseUrl(false) . 'core/rewrite/test')[0] === 'HTTP/1.1 200 OK') {
+					if(helper::rewritingCheck()) {
 						rename('.htaccess', '.simple');
 						rename('.rewriting', '.htaccess');
 					}
@@ -1054,7 +1054,7 @@ class core
 					template::checkbox('rewriting', true, 'Activer la réécriture d\'URL', [
 						'checked' => file_exists('.simple'),
 						'help' => 'Supprime le point d\'interrogation de l\'URL (si vous n\'arrivez pas à cocher la case, vérifiez que le module d\'URL rewriting de votre serveur est bien activé).',
-						'disabled' => (get_headers(helper::baseUrl(false) . 'core/rewrite/test')[0] !== 'HTTP/1.1 200 OK') ? 'disabled' : '' // Check que l'URL rewriting fonctionne sur le serveur
+						'disabled' => helper::rewritingCheck() ? '' : 'disabled' // Check que l'URL rewriting fonctionne sur le serveur
 					]).
 					template::newRow().
 					template::button('clean', [
@@ -1653,6 +1653,35 @@ class helper
 		$message .= $n . '--' . $boundary . '--' . $n;
 		// Envoi du mail
 		return @mail($to, $subject, $message, $header);
+	}
+
+	/**
+	 * Vérifie que l'URL rewriting est activée
+	 * @return bool
+	 */
+	public static function rewritingCheck()
+	{
+		// Check si l'URL rewriting est activée
+		if(function_exists('apache_get_modules')) {
+			if(in_array('mod_rewrite', apache_get_modules())) {
+				return true;
+			}
+		}
+		// Check si l'URL rewriting est activée (si la fonction apache_get_modules() n'existe pas)
+		if(function_exists('phpinfo') AND strpos(ini_get('disable_functions'), 'phpinfo') === false) {
+			ob_start();
+			phpinfo(8);
+			$phpinfo = ob_get_clean();
+			if(strpos($phpinfo, 'mod_rewrite') !== false) {
+				return true;
+			}
+		}
+		// Check si l'URL rewriting est activée (si PHP est installé en FastCGI)
+		if(get_headers(helper::baseUrl(false) . 'core/rewrite/test')[0] === 'HTTP/1.1 200 OK') {
+			return true;
+		}
+		// l'URL rewriting n'est pas prise en charge
+		return false;
 	}
 }
 
