@@ -11,16 +11,112 @@
  */
 
 /**
- * Éléments spécifiques
+ * Éléments génériques
  */
 
 @import url(http://fonts.googleapis.com/css?family=Lato|Oswald);
+
 body {
 	font-family: 'Lato', sans-serif;
 	color: #2C3E50;
 }
 
-/* Notification */
+/* Liens */
+a {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+
+/* Titres */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: 'Oswald', sans-serif;
+	font-weight: normal;
+	text-transform: uppercase;
+}
+h1 {
+	font-size: 2em;
+}
+h2 {
+	font-size: 1.5em;
+}
+h3 {
+	font-size: 1.2em;
+}
+h4 {
+	font-size: 1em;
+}
+h5 {
+	font-size: .8em;
+}
+h6 {
+	font-size: .7em;
+}
+
+/* Listes */
+ul {
+	list-style: square;
+}
+
+/* Séparateur */
+hr {
+	border: 0;
+	border-top: 1px solid #C5D1D4;
+}
+
+/* Égalisation des margins */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+hr,
+ul,
+ol {
+	margin: 15px 0;
+}
+
+/* Tableau */
+table {
+	width: 100%;
+	border-spacing: 0;
+	border-collapse: collapse;
+	border: 1px solid #C5D1D4;
+}
+tr:nth-child(2n+2) {
+	background: #ECF0F1;
+}
+td {
+	padding: 10px;
+}
+td > .col1,
+td > .col2,
+td > .col3,
+td > .col4,
+td > .col5,
+td > .col6,
+td > .col7,
+td > .col8,
+td > .col9,
+td > .col10,
+td > .col11,
+td > .col12 {
+	padding: 0 !important;
+}
+
+/**
+ * Éléments spécifiques
+ */
+
+/* Notifications */
 #notification {
 	text-align: center;
 	padding: 15px;
@@ -161,100 +257,9 @@ body {
 	padding-bottom: 20px;
 }
 
-/* Liens */
-a {
-	text-decoration: none;
-}
-a:hover {
-	text-decoration: underline;
-}
-
-/* Titres */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	font-family: 'Oswald', sans-serif;
-	font-weight: normal;
-	text-transform: uppercase;
-}
-h1 {
-	font-size: 2em;
-}
-h2 {
-	font-size: 1.5em;
-}
-h3 {
-	font-size: 1.2em;
-}
-h4 {
-	font-size: 1em;
-}
-h5 {
-	font-size: .8em;
-}
-h6 {
-	font-size: .7em;
-}
-
-/* Listes */
-ul {
-	list-style: square;
-}
-
-/* Séparateur */
-hr {
-	border: 0;
-	border-top: 1px solid #C5D1D4;
-}
-
-/* Égalisation des margins */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-hr,
-ul,
-ol {
-	margin: 15px 0;
-}
-
 /* Zone de remplacement */
 .placeholder {
 	background: #ECF0F1;
-}
-
-/* Tableau */
-table {
-	width: 100%;
-	border-spacing: 0;
-	border-collapse: collapse;
-	border: 1px solid #C5D1D4;
-}
-tr:nth-child(2n+2) {
-	background: #ECF0F1;
-}
-td {
-	padding: 10px;
-}
-td > .col1,
-td > .col2,
-td > .col3,
-td > .col4,
-td > .col5,
-td > .col6,
-td > .col7,
-td > .col8,
-td > .col9,
-td > .col10,
-td > .col11,
-td > .col12 {
-	padding: 0 !important;
 }
 
 /* Onglet */
