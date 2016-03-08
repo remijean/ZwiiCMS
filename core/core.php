@@ -1226,26 +1226,24 @@ class core
 		// Contenu de la page
 		self::$title = helper::translate('Gestionnaire de fichiers');
 		self::$content =
-			template::tabs([
-				'Liste des fichiers' =>
-					(self::$content ? self::$content : template::subTitle('Aucun fichier...')),
-				'Envoyer un fichier' =>
-					template::openForm('form', [
-						'enctype' => 'multipart/form-data'
-					]).
-					template::openRow().
-					template::file('file', [
-						'label' => 'Parcourir mes fichiers',
-						'help' => 'Envoyez vos fichier sur votre site (formats autorisés : png, gif, jpg, jpeg, txt, pdf, zip, rar, 7z, css, html, xml).',
-						'col' => '10'
-					]).
-					template::submit('submit', [
-						'value' => 'Envoyer',
-						'col' => '2'
-					]).
-					template::closeRow().
-					template::closeForm()
-			]);
+			template::title('Envoyer un fichier').
+			template::openForm('form', [
+				'enctype' => 'multipart/form-data'
+			]).
+			template::openRow().
+			template::file('file', [
+				'label' => 'Parcourir mes fichiers',
+				'help' => 'Envoyez vos fichier sur votre site (formats autorisés : png, gif, jpg, jpeg, txt, pdf, zip, rar, 7z, css, html, xml).',
+				'col' => '10'
+			]).
+			template::submit('submit', [
+				'value' => 'Envoyer',
+				'col' => '2'
+			]).
+			template::closeRow().
+			template::closeForm().
+			template::title('Liste des fichiers').
+			(self::$content ? self::$content : template::subTitle('Aucun fichier...'));
 	}
 
 	/**
