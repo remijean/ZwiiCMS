@@ -1,6 +1,14 @@
 ZwiiCMS 7
 =========
 
+## 7.4.3
+* Suppression des onglets dans le gestionnaire de fichiers
+* Correction de la non détection du module d'URL rewriting
+* Correction d'une faute d'ortographe et ajout de la page Facebook
+* Ajout d'une feuille de style vierge pour la personnalisation avancée
+* Ajout de Google Analytics (Merci Yoan Malié)
+* Mise à jour et optimisation de la traduction en anglais (Merci Yoan Malié)
+
 ## 7.4.2
 * Ajout du blanc pour la couleur de fond
 * Correction d'un bug qui ne cachait pas le titre du site lorsqu'une image était appliquée à la bannière
