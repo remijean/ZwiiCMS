@@ -12,8 +12,6 @@
  * @link http://zwiicms.com/
  */
 
-session_start();
-
 class core
 {
 	/** @var array Liste des vues pour les modules */
@@ -43,56 +41,22 @@ class core
 	/** @var array Url du site coupée à chaque "/" */
 	private $url;
 
-	/** @var string Message d'erreur */
-	private $error;
-
-	/** @var string Message de succès */
-	private $success;
-
 	/** @var array Liste des modules */
 	private static $modules = ['create', 'edit', 'save', 'module', 'delete', 'clean', 'export', 'mode', 'config', 'files', 'upload', 'logout'];
 
 	/** Version de ZwiiCMS */
 	private static $version = '7.4.3';
 
-	/** Constructeur de la classe */
+	/** Récupère les données */
 	public function __construct()
 	{
-		$this->data = json_decode(file_get_contents('core/data.json'), true);
-		$this->url = empty($_SERVER['QUERY_STRING']) ? $this->getData(['config', 'index']) : $_SERVER['QUERY_STRING'];
-		$this->url = helper::filter($this->url, helper::URL);
-		$this->url = explode('/', $this->url);
-		$this->error = empty($_SESSION['ERROR']) ? '' : $_SESSION['ERROR'];
-		$this->success = empty($_SESSION['SUCCESS']) ? '' : $_SESSION['SUCCESS'];
-	}
-
-	/**
-	 * Auto-chargement des classes
-	 * @param string $className Nom de la classe à charger
-	 */
-	public static function autoload($className)
-	{
-		$className = substr($className, 0, -3);
-		$classPath = 'modules/' . $className . '/' . $className . '.php';
-		if(is_readable($classPath)) {
-			require $classPath;
+		if(empty($this->data)) {
+			$this->data = json_decode(file_get_contents('core/data.json'), true);
 		}
 	}
 
-	/** Importe les fichiers de langue du site */
-	public function language()
-	{
-		// Importe le fichier langue système
-		$language = 'core/langs/' . $this->getData(['config', 'language']);
-		if(is_file($language)) {
-			self::$language = json_decode(file_get_contents($language), true);
-		}
-		// Importe le fichier langue pour le module de la page
-		$language = 'modules/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '/langs/' . $this->getData(['config', 'language']);
-		if(is_file($language)) {
-			self::$language = array_merge(self::$language, json_decode(file_get_contents($language), true));
-		}
-	}
+	############################################################
+	# GETTERS/SETTERS
 
 	/**
 	 * Accède aux données du tableau de données
@@ -213,14 +177,20 @@ class core
 	 */
 	public function getUrl($key = null, $splice = true)
 	{
-		// Variable temporaire pour ne pas impacter les autres $this->getUrl() avec le array_splice()
-		$url = $this->url;
+		// Construit l'URL
+		if(empty($this->url)) {
+			$this->url = empty($_SERVER['QUERY_STRING']) ? $this->getData(['config', 'index']) : $_SERVER['QUERY_STRING'];
+			$this->url = helper::filter($this->url, helper::URL);
+			$this->url = explode('/', $this->url);
+		}
 		// Retourne l'URL complète
 		if($key === null) {
-			return implode('/', $url);
+			return implode('/', $this->url);
 		}
 		// Retourne une partie de l'URL
 		else {
+			// Variable temporaire pour ne pas impacter la propriété $this->url avec le array_splice()
+			$url = $this->url;
 			// Supprime les modules système de $this->url[0] si ils sont présents
 			if($splice AND (in_array($url[0], self::$modules))) {
 				array_splice($url, 0, 1);
@@ -262,7 +232,7 @@ class core
 	 */
 	public function getNotification()
 	{
-		// Si une notice existe affiche un message pour prévenir l'utilisateur
+		// Si une notice existe, affiche un message pour prévenir l'utilisateur
 		if(template::$notices) {
 			return template::div([
 				'id' => 'notification',
@@ -270,22 +240,24 @@ class core
 				'text' => 'Impossible de soumettre le formulaire, car il contient des erreurs !'
 			]);
 		}
-		// Affiche un message d'erreur si il en existe un
-		elseif($this->error) {
+		// Si besoin, affiche une notification d'erreur
+		elseif(!empty($_SESSION['ERROR'])) {
+			$error = $_SESSION['ERROR'];
 			unset($_SESSION['ERROR']);
 			return template::div([
 				'id' => 'notification',
 				'class' => 'error',
-				'text' => $this->error
+				'text' => $error
 			]);
 		}
-		// Affiche un message de succès si il en existe un
-		elseif($this->success) {
+		// Si besoin, affiche une notification de succès
+		elseif(!empty($_SESSION['SUCCESS'])) {
+			$success = $_SESSION['SUCCESS'];
 			unset($_SESSION['SUCCESS']);
 			return template::div([
 				'id' => 'notification',
 				'class' => 'success',
-				'text' => $this->success
+				'text' => $success
 			]);
 		}
 	}
@@ -353,38 +325,20 @@ class core
 		return ($filter !== null) ? helper::filter($post, $filter) : $post;
 	}
 
-	/**
-	 * Met en forme la liste des classes du thème
-	 * @return string
-	 */
-	public function getTheme()
-	{
-		// Liste des classes
-		$class = [];
-		foreach($this->getData(['theme']) as $key => $value) {
-			// Cas spécifique pour l'image de la bannière
-			if($key === 'headerImage' && !empty($value)) {
-				$class[] = 'themeHeaderImage';
-			}
-			// Pour les booleans
-			elseif($value === true) {
-				$class[] = 'theme' . ucfirst($key);
-			}
-			// Pour les autres
-			elseif($value) {
-				$class[] = $value;
-			}
-		}
-		return implode($class, ' ');
-	}
+	############################################################
+	# SYSTÈME
 
 	/**
-	 * Met en forme l'image de la bannière
-	 * @return string
+	 * Auto-chargement des classes
+	 * @param string $className Nom de la classe à charger
 	 */
-	public function getThemeImage()
+	public static function autoload($className)
 	{
-		return $this->getData(['theme', 'headerImage']) ? 'background-image:url(\'' . $this->getData(['theme', 'headerImage']) . '\')' : '';
+		$className = substr($className, 0, -3);
+		$classPath = 'modules/' . $className . '/' . $className . '.php';
+		if(is_readable($classPath)) {
+			require $classPath;
+		}
 	}
 
 	/**
@@ -503,6 +457,21 @@ class core
 		}
 	}
 
+	/** Importe les fichiers de langue du site */
+	public function language()
+	{
+		// Importe le fichier langue système
+		$language = 'core/langs/' . $this->getData(['config', 'language']);
+		if(is_file($language)) {
+			self::$language = json_decode(file_get_contents($language), true);
+		}
+		// Importe le fichier langue pour le module de la page
+		$language = 'modules/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '/langs/' . $this->getData(['config', 'language']);
+		if(is_file($language)) {
+			self::$language = array_merge(self::$language, json_decode(file_get_contents($language), true));
+		}
+	}
+
 	/**
 	 * Met en forme le panneau d'administration
 	 * @return string
@@ -547,6 +516,40 @@ class core
 			$li .= '</li>';
 			return '<ul id="panel">' . $li . '</ul>';
 		}
+	}
+
+	/**
+	 * Met en forme la liste des classes du thème
+	 * @return string
+	 */
+	public function theme()
+	{
+		// Liste des classes
+		$class = [];
+		foreach($this->getData(['theme']) as $key => $value) {
+			// Cas spécifique pour l'image de la bannière
+			if($key === 'headerImage' && !empty($value)) {
+				$class[] = 'themeHeaderImage';
+			}
+			// Pour les booleans
+			elseif($value === true) {
+				$class[] = 'theme' . ucfirst($key);
+			}
+			// Pour les autres
+			elseif($value) {
+				$class[] = $value;
+			}
+		}
+		return implode($class, ' ');
+	}
+
+	/**
+	 * Met en forme l'image de la bannière
+	 * @return string
+	 */
+	public function themeImage()
+	{
+		return $this->getData(['theme', 'headerImage']) ? 'background-image:url(\'' . $this->getData(['theme', 'headerImage']) . '\')' : '';
 	}
 
 	/**
@@ -615,7 +618,10 @@ class core
 		}
 	}
 
-	/** MODULE : Création d'une page */
+	############################################################
+	# MODULES
+
+	/** Création d'une page */
 	public function create()
 	{
 		// Titre de la nouvelle page
@@ -643,7 +649,7 @@ class core
 		helper::redirect('edit/' . $key);
 	}
 
-	/** MODULE : Édition de page */
+	/** Édition de page */
 	public function edit()
 	{
 		// Erreur 404
@@ -792,53 +798,7 @@ class core
 			template::closeForm();
 	}
 
-	/** MODULE : Enregistrement du module en ajax */
-	public function save()
-	{
-		// Erreur 404
-		if(!$this->getData(['pages', $this->getUrl(0)])) {
-			return false;
-		}
-		// Supprime les données du module de la page si le module à changé
-		if($this->getPost('module') !== $this->getData(['pages', $this->getUrl(0), 'module'])) {
-			$this->removeData($this->getUrl(0));
-		}
-		// Modifie le module de la page
-		$this->setData([
-			'pages',
-			$this->getUrl(0),
-			[
-				'title' => $this->getData(['pages', $this->getUrl(0), 'title']),
-				'description' => $this->getData(['pages', $this->getUrl(0), 'description']),
-				'position' => $this->getData(['pages', $this->getUrl(0), 'position']),
-				'blank' => $this->getData(['pages', $this->getUrl(0), 'blank']),
-				'module' => $this->getPost('module', helper::STRING),
-				'content' => $this->getData(['pages', $this->getUrl(0), 'content'])
-			]
-		]);
-		// Enregistre les données
-		$this->saveData();
-		// Utilise le layout JSON
-		self::$layout = 'JSON';
-		self::$content = true;
-	}
-
-	/** MODULE : Configuration du module */
-	public function module()
-	{
-		// Erreur 404
-		if(!$this->getData(['pages', $this->getUrl(0), 'module'])) {
-			return false;
-		}
-		// Contenu de la page
-		$module = $this->getData(['pages', $this->getUrl(0), 'module']) . 'Adm';
-		$module = new $module;
-		$method = in_array($this->getUrl(1), $module::$views) ? $this->getUrl(1) : 'index';
-		$module->$method(); // Retourne la variable self::content
-		self::$title = $this->getData(['pages', $this->getUrl(0), 'title']);
-	}
-
-	/** MODULE : Suppression de page et de fichier */
+	/** Suppression de page et de fichier */
 	public function delete()
 	{
 		// Erreur 404
@@ -879,29 +839,53 @@ class core
 		}
 	}
 
-	/** MODULE : Vide le cache des pages publiques */
-	public function clean()
+	/** Enregistrement du module en AJAX */
+	public function save()
 	{
-		// Sauvegarde les données en supprimant le cache
-		$this->saveData(true);
-		// Notification de suppression
-		$this->setNotification('Cache vidé avec succès !');
-		// Redirige vers la page de configuration
-		helper::redirect('config');
-	}
-
-	/** MODULE : Exporte le fichier de données */
-	public function export()
-	{
-		// Force le téléchargement du fichier core/data.json
-		header('Content-disposition: attachment; filename=data.json');
-		header('Content-type: application/json');
-		self::$content = $this->getData();
+		// Erreur 404
+		if(!$this->getData(['pages', $this->getUrl(0)])) {
+			return false;
+		}
+		// Supprime les données du module de la page si le module à changé
+		if($this->getPost('module') !== $this->getData(['pages', $this->getUrl(0), 'module'])) {
+			$this->removeData($this->getUrl(0));
+		}
+		// Modifie le module de la page
+		$this->setData([
+			'pages',
+			$this->getUrl(0),
+			[
+				'title' => $this->getData(['pages', $this->getUrl(0), 'title']),
+				'description' => $this->getData(['pages', $this->getUrl(0), 'description']),
+				'position' => $this->getData(['pages', $this->getUrl(0), 'position']),
+				'blank' => $this->getData(['pages', $this->getUrl(0), 'blank']),
+				'module' => $this->getPost('module', helper::STRING),
+				'content' => $this->getData(['pages', $this->getUrl(0), 'content'])
+			]
+		]);
+		// Enregistre les données
+		$this->saveData();
 		// Utilise le layout JSON
 		self::$layout = 'JSON';
+		self::$content = true;
 	}
 
-	/** MODULE : Redirige vers le bon mode */
+	/** Configuration du module d'une page */
+	public function module()
+	{
+		// Erreur 404
+		if(!$this->getData(['pages', $this->getUrl(0), 'module'])) {
+			return false;
+		}
+		// Contenu de la page
+		$module = $this->getData(['pages', $this->getUrl(0), 'module']) . 'Adm';
+		$module = new $module;
+		$method = in_array($this->getUrl(1), $module::$views) ? $this->getUrl(1) : 'index';
+		$module->$method(); // Retourne la variable self::content
+		self::$title = $this->getData(['pages', $this->getUrl(0), 'title']);
+	}
+
+	/** Redirection vers le bon mode (édition ou public) */
 	public function mode()
 	{
 		// Redirection vers mode édition si page en mode public
@@ -920,7 +904,124 @@ class core
 		helper::redirect($url);
 	}
 
-	/** MODULE : Configuration */
+	/** Gestionnaire de fichiers */
+	public function files()
+	{
+		// Traitement du formulaire
+		if($this->getPost('submit')) {
+			$this->upload(['png', 'gif', 'jpg', 'jpeg', 'txt', 'pdf', 'zip', 'rar', '7z', 'css', 'html', 'xml']);
+		}
+		// Met en forme les fichiers pour les afficher dans un tableau
+		$filesTable = [];
+		foreach(helper::listUploads() as $path => $file) {
+			$filesTable[] = [
+				$file,
+				template::button('preview[]', [
+					'value' => 'Aperçu',
+					'href' => $path,
+					'target' => '_blank'
+				]),
+				template::button('delete[]', [
+					'value' => 'Supprimer',
+					'href' => helper::baseUrl() . 'delete/' . $file,
+					'onclick' => 'return confirm(\'' . helper::translate('Êtes-vous sûr de vouloir supprimer ce fichier ?') . '\');'
+				])
+			];
+		}
+		if($filesTable) {
+			self::$content =
+				template::openRow() .
+				template::table([8, 2, 2], $filesTable) .
+				template::closeRow();
+		}
+		// Contenu de la page
+		self::$title = helper::translate('Gestionnaire de fichiers');
+		self::$content =
+			template::title('Envoyer un fichier').
+			template::openForm('form', [
+				'enctype' => 'multipart/form-data'
+			]).
+			template::openRow().
+			template::file('file', [
+				'label' => 'Parcourir mes fichiers',
+				'help' => 'Envoyez vos fichier sur votre site (formats autorisés : png, gif, jpg, jpeg, txt, pdf, zip, rar, 7z, css, html, xml).',
+				'col' => '10'
+			]).
+			template::submit('submit', [
+				'value' => 'Envoyer',
+				'col' => '2'
+			]).
+			template::closeRow().
+			template::closeForm().
+			template::title('Liste des fichiers').
+			(self::$content ? self::$content : template::subTitle('Aucun fichier...'));
+	}
+
+	/**
+	 * Upload d'un fichier en POST et en AJAX
+	 * A importer entre un if($this->getPost()) en POST ; A appeler depuis un fichier JS en AJAX
+	 * @param array $extensions Extensions autorisées, par défaut seule les fichiers images sont autorisés
+	 * @return bool
+	 */
+	public function upload(array $extensions = ['png', 'gif', 'jpg', 'jpeg'])
+	{
+		// Erreur 404
+		if(!isset($_FILES['file'])) {
+			return false;
+		}
+		$target = 'core/uploads/' . helper::filter(basename($_FILES['file']['name']), helper::URL);
+		// Check la taille du fichier (limité à environs 100 mo)
+		if($_FILES['file']['size'] > 100000000) {
+			$data['error'] = 'Fichier trop volumineux !';
+		}
+		// Check le type de fichier
+		elseif(!in_array(strtolower(pathinfo($target, PATHINFO_EXTENSION)), $extensions)) {
+			$data['error'] = 'Format du fichier non autorisé !';
+		}
+		// Check les erreurs au chargement du fichier
+		elseif($_FILES['file']['error']) {
+			$data['error'] = 'Erreur au chargement du fichier !';
+		}
+		// Check qu'il n'existe aucune notice
+		if(empty($data['error'])) {
+			// Tente de déplacer le fichier dans le bon dossier
+			if(@move_uploaded_file($_FILES['file']['tmp_name'], $target)) {
+				$data['success'] = 'Fichier envoyé avec succès !';
+				$data['link'] = helper::baseUrl(false) . $target;
+			}
+			else {
+				$data['error'] = 'Impossible de communiquer avec le serveur !';
+			}
+		}
+		// Pour une requête en AJAX
+		if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+			// En cas de succès retourne les données
+			if(isset($data['success'])) {
+				self::$layout = 'JSON';
+				self::$content = $data;
+			}
+			// Sinon statut de requête incorrecte
+			else {
+				http_response_code(400);
+			}
+		}
+		// Pour une requête en POST
+		else {
+			// En cas de succès
+			if(isset($data['success'])) {
+				// Notification d'upload
+				$this->setNotification($data['success']);
+				// Redirige vers la page courante
+				helper::redirect($this->getUrl());
+			}
+			// Sinon crée une notice en cas d'erreur
+			else {
+				template::$notices['file'] = $data['error'];
+			}
+		}
+	}
+
+	/** Configuration */
 	public function config()
 	{
 		// Traitement du formulaire
@@ -976,18 +1077,27 @@ class core
 			]);
 			// Active/désactive l'URL rewriting
 			if(!template::$notices) {
+				// URL rewriting
+				$htaccess = file_get_contents('.htaccess');
+				$rewriteRule = explode('# URL rewriting', $htaccess);
 				// Active l'URL rewriting
-				if($this->getPost('rewriting', helper::BOOLEAN) AND file_exists('.rewriting')) {
-					// Check que l'URL rewriting fonctionne sur le serveur
-					if(helper::rewritingCheck()) {
-						rename('.htaccess', '.simple');
-						rename('.rewriting', '.htaccess');
+				if($this->getPost('rewrite', helper::BOOLEAN)) {
+					if(empty($rewriteRule[1])) {
+						file_put_contents('.htaccess',
+							$htaccess . PHP_EOL .
+							'RewriteEngine on' . PHP_EOL .
+							'RewriteBase ' . helper::baseUrl(false, false) . PHP_EOL .
+							'RewriteCond %{REQUEST_FILENAME} !-d' . PHP_EOL .
+							'RewriteCond %{REQUEST_FILENAME} !-f' . PHP_EOL .
+							'RewriteRule ^(.*)$ index.php?$1 [L]'
+						);
 					}
 				}
 				// Désactive l'URL rewriting
-				elseif(!$this->getPost('rewriting', helper::BOOLEAN) AND file_exists('.simple')) {
-					rename('.htaccess', '.rewriting');
-					rename('.simple', '.htaccess');
+				else {
+					if(!empty($rewriteRule[1])) {
+						file_put_contents('.htaccess', $rewriteRule[0] . '# URL rewriting');
+					}
 				}
 			}
 			// Enregistre les données et supprime le cache
@@ -1051,10 +1161,10 @@ class core
 						'placeholder' => 'UA-XXXXXXXX-X',
 					]).
 					template::newRow().
-					template::checkbox('rewriting', true, 'Activer la réécriture d\'URL', [
-						'checked' => file_exists('.simple'),
+					template::checkbox('rewrite', true, 'Activer la réécriture d\'URL', [
+						'checked' => helper::rewriteCheck(),
 						'help' => 'Supprime le point d\'interrogation de l\'URL (si vous n\'arrivez pas à cocher la case, vérifiez que le module d\'URL rewriting de votre serveur est bien activé).',
-						'disabled' => helper::rewritingCheck() ? '' : 'disabled' // Check que l'URL rewriting fonctionne sur le serveur
+						'disabled' => helper::modRewriteCheck() ? '' : 'disabled' // Check que l'URL rewriting fonctionne sur le serveur
 					]).
 					template::newRow().
 					template::button('clean', [
@@ -1193,124 +1303,29 @@ class core
 			template::closeForm();
 	}
 
-	/** MODULE : Gestionnaire de fichiers */
-	public function files()
+	/** Suppression du cache */
+	public function clean()
 	{
-		// Traitement du formulaire
-		if($this->getPost('submit')) {
-			$this->upload(['png', 'gif', 'jpg', 'jpeg', 'txt', 'pdf', 'zip', 'rar', '7z', 'css', 'html', 'xml']);
-		}
-		// Met en forme les fichiers pour les afficher dans un tableau
-		$filesTable = [];
-		foreach(helper::listUploads() as $path => $file) {
-			$filesTable[] = [
-				$file,
-				template::button('preview[]', [
-					'value' => 'Aperçu',
-					'href' => $path,
-					'target' => '_blank'
-				]),
-				template::button('delete[]', [
-					'value' => 'Supprimer',
-					'href' => helper::baseUrl() . 'delete/' . $file,
-					'onclick' => 'return confirm(\'' . helper::translate('Êtes-vous sûr de vouloir supprimer ce fichier ?') . '\');'
-				])
-			];
-		}
-		if($filesTable) {
-			self::$content =
-				template::openRow() .
-				template::table([8, 2, 2], $filesTable) .
-				template::closeRow();
-		}
-		// Contenu de la page
-		self::$title = helper::translate('Gestionnaire de fichiers');
-		self::$content =
-			template::title('Envoyer un fichier').
-			template::openForm('form', [
-				'enctype' => 'multipart/form-data'
-			]).
-			template::openRow().
-			template::file('file', [
-				'label' => 'Parcourir mes fichiers',
-				'help' => 'Envoyez vos fichier sur votre site (formats autorisés : png, gif, jpg, jpeg, txt, pdf, zip, rar, 7z, css, html, xml).',
-				'col' => '10'
-			]).
-			template::submit('submit', [
-				'value' => 'Envoyer',
-				'col' => '2'
-			]).
-			template::closeRow().
-			template::closeForm().
-			template::title('Liste des fichiers').
-			(self::$content ? self::$content : template::subTitle('Aucun fichier...'));
+		// Sauvegarde les données en supprimant le cache
+		$this->saveData(true);
+		// Notification de suppression
+		$this->setNotification('Cache vidé avec succès !');
+		// Redirige vers la page de configuration
+		helper::redirect('config');
 	}
 
-	/**
-	 * MODULE : Upload d'un fichier en POST et en AJAX
-	 * A importer entre un if($this->getPost()) en POST ; A appeler depuis un fichier JS en AJAX
-	 * @param array $extensions Extensions autorisées, par défaut seule les fichiers images sont autorisés
-	 * @return bool
-	 */
-	public function upload(array $extensions = ['png', 'gif', 'jpg', 'jpeg'])
+	/** Exporte le fichier de données */
+	public function export()
 	{
-		// Erreur 404
-		if(!isset($_FILES['file'])) {
-			return false;
-		}
-		$target = 'core/uploads/' . helper::filter(basename($_FILES['file']['name']), helper::URL);
-		// Check la taille du fichier (limité à environs 100 mo)
-		if($_FILES['file']['size'] > 100000000) {
-			$data['error'] = 'Fichier trop volumineux !';
-		}
-		// Check le type de fichier
-		elseif(!in_array(strtolower(pathinfo($target, PATHINFO_EXTENSION)), $extensions)) {
-			$data['error'] = 'Format du fichier non autorisé !';
-		}
-		// Check les erreurs au chargement du fichier
-		elseif($_FILES['file']['error']) {
-			$data['error'] = 'Erreur au chargement du fichier !';
-		}
-		// Check qu'il n'existe aucune notice
-		if(empty($data['error'])) {
-			// Tente de déplacer le fichier dans le bon dossier
-			if(@move_uploaded_file($_FILES['file']['tmp_name'], $target)) {
-				$data['success'] = 'Fichier envoyé avec succès !';
-				$data['link'] = helper::baseUrl(false) . $target;
-			}
-			else {
-				$data['error'] = 'Impossible de communiquer avec le serveur !';
-			}
-		}
-		// Pour une requête en AJAX
-		if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-			// En cas de succès retourne les données
-			if(isset($data['success'])) {
-				self::$layout = 'JSON';
-				self::$content = $data;
-			}
-			// Sinon statut de requête incorrecte
-			else {
-				http_response_code(400);
-			}
-		}
-		// Pour une requête en POST
-		else {
-			// En cas de succès
-			if(isset($data['success'])) {
-				// Notification d'upload
-				$this->setNotification($data['success']);
-				// Redirige vers la page courante
-				helper::redirect($this->getUrl());
-			}
-			// Sinon crée une notice en cas d'erreur
-			else {
-				template::$notices['file'] = $data['error'];
-			}
-		}
+		// Force le téléchargement du fichier core/data.json
+		header('Content-disposition: attachment; filename=data.json');
+		header('Content-type: application/json');
+		self::$content = $this->getData();
+		// Utilise le layout JSON
+		self::$layout = 'JSON';
 	}
 
-	/** MODULE : Connexion */
+	/** Connexion */
 	public function login()
 	{
 		// Traitement du formulaire
@@ -1347,7 +1362,7 @@ class core
 			template::closeForm();
 	}
 
-	/** MODULE : Déconnexion */
+	/** Déconnexion */
 	public function logout()
 	{
 		// Supprime le cookie de connexion
@@ -1355,11 +1370,13 @@ class core
 		// Redirige vers la page d'accueil du site
 		helper::redirect('./', false);
 	}
-
 }
 
 class helper
 {
+	/** Statut de l'URL rewriting (pour éviter de lire le contenu du fichier .htaccess à chaque self::baseUrl()) */
+	private static $rewriteStatus = null;
+
 	/** Filtres personnalisés */
 	const PASSWORD = 'FILTER_SANITIZE_PASSWORD';
 	const BOOLEAN = 'FILTER_SANITIZE_BOOLEAN';
@@ -1371,16 +1388,17 @@ class helper
 	const INT = FILTER_SANITIZE_NUMBER_INT;
 
 	/**
-	 * Retourne l'URL de base du site avec ou sans le point d'interrogation
+	 * Retourne l'URL de base du site
 	 * @param  bool   $queryString Affiche ou non le point d'interrogation
+	 * @param  bool   $host        Affiche ou non l'host
 	 * @return string
 	 */
-	public static function baseUrl($queryString = true) {
+	public static function baseUrl($queryString = true, $host = true) {
 		$currentPath = $_SERVER['PHP_SELF'];
 		$pathInfo = pathinfo($currentPath);
 		$hostName = $_SERVER['HTTP_HOST'];
 		$protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"], 0, 5)) == 'https://' ? 'https://' : 'http://';
-		return $protocol . $hostName . rtrim($pathInfo['dirname'], ' \/') . '/' . (($queryString AND file_exists('.rewriting')) ? '?' : '');
+		return ($host ? $protocol . $hostName  : '') . rtrim($pathInfo['dirname'], ' \/') . '/' . (($queryString AND !helper::rewriteCheck()) ? '?' : '');
 	}
 
 	/**
@@ -1656,10 +1674,25 @@ class helper
 	}
 
 	/**
-	 * Vérifie que l'URL rewriting est activée
+	 * Vérifie l'état de l'URL rewriting
 	 * @return bool
 	 */
-	public static function rewritingCheck()
+	public static function rewriteCheck()
+	{
+		if(self::$rewriteStatus === null) {
+			// Ouvre et scinde le fichier .htaccess
+			$htaccess = explode('# URL rewriting', file_get_contents('.htaccess'));
+			// Retourne un boolean en fonction du contenu de la partie réservée à l'URL rewriting
+			self::$rewriteStatus = (bool) end($htaccess);
+		}
+		return self::$rewriteStatus;
+	}
+
+	/**
+	 * Vérifie que le module d'URL rewriting est activé sur le serveur
+	 * @return bool
+	 */
+	public static function modRewriteCheck()
 	{
 		// Check si l'URL rewriting est activée
 		if(function_exists('apache_get_modules')) {
@@ -1677,7 +1710,16 @@ class helper
 			}
 		}
 		// Check si l'URL rewriting est activée (si PHP est installé en FastCGI)
-		if(get_headers(helper::baseUrl(false) . 'core/rewrite/test')[0] === 'HTTP/1.1 200 OK') {
+		file_put_contents('core/.htaccess',
+			'RewriteEngine on' . PHP_EOL .
+			'RewriteBase ' . helper::baseUrl(false, false) . 'core/' . PHP_EOL .
+			'RewriteRule test check'
+		);
+		file_put_contents('core/check', 'ok');
+		$header = get_headers(helper::baseUrl(false) . 'core/test')[0];
+		unlink('core/.htaccess');
+		unlink('core/check');
+		if($header === 'HTTP/1.1 200 OK') {
 			return true;
 		}
 		// l'URL rewriting n'est pas prise en charge
@@ -2549,5 +2591,4 @@ class template
 			]).
 			$contents;
 	}
-
 }

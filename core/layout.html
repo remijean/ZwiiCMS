@@ -12,15 +12,15 @@
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/custom.css">
 	<?php echo $this->css(); ?>
 </head>
-<body class="<?php echo $this->getTheme(); ?>">
+<body class="<?php echo $this->theme(); ?>">
 <?php echo $this->panel() . $this->getNotification(); ?>
-<div class="header" style="<?php echo $this->getThemeImage(); ?>">
+<div class="header" style="<?php echo $this->themeImage(); ?>">
 	<h1><?php echo $this->getData(['config', 'title']); ?></h1>
 </div>
 <div class="toggle"><span></span></div>
 <ul class="menu"><?php echo $this->menu(); ?></ul>
 <div id="container">
-	<div class="header" style="<?php echo $this->getThemeImage(); ?>">
+	<div class="header" style="<?php echo $this->themeImage(); ?>">
 		<h1><?php echo $this->getData(['config', 'title']); ?></h1>
 	</div>
 	<div class="toggle"><span></span></div>

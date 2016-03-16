@@ -22,6 +22,7 @@ if(version_compare(PHP_VERSION, '5.4.0', '<')) {
 /**
  * Initialisation de ZwiiCMS
  */
+session_start();
 require 'core/core.php';
 $core = new core;
 spl_autoload_register('core::autoload');

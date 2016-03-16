@@ -9,3 +9,6 @@ Options -Indexes
 	Order allow,deny
 	Deny from all
 </FilesMatch>
+
+# Attention, surtout ne rien modifier ci-dessous !
+# URL rewriting
