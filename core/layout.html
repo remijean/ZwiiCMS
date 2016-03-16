@@ -7,7 +7,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/vendor/normalize.min.css">
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/vendor/jquery-ui/jquery-ui.min.css">
-	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/vendor/trumbowyg/trumbowyg.min.css">
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/theme.css">
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/custom.css">
 	<?php echo $this->css(); ?>
@@ -34,10 +33,12 @@
 <script src="<?php echo helper::baseUrl(false); ?>core/vendor/jquery.min.js"></script>
 <script src="<?php echo helper::baseUrl(false); ?>core/vendor/jquery-ui/jquery-ui.min.js"></script>
 <script src="<?php echo helper::baseUrl(false); ?>core/vendor/jquery-ui/jquery-ui.touch-punch.min.js"></script>
-<script src="<?php echo helper::baseUrl(false); ?>core/vendor/trumbowyg/trumbowyg.min.js"></script>
-<script src="<?php echo helper::baseUrl(false); ?>core/vendor/trumbowyg/trumbowyg.upload.min.js"></script>
+<script src="<?php echo helper::baseUrl(false); ?>core/vendor/tinymce/tinymce.min.js"></script>
+<script src="<?php echo helper::baseUrl(false); ?>core/vendor/tinymce/jquery.tinymce.min.js"></script>
 <script>
 	var baseUrl = '<?php echo helper::baseUrl(); ?>';
+	var bodyClass = '<?php echo $this->theme(); ?>';
+	var language = '<?php echo $this->getData(["config", "language"]); ?>';
 </script>
 <script src="<?php echo helper::baseUrl(false); ?>core/core.js"></script>
 <?php echo $this->js(); ?>

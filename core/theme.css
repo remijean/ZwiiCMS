@@ -21,6 +21,11 @@ body {
 	color: #2C3E50;
 }
 
+body.editor {
+	font-size: 15px !important;
+	background-color: #FFF !important;
+}
+
 /* Liens */
 a {
 	text-decoration: none;
