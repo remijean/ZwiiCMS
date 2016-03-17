@@ -194,7 +194,6 @@ td > .col12 {
 
 /* Bannière */
 .header {
-	background-position: center;
 	background-repeat: no-repeat;
 }
 .header h1 {
@@ -697,12 +696,15 @@ td.offset11 {
 /* Alignement du contenu de la bannière */
 .themeHeaderTextAlignLeft .header {
 	text-align: left;
+	background-position: left;
 }
 .themeHeaderTextAlignCenter .header {
 	text-align: center;
+	background-position: center;
 }
 .themeHeaderTextAlignRight .header {
 	text-align: right;
+	background-position: right;
 }
 
 /* Alignement du contenu du menu */
