@@ -88,8 +88,8 @@ else {
 tinymce.init({
 	selector: '.editor',
 	language: language,
-	plugins: 'advlist anchor autolink autoresize charmap code fullscreen hr image imagetools legacyoutput link lists media nonbreaking noneditable paste preview print searchreplace tabfocus table textpattern wordcount',
-	toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media',
+	plugins: 'advlist anchor autolink autoresize charmap code colorpicker contextmenu fullscreen hr image imagetools legacyoutput link lists media nonbreaking noneditable paste preview print searchreplace tabfocus table textcolor textpattern visualchars wordcount',
+	toolbar: 'insertfile undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media',
 	body_class: bodyClass + ' editor',
 	content_css: [
 		'core/theme.css',
