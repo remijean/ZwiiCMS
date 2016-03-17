@@ -45,7 +45,7 @@ class core
 	private static $modules = ['create', 'edit', 'save', 'module', 'delete', 'clean', 'export', 'mode', 'config', 'files', 'upload', 'logout'];
 
 	/** Version de ZwiiCMS */
-	private static $version = '7.4.3';
+	private static $version = '7.4.4';
 
 	/** Récupère les données */
 	public function __construct()

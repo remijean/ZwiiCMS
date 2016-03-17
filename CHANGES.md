@@ -1,10 +1,15 @@
 ZwiiCMS 7
 =========
 
+## 7.4.4
+* Correction d'un bug lors du choix de l'alignement du contenu de la bannière
+* Intégration de TinyMCE
+* Refonte du système de détection de l'URL rewriting pour corriger des problèmes d'incompatibilités
+
 ## 7.4.3
 * Suppression des onglets dans le gestionnaire de fichiers
 * Correction de la non détection du module d'URL rewriting
-* Correction d'une faute d'ortographe et ajout de la page Facebook
+* Correction d'une faute d'orthographe et ajout de la page Facebook
 * Ajout d'une feuille de style vierge pour la personnalisation avancée
 * Ajout de Google Analytics (Merci Yoan Malié)
 * Mise à jour et optimisation de la traduction en anglais (Merci Yoan Malié)
