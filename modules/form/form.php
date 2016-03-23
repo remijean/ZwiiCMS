@@ -326,15 +326,20 @@ class formMod extends core
 			$this->saveData();
 			// Envoi du mail
 			if($this->getData([$this->getUrl(0), 'config', 'mail'])) {
-				helper::mail(
+				$sent = helper::mail(
 					false,
 					$this->getData([$this->getUrl(0), 'config', 'mail']),
-					helper::translate('Mail de votre site ZwiiCMS'),
-					'<h1>' . helper::translate('Mail en provenance de votre site ZwiiCMS') . '</h1>' . $mail . '</ul>'
+					helper::translate('Nouvelle entrée dans votre formulaire'),
+					'<h2>' . helper::translate('Mail en provenance de votre site ZwiiCMS') . '</h2><h3>' . helper::baseUrl() . $this->getUrl() . '</h3><ul>' . $mail . '</ul>'
 				);
 			}
 			// Notification de soumission
-			$this->setNotification('Formulaire soumis avec succès !');
+			if(isset($sent)) {
+				$this->setNotification('Formulaire soumis avec succès !');
+			}
+			else {
+				$this->setNotification('Impossible d\'envoyer le mail mais formulaire soumis avec succès !', true);
+			}
 			// Redirige vers la page courante
 			helper::redirect($this->getUrl());
 		}

@@ -42,7 +42,21 @@ class core
 	private $url;
 
 	/** @var array Liste des modules */
-	private static $modules = ['create', 'edit', 'save', 'module', 'delete', 'clean', 'export', 'mode', 'config', 'files', 'upload', 'logout'];
+	private static $modules = [
+		'create',
+		'edit',
+		'save',
+		'module',
+		'delete',
+		'clean',
+		'export',
+		'mode',
+		'config',
+		'files',
+		'upload',
+		'logout',
+		'phpinfo'
+	];
 
 	/** Version de ZwiiCMS */
 	private static $version = '7.4.4';
@@ -1375,6 +1389,13 @@ class core
 		// Redirige vers la page d'accueil du site
 		helper::redirect('./', false);
 	}
+
+	/** PHPInfo */
+	public function phpinfo()
+	{
+		self::$layout = 'BLANK';
+		self::$content = phpinfo();
+	}
 }
 
 class helper
@@ -1659,6 +1680,9 @@ class helper
 		if($from) {
 			$header .= 'From: ' . $from . $n;
 		}
+		else {
+			$header .= 'From: ' . helper::translate('Votre site ZwiiCMS') . ' <no-reply@' . $_SERVER['SERVER_NAME'] . '>' . $n;
+		}
 		$header .= 'MIME-Version: 1.0' . $n;
 		$header .= 'Content-Type: multipart/alternative;' . $n . ' boundary="' . $boundary . '"' . $n;
 		// Message au format texte
@@ -1674,6 +1698,8 @@ class helper
 		// Fermeture des séparateurs
 		$message .= $n . '--' . $boundary . '--' . $n;
 		$message .= $n . '--' . $boundary . '--' . $n;
+		// Accents dans le sujet d'un mail
+		$subject = mb_encode_mimeheader($subject,'UTF-8', 'Q', $n)
 		// Envoi du mail
 		return @mail($to, $subject, $message, $header);
 	}
