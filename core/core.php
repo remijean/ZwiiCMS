@@ -1688,7 +1688,7 @@ class helper
 			// Ouvre et scinde le fichier .htaccess
 			$htaccess = explode('# URL rewriting', file_get_contents('.htaccess'));
 			// Retourne un boolean en fonction du contenu de la partie réservée à l'URL rewriting
-			self::$rewriteStatus = (bool) end($htaccess);
+			self::$rewriteStatus = !empty($htaccess[1]);
 		}
 		return self::$rewriteStatus;
 	}
