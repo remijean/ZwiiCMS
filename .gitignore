@@ -1,5 +1,8 @@
-# Dossier de cache
-core/cache/
+# Fichiers de cache
+core/cache/*
+
+# Fichiers temporaires
+core/tmp/*
 
 # Fichiers uploadés
 core/uploads/*

@@ -26,6 +26,7 @@ session_start();
 require 'core/core.php';
 $core = new core;
 spl_autoload_register('core::autoload');
+$core->tmp();
 $core->language();
 $core->router();
 echo $core->cache();

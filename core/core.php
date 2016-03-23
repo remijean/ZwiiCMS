@@ -154,7 +154,7 @@ class core
 			$it = new DirectoryIterator('core/cache/');
 			foreach($it as $file) {
 				// Check que la cible est un fichier
-				if($file->isFile()) {
+				if($file->isFile() AND $file->getBasename() !== '.gitkeep') {
 					// Supprime automatiquement le fichier si l'argument $removeAllCache est à true
 					if($removeAllCache === true) {
 						unlink($file->getPathname());
@@ -341,15 +341,9 @@ class core
 		}
 	}
 
-	/**
-	 * Crée la connexion entre les modules et le système afin d'afficher le contenu de la page
-	 */
+	/** Crée la connexion entre les modules et le système afin d'afficher le contenu de la page */
 	public function router()
 	{
-		// Crée le dossier de cache si il n'existe pas
-		if(!file_exists('core/cache/')) {
-			mkdir('core/cache/');
-		}
 		// Module système
 		if(in_array($this->getUrl(0, false), self::$modules)) {
 			// Si l'utilisateur est connecté le module système est retournée
@@ -424,6 +418,17 @@ class core
 			case 'BLANK':
 				echo self::$content;
 				break;
+		}
+	}
+
+	/** Supprime les fichiers temporaires lorsqu'ils datent de plus d'un jour */
+	public function tmp()
+	{
+		$it = new DirectoryIterator('core/tmp/');
+		foreach($it as $file) {
+			if($file->isFile() AND $file->getBasename() !== '.gitkeep' AND $file->getMTime() + 86400 > time()) {
+				unlink($file->getPathname());
+			}
 		}
 	}
 
@@ -1710,16 +1715,13 @@ class helper
 			}
 		}
 		// Check si l'URL rewriting est activée (si PHP est installé en FastCGI)
-		file_put_contents('core/.htaccess',
+		file_put_contents('core/tmp/.htaccess',
 			'RewriteEngine on' . PHP_EOL .
-			'RewriteBase ' . helper::baseUrl(false, false) . 'core/' . PHP_EOL .
+			'RewriteBase ' . helper::baseUrl(false, false) . 'core/tmp/' . PHP_EOL .
 			'RewriteRule test check'
 		);
-		file_put_contents('core/check', 'ok');
-		$header = get_headers(helper::baseUrl(false) . 'core/test')[0];
-		unlink('core/.htaccess');
-		unlink('core/check');
-		if($header === 'HTTP/1.1 200 OK') {
+		file_put_contents('core/tmp/check', 'ok');
+		if(get_headers(helper::baseUrl(false) . 'core/tmp/test')[0] === 'HTTP/1.1 200 OK') {
 			return true;
 		}
 		// l'URL rewriting n'est pas prise en charge
