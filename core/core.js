@@ -95,7 +95,7 @@ tinymce.init({
 		'core/theme.css',
 		'core/custom.css'
 	],
-	image_advtab: true,
+	relative_urls: false,
 	file_browser_callback: function(fieldName) {
 		$('#editorField').val(fieldName);
 		$('#editorFile').trigger('click');
