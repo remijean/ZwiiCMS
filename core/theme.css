@@ -234,6 +234,7 @@ td > .col12 {
 	display: none;
 	position: absolute;
 	min-width: 200px;
+	z-index: 20;
 }
 .menu li ul li {
 	display: block;

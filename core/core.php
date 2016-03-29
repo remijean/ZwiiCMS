@@ -580,7 +580,7 @@ class core
 		$class = [];
 		foreach($this->getData(['theme']) as $key => $value) {
 			// Cas spécifique pour l'image de la bannière
-			if($key === 'headerImage' && !empty($value)) {
+			if($key === 'headerImage' AND !empty($value)) {
 				$class[] = 'themeHeaderImage';
 			}
 			// Pour les booleans
@@ -744,9 +744,12 @@ class core
 			// Actualise la positions des pages suivantes de même parent si la position ou le parent de la page à changée
 			$position = $this->getPost('position', helper::INT);
 			$parent = $this->getPost('parent', helper::STRING);
+			var_dump($this->getData(['pages', $this->getUrl(0), 'position']));
 			if($position !== $this->getData(['pages', $this->getUrl(0), 'position']) OR $parent !== $this->getData(['pages', $this->getUrl(0), 'parent'])) {
 				$hierarchy = $this->getHierarchy();
-				if($position > $this->getData(['pages', $this->getUrl(0), 'position'])) {
+				// Supérieur à 1 pour ignorer les options ne pas afficher et au début
+				// Sinon incrémente de +1 si la nouvelle position est supérieure à la position actuelle afin de prendre en compte la page courante qui n'appraît pas dans la liste
+				if($position > 1 AND $position >= $this->getData(['pages', $this->getUrl(0), 'position'])) {
 					$position++;
 				}
 				// Modifie les positions des pages dans parents
@@ -755,9 +758,12 @@ class core
 						// Commence à 1 et non 0
 						$index++;
 						// Incrémente de +1 la position des pages suivantes
-						if($index >= $position) {
+						if($index >= $position AND $position !== 0) {
 							$index++;
 						}
+						echo $parentKey . ' ';
+						echo $index . ' ';
+						echo $position . '<br>';
 						// Change les positions
 						$this->setData(['pages', $parentKey, 'position', $index]);
 					}
@@ -1796,7 +1802,7 @@ class helper
 		}
 		$it = new DirectoryIterator('data/upload/');
 		foreach($it as $file) {
-			if($file->isFile() AND $file->getBasename() !== '.gitkeep' AND (empty($extensions) || in_array(strtolower($file->getExtension()), $extensions))) {
+			if($file->isFile() AND $file->getBasename() !== '.gitkeep' AND (empty($extensions) OR in_array(strtolower($file->getExtension()), $extensions))) {
 				$uploads['data/upload/' . $file->getBasename()] = $file->getBasename();
 			}
 		}
