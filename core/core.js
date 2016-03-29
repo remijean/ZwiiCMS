@@ -42,37 +42,6 @@ $(window).on('resize', function() {
 	}
 });
 
-/* Enregistrement en AJAX du module des page */
-$('#module').on('change', function() {
-	var newModule = $('#module').val();
-	var admin = $('#admin');
-	var ok = true;
-	if($('#oldModule').val() != '') {
-		ok = confirm('Si vous confirmez, les données du module précédent seront supprimées !');
-	}
-	if(ok) {
-		$.ajax({
-			type: 'POST',
-			url: baseUrl + 'save/' + $('#key').val(),
-			data: {module: newModule},
-			success: function() {
-				$('#oldModule').val(newModule);
-				if(newModule == '') {
-					admin.addClass('disabled');
-				}
-				else {
-					admin.removeClass('disabled');
-					admin.attr('target', '_blank')
-				}
-			},
-			error: function() {
-				alert('Impossible d\'enregistrer le module !');
-				admin.addClass('disabled');
-			}
-		});
-	}
-});
-
 /* Filtre la langue du site au format de tinyMCE */
 if(!language) {
 	language = 'fr_FR';
@@ -91,10 +60,7 @@ tinymce.init({
 	plugins: 'advlist anchor autolink autoresize charmap code colorpicker contextmenu fullscreen hr image imagetools legacyoutput link lists media nonbreaking noneditable paste preview print searchreplace tabfocus table textcolor textpattern visualchars wordcount',
 	toolbar: 'insertfile undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media',
 	body_class: bodyClass + ' editor',
-	content_css: [
-		'core/theme.css',
-		'core/custom.css'
-	],
+	content_css: ['core/theme.css'],
 	relative_urls: false,
 	file_browser_callback: function(fieldName) {
 		$('#editorField').val(fieldName);

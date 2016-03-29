@@ -5,9 +5,9 @@ core/cache/*
 core/tmp/*
 
 # Fichiers uploadés
-core/uploads/*
+data/upload/*
 
-# Autorise les dossiers vides
+# Autorise les dossiers vides dans GitHub
 !.gitkeep
 
 # Configuration de PHPStorm

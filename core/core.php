@@ -38,6 +38,9 @@ class core
 	/** @var array Base de données */
 	private $data;
 
+	/** @var array Liste des pages parentes et de leurs enfants */
+	private $hierarchy;
+
 	/** @var array Url du site coupée à chaque "/" */
 	private $url;
 
@@ -52,7 +55,7 @@ class core
 		'export',
 		'mode',
 		'config',
-		'files',
+		'manager',
 		'upload',
 		'logout',
 		'phpinfo'
@@ -65,7 +68,7 @@ class core
 	public function __construct()
 	{
 		if(empty($this->data)) {
-			$this->data = json_decode(file_get_contents('core/data.json'), true);
+			$this->data = json_decode(file_get_contents('data/data.json'), true);
 		}
 	}
 
@@ -179,8 +182,38 @@ class core
 					}
 				}
 			}
-			file_put_contents('core/data.json', json_encode($this->getData()));
+			file_put_contents('data/data.json', json_encode($this->getData()));
 		}
+	}
+
+	/**
+	 * Génère la liste des pages parentes et de leurs enfants
+	 * @return array
+	 */
+	public function getHierarchy() {
+		if(empty($this->hierarchy)) {
+			$children = [];
+			// Liste les pages par position en ordre croissant
+			$pages = helper::arrayCollumn($this->getData('pages'), 'position', 'SORT_ASC', true);
+			// Passe en revue les pages
+			foreach($pages as $pageKey => $pagePosition) {
+				// Si la page n'a pas de parent = page parente
+				if(!$this->getData(['pages', $pageKey, 'parent'])) {
+					$this->hierarchy[$pageKey] = [];
+				}
+				// Si la page a un parent = page enfant
+				else {
+					$children[$this->getData(['pages', $pageKey, 'parent'])][] = $pageKey;
+				}
+			}
+			// Ajoute les enfants au parents
+			foreach($this->hierarchy as $parentKey => $childrenKeys) {
+				if(isset($children[$parentKey])) {
+					$this->hierarchy[$parentKey] = $children[$parentKey];
+				}
+			}
+		}
+		return $this->hierarchy;
 	}
 
 	/**
@@ -349,7 +382,7 @@ class core
 	public static function autoload($className)
 	{
 		$className = substr($className, 0, -3);
-		$classPath = 'modules/' . $className . '/' . $className . '.php';
+		$classPath = 'module/' . $className . '/' . $className . '.php';
 		if(is_readable($classPath)) {
 			require $classPath;
 		}
@@ -480,12 +513,12 @@ class core
 	public function language()
 	{
 		// Importe le fichier langue système
-		$language = 'core/langs/' . $this->getData(['config', 'language']);
+		$language = 'core/lang/' . $this->getData(['config', 'language']);
 		if(is_file($language)) {
 			self::$language = json_decode(file_get_contents($language), true);
 		}
 		// Importe le fichier langue pour le module de la page
-		$language = 'modules/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '/langs/' . $this->getData(['config', 'language']);
+		$language = 'module/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '/langs/' . $this->getData(['config', 'language']);
 		if(is_file($language)) {
 			self::$language = array_merge(self::$language, json_decode(file_get_contents($language), true));
 		}
@@ -577,16 +610,27 @@ class core
 	 */
 	public function menu()
 	{
-		// Ajout edit/ à l'URL si l'utilisateur est en mode édition
+		// Ajoute edit/ à l'URL si l'utilisateur est en mode édition
 		$edit = ($this->getCookie() === $this->getData(['config', 'password'])) ? $this->getMode() : false;
-		// Liste les items du menu en classant les pages par position en ordre croissant
-		$pageKeys = helper::arrayCollumn($this->getData('pages'), 'position', 'SORT_ASC');
-		// Génère les items du menu en fonction des pages
-		$items = false;
-		foreach($pageKeys as $pageKey) {
-			$current = ($pageKey === $this->getUrl(0)) ? ' class="current"' : false;
-			$blank = ($this->getData(['pages', $pageKey, 'blank']) AND !$this->getMode()) ? ' target="_blank"' : false;
-			$items .= '<li><a href="' . helper::baseUrl() . $edit . $pageKey . '"' . $current . $blank . '>' . $this->getData(['pages', $pageKey, 'title']) . '</a></li>';
+		// Met en forme les items du menu
+		$items = '';
+		foreach($this->getHierarchy() as $parentKey => $childrenKeys) {
+			// Propriétés de l'item
+			$current = ($parentKey === $this->getUrl(0)) ? ' class="current"' : '';
+			$blank = ($this->getData(['pages', $parentKey, 'blank']) AND !$this->getMode()) ? ' target="_blank"' : '';
+			// Mise en page de l'item
+			$items .= '<li>';
+			$items .= '<a href="' . helper::baseUrl() . $edit . $parentKey . '"' . $current . $blank . '>' . $this->getData(['pages', $parentKey, 'title']) . '</a>';
+			$items .= '<ul>';
+			foreach($childrenKeys as $childKey) {
+				// Propriétés de l'item
+				$current = ($childKey === $this->getUrl(0)) ? ' class="current"' : '';
+				$blank = ($this->getData(['pages', $childKey, 'blank']) AND !$this->getMode()) ? ' target="_blank"' : '';
+				// Mise en page du sous-item
+				$items .= '<li><a href="' . helper::baseUrl() . $edit . $childKey . '"' . $current . $blank . '>' . $this->getData(['pages', $childKey, 'title']) . '</a></li>';
+			}
+			$items .= '</ul>';
+			$items .= '</li>';
 		}
 		// Retourne les items du menu
 		return $items;
@@ -599,7 +643,7 @@ class core
 	public function js()
 	{
 		// Check l'existance d'un fichier js pour le module de la page et l'import
-		$module = 'modules/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '.js';
+		$module = 'module/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '.js';
 		if(is_file($module)) {
 			return '<script src="' . helper::baseUrl(false) . $module . '"></script>';
 		}
@@ -612,7 +656,7 @@ class core
 	public function css()
 	{
 		// Check l'existance d'un fichier css pour le module de la page et l'import
-		$module = 'modules/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '.css';
+		$module = 'module/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '.css';
 		if(is_file($module)) {
 			return '<link rel="stylesheet" href="' . $module . '.css">';
 		}
@@ -633,7 +677,7 @@ class core
 			$ga .= '})(window,document,\'script\',\'//www.google-analytics.com/analytics.js\',\'ga\');';
 			$ga .= 'ga(\'create\', \'' . $code . '\', \'auto\');';
 			$ga .= 'ga(\'send\', \'pageview\');';
-			return '<script>' . $ga . '</script>';
+			return $ga;
 		}
 	}
 
@@ -697,18 +741,38 @@ class core
 					$this->setData(['config', 'index', $key]);
 				}
 			}
-			// Change la positions des pages suivantes si la position de la page à changée
+			// Actualise la positions des pages suivantes de même parent si la position ou le parent de la page à changée
 			$position = $this->getPost('position', helper::INT);
-			if($position AND $position !== $this->getData(['pages', $this->getUrl(0), 'position'])) {
-				// Nouvelle position des pages
-				$newPosition = $position;
-				// Liste les pages en les triant par position en ordre croissant
-				$pages = array_flip(helper::arrayCollumn($this->getData('pages'), 'position', 'SORT_ASC', true));
-				// Incrémente la position des pages suivante
-				foreach($pages as $pagePosition => $pageKey) {
-					if($pagePosition >= $position) {
-						$newPosition++;
-						$this->setData(['pages', $pageKey, 'position', $newPosition]);
+			$parent = $this->getPost('parent', helper::STRING);
+			if($position !== $this->getData(['pages', $this->getUrl(0), 'position']) OR $parent !== $this->getData(['pages', $this->getUrl(0), 'parent'])) {
+				$hierarchy = $this->getHierarchy();
+				if($position > $this->getData(['pages', $this->getUrl(0), 'position'])) {
+					$position++;
+				}
+				// Modifie les positions des pages dans parents
+				if(empty($parent)) {
+					foreach(array_keys($hierarchy) as $index => $parentKey) {
+						// Commence à 1 et non 0
+						$index++;
+						// Incrémente de +1 la position des pages suivantes
+						if($index >= $position) {
+							$index++;
+						}
+						// Change les positions
+						$this->setData(['pages', $parentKey, 'position', $index]);
+					}
+				}
+				// Modifie les positions des pages avec le même parent
+				elseif(!empty($hierarchy[$parent])) {
+					foreach($hierarchy[$parent] as $index => $childKey) {
+						// Commence à 1 et non 0
+						$index++;
+						// Incrémente de +1 la position des pages suivantes
+						if($index >= $position) {
+							$index++;
+						}
+						// Change les positions
+						$this->setData(['pages', $childKey, 'position', $index]);
 					}
 				}
 			}
@@ -719,6 +783,7 @@ class core
 				[
 					'title' => $this->getPost('title', helper::STRING),
 					'description' => $this->getPost('description', helper::STRING),
+					'parent' => $parent,
 					'position' => $position,
 					'blank' => $this->getPost('blank', helper::BOOLEAN),
 					'module' => $module,
@@ -730,30 +795,27 @@ class core
 				$this->removeData(['pages', $this->getUrl(0)]);
 			}
 			// Enregistre les données
-			$this->saveData($key);
+			$this->saveData(true);
 			// Notification de modification
 			$this->setNotification('Page modifiée avec succès !');
 			// Redirige vers la l'édition de la nouvelle page si la clef à changée ou sinon vers l'ancienne
 			helper::redirect('edit/' . $key);
 		}
-		// Liste les pages en les triant par position
-		$listPages = ['Ne pas afficher', 'Au début'];
-		$selected = 0;
-		$pagePositionPrevious = 1;
-		$pages = array_flip(helper::arrayCollumn($this->getData('pages'), 'position', 'SORT_ASC', true));
-		foreach($pages as $pagePosition => $pageKey) {
-			// Si la page est la page courante on ne l'affiche pas et on selection l'élément précédent (pas de - 1 à $pagePosition car + 1 dans $listPages)
-			if($pageKey === $this->getUrl(0)) {
-				$selected = $pagePositionPrevious;
+		// Liste des pages sans parent
+		$pagesNoParent = ['' => 'Aucune'];
+		$selected = '';
+		$hierarchy = $this->getHierarchy();
+		foreach($hierarchy as $parentKey => $childrenKeys) {
+			// Sélectionne le parent de la page courante
+			if($parentKey === $this->getData(['pages', $this->getUrl(0), 'parent'])) {
+				$selected = $parentKey;
 			}
-			// Sinon ajoute la page à la liste
-			else {
-				// Ajoute à la liste
-				$listPages[$pagePosition + 1] = helper::translate('Après') . ' "' . $this->getData(['pages', $pageKey, 'title']) . '"';
-				// Enregistre la position de cette page afin de la sélectionner si la prochaine page de la liste est la page en train d'être éditée
-				$pagePositionPrevious = $pagePosition + 1;
+			// Ajoute la page à la liste des pages parentes si elle ne correspond pas à la page courante
+			if($parentKey !== $this->getUrl(0)) {
+				$pagesNoParent[$parentKey] = $this->getData(['pages', $parentKey, 'title']);
 			}
 		}
+		// Template de la page
 		self::$title = $this->getData(['pages', $this->getUrl(0), 'title']);
 		self::$content =
 			template::openForm().
@@ -764,10 +826,72 @@ class core
 				'required' => true
 			]).
 			template::newRow().
-			template::select('position', $listPages, [
-				'label' => 'Position dans le menu',
-				'selected' => $selected
+			template::select('parent', $pagesNoParent, [
+				'label' => 'Page parente',
+				'selected' => $selected,
+				'col' => 6,
+				'classWrapper' => (empty($hierarchy[$this->getUrl(0)]) ?: 'hide')
 			]).
+			template::select('position', [], [
+				'label' => 'Position dans le menu',
+				'col' => (empty($hierarchy[$this->getUrl(0)]) ? 6 : 12)
+			]).
+			// Script pour afficher les bonnes pages dans le select des positions en fonction de la page parente
+			template::script('
+				var hierarchy = ' . json_encode($this->getHierarchy()) . ';
+				var pages = ' . json_encode($this->getData(['pages'])) . ';
+				$("#parent").on("change", function() {
+					var positionDOM = $("#position");
+					var positionLabelDOM = $("label[form=position]");
+					positionDOM.empty().append(
+						$("<option>").val(0).text("Ne pas afficher"),
+						$("<option>").val(1).text("Au début")
+					);
+					var parentSelected = $(this).find("option:selected").val();
+					var positionSelected = 0;
+					var positionPrevious = 1;
+					/* Aucune page parente selectionnée */
+					if(parentSelected === "") {
+						/* Liste des pages sans parents */
+						for(var key in hierarchy) {
+							/* Pour page courante sélectionne la page précédente (pas de - 1 à positionSelected à cause des options par défaut) */
+							if(key === "' . $this->getUrl(0) . '") {
+								positionSelected = positionPrevious;
+							}
+							/* Sinon ajoute la page à la liste */
+							else {
+								/* Enregistre la position de cette page afin de la sélectionner si la prochaine page de la liste est la page courante */
+								positionPrevious++;
+								/* Ajout à la liste */
+								positionDOM.append(
+									$("<option>").val(positionPrevious).text("' . helper::translate('Après') . ' \"" + pages[key].title + "\"")
+								);
+							}
+						}
+					}
+					/* Un page parente est selectionnée */
+					else {
+						/* Liste des pages enfants de la page parente */
+						for(var i = 0; i < hierarchy[parentSelected].length; i++) {
+							/* Pour page courante sélectionne la page précédente (pas de - 1 à positionSelected à cause des options par défaut) */
+							if(hierarchy[parentSelected][i] === "' . $this->getUrl(0) . '") {
+								positionSelected = positionPrevious;
+							}
+							/* Sinon ajoute la page à la liste */
+							else {
+								/* Enregistre la position de cette page afin de la sélectionner si la prochaine page de la liste est la page courante */
+								positionPrevious++;
+								/* Ajout à la liste */
+								positionDOM.append(
+									$("<option>").val(positionPrevious).text("' . helper::translate('Après') . ' \"" + pages[hierarchy[parentSelected][i]].title + "\"")
+								);
+							}
+						}
+					}
+					/* Sélectionne la bonne position */
+					positionDOM.find("option[value=" + positionSelected + "]").prop("selected", true);
+				}).trigger("change");
+			').
 			template::newRow().
 			template::textarea('content', [
 				'value' => $this->getData(['pages', $this->getUrl(0), 'content']),
@@ -798,6 +922,38 @@ class core
 				'disabled' => $this->getData(['pages', $this->getUrl(0), 'module']) ? '' : 'disabled',
 				'col' => 2
 			]).
+			// Script pour enregistrer le module de la page en AJAX
+			template::script('
+				$("#module").on("change", function() {
+					var newModule = $("#module").val();
+					var admin = $("#admin");
+					var ok = true;
+					if($("#oldModule").val() != "") {
+						ok = confirm("' . helper::translate('Si vous confirmez, les données du module précédent seront supprimées !') . '");
+					}
+					if(ok) {
+						$.ajax({
+							type: "POST",
+							url: baseUrl + "save/" + $("#key").val(),
+							data: {module: newModule},
+							success: function() {
+								$("#oldModule").val(newModule);
+								if(newModule == "") {
+									admin.addClass("disabled");
+								}
+								else {
+									admin.removeClass("disabled");
+									admin.attr("target", "_blank")
+								}
+							},
+							error: function() {
+								alert("Impossible d\"enregistrer le module !");
+								admin.addClass("disabled");
+							}
+						});
+					}
+				});
+			').
 			template::newRow().
 			template::checkbox('blank', true, 'Ouvrir dans un nouvel onglet en mode public', [
 				'checked' => $this->getData(['pages', $this->getUrl(0), 'blank'])
@@ -821,7 +977,7 @@ class core
 	public function delete()
 	{
 		// Erreur 404
-		if(!$this->getData(['pages', $this->getUrl(0)]) AND !is_file('core/uploads/' . $this->getUrl(0))) {
+		if(!$this->getData(['pages', $this->getUrl(0)]) AND !is_file('data/upload/' . $this->getUrl(0))) {
 			return false;
 		}
 		// Pour les pages
@@ -845,7 +1001,7 @@ class core
 		// Pour les fichiers
 		else {
 			// Tente de supprimer le fichier
-			if(@unlink('core/uploads/' . $this->getUrl(0))) {
+			if(@unlink('data/upload/' . $this->getUrl(0))) {
 				// Notification de suppression
 				$this->setNotification('Fichier supprimé avec succès !');
 			}
@@ -924,7 +1080,7 @@ class core
 	}
 
 	/** Gestionnaire de fichiers */
-	public function files()
+	public function manager()
 	{
 		// Traitement du formulaire
 		if($this->getPost('submit')) {
@@ -988,7 +1144,7 @@ class core
 		if(!isset($_FILES['file'])) {
 			return false;
 		}
-		$target = 'core/uploads/' . helper::filter(basename($_FILES['file']['name']), helper::URL);
+		$target = 'data/upload/' . helper::filter(basename($_FILES['file']['name']), helper::URL);
 		// Check la taille du fichier (limité à environs 100 mo)
 		if($_FILES['file']['size'] > 100000000) {
 			$data['error'] = 'Fichier trop volumineux !';
@@ -1336,7 +1492,7 @@ class core
 	/** Exporte le fichier de données */
 	public function export()
 	{
-		// Force le téléchargement du fichier core/data.json
+		// Force le téléchargement du fichier data/data.json
 		header('Content-disposition: attachment; filename=data.json');
 		header('Content-type: application/json');
 		self::$content = $this->getData();
@@ -1455,13 +1611,21 @@ class helper
 				$text = sha1($text);
 				break;
 			case self::BOOLEAN:
-				$text = empty($text) ? false : true;
+				$text = (bool)$text;
 				break;
 			case self::URL:
 				$text = str_replace(explode(',', $search), explode(',', $replace), mb_strtolower($text, 'UTF-8'));
 				break;
 			case self::URL_STRICT:
 				$text = str_replace(explode(',', $search . ',?,&,/'), explode(',', $replace . ',-,-,-'), mb_strtolower($text, 'UTF-8'));
+				break;
+			case self::INT:
+				$text = filter_var($text, $filter);
+				$text = (int)$text;
+				break;
+			case self::FLOAT:
+				$text = filter_var($text, $filter);
+				$text = (float)$text;
 				break;
 			default:
 				$text = filter_var($text, $filter);
@@ -1587,7 +1751,7 @@ class helper
 		if($default) {
 			$modules[''] = self::translate($default);
 		}
-		$it = new DirectoryIterator('modules/');
+		$it = new DirectoryIterator('module/');
 		foreach($it as $dir) {
 			if($dir->isDir() AND $dir->getBasename() !== '.' AND $dir->getBasename() !== '..') {
 				$module = $dir->getBasename() . 'Adm';
@@ -1609,7 +1773,7 @@ class helper
 		if($default) {
 			$languages[''] = self::translate($default);
 		}
-		$it = new DirectoryIterator('core/langs/');
+		$it = new DirectoryIterator('core/lang/');
 		foreach($it as $file) {
 			if($file->isFile() AND $file->getExtension() === 'json') {
 				$languages[$file->getBasename()] = $file->getBasename('.json');
@@ -1630,10 +1794,10 @@ class helper
 		if($default) {
 			$uploads[''] = self::translate($default);
 		}
-		$it = new DirectoryIterator('core/uploads/');
+		$it = new DirectoryIterator('data/upload/');
 		foreach($it as $file) {
 			if($file->isFile() AND $file->getBasename() !== '.gitkeep' AND (empty($extensions) || in_array(strtolower($file->getExtension()), $extensions))) {
-				$uploads['core/uploads/' . $file->getBasename()] = $file->getBasename();
+				$uploads['data/upload/' . $file->getBasename()] = $file->getBasename();
 			}
 		}
 		return $uploads;
@@ -1699,7 +1863,7 @@ class helper
 		$message .= $n . '--' . $boundary . '--' . $n;
 		$message .= $n . '--' . $boundary . '--' . $n;
 		// Accents dans le sujet d'un mail
-		$subject = mb_encode_mimeheader($subject,'UTF-8', 'Q', $n)
+		$subject = mb_encode_mimeheader($subject,'UTF-8', 'Q', $n);
 		// Envoi du mail
 		return @mail($to, $subject, $message, $header);
 	}
@@ -2008,6 +2172,7 @@ class template
 			'label' => '',
 			'help' => '',
 			'class' => '',
+			'classWrapper' => '',
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
@@ -2018,7 +2183,7 @@ class template
 			$attributes['value'] = $value;
 		}
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper']. '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -2060,6 +2225,7 @@ class template
 			'label' => '',
 			'help' => '',
 			'class' => '',
+			'classWrapper' => '',
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
@@ -2070,7 +2236,7 @@ class template
 			$attributes['value'] = $value;
 		}
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -2113,13 +2279,14 @@ class template
 			'label' => '',
 			'help' => '',
 			'class' => '',
+			'classWrapper' => '',
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
 		// Champ requis
 		self::setRequired($nameId, $attributes);
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -2160,6 +2327,7 @@ class template
 			'label' => '',
 			'help' => '',
 			'class' => '',
+			'classWrapper' => '',
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
@@ -2170,7 +2338,7 @@ class template
 			$attributes['value'] = $value;
 		}
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -2212,6 +2380,7 @@ class template
 			'label' => '',
 			'help' => '',
 			'class' => '',
+			'classWrapper' => '',
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
@@ -2222,7 +2391,7 @@ class template
 			$attributes['selected'] = $selected;
 		}
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -2273,6 +2442,7 @@ class template
 			'label' => '',
 			'help' => '',
 			'class' => '',
+			'classWrapper' => '',
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
@@ -2309,7 +2479,7 @@ class template
 		// Supprime les couleurs à ignorer
 		$colors = array_diff($colors, $attributes['ignore']);
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -2366,13 +2536,14 @@ class template
 			'required' => '',
 			'help' => '',
 			'class' => '',
+			'classWrapper' => '',
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
 		// Champ requis
 		self::setRequired($nameId, $attributes);
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Notice
 		if(!empty(self::$notices[$nameId])) {
 			$html .= self::getNotice($nameId);
@@ -2413,13 +2584,14 @@ class template
 			'required' => '',
 			'help' => '',
 			'class' => '',
+			'classWrapper' => '',
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
 		// Champ requis
 		self::setRequired($nameId, $attributes);
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Notice
 		if(!empty(self::$notices[$nameId])) {
 			$html .= self::getNotice($nameId);
@@ -2458,11 +2630,12 @@ class template
 			'value' => 'Enregistrer',
 			'disabled' => '',
 			'class' => '',
+			'classWrapper' => '',
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Bouton
 		$html .= sprintf(
 			'<input type="submit" value="%s" %s>',
@@ -2493,12 +2666,13 @@ class template
 			'onclick' => '',
 			'disabled' => '',
 			'class' => '',
+			'classWrapper' => '',
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
 
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Bouton
 		$html .= sprintf(
 			'<a %s class="button %s %s">%s</a>',
@@ -2524,11 +2698,12 @@ class template
 		// Attributs possibles
 		$attributes = array_merge([
 			'class' => '',
+			'classWrapper' => '',
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Background
 		$html .= '<div class="background ' . $attributes['class']. '">' . helper::translate($text) . '</div>';
 		// Fin col
@@ -2558,11 +2733,12 @@ class template
 		// Attributs possibles
 		$attributes = array_merge([
 			'class' => '',
+			'classWrapper' => '',
 			'col' => 12,
 			'offset' => 0
 		], $attributes);
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Début tableau
 		$html .= '<table class="' . $attributes['class']. '">';
 		// Début contenu
@@ -2590,7 +2766,7 @@ class template
 
 	/**
 	 * Crée des onglets
-	 * @param  array  $tabs Onglets à créer (format: ['titre onglet 1' => 'contenu onglet 1', 'titre onglet 2' => 'contenu onglet 2', etc])
+	 * @param  array $tabs Onglets à créer (format: ['titre onglet 1' => 'contenu onglet 1', 'titre onglet 2' => 'contenu onglet 2', etc])
 	 * @return string
 	 */
 	public static function tabs(array $tabs = [])
@@ -2618,5 +2794,14 @@ class template
 				'text' => $titles
 			]).
 			$contents;
+	}
+	/**
+	 * Crée un script
+	 * @param  string $script Script à intégrer
+	 * @return string
+	 */
+	public static function script($script)
+	{
+		return '<script>' . $script . '</script>';
 	}
 }

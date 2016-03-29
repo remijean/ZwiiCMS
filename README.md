@@ -1,7 +1,7 @@
 ZwiiCMS 7
 =========
 
-ZwiiCMS est un logiciel sans base de données qui permet à ses utilisateurs de créer et gérer facilement un site web sans aucune connaissance en programmation.
+ZwiiCMS est un CMS sans base de données qui permet à ses utilisateurs de créer et gérer facilement un site web sans aucune connaissance en programmation.
 
 ## Configuration recommandée
 
@@ -10,7 +10,7 @@ ZwiiCMS est un logiciel sans base de données qui permet à ses utilisateurs de 
 
 ## Installation
 
-Téléchargez puis décompressez l’archive sur votre serveur et c’est tout !
+Téléchargez puis décompressez l'archive sur votre serveur et c'est tout !
 
 ## Configuration
 

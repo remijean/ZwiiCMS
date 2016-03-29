@@ -96,12 +96,13 @@ table {
 	border-collapse: collapse;
 	border: 1px solid #C5D1D4;
 }
-tr:nth-child(2n+2) {
+tr:nth-child(2n + 2) {
 	background: #ECF0F1;
 }
 td {
 	padding: 10px;
 }
+/* Supprime le padding des cols dans les cellules des tableaux */
 td > .col1,
 td > .col2,
 td > .col3,
@@ -219,12 +220,26 @@ td > .col12 {
 }
 .menu {
 	display: block;
+}
+.menu ul {
 	padding: 0;
 	margin: 0;
 	list-style: none;
 }
 .menu li {
 	display: inline-block;
+	position: relative;
+}
+.menu li ul {
+	display: none;
+	position: absolute;
+	min-width: 200px;
+}
+.menu li ul li {
+	display: block;
+}
+.menu li:hover ul {
+	display: block;
 }
 .menu a {
 	display: inherit;
@@ -239,10 +254,21 @@ td > .col12 {
 	}
 	.menu {
 		display: none;
-		text-align: center !important;
+		text-align: left !important;
 	}
 	.menu li {
 		display: block;
+	}
+	.menu li ul {
+		display: block;
+		position: static;
+		min-width: inherit;
+	}
+	.menu a {
+		padding: 15px !important;
+	}
+	.menu li ul a {
+		padding-left: 40px !important;
 	}
 }
 
@@ -515,18 +541,18 @@ input[type='radio']:disabled + label:before {
 .row {
 	margin: 0 -10px;
 }
-.col1:not(td),
-.col2:not(td),
-.col3:not(td),
-.col4:not(td),
-.col5:not(td),
-.col6:not(td),
-.col7:not(td),
-.col8:not(td),
-.col9:not(td),
-.col10:not(td),
-.col11:not(td),
-.col12:not(td) {
+.col1,
+.col2,
+.col3,
+.col4,
+.col5,
+.col6,
+.col7,
+.col8,
+.col9,
+.col10,
+.col11,
+.col12 {
 	vertical-align: bottom;
 	padding: 10px;
 	width: 100%;
@@ -535,73 +561,73 @@ input[type='radio']:disabled + label:before {
 	display: inline-block;
 }
 @media (min-width: 992px) {
-	.col1:not(td) {
+	.col1 {
 		width: 8.33333333%;
 	}
-	.col2:not(td) {
+	.col2 {
 		width: 16.66666667%;
 	}
-	.col3:not(td) {
+	.col3 {
 		width: 25%;
 	}
-	.col4:not(td) {
+	.col4 {
 		width: 33.33333333%;
 	}
-	.col5:not(td) {
+	.col5 {
 		width: 41.66666667%;
 	}
-	.col6:not(td) {
+	.col6 {
 		width: 50%;
 	}
-	.col7:not(td) {
+	.col7 {
 		width: 58.33333333%;
 	}
-	.col8:not(td) {
+	.col8 {
 		width: 66.66666667%;
 	}
-	.col9:not(td) {
+	.col9 {
 		width: 75%;
 	}
-	.col10:not(td) {
+	.col10 {
 		width: 83.33333333%;
 	}
-	.col11:not(td) {
+	.col11 {
 		width: 91.66666667%;
 	}
-	.col12:not(td) {
+	.col12 {
 		width: 100%;
 	}
-	.offset1:not(td) {
+	.offset1 {
 		margin-left: 8.33333333%;
 	}
-	.offset2:not(td) {
+	.offset2 {
 		margin-left: 16.66666667%;
 	}
-	.offset3:not(td) {
+	.offset3 {
 		margin-left: 25%;
 	}
-	.offset4:not(td) {
+	.offset4 {
 		margin-left: 33.33333333%;
 	}
-	.offset5:not(td) {
+	.offset5 {
 		margin-left: 41.66666667%;
 	}
-	.offset6:not(td) {
+	.offset6 {
 		margin-left: 50%;
 	}
-	.offset7:not(td) {
+	.offset7 {
 		margin-left: 58.33333333%;
 	}
-	.offset8:not(td) {
+	.offset8 {
 		margin-left: 66.66666667%;
 	}
-	.offset9:not(td) {
+	.offset9 {
 		margin-left: 75%;
 	}
-	.offset10:not(td) {
+	.offset10 {
 		margin-left: 83.33333333%;
 	}
-	.offset11:not(td) {
+	.offset11 {
 		margin-left: 91.66666667%;
 	}
 }
@@ -610,6 +636,24 @@ input[type='radio']:disabled + label:before {
  * Grille pour tableau
  */
 
+td.col1,
+td.col2,
+td.col3,
+td.col4,
+td.col5,
+td.col6,
+td.col7,
+td.col8,
+td.col9,
+td.col10,
+td.col11,
+td.col12 {
+	vertical-align: inherit;
+	width: 100%;
+	min-height: 1px;
+	position: relative;
+	display: table-cell;
+}
 td.col1 {
 	width: 8.33333333%;
 }
@@ -645,39 +689,6 @@ td.col11 {
 }
 td.col12 {
 	width: 100%;
-}
-td.offset1 {
-	margin-left: 8.33333333%;
-}
-td.offset2 {
-	margin-left: 16.66666667%;
-}
-td.offset3 {
-	margin-left: 25%;
-}
-td.offset4 {
-	margin-left: 33.33333333%;
-}
-td.offset5 {
-	margin-left: 41.66666667%;
-}
-td.offset6 {
-	margin-left: 50%;
-}
-td.offset7 {
-	margin-left: 58.33333333%;
-}
-td.offset8 {
-	margin-left: 66.66666667%;
-}
-td.offset9 {
-	margin-left: 75%;
-}
-td.offset10 {
-	margin-left: 83.33333333%;
-}
-td.offset11 {
-	margin-left: 91.66666667%;
 }
 
 /**
@@ -814,7 +825,7 @@ td.offset11 {
 /* Couleur normale */
 .themeBackgroundColorTurquoise,
 .themeMenuColorTurquoise .toggle,
-.themeMenuColorTurquoise .menu,
+.themeMenuColorTurquoise .menu ul,
 .themeElementColorTurquoise input[type='submit'],
 .themeElementColorTurquoise .button,
 .themeElementColorTurquoise .pagination a,
@@ -869,7 +880,7 @@ td.offset11 {
 /* Couleur normale */
 .themeBackgroundColorGreenSea,
 .themeMenuColorGreenSea .toggle,
-.themeMenuColorGreenSea .menu,
+.themeMenuColorGreenSea .menu ul,
 .themeElementColorGreenSea input[type='submit'],
 .themeElementColorGreenSea .button,
 .themeElementColorGreenSea .pagination a,
@@ -924,7 +935,7 @@ td.offset11 {
 /* Couleur normale */
 .themeBackgroundColorEmerald,
 .themeMenuColorEmerald .toggle,
-.themeMenuColorEmerald .menu,
+.themeMenuColorEmerald .menu ul,
 .themeElementColorEmerald input[type='submit'],
 .themeElementColorEmerald .button,
 .themeElementColorEmerald .pagination a,
@@ -979,7 +990,7 @@ td.offset11 {
 /* Couleur normale */
 .themeBackgroundColorNephritis,
 .themeMenuColorNephritis .toggle,
-.themeMenuColorNephritis .menu,
+.themeMenuColorNephritis .menu ul,
 .themeElementColorNephritis input[type='submit'],
 .themeElementColorNephritis .button,
 .themeElementColorNephritis .pagination a,
@@ -1034,7 +1045,7 @@ td.offset11 {
 /* Couleur normale */
 .themeBackgroundColorPeterRiver,
 .themeMenuColorPeterRiver .toggle,
-.themeMenuColorPeterRiver .menu,
+.themeMenuColorPeterRiver .menu ul,
 .themeElementColorPeterRiver input[type='submit'],
 .themeElementColorPeterRiver .button,
 .themeElementColorPeterRiver .pagination a,
@@ -1089,7 +1100,7 @@ td.offset11 {
 /* Couleur normale */
 .themeBackgroundColorBelizeHole,
 .themeMenuColorBelizeHole .toggle,
-.themeMenuColorBelizeHole .menu,
+.themeMenuColorBelizeHole .menu ul,
 .themeElementColorBelizeHole input[type='submit'],
 .themeElementColorBelizeHole .button,
 .themeElementColorBelizeHole .pagination a,
@@ -1144,7 +1155,7 @@ td.offset11 {
 /* Couleur normale */
 .themeBackgroundColorAmethyst,
 .themeMenuColorAmethyst .toggle,
-.themeMenuColorAmethyst .menu,
+.themeMenuColorAmethyst .menu ul,
 .themeElementColorAmethyst input[type='submit'],
 .themeElementColorAmethyst .button,
 .themeElementColorAmethyst .pagination a,
@@ -1199,7 +1210,7 @@ td.offset11 {
 /* Couleur normale */
 .themeBackgroundColorWisteria,
 .themeMenuColorWisteria .toggle,
-.themeMenuColorWisteria .menu,
+.themeMenuColorWisteria .menu ul,
 .themeElementColorWisteria input[type='submit'],
 .themeElementColorWisteria .button,
 .themeElementColorWisteria .pagination a,
@@ -1254,7 +1265,7 @@ td.offset11 {
 /* Couleur normale */
 .themeBackgroundColorWetAsphalt,
 .themeMenuColorWetAsphalt .toggle,
-.themeMenuColorWetAsphalt .menu,
+.themeMenuColorWetAsphalt .menu ul,
 .themeElementColorWetAsphalt input[type='submit'],
 .themeElementColorWetAsphalt .button,
 .themeElementColorWetAsphalt .pagination a,
@@ -1309,7 +1320,7 @@ td.offset11 {
 /* Couleur normale */
 .themeBackgroundColorMidnightBlue,
 .themeMenuColorMidnightBlue .toggle,
-.themeMenuColorMidnightBlue .menu,
+.themeMenuColorMidnightBlue .menu ul,
 .themeElementColorMidnightBlue input[type='submit'],
 .themeElementColorMidnightBlue .button,
 .themeElementColorMidnightBlue .pagination a,
@@ -1364,7 +1375,7 @@ td.offset11 {
 /* Couleur normale */
 .themeBackgroundColorSunFlower,
 .themeMenuColorSunFlower .toggle,
-.themeMenuColorSunFlower .menu,
+.themeMenuColorSunFlower .menu ul,
 .themeElementColorSunFlower input[type='submit'],
 .themeElementColorSunFlower .button,
 .themeElementColorSunFlower .pagination a,
@@ -1419,7 +1430,7 @@ td.offset11 {
 /* Couleur normale */
 .themeBackgroundColorOrange,
 .themeMenuColorOrange .toggle,
-.themeMenuColorOrange .menu,
+.themeMenuColorOrange .menu ul,
 .themeElementColorOrange input[type='submit'],
 .themeElementColorOrange .button,
 .themeElementColorOrange .pagination a,
@@ -1474,7 +1485,7 @@ td.offset11 {
 /* Couleur normale */
 .themeBackgroundColorCarrot,
 .themeMenuColorCarrot .toggle,
-.themeMenuColorCarrot .menu,
+.themeMenuColorCarrot .menu ul,
 .themeElementColorCarrot input[type='submit'],
 .themeElementColorCarrot .button,
 .themeElementColorCarrot .pagination a,
@@ -1529,7 +1540,7 @@ td.offset11 {
 /* Couleur normale */
 .themeBackgroundColorPumpkin,
 .themeMenuColorPumpkin .toggle,
-.themeMenuColorPumpkin .menu,
+.themeMenuColorPumpkin .menu ul,
 .themeElementColorPumpkin input[type='submit'],
 .themeElementColorPumpkin .button,
 .themeElementColorPumpkin .pagination a,
@@ -1584,7 +1595,7 @@ td.offset11 {
 /* Couleur normale */
 .themeBackgroundColorAlizarin,
 .themeMenuColorAlizarin .toggle,
-.themeMenuColorAlizarin .menu,
+.themeMenuColorAlizarin .menu ul,
 .themeElementColorAlizarin input[type='submit'],
 .themeElementColorAlizarin .button,
 .themeElementColorAlizarin .pagination a,
@@ -1639,7 +1650,7 @@ td.offset11 {
 /* Couleur normale */
 .themeBackgroundColorPomegranate,
 .themeMenuColorPomegranate .toggle,
-.themeMenuColorPomegranate .menu,
+.themeMenuColorPomegranate .menu ul,
 .themeElementColorPomegranate input[type='submit'],
 .themeElementColorPomegranate .button,
 .themeElementColorPomegranate .pagination a,
@@ -1701,7 +1712,7 @@ td.offset11 {
 /* Couleur normale */
 .themeBackgroundColorSilver,
 .themeMenuColorSilver .toggle,
-.themeMenuColorSilver .menu,
+.themeMenuColorSilver .menu ul,
 .themeElementColorSilver input[type='submit'],
 .themeElementColorSilver .button,
 .themeElementColorSilver .pagination a,
@@ -1756,7 +1767,7 @@ td.offset11 {
 /* Couleur normale */
 .themeBackgroundColorConcrete,
 .themeMenuColorConcrete .toggle,
-.themeMenuColorConcrete .menu,
+.themeMenuColorConcrete .menu ul,
 .themeElementColorConcrete input[type='submit'],
 .themeElementColorConcrete .button,
 .themeElementColorConcrete .pagination a,
@@ -1811,7 +1822,7 @@ td.offset11 {
 /* Couleur normale */
 .themeBackgroundColorAsbestos,
 .themeMenuColorAsbestos .toggle,
-.themeMenuColorAsbestos .menu,
+.themeMenuColorAsbestos .menu ul,
 .themeElementColorAsbestos input[type='submit'],
 .themeElementColorAsbestos .button,
 .themeElementColorAsbestos .pagination a,
