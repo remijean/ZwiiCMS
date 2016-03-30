@@ -744,7 +744,6 @@ class core
 			// Actualise la positions des pages suivantes de même parent si la position ou le parent de la page à changée
 			$position = $this->getPost('position', helper::INT);
 			$parent = $this->getPost('parent', helper::STRING);
-			var_dump($this->getData(['pages', $this->getUrl(0), 'position']));
 			if($position !== $this->getData(['pages', $this->getUrl(0), 'position']) OR $parent !== $this->getData(['pages', $this->getUrl(0), 'parent'])) {
 				$hierarchy = $this->getHierarchy();
 				// Supérieur à 1 pour ignorer les options ne pas afficher et au début
@@ -761,9 +760,6 @@ class core
 						if($index >= $position AND $position !== 0) {
 							$index++;
 						}
-						echo $parentKey . ' ';
-						echo $index . ' ';
-						echo $position . '<br>';
 						// Change les positions
 						$this->setData(['pages', $parentKey, 'position', $index]);
 					}
