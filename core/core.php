@@ -1471,6 +1471,51 @@ class core
 					]).
 					template::closeRow()
 			]).
+			// Aperçu de la personnalisation en direct
+			template::script('
+				$(".tabContent[data-1=3]").on("change", function() {
+					console.log("test");
+					var body = $("body");
+					// Supprime les anciennes classes
+					body.removeClass();
+					// Ajoute les nouvelles classes
+					// Pour les selects
+					$(this).find("select").each(function() {
+						var select = $(this);
+						var option = select.find("option:selected").val();
+						// Pour le select d\'ajout d\'image dans la bannière
+						if(select.attr("id") === "themeHeaderImage") {
+							$(".header").css("background-image", "url(\'" + option + "\')");
+							if(select.val() === "") {
+								body.removeClass("themeHeaderImage");
+							}
+							else {
+								body.addClass("themeHeaderImage");
+							}
+						}
+						// Pour les autres
+						else {
+							if(option) {
+								body.addClass(option);
+							}
+						}
+					});
+					// Pour les inputs
+					$(this).find("input").each(function() {
+						var input = $(this);
+						// Cas spécifique pour les checkbox
+						if(input.is(":checkbox")) {
+							if(input.is(":checked")) {
+								body.addClass(input.attr("name").replace("[]", ""));
+							}
+						}
+						// Cas simple
+						else {
+							body.addClass(input.val());
+						}
+					});
+				});
+			').
 			template::openRow().
 			template::submit('submit', [
 				'col' => 2,
@@ -2517,6 +2562,18 @@ class template
 		$html .= '</div>';
 		// Fin col
 		$html .= '</div>';
+		// Script
+		$html .= self::script('
+			$("#' . $nameId . 'ColorPicker div").on("click", function() {
+				var color = $(this);
+				var colorPicker = color.parents(".colorPicker");
+				// Sélectionne la couleur
+				colorPicker.find(".selected").removeClass("selected");
+				$(this).addClass("selected");
+				// Ajoute la couleur sélectionnée dans l\'input caché
+				colorPicker.find("input[type=hidden]").val(color.data("color")).trigger("change");
+			});
+		');
 		// Retourne le html
 		return $html;
 	}
@@ -2773,18 +2830,19 @@ class template
 	 */
 	public static function tabs(array $tabs = [])
 	{
+		$id = uniqid();
 		$titles = '';
 		$contents = '';
 		$i = 1;
 		// Met en forme les onglets
 		foreach($tabs as $title => $content) {
 			$titles .= self::div([
-				'class' => 'tabTitle' . ($i === 1 ? ' current' : ''),
+				'class' => 'tabTitle ' . $id . ($i === 1 ? ' current' : ''),
 				'data-1' => $i,
 				'text' => $title
 			]);
 			$contents .= self::div([
-				'class' => 'tabContent' . ($i === 1 ? '' : ' hide'),
+				'class' => 'tabContent ' . $id . ($i === 1 ? '' : ' hide'),
 				'data-1' => $i,
 				'text' => $content
 			]);
@@ -2795,7 +2853,32 @@ class template
 				'class' => 'tabTitles',
 				'text' => $titles
 			]).
-			$contents;
+			$contents.
+			self::script('
+				var tabTitles = $("#' . $id . '");
+				$(".' . $id . '.tabTitle").on("click", function() {
+					var tabTitle = $(this);
+					// Si le titre cliqué n\'est pas celui de l\'onglet courant
+					if(tabTitle.hasClass("current") === false) {
+						// Sélectionne le titre de l\'onglet courant
+						$(".' . $id . '.tabTitle.current").removeClass("current");
+						tabTitle.addClass("current");
+						// Affiche le contenu de l\'onglet courant
+						$(".' . $id . '.tabContent:visible").hide();
+						$(".' . $id . '.tabContent[data-1=" + tabTitle.attr("data-1") + "]").show();
+					}
+					// Ajoute le hash dans l\'URL
+					window.location.hash = tabTitle.attr("data-1");
+				});
+				// Affiche le bon onglet si un hash est présent dans l"URL
+				var hash = window.location.hash.substr(1);
+				if(hash) {
+					var tabTitle = $(".' . $id . '.tabTitle[data-1=\'" + hash + "\']");
+					if(tabTitle.length) {
+						tabTitle.trigger("click");
+					}
+				}
+			');
 	}
 	/**
 	 * Crée un script
