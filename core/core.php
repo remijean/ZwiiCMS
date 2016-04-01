@@ -2732,7 +2732,7 @@ class template
 		$html .= '</div>';
 		// Script
 		$html .= self::script('
-			:: Sélectionne une couleur
+			// Sélectionne une couleur
 			$("#' . $nameId . 'ColorPicker div").on("click", function() {
 				var color = $(this);
 				var colorPicker = color.parents(".colorPicker");
