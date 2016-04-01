@@ -387,7 +387,7 @@ class core
 				$this->$method();
 				// Passe en mode édition
 				// Sauf pour le module de configuration et le gestionnaire de fichiers afin de ne pas changer de mode en cliquant sur leur lien dans le panneau admin
-				if(!in_array($this->getUrl(0, false), ['config', 'files'])) {
+				if(!in_array($this->getUrl(0, false), ['config', 'manager'])) {
 					$this->setMode(true);
 				}
 			}
@@ -553,7 +553,7 @@ class core
 			$li = '<li>';
 			$li .= '<select onchange="$(location).attr(\'href\', $(this).val());">';
 			// Affiche l'option "Choisissez une page" seulement pour le module de configuration et le gestionnaire de fichier
-			if(in_array($this->getUrl(0, false), ['config', 'files'])) {
+			if(in_array($this->getUrl(0, false), ['config', 'manager'])) {
 				$li .= '<option value="">' . helper::translate('Choisissez une page') . '</option>';
 			}
 			// Crée des options pour les pages en les triant par titre
@@ -568,13 +568,13 @@ class core
 			$li .= '<a href="' . helper::baseUrl() . 'create">' . helper::translate('Créer une page') . '</a>';
 			$li .= '</li>';
 			// Affiche le switch de mode pour toutes les pages sauf le module de configuration et le gestionnaire de fichiers
-			if(!in_array($this->getUrl(0, false), ['config', 'files'])) {
+			if(!in_array($this->getUrl(0, false), ['config', 'manager'])) {
 				$li .= '<li>';
 				$li .= '<a href="' . helper::baseUrl() . 'mode/' . $this->getUrl(null, false) . '"' . ($this->getMode() ? ' class="edit"' : '') . '>' . helper::translate('Mode édition') . '</a>';
 				$li .= '</li>';
 			};
 			$li .= '<li>';
-			$li .= '<a href="' . helper::baseUrl() . 'files">' . helper::translate('Gestionnaire de fichiers') . '</a>';
+			$li .= '<a href="' . helper::baseUrl() . 'manager">' . helper::translate('Gestionnaire de fichiers') . '</a>';
 			$li .= '</li>';
 			$li .= '<li>';
 			$li .= '<a href="' . helper::baseUrl() . 'config">' . helper::translate('Configuration') . '</a>';
@@ -1151,7 +1151,7 @@ class core
 				$this->setNotification('Impossible de supprimer le fichier demandé !', true);
 			}
 			// Redirige vers le gestionnaire de fichiers
-			helper::redirect('files');
+			helper::redirect('manager');
 		}
 	}
 
