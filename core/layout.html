@@ -5,18 +5,12 @@
 	<title><?php echo self::$title; ?> - <?php echo $this->getData(['config', 'title']); ?></title>
 	<meta name="description" content="<?php echo self::$description; ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<script src="<?php echo helper::baseUrl(false); ?>core/vendor/jquery/jquery.min.js"></script>
-	<script src="<?php echo helper::baseUrl(false); ?>core/vendor/jquery-ui/jquery-ui.min.js"></script>
-	<script src="<?php echo helper::baseUrl(false); ?>core/vendor/jquery-ui/jquery-ui.touch-punch.min.js"></script>
-	<script src="<?php echo helper::baseUrl(false); ?>core/vendor/tinymce/tinymce.min.js"></script>
-	<script src="<?php echo helper::baseUrl(false); ?>core/vendor/tinymce/jquery.tinymce.min.js"></script>
-	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/vendor/normalize/normalize.min.css">
-	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/vendor/jquery-ui/jquery-ui.min.css">
+	<?php echo $this->vendor(); ?>
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/theme.css">
-	<?php echo $this->css(); ?>
 </head>
 <body class="<?php echo $this->theme(); ?>">
-<?php echo $this->panel() . $this->getNotification(); ?>
+<?php echo $this->panel(); ?>
+<?php echo $this->notification(); ?>
 <div class="header" style="<?php echo $this->themeImage(); ?>">
 	<h1><?php echo $this->getData(['config', 'title']); ?></h1>
 </div>
@@ -38,14 +32,7 @@
 	</div>
 	<div id="footer"><?php echo helper::translate('Motorisé par'); ?> <a href="http://zwiicms.com/" target="_blank">ZwiiCMS</a> | <a href="<?php echo helper::baseUrl(); ?>config"><?php echo helper::translate('Administration'); ?></a></div>
 </div>
-<script src="<?php echo helper::baseUrl(false); ?>core/vendor/jquery/jquery.min.js"></script>
-<script src="<?php echo helper::baseUrl(false); ?>core/vendor/jquery-ui/jquery-ui.min.js"></script>
-<script src="<?php echo helper::baseUrl(false); ?>core/vendor/jquery-ui/jquery-ui.touch-punch.min.js"></script>
-<script src="<?php echo helper::baseUrl(false); ?>core/vendor/tinymce/tinymce.min.js"></script>
-<script src="<?php echo helper::baseUrl(false); ?>core/vendor/tinymce/jquery.tinymce.min.js"></script>
-<script>
-	<?php echo $this->analytics(); ?>
-</script>
-<script src="<?php echo helper::baseUrl(false); ?>core/core.js"></script>
+<?php echo $this->analytics(); ?>
+<?php echo $this->scripts(); ?>
 </body>
 </html>

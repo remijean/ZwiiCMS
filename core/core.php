@@ -61,6 +61,14 @@ class core
 		'phpinfo'
 	];
 
+	/** @var array Liste des librairies à charger */
+	public static $vendor = [
+		'normalize' => true,
+		'jquery' => true,
+		'jquery-ui' => false,
+		'tinymce' => false
+	];
+
 	/** Version de ZwiiCMS */
 	private static $version = '7.4.4';
 
@@ -250,7 +258,7 @@ class core
 
 	/**
 	 * Accède au cookie contenant le mot de passe
-	 * @return string Cookie contenant le mot de passe
+	 * @return string
 	 */
 	public function getCookie()
 	{
@@ -274,39 +282,19 @@ class core
 	}
 
 	/**
-	 * Accède à la notification
-	 * @return string Notification mise en forme
+	 * Accède à la notification et supprime les sessions rattachées
+	 * @return array
 	 */
 	public function getNotification()
 	{
-		// Si une notice existe, affiche un message pour prévenir l'utilisateur
-		if(template::$notices) {
-			return template::div([
-				'id' => 'notification',
-				'class' => 'error',
-				'text' => 'Impossible de soumettre le formulaire, car il contient des erreurs !'
-			]);
-		}
-		// Si besoin, affiche une notification d'erreur
-		elseif(!empty($_SESSION['ERROR'])) {
-			$error = $_SESSION['ERROR'];
-			unset($_SESSION['ERROR']);
-			return template::div([
-				'id' => 'notification',
-				'class' => 'error',
-				'text' => $error
-			]);
-		}
-		// Si besoin, affiche une notification de succès
-		elseif(!empty($_SESSION['SUCCESS'])) {
-			$success = $_SESSION['SUCCESS'];
-			unset($_SESSION['SUCCESS']);
-			return template::div([
-				'id' => 'notification',
-				'class' => 'success',
-				'text' => $success
-			]);
-		}
+		$notification = [
+			'notice' => template::$notices,
+			'success' => (isset($_SESSION['SUCCESS']) ? $_SESSION['SUCCESS'] : ''),
+			'error' => (isset($_SESSION['ERROR']) ? $_SESSION['ERROR'] : '')
+		];
+		unset($_SESSION['SUCCESS']);
+		unset($_SESSION['ERROR']);
+		return $notification;
 	}
 
 	/**
@@ -322,8 +310,8 @@ class core
 	}
 
 	/**
-	 * Accède au mode d'affichage
-	 * @return string Retourne "edit/" si le mode édition
+	 * Accède au mode d'affichage (ajoute "edit/" si le mode édition)
+	 * @return string
 	 */
 	public function getMode()
 	{
@@ -525,6 +513,36 @@ class core
 	}
 
 	/**
+	 * Importe les libraries
+	 * @return string
+	 */
+	public function vendor()
+	{
+		$vendor = '';
+		foreach(self::$vendor as $vendorName => $vendorStatus) {
+			if($vendorStatus) {
+				switch($vendorName) {
+					case 'jquery':
+						$vendor .= '<script src="' . helper::baseUrl(false) . 'core/vendor/jquery/jquery.min.js"></script>';
+						break;
+					case 'jquery-ui':
+						$vendor .= '<script src="' . helper::baseUrl(false) . 'core/vendor/jquery-ui/jquery-ui.min.js"></script>';
+						$vendor .= '<script src="' . helper::baseUrl(false) . 'core/vendor/jquery-ui/jquery-ui.touch-punch.min.js"></script>';
+						$vendor .= '<link rel="stylesheet" href="' . helper::baseUrl(false) . 'core/vendor/jquery-ui/jquery-ui.min.css">';
+						break;
+					case 'tinymce':
+						$vendor .= '<script src="' . helper::baseUrl(false) . 'core/vendor/tinymce/tinymce.min.js"></script>';
+						$vendor .= '<script src="' . helper::baseUrl(false) . 'core/vendor/tinymce/jquery.tinymce.min.js"></script>';
+						break;
+					case 'normalize';
+						$vendor .= '<link rel="stylesheet" href="' . helper::baseUrl(false) . 'core/vendor/normalize/normalize.min.css">';
+				}
+			}
+		}
+		return $vendor;
+	}
+
+	/**
 	 * Met en forme le panneau d'administration
 	 * @return string
 	 */
@@ -567,6 +585,49 @@ class core
 			$li .= '</a>';
 			$li .= '</li>';
 			return '<ul id="panel">' . $li . '</ul>';
+		}
+	}
+
+	/**
+	 * Met en forme la notification
+	 * @return string
+	 */
+	public function notification()
+	{
+		$notification = $this->getNotification();
+		// Si une notice existe, affiche un message pour prévenir l'utilisateur
+		if(!empty($notification['notice'])) {
+			$notification = template::div([
+				'id' => 'notification',
+				'class' => 'error',
+				'text' => 'Impossible de soumettre le formulaire, car il contient des erreurs !'
+			]);
+		}
+		// Si besoin, affiche une notification d'erreur
+		elseif(!empty($notification['error'])) {
+			$notification = template::div([
+				'id' => 'notification',
+				'class' => 'error',
+				'text' => $notification['error']
+			]);
+		}
+		// Si besoin, affiche une notification de succès
+		elseif(!empty($notification['success'])) {
+			$notification = template::div([
+				'id' => 'notification',
+				'class' => 'success',
+				'text' => $notification['success']
+			]);
+		}
+		// Si une notification existe elle est retournée
+		if(is_string($notification)) {
+			return $notification.
+			template::script('
+				// Cache la notification après 4 secondes
+				setTimeout(function() {
+					$("#notification").slideUp();
+				}, 4000);
+			');
 		}
 	}
 
@@ -637,32 +698,6 @@ class core
 	}
 
 	/**
-	 * Importe le js du module
-	 * @return string
-	 */
-	public function js()
-	{
-		// Check l'existance d'un fichier js pour le module de la page et l'import
-		$module = 'module/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '.js';
-		if(is_file($module)) {
-			return '<script src="' . helper::baseUrl(false) . $module . '"></script>';
-		}
-	}
-
-	/**
-	 * Importe le css du module
-	 * @return string
-	 */
-	public function css()
-	{
-		// Check l'existance d'un fichier css pour le module de la page et l'import
-		$module = 'module/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '.css';
-		if(is_file($module)) {
-			return '<link rel="stylesheet" href="' . $module . '.css">';
-		}
-	}
-
-	/**
 	 * Script Google Analytics
 	 * @return string
 	 */
@@ -677,8 +712,109 @@ class core
 			$ga .= '})(window,document,\'script\',\'//www.google-analytics.com/analytics.js\',\'ga\');';
 			$ga .= 'ga(\'create\', \'' . $code . '\', \'auto\');';
 			$ga .= 'ga(\'send\', \'pageview\');';
-			return $ga;
+			return '<script>' . $ga . '</script>';
 		}
+	}
+
+	/**
+	 * Scripts communs
+	 * @return string
+	 */
+	public function scripts()
+	{
+		$scripts = template::script('
+			// Modifications non enregistrées du formulaire
+			var form = $("form");
+			form.data("serialize", form.serialize());
+			$(window).on("beforeunload", function() {
+				if(form.length && form.serialize() !== form.data("serialize")) {
+					return "Attention, si vous continuez, vous allez perdre les modifications non enregistrées !";
+				}
+			});
+			form.submit(function() {
+				$(window).off("beforeunload");
+			});
+			
+			// Affiche/cache le menu en mode responsive
+			var menu = $(".menu");
+			$(".toggle").on("click", function() {
+				menu.slideToggle();
+			});
+			$(window).on("resize", function() {
+				if($(window).width() > 768) {
+					menu.css("display", "");
+				}
+			});
+		');
+		if(self::$vendor['tinymce']) {
+			$scripts .= template::script('
+				// Ajoute le formulaire d\'upload de TinyMCE si il n\'existe pas
+				if(!$("#editorFileForm").length) {
+					body.append(
+						$("<form>").attr({
+							id: "editorForm",
+							enctype: "multipart/form-data",
+							method: "post"
+						}).append(
+							$("<input>").addClass("hide").attr({
+								id: "editorFile",
+								type: "file"
+							}),
+							$("<input>").attr({
+								id: "editorField",
+								type: "hidden"
+							})
+						)
+					);
+				}
+				
+				// Upload de tinyMCE
+				$("#editorFile").on("change", function() {
+					var editorField = $("#editorField").val();
+					var editorFieldShort = editorField.substring(0, editorField.length - 3);
+					// Affiche le statut de l\'upload
+					function uploadStatus(color) {
+						$("#" + editorField).val("").css("border-color", color);
+						$("#" + editorFieldShort + "l").css("color", color);
+						$("#" + editorFieldShort + "action").css({
+							backgroundColor: color,
+							borderColor: color
+						});
+					}
+					// Upload d\'image
+					var file = this.files[0];
+					if(file !== undefined && file.type.substring(0, 5) === "image") {
+						var formData = new FormData();
+						formData.append("file", file);
+						$.ajax({
+							type: "POST",
+							url: "' . helper::baseUrl() . 'upload",
+							data: formData,
+							dataType: "json",
+							cache: false,
+							contentType: false,
+							processData: false,
+							success: function(data) {
+								if(data.error) {
+									uploadStatus("#E74C3C");
+								}
+								else {
+									uploadStatus("#1ABC9C");
+									$("#" + editorField).val(data.link);
+								}
+							},
+							error: function() {
+								uploadStatus("#E74C3C");
+							}
+						});
+					}
+					else {
+						uploadStatus("#E74C3C");
+					}
+				});
+			');
+		}
+		return $scripts;
 	}
 
 	############################################################
@@ -838,8 +974,8 @@ class core
 				'label' => 'Position dans le menu',
 				'col' => (empty($hierarchy[$this->getUrl(0)]) ? 6 : 12)
 			]).
-			// Script pour afficher les bonnes pages dans le select des positions en fonction de la page parente
 			template::script('
+				// Affiche les bonnes pages dans le select des positions en fonction de la page parente
 				var hierarchy = ' . json_encode($this->getHierarchy()) . ';
 				var pages = ' . json_encode($this->getData(['pages'])) . ';
 				$("#parent").on("change", function() {
@@ -852,52 +988,52 @@ class core
 					var parentSelected = $(this).find("option:selected").val();
 					var positionSelected = 0;
 					var positionPrevious = 1;
-					/* Aucune page parente selectionnée */
+					// Aucune page parente selectionnée
 					if(parentSelected === "") {
-						/* Liste des pages sans parents */
+						// Liste des pages sans parents
 						for(var key in hierarchy) {
-							/* Pour page courante sélectionne la page précédente (pas de - 1 à positionSelected à cause des options par défaut) */
+							// Pour page courante sélectionne la page précédente (pas de - 1 à positionSelected à cause des options par défaut)
 							if(key === "' . $this->getUrl(0) . '") {
 								positionSelected = positionPrevious;
 							}
-							/* Sinon ajoute la page à la liste */
+							// Sinon ajoute la page à la liste
 							else {
-								/* Enregistre la position de cette page afin de la sélectionner si la prochaine page de la liste est la page courante */
+								// Enregistre la position de cette page afin de la sélectionner si la prochaine page de la liste est la page courante
 								positionPrevious++;
-								/* Ajout à la liste */
+								// Ajout à la liste
 								positionDOM.append(
 									$("<option>").val(positionPrevious).text("' . helper::translate('Après') . ' \"" + pages[key].title + "\"")
 								);
 							}
 						}
 					}
-					/* Un page parente est selectionnée */
+					// Un page parente est selectionnée
 					else {
-						/* Liste des pages enfants de la page parente */
+						// Liste des pages enfants de la page parente
 						for(var i = 0; i < hierarchy[parentSelected].length; i++) {
-							/* Pour page courante sélectionne la page précédente (pas de - 1 à positionSelected à cause des options par défaut) */
+							// Pour page courante sélectionne la page précédente (pas de - 1 à positionSelected à cause des options par défaut)
 							if(hierarchy[parentSelected][i] === "' . $this->getUrl(0) . '") {
 								positionSelected = positionPrevious;
 							}
-							/* Sinon ajoute la page à la liste */
+							// Sinon ajoute la page à la liste
 							else {
-								/* Enregistre la position de cette page afin de la sélectionner si la prochaine page de la liste est la page courante */
+								// Enregistre la position de cette page afin de la sélectionner si la prochaine page de la liste est la page courante
 								positionPrevious++;
-								/* Ajout à la liste */
+								// Ajout à la liste
 								positionDOM.append(
 									$("<option>").val(positionPrevious).text("' . helper::translate('Après') . ' \"" + pages[hierarchy[parentSelected][i]].title + "\"")
 								);
 							}
 						}
 					}
-					/* Sélectionne la bonne position */
+					// Sélectionne la bonne position
 					positionDOM.find("option[value=" + positionSelected + "]").prop("selected", true);
 				}).trigger("change");
 			').
 			template::newRow().
 			template::textarea('content', [
 				'value' => $this->getData(['pages', $this->getUrl(0), 'content']),
-				'class' => 'editor'
+				'editor' => true
 			]).
 			template::newRow().
 			template::textarea('description', [
@@ -924,8 +1060,8 @@ class core
 				'disabled' => $this->getData(['pages', $this->getUrl(0), 'module']) ? '' : 'disabled',
 				'col' => 2
 			]).
-			// Script pour enregistrer le module de la page en AJAX
 			template::script('
+				// Enregistre le module de la page en AJAX
 				$("#module").on("change", function() {
 					var newModule = $("#module").val();
 					var admin = $("#admin");
@@ -1471,8 +1607,8 @@ class core
 					]).
 					template::closeRow()
 			]).
-			// Aperçu de la personnalisation en direct
 			template::script('
+				// Aperçu de la personnalisation en direct
 				$(".tabContent[data-1=3]").on("change", function() {
 					var body = $("body");
 					// Supprime les anciennes classes
@@ -2276,6 +2412,7 @@ class template
 			'required' => '',
 			'label' => '',
 			'help' => '',
+			'editor' => false,
 			'class' => '',
 			'classWrapper' => '',
 			'col' => 12,
@@ -2303,11 +2440,34 @@ class template
 		// Texte long
 		$html .= sprintf(
 			'<textarea %s>%s</textarea>',
-			self::sprintAttributes($attributes, ['value']),
+			self::sprintAttributes($attributes, ['value', 'editor']),
 			$attributes['value']
 		);
 		// Fin col
 		$html .= '</div>';
+		// Charge la librairie TinyMCE
+		if($attributes['editor']) {
+			core::$vendor['tinymce'] = true;
+			$html .= self::script('
+				// Charge tinyMCE
+				var language = navigator.languages ? navigator.languages[0] : (navigator.language || navigator.userLanguage);
+				var body = $("body");
+				tinymce.init({
+					selector: "#' . $nameId . '",
+					language: language.split("-")[0],
+					plugins: "advlist anchor autolink autoresize charmap code colorpicker contextmenu fullscreen hr image imagetools legacyoutput link lists media nonbreaking noneditable paste preview print searchreplace tabfocus table textcolor textpattern visualchars wordcount",
+					toolbar: "insertfile undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media",
+					body_class: body.attr("class") + " editor",
+					content_css: ["core/theme.css"],
+					relative_urls: false,
+					file_browser_callback: function(fieldName) {
+						$("#editorField").val(fieldName);
+						$("#editorFile").trigger("click");
+					},
+					file_browser_callback_types: "image"
+				});
+			');
+		}
 		// Retourne le html
 		return $html;
 	}
@@ -2569,6 +2729,7 @@ class template
 		$html .= '</div>';
 		// Script
 		$html .= self::script('
+			:: Sélectionne une couleur
 			$("#' . $nameId . 'ColorPicker div").on("click", function() {
 				var color = $(this);
 				var colorPicker = color.parents(".colorPicker");
@@ -2860,6 +3021,7 @@ class template
 			]).
 			$contents.
 			self::script('
+				// Affiche/cache les onglets
 				var tabTitles = $("#' . $id . '");
 				$(".' . $id . '.tabTitle").on("click", function() {
 					var tabTitle = $(this);
@@ -2886,12 +3048,18 @@ class template
 			');
 	}
 	/**
-	 * Crée un script
+	 * Crée un script et le minimise
 	 * @param  string $script Script à intégrer
 	 * @return string
 	 */
 	public static function script($script)
 	{
+		// Supprime les commentaires
+		$script =  preg_replace('/((?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|\s*(?<![\:\=])\/\/.*)/', '', $script);
+		// Supprime les tabulations, espaces, nouvelles lignes, etc...
+		$script = str_replace(["\r\n", "\r", "\t", "\n", '  ', '    ', '     '], '', $script);
+		$script = preg_replace(['(( )+\))', '(\)( )+)'], ')', $script);
+		// Retourne le script minifié
 		return '<script>' . $script . '</script>';
 	}
 }
