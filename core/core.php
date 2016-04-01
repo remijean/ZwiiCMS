@@ -677,7 +677,10 @@ class core
 		$items = '';
 		foreach($this->getHierarchy() as $parentKey => $childrenKeys) {
 			// Propriétés de l'item
-			$current = ($parentKey === $this->getUrl(0)) ? ' class="current"' : '';
+			$current = '';
+			if($parentKey === $this->getUrl(0) OR in_array($this->getUrl(0), $childrenKeys)) {
+				$current = ' class="current"';
+			}
 			$blank = ($this->getData(['pages', $parentKey, 'blank']) AND !$this->getMode()) ? ' target="_blank"' : '';
 			// Mise en page de l'item
 			$items .= '<li>';
