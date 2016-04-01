@@ -473,7 +473,7 @@ class core
 	{
 		$it = new DirectoryIterator('core/tmp/');
 		foreach($it as $file) {
-			if($file->isFile() AND $file->getBasename() !== '.gitkeep' AND $file->getMTime() + 86400 > time()) {
+			if($file->isFile() AND $file->getBasename() !== '.gitkeep' AND $file->getMTime() + 86400 < time()) {
 				unlink($file->getPathname());
 			}
 		}
@@ -1474,7 +1474,6 @@ class core
 			// Aperçu de la personnalisation en direct
 			template::script('
 				$(".tabContent[data-1=3]").on("change", function() {
-					console.log("test");
 					var body = $("body");
 					// Supprime les anciennes classes
 					body.removeClass();
@@ -1952,12 +1951,18 @@ class helper
 			}
 		}
 		// Check si l'URL rewriting est activée (si PHP est installé en FastCGI)
-		file_put_contents('core/tmp/.htaccess',
+		$htaccess =
 			'RewriteEngine on' . PHP_EOL .
 			'RewriteBase ' . helper::baseUrl(false, false) . 'core/tmp/' . PHP_EOL .
-			'RewriteRule test check'
-		);
-		file_put_contents('core/tmp/check', 'ok');
+			'RewriteRule test check';
+		if(
+			!file_exists('core/tmp/.htaccess')
+			OR !file_exists('core/tmp/check')
+			OR md5_file('core/tmp/.htaccess') !== md5($htaccess)
+		) {
+			file_put_contents('core/tmp/.htaccess', $htaccess);
+			file_put_contents('core/tmp/check', 'ok');
+		}
 		if(get_headers(helper::baseUrl(false) . 'core/tmp/test')[0] === 'HTTP/1.1 200 OK') {
 			return true;
 		}
