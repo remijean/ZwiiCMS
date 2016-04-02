@@ -1143,6 +1143,10 @@ class core
 			if($this->getUrl(0) === $this->getData(['config', 'index'])) {
 				$this->setNotification('Impossible de supprimer la page d\'accueil !', true);
 			}
+			// Impossible de supprimer une page contenant des enfants
+			if(!empty($this->getHierarchy()[$this->getUrl(0)])) {
+				$this->setNotification('Impossible de supprimer une page contenant des enfants !', true);
+			}
 			elseif($this->getData(['pages', $this->getUrl(0)])) {
 				// Supprime la page et les données du module rattachées à la page
 				$this->removeData(['pages', $this->getUrl(0)]);
