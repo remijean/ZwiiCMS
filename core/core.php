@@ -70,7 +70,7 @@ class core
 	];
 
 	/** Version de ZwiiCMS */
-	private static $version = '7.4.4';
+	private static $version = '7.5.0';
 
 	/** Récupère les données */
 	public function __construct()

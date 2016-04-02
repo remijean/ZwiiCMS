@@ -1,6 +1,20 @@
 ZwiiCMS 7
 =========
 
+## 7.5.0
+* Amélioration de la présentation des mails
+* Ajout de la notion de pages parentes
+* Ajout d'un système de gestion des fichiers temporaires
+* Ajout d'un bouton de back to top
+* Ajout d'un champ pour modifier le texte du bas de page
+* Ajout des balises HTML5 dans le layout
+* Optimisation des scripts JS
+* Optimisation du chargement des librairies
+* Correction d'un problème lors de l'ajout d'une image depuis TinyMCE
+* Réorganisation de l'architecture de ZwiiCMS
+* Mise à jour de Normalize.css
+* Mise à jour de jQuery
+
 ## 7.4.4
 * Correction d'un bug lors du choix de l'alignement du contenu de la bannière
 * Intégration de TinyMCE
