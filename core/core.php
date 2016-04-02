@@ -896,10 +896,28 @@ class core
 					$this->setData(['config', 'index', $key]);
 				}
 			}
-			// Actualise la positions des pages suivantes de même parent si la position ou le parent de la page à changée
+			// Check si il faut supprimer l'ensemble du cache
+			// - si la position de la page a changée
+			// - ou si le parent de la page a changé
+			// - ou si le nom de la page a changé
 			$position = $this->getPost('position', helper::INT);
 			$parent = $this->getPost('parent', helper::STRING);
-			if($position !== $this->getData(['pages', $this->getUrl(0), 'position']) OR $parent !== $this->getData(['pages', $this->getUrl(0), 'parent'])) {
+			$title = $this->getPost('title', helper::STRING);
+			if(
+				$position !== $this->getData(['pages', $this->getUrl(0), 'position'])
+				OR $parent !== $this->getData(['pages', $this->getUrl(0), 'parent'])
+				OR $title !== $this->getData(['pages', $this->getUrl(0), 'title'])
+			) {
+				$removeAllCache = true;
+			}
+			else {
+				$removeAllCache = false;
+			}
+			// Actualise la positions des pages suivantes de même parent si la position ou le parent de la page à changée
+			if(
+				$position !== $this->getData(['pages', $this->getUrl(0), 'position'])
+				OR $parent !== $this->getData(['pages', $this->getUrl(0), 'parent'])
+			) {
 				$hierarchy = $this->getHierarchy();
 				// Supérieur à 1 pour ignorer les options ne pas afficher et au début
 				// Sinon incrémente de +1 si la nouvelle position est supérieure à la position actuelle afin de prendre en compte la page courante qui n'appraît pas dans la liste
@@ -938,7 +956,7 @@ class core
 				'pages',
 				$key,
 				[
-					'title' => $this->getPost('title', helper::STRING),
+					'title' => $title,
 					'description' => $this->getPost('description', helper::STRING),
 					'parent' => $parent,
 					'position' => $position,
@@ -952,7 +970,7 @@ class core
 				$this->removeData(['pages', $this->getUrl(0)]);
 			}
 			// Enregistre les données
-			$this->saveData(true);
+			$this->saveData($removeAllCache);
 			// Notification de modification
 			$this->setNotification('Page modifiée avec succès !');
 			// Redirige vers la l'édition de la nouvelle page si la clef à changée ou sinon vers l'ancienne
@@ -1625,6 +1643,7 @@ class core
 					template::subTitle('Effets supplémentaires').
 					template::openRow().
 					template::checkbox('themeSiteMargin', true, 'Ajouter dans le site une marge autour de la bannière et du menu', [
+						'help' => 'S\'applique seulement si la bannière ou le menu sont placés dans le site',
 						'checked' => $this->getData(['theme', 'siteMargin'])
 					]).
 					template::newRow().
