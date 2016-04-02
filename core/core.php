@@ -731,7 +731,7 @@ class core
 			form.data("serialize", form.serialize());
 			$(window).on("beforeunload", function() {
 				if(form.length && form.serialize() !== form.data("serialize")) {
-					return "Attention, si vous continuez, vous allez perdre les modifications non enregistrées !";
+					return "' . helper::translate('Attention, si vous continuez, vous allez perdre les modifications non enregistrées !') . '";
 				}
 			});
 			form.submit(function() {
@@ -1001,8 +1001,8 @@ class core
 					var positionDOM = $("#position");
 					var positionLabelDOM = $("label[form=position]");
 					positionDOM.empty().append(
-						$("<option>").val(0).text("Ne pas afficher"),
-						$("<option>").val(1).text("Au début")
+						$("<option>").val(0).text("' . helper::translate('Ne pas afficher') . '"),
+						$("<option>").val(1).text("' . helper::translate('Au début') . '")
 					);
 					var parentSelected = $(this).find("option:selected").val();
 					var positionSelected = 0;
@@ -1091,7 +1091,7 @@ class core
 					if(ok) {
 						$.ajax({
 							type: "POST",
-							url: baseUrl + "save/" + $("#key").val(),
+							url: "' . helper::baseUrl() . 'save/" + $("#key").val(),
 							data: {module: newModule},
 							success: function() {
 								$("#oldModule").val(newModule);
@@ -1104,7 +1104,7 @@ class core
 								}
 							},
 							error: function() {
-								alert("Impossible d\"enregistrer le module !");
+								alert("' . helper::translate('Impossible d\"enregistrer le module !') . '");
 								admin.addClass("disabled");
 							}
 						});
