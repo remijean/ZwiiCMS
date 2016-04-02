@@ -1383,7 +1383,8 @@ class core
 					'password' => $password,
 					'index' => $this->getPost('index', helper::STRING),
 					'language' => $this->getPost('language', helper::STRING),
-					'analytics' => $this->getPost('analytics', helper::STRING)
+					'analytics' => $this->getPost('analytics', helper::STRING),
+					'footer' => $this->getPost('footer', helper::STRING)
 				]
 			]);
 			// Modifie le theme
@@ -1484,6 +1485,12 @@ class core
 						'label' => 'Version de ZwiiCMS',
 						'value' => self::$version,
 						'disabled' => 'disabled'
+					]).
+					template::newRow().
+					template::textarea('footer', [
+						'label' => 'Texte du bas de page',
+						'value' => $this->getData(['config', 'footer']),
+						'help' => 'Ajoutez un texte personnalisé dans le bas de page'
 					]).
 					template::newRow().
 					template::text('analytics', [

@@ -286,6 +286,9 @@ td > .col12 {
 	font-size: 0.8em;
 	padding-bottom: 20px;
 }
+#footer p {
+	margin: 0;
+}
 
 /* Remonter en haut */
 #backToTop {
