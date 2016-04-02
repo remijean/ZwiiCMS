@@ -11,29 +11,29 @@
 <body class="<?php echo $this->theme(); ?>">
 <?php echo $this->panel(); ?>
 <?php echo $this->notification(); ?>
-<div class="header" style="<?php echo $this->themeImage(); ?>">
+<header style="<?php echo $this->themeImage(); ?>">
 	<h1><?php echo $this->getData(['config', 'title']); ?></h1>
-</div>
+</header>
 <div class="toggle"><span></span></div>
-<div class="menu">
+<nav>
 	<ul><?php echo $this->menu(); ?></ul>
-</div>
+</nav>
 <div id="container">
-	<div class="header" style="<?php echo $this->themeImage(); ?>">
+	<header style="<?php echo $this->themeImage(); ?>">
 		<h1><?php echo $this->getData(['config', 'title']); ?></h1>
-	</div>
+	</header>
 	<div class="toggle"><span></span></div>
-	<div class="menu">
+	<nav>
 		<ul><?php echo $this->menu(); ?></ul>
-	</div>
-	<div id="section">
+	</nav>
+	<section>
 		<h2><?php echo self::$title; ?></h2>
 		<?php echo self::$content; ?>
-	</div>
-	<div id="footer">
+	</section>
+	<footer>
 		<p><?php echo $this->getData(['config', 'footer']); ?></p>
 		<p><?php echo helper::translate('Motorisé par'); ?> <a href="http://zwiicms.com/" target="_blank">ZwiiCMS</a> | <a href="<?php echo helper::baseUrl(); ?>config"><?php echo helper::translate('Administration'); ?></a></p>
-	</div>
+	</footer>
 </div>
 <div id="backToTop"></div>
 <?php echo $this->analytics(); ?>

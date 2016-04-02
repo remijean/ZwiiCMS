@@ -739,13 +739,13 @@ class core
 			});
 			
 			// Affiche/cache le menu en mode responsive
-			var menu = $(".menu");
+			var nav = $("nav");
 			$(".toggle").on("click", function() {
-				menu.slideToggle();
+				nav.slideToggle();
 			});
 			$(window).on("resize", function() {
 				if($(window).width() > 768) {
-					menu.css("display", "");
+					nav.css("display", "");
 				}
 			});
 			
@@ -1646,7 +1646,7 @@ class core
 						var option = select.find("option:selected").val();
 						// Pour le select d\'ajout d\'image dans la bannière
 						if(select.attr("id") === "themeHeaderImage") {
-							$(".header").css("background-image", "url(\'" + option + "\')");
+							$("header").css("background-image", "url(\'" + option + "\')");
 							if(select.val() === "") {
 								body.removeClass("themeHeaderImage");
 							}
