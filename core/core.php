@@ -748,6 +748,22 @@ class core
 					menu.css("display", "");
 				}
 			});
+			
+			// Affiche/cache le bouton pour remonter en haut
+			var backToTop = $("#backToTop");
+			$(window).on("scroll", function() {
+				if($(this).scrollTop() > 200) {
+					backToTop.fadeIn();
+				}
+				else {
+					backToTop.fadeOut();
+				}
+			});
+			
+			// Remonter en haut au clic sur le bouton
+			backToTop.on("click", function() {
+				$("body, html").animate({scrollTop: 0}, "400");
+			});
 		');
 		if(self::$vendor['tinymce']) {
 			$scripts .= template::script('

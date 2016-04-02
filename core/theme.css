@@ -20,7 +20,6 @@ body {
 	font-family: 'Lato', sans-serif;
 	color: #2C3E50;
 }
-
 body.editor {
 	font-size: 15px !important;
 	background-color: #FFF !important;
@@ -286,6 +285,29 @@ td > .col12 {
 	text-align: center;
 	font-size: 0.8em;
 	padding-bottom: 20px;
+}
+
+/* Remonter en haut */
+#backToTop {
+	opacity: .7;
+	position: fixed;
+	z-index: 30;
+	right: 20px;
+	bottom: 20px;
+	padding: 15px;
+	background-color: #2C3E50;
+	color: #FFF;
+	cursor: pointer;
+	display: none;
+}
+#backToTop:hover {
+	opacity: .8;
+}
+#backToTop:active {
+	opacity: .9;
+}
+#backToTop:after {
+	content: '\0025B2';
 }
 
 /* Zone de remplacement */
