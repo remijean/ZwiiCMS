@@ -1502,16 +1502,9 @@ class core
 					template::closeRow(),
 				'Configuration avancée' =>
 					template::openRow().
-					template::text('version', [
-						'label' => 'Version de ZwiiCMS',
-						'value' => self::$version,
-						'disabled' => 'disabled'
-					]).
-					template::newRow().
 					template::textarea('footer', [
 						'label' => 'Texte du bas de page',
-						'value' => $this->getData(['config', 'footer']),
-						'help' => 'Ajoutez un texte personnalisé dans le bas de page'
+						'value' => $this->getData(['config', 'footer'])
 					]).
 					template::newRow().
 					template::text('analytics', [
@@ -1525,6 +1518,12 @@ class core
 						'checked' => helper::rewriteCheck(),
 						'help' => 'Supprime le point d\'interrogation de l\'URL (si vous n\'arrivez pas à cocher la case, vérifiez que le module d\'URL rewriting de votre serveur est bien activé).',
 						'disabled' => helper::modRewriteCheck() ? '' : 'disabled' // Check que l'URL rewriting fonctionne sur le serveur
+					]).
+					template::newRow().
+					template::text('version', [
+						'label' => 'Version de ZwiiCMS',
+						'value' => self::$version,
+						'disabled' => 'disabled'
 					]).
 					template::newRow().
 					template::button('clean', [
@@ -1641,8 +1640,8 @@ class core
 					template::closeRow().
 					template::subTitle('Effets supplémentaires').
 					template::openRow().
-					template::checkbox('themeSiteMargin', true, 'Ajouter dans le site une marge autour de la bannière et du menu', [
-						'help' => 'S\'applique seulement si la bannière ou le menu sont placés dans le site',
+					template::checkbox('themeSiteMargin', true, 'Ajouter une marge autour de la bannière et du menu', [
+						'help' => 'S\'applique seulement l\'un des deux éléments est placé dans le site.',
 						'checked' => $this->getData(['theme', 'siteMargin'])
 					]).
 					template::newRow().

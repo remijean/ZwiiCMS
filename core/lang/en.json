@@ -79,7 +79,7 @@
 	"Hauteur du menu": "Height of the menu",
 	"Effets supplémentaires": "Additional effects",
 	"Ajouter une marge autour de la bannière et du menu": "Add a margin around the banner and the menu",
-	"S'applique seulement si la bannière ou le menu sont placés dans le site": "Applies only if the banner or menu are placed in the site",
+	"S'applique seulement l'un des deux éléments est placé dans le site.": "Applies only one of the two elements is placed in the site.",
 	"Arrondir les coins du site": "Radius corners of the site",
 	"Ajouter une ombre autour du site": "Add a shadow around the site",
 	"Aperçu": "Preview",
