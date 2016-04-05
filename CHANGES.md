@@ -1,7 +1,15 @@
 ZwiiCMS 7
 =========
 
+## 7.5.1
+* Ajustement de l'espacement des items dans le petit menu
+* Correction de bugs mineurs
+* Correction d'un bug qui bloquait l'affichage de la bannière en mode édition
+* Correction d'un problème d'affichage de l'éditeur de texte dans le gestionnaire de news
+* Correction d'un bug d'URL rewriting lorsque l'URL est égale au nom d'un dossier
+
 ## 7.5.0
+### Attention, data.json et uploads se placent dorénavant dans le nouveau dossier data, par la même occasion uploads est renommé upload (sans le "s").
 * Amélioration de la présentation des mails
 * Ajout de la notion de pages parentes
 * Ajout d'un système de gestion des fichiers temporaires
