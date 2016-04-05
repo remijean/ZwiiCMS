@@ -772,7 +772,7 @@ td.col12 {
 /* Hauteur du menu */
 .themeMenuHeightSmall nav a,
 .themeMenuHeightSmall .toggle {
-	padding: 10px 5px;
+	padding: 10px;
 }
 .themeMenuHeightMedium nav a,
 .themeMenuHeightMedium .toggle {
