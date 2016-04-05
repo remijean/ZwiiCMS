@@ -94,7 +94,7 @@ class newsAdm extends core
 					]).
 					template::newRow().
 					template::textarea('content', [
-						'class' => 'editor'
+						'editor' => true
 					]).
 					template::newRow().
 					template::button('back', [
@@ -161,7 +161,7 @@ class newsAdm extends core
 			]).
 			template::newRow().
 			template::textarea('content', [
-				'class' => 'editor',
+				'editor' => true,
 				'value' => $this->getData([$this->getUrl(0), $this->getUrl(2), 'content'])
 			]).
 			template::newRow().
