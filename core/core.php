@@ -662,7 +662,7 @@ class core
 	 */
 	public function themeImage()
 	{
-		return $this->getData(['theme', 'headerImage']) ? 'background-image:url(\'' . $this->getData(['theme', 'headerImage']) . '\')' : '';
+		return $this->getData(['theme', 'headerImage']) ? 'background-image:url(\'' . helper::baseUrl(false) . $this->getData(['theme', 'headerImage']) . '\')' : '';
 	}
 
 	/**
