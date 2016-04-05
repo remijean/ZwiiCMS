@@ -1442,7 +1442,6 @@ class core
 							$htaccess . PHP_EOL .
 							'RewriteEngine on' . PHP_EOL .
 							'RewriteBase ' . helper::baseUrl(false, false) . PHP_EOL .
-							'RewriteCond %{REQUEST_FILENAME} !-d' . PHP_EOL .
 							'RewriteCond %{REQUEST_FILENAME} !-f' . PHP_EOL .
 							'RewriteRule ^(.*)$ index.php?$1 [L]'
 						);
