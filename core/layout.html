@@ -5,40 +5,54 @@
 	<title><?php echo self::$title; ?> - <?php echo $this->getData(['config', 'title']); ?></title>
 	<meta name="description" content="<?php echo self::$description; ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<?php echo $this->vendor(); ?>
+	<!-- Import du thème et des couleurs -->
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/theme.css">
+	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/cache/<?php echo md5(json_encode($this->getData('colors'))); ?>.css">
+	<!-- Import des librairies -->
+	<?php echo $this->vendor(); ?>
 </head>
+<!-- Ajout des classes du thème à la page -->
 <body class="<?php echo $this->theme(); ?>" style="background-image: url('<?php echo helper::baseUrl(false) . $this->getData(['theme', 'backgroundImage']); ?>');">
-<?php echo $this->panel(); ?>
-<?php echo $this->notification(); ?>
+<!-- Panneau d'administration et notifications -->
+<?php echo $this->panel() . $this->notification(); ?>
+<!-- Bannière dans le haut de page -->
 <header>
 	<h1><?php echo $this->getData(['config', 'title']); ?></h1>
 	<img src="<?php echo helper::baseUrl(false) . $this->getData(['theme', 'headerImage']); ?>" title="<?php echo $this->getData(['config', 'title']); ?>" alt="<?php echo $this->getData(['config', 'title']); ?>">
 </header>
+<!-- Menu dans le haut de page -->
 <div class="toggle"><span></span></div>
 <nav>
 	<ul><?php echo $this->menu(); ?></ul>
 </nav>
+<!-- Site -->
 <div id="container">
+	<!-- Bannière dans le site -->
 	<header>
 		<h1><?php echo $this->getData(['config', 'title']); ?></h1>
 		<img src="<?php echo helper::baseUrl(false) . $this->getData(['theme', 'headerImage']); ?>" title="<?php echo $this->getData(['config', 'title']); ?>" alt="<?php echo $this->getData(['config', 'title']); ?>">
 	</header>
+	<!-- Menu dans le site -->
 	<div class="toggle"><span></span></div>
 	<nav>
 		<ul><?php echo $this->menu(); ?></ul>
 	</nav>
+	<!-- Corps -->
 	<section>
 		<h2><?php echo self::$title; ?></h2>
 		<?php echo self::$content; ?>
 	</section>
+	<!-- Bas du site -->
 	<footer>
 		<p><?php echo $this->getData(['config', 'footer']); ?></p>
 		<p><?php echo helper::translate('Motorisé par'); ?> <a href="http://zwiicms.com/" target="_blank">ZwiiCMS</a> | <a href="<?php echo helper::baseUrl(); ?>config"><?php echo helper::translate('Administration'); ?></a></p>
 	</footer>
 </div>
+<!-- Lien remonter en haut -->
 <div id="backToTop"></div>
+<!-- Coogle Analytics -->
 <?php echo $this->analytics(); ?>
+<!-- Scripts communs -->
 <?php echo $this->scripts(); ?>
 </body>
 </html>

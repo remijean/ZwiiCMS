@@ -46,26 +46,27 @@ class core
 
 	/** @var array Liste des modules */
 	private static $modules = [
-		'create',
-		'edit',
-		'save',
-		'module',
-		'delete',
 		'clean',
-		'export',
-		'mode',
 		'config',
-		'manager',
-		'upload',
+		'create',
+		'delete',
+		'edit',
+		'export',
 		'logout',
-		'phpinfo'
+		'manager',
+		'mode',
+		'module',
+		'phpinfo',
+		'save',
+		'upload'
 	];
 
 	/** @var array Liste des librairies à charger */
 	public static $vendor = [
-		'normalize' => true,
 		'jquery' => true,
 		'jquery-ui' => false,
+		'jscolor' => false,
+		'normalize' => true,
 		'tinymce' => false
 	];
 
@@ -457,7 +458,7 @@ class core
 	}
 
 	/** Supprime les fichiers temporaires lorsqu'ils datent de plus d'un jour */
-	public function tmp()
+	public function cleanTmpFiles()
 	{
 		$it = new DirectoryIterator('core/tmp/');
 		foreach($it as $file) {
@@ -467,11 +468,118 @@ class core
 		}
 	}
 
+	/** Génération dynamique du css des couleurs */
+	public function generateColorCss()
+	{
+		$md5Colors = md5(json_encode($this->getData('colors')));
+		if(!file_exists('core/cache/' . $md5Colors . '.css')) {
+			// Couleur du header
+			list($r, $g, $b) = helper::hexToRgb($this->getData(['colors', 'theme']));
+			$headerColor = $r . ',' . $g . ',' . $b;
+			$headerTextVariant = ($r + $g + $b / 3) < 350 ? 'FFF' : '333';
+			// Couleurs du menu
+			list($r, $g, $b) = helper::hexToRgb($this->getData(['colors', 'menu']));
+			$menuColor = $r . ',' . $g . ',' . $b;
+			$menuColorDark = ($r - 20) . ',' . ($g - 20) . ',' . ($b - 20);
+			$menuColorVeryDark = ($r - 40) . ',' . ($g - 40) . ',' . ($b - 40);
+			$menuTextVariant = intval($r + $g + $b / 3) < 350 ? 'FFF' : '333';
+			// Couleurs des éléments
+			list($r, $g, $b) = helper::hexToRgb($this->getData(['colors', 'element']));
+			$elementColor = $r . ',' . $g . ',' . $b;
+			$elementColorDark = ($r - 20) . ',' . ($g - 20) . ',' . ($b - 20);
+			$elementColorVeryDark = ($r - 40) . ',' . ($g - 40) . ',' . ($b - 40);
+			$elementTextVariant = intval($r + $g + $b / 3) < 350 ? 'FFF' : '333';
+			// Couleur de fond
+			list($r, $g, $b) = helper::hexToRgb($this->getData(['colors', 'background']));
+			$backgroundColor = $r . ',' . $g . ',' . $b;
+			// Mise en forme du css
+			$css = '
+				/* Couleur normale */
+				/* Bannière */
+				header {
+					background-color: rgb(' . $headerColor . ');
+					color: #' . $headerTextVariant . ';
+				}
+				/* Menu */
+				.toggle,
+				nav ul {
+					background-color: rgb(' . $menuColor . ');
+				}
+				.toggle span:after,
+				nav a {
+					color: #' . $menuTextVariant . ';
+				}
+				/* Eléments */
+				input[type=\'submit\'],
+				.button,
+				.pagination a,
+				input[type=\'checkbox\']:checked + label:before,
+				input[type=\'radio\']:checked + label:before,
+				.helpButton,
+				.helpContent {
+					background-color: rgb(' . $elementColor . ');
+					color: #' . $elementTextVariant . ';
+				}
+				h2,
+				h4,
+				h6,
+				a,
+				.tabTitle.current {
+					color: rgb(' . $elementColor . ');
+				}
+				input[type=\'text\']:hover,
+				input[type=\'password\']:hover,
+				input[type=\'file\']:hover,
+				select:hover,
+				textarea:hover {
+					border: 1px solid rgb(' . $elementColor . ');
+				}
+				/* Fond */
+				body {
+					background-color: rgb(' . $backgroundColor . ');
+				}
+				
+				/* Couleur foncée */
+				/* Menu */
+				.toggle:hover,
+				nav a:hover {
+					background-color: rgb(' . $menuColorDark . ');
+				}
+				/* Eléments */
+				input[type=\'submit\']:hover,
+				.button:hover,
+				.pagination a:hover,
+				input[type=\'checkbox\']:not(:active):checked:hover + label:before,
+				input[type=\'checkbox\']:active + label:before,
+				input[type=\'radio\']:checked:hover + label:before,
+				input[type=\'radio\']:not(:checked):active + label:before,
+				.helpButton:hover {
+					background-color: rgb(' . $elementColorDark . ');
+				}
+				
+				/* Couleur très foncée */
+				/* Menu */
+				.toggle:active,
+				nav a:active {
+					background-color: rgb(' . $menuColorVeryDark . ');
+				}
+				/* Eléments */
+				nav a.current,
+				input[type=\'submit\']:active,
+				.button:active,
+				.pagination a:active {
+					background-color: rgb(' . $elementColorVeryDark . ');
+				}
+			';
+			file_put_contents('core/cache/' . $md5Colors . '.css', helper::minifyCss($css));
+		}
+	}
+
 	/**
 	 * Génère le fichier de cache et retourne la valeur tampon pour les pages publics (appelé après l'affichage du site dans index.php)
 	 * @return string
 	 */
-	public function cache()
+	public function putGetCache()
 	{
 		// Remplace les / de l'URL par des _
 		$url = str_replace('/', '_', $this->getUrl());
@@ -498,7 +606,7 @@ class core
 	}
 
 	/** Importe les fichiers de langue du site */
-	public function language()
+	public function importLanguage()
 	{
 		// Importe le fichier langue système
 		$language = 'core/lang/' . $this->getData(['config', 'language']);
@@ -513,7 +621,7 @@ class core
 	}
 
 	/**
-	 * Importe les libraries
+	 * Importe les librairies
 	 * @return string
 	 */
 	public function vendor()
@@ -529,6 +637,9 @@ class core
 						$vendor .= '<script src="' . helper::baseUrl(false) . 'core/vendor/jquery-ui/jquery-ui.min.js"></script>';
 						$vendor .= '<script src="' . helper::baseUrl(false) . 'core/vendor/jquery-ui/jquery-ui.touch-punch.min.js"></script>';
 						$vendor .= '<link rel="stylesheet" href="' . helper::baseUrl(false) . 'core/vendor/jquery-ui/jquery-ui.min.css">';
+						break;
+					case 'jscolor':
+						$vendor .= '<script src="' . helper::baseUrl(false) . 'core/vendor/jscolor/jscolor.min.js"></script>';
 						break;
 					case 'tinymce':
 						$vendor .= '<script src="' . helper::baseUrl(false) . 'core/vendor/tinymce/tinymce.min.js"></script>';
@@ -759,6 +870,16 @@ class core
 			backToTop.on("click", function() {
 				$("body, html").animate({scrollTop: 0}, "400");
 			});
+			
+			// Convertit un code hexadecimal en rgb
+			function hexToRgb(hex) {
+				var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+				return result ? {
+					r: parseInt(result[1], 16),
+					g: parseInt(result[2], 16),
+					b: parseInt(result[3], 16)
+				} : null;
+			}
 		');
 		if(self::$vendor['tinymce']) {
 			$scripts .= template::script('
@@ -833,7 +954,7 @@ class core
 
 	############################################################
 	# MODULES
-
+	
 	/** Création d'une page */
 	public function create()
 	{
@@ -1404,22 +1525,27 @@ class core
 					'footer' => $this->getPost('footer', helper::STRING)
 				]
 			]);
+			// Modifie les couleurs
+			$this->setData([
+				'colors',
+				[
+					'background' => $this->getPost('colorBackground', helper::STRING),
+					'element' => $this->getPost('colorElement', helper::STRING),
+					'header' => $this->getPost('colorHeader', helper::STRING),
+					'menu' => $this->getPost('colorMenu', helper::STRING)
+				]
+			]);
 			// Modifie le theme
 			$this->setData([
 				'theme',
 				[
-					'backgroundColor' => $this->getPost('themeBackgroundColor', helper::STRING),
-					'backgroundImage' => $this->getPost('themeBackgroundImage', helper::URL),
 					'backgroundImageRepeat' => $this->getPost('themeBackgroundImageRepeat', helper::STRING),
 					'backgroundImagePosition' => $this->getPost('themeBackgroundImagePosition', helper::STRING),
 					'backgroundImageAttachment' => $this->getPost('themeBackgroundImageAttachment', helper::STRING),
-					'elementColor' => $this->getPost('themeElementColor', helper::STRING),
-					'headerColor' => $this->getPost('themeHeaderColor', helper::STRING),
 					'headerHeight' => $this->getPost('themeHeaderHeight', helper::STRING),
 					'headerImage' => $this->getPost('themeHeaderImage', helper::URL),
 					'headerPosition' => $this->getPost('themeHeaderPosition', helper::STRING),
 					'headerTextAlign' => $this->getPost('themeHeaderTextAlign', helper::STRING),
-					'menuColor' => $this->getPost('themeMenuColor', helper::STRING),
 					'menuHeight' => $this->getPost('themeMenuHeight', helper::STRING),
 					'menuPosition' => $this->getPost('themeMenuPosition', helper::STRING),
 					'menuTextAlign' => $this->getPost('themeMenuTextAlign', helper::STRING),
@@ -1539,28 +1665,25 @@ class core
 				'Personnalisation du thème' =>
 					template::subTitle('Couleurs et images').
 					template::openRow().
-					template::colorPicker('themeHeaderColor', [
+					template::colorPicker('colorHeader', [
 						'label' => 'Couleur de la bannière',
-						'ignore' => ['Clouds'],
-						'selected' => $this->getData(['theme', 'headerColor']),
+						'value' => $this->getData(['colors', 'header']),
 						'col' => 6
 					]).
-					template::colorPicker('themeMenuColor', [
+					template::colorPicker('colorMenu', [
 						'label' => 'Couleur du menu',
-						'ignore' => ['Clouds', 'White'],
-						'selected' => $this->getData(['theme', 'menuColor']),
+						'value' => $this->getData(['colors', 'menu']),
 						'col' => 6
 					]).
 					template::newRow().
-					template::colorPicker('themeElementColor', [
+					template::colorPicker('colorElement', [
 						'label' => 'Couleur des éléments du site',
-						'ignore' => ['Clouds', 'White'],
-						'selected' => $this->getData(['theme', 'elementColor']),
+						'value' => $this->getData(['colors', 'element']),
 						'col' => 6
 					]).
-					template::colorPicker('themeBackgroundColor', [
+					template::colorPicker('colorBackground', [
 						'label' => 'Couleur du fond',
-						'selected' => $this->getData(['theme', 'backgroundColor']),
+						'value' => $this->getData(['colors', 'background']),
 						'col' => 6
 					]).
 					template::newRow().
@@ -1737,10 +1860,116 @@ class core
 								bodyDOM.addClass(inputDOM.attr("name").replace("[]", ""));
 							}
 						}
-						// Cas simple
-						else {
+						// Cas simple (ignore les colorPickers)
+						else if(!input.hasClass(".jscolor")) {
 							bodyDOM.addClass(inputDOM.val());
 						}
+					});
+					// Pour les colorPickers
+					var style = "";
+					$(this).find(".jscolor").each(function() {
+						var jscolorDOM = $(this);
+						var rgb = hexToRgb(jscolorDOM.val());
+						var color = rgb.r + "," + rgb.g + "," + rgb.b;
+						var colorDark = (rgb.r - 20) + "," + (rgb.g - 20) + "," + (rgb.b - 20);
+						var colorVeryDark = (rgb.r - 40) + "," + (rgb.g - 40) + "," + (rgb.b - 40);
+						var textVariant = (rgb.r + rgb.g + rgb.b / 3) < 350 ? "FFF" : "333";
+						// Couleur du header
+						if(jscolorDOM.attr("id") === "colorHeader") {
+							style += "
+								/* Couleur normale */
+								header {
+									background-color: rgb(" + color + ");
+									color: #" + textVariant + ";
+								}
+							";
+						}
+						// Couleurs du menu
+						else if(jscolorDOM.attr("id") === "colorMenu") {
+							style += "
+								/* Couleur normale */
+								.toggle,
+								nav ul {
+									background-color: rgb(" + color + ");
+								}
+								.toggle span:after,
+								nav a {
+									color: #" + textVariant + ";
+								}
+								/* Couleur foncée */
+								.toggle:hover,
+								nav a:hover {
+									background-color: rgb(" + colorDark + ");
+								}
+								/* Couleur très foncée */
+								.toggle:active,
+								nav a:active {
+									background-color: rgb(" + colorVeryDark + ");
+								}
+							";
+						}
+						// Couleurs des éléments
+						else if(jscolorDOM.attr("id") === "colorElement") {
+							style += "
+								/* Couleur normale */
+								input[type=\'submit\'],
+								.button,
+								.pagination a,
+								input[type=\'checkbox\']:checked + label:before,
+								input[type=\'radio\']:checked + label:before,
+								.helpButton,
+								.helpContent {
+									background-color: rgb(" + color + ");
+									color: #" + textVariant + ";
+								}
+								h2,
+								h4,
+								h6,
+								a,
+								.tabTitle.current {
+									color: rgb(" + color + ");
+								}
+								input[type=\'text\']:hover,
+								input[type=\'password\']:hover,
+								input[type=\'file\']:hover,
+								select:hover,
+								textarea:hover {
+									border: 1px solid rgb(" + color + ");
+								}
+								/* Couleur foncée */
+								input[type=\'submit\']:hover,
+								.button:hover,
+								.pagination a:hover,
+								input[type=\'checkbox\']:not(:active):checked:hover + label:before,
+								input[type=\'checkbox\']:active + label:before,
+								input[type=\'radio\']:checked:hover + label:before,
+								input[type=\'radio\']:not(:checked):active + label:before,
+								.helpButton:hover {
+									background-color: rgb(" + colorDark + ");
+								}
+								/* Couleur très foncée */
+								nav a.current,
+								input[type=\'submit\']:active,
+								.button:active,
+								.pagination a:active {
+									background-color: rgb(" + colorVeryDark + ");
+								}
+							";
+						}
+						// Couleur du fond
+						else if(jscolorDOM.attr("id") === "colorBackground") {
+							style += "
+								/* Couleur normale */
+								body {
+									background-color: rgb(" + color + ");
+								}
+							";
+						}
+						// Supprime le css déjà ajouté
+						var headDOM = $("head");
+						headDOM.find("style").remove();
+						// Retourne le nouveau css
+						$("<style>").text(style).appendTo(headDOM);
 					});
 				});
 			').
@@ -1906,6 +2135,50 @@ class helper
 				$text = filter_var($text, $filter);
 		}
 		return get_magic_quotes_gpc() ? stripslashes($text) : $text;
+	}
+
+	/**
+	 * Convertit un code hexadecimal en rgb
+	 * @param  mixed  $hex Code hexadecimal à convertir
+	 * @return string
+	 */
+	public static function hexToRgb($hex)
+	{
+		$hex = $hex ? $hex : 'FFFFFF'; // Compatibilité anciennes versions
+    	list($r, $g, $b) = str_split($hex, 2);
+		return array(hexdec($r), hexdec($g), hexdec($b));
+	}
+
+	/**
+	 * Minimise du js
+	 * @param string  $js Js à minimiser
+	 * @return string
+	 */
+	public static function minifyJs($js) {
+		// Supprime les commentaires
+		$js =  preg_replace('/((?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|\s*(?<![\:\=])\/\/.*)/', '', $js);
+		// Supprime les tabulations, espaces, nouvelles lignes, etc...
+		$js = str_replace(["\r\n", "\r", "\t", "\n", '  ', '    ', '     '], '', $js);
+		$js = preg_replace(['(( )+\))', '(\)( )+)'], ')', $js);
+		// Retourne le js minifié
+		return $js;
+	}
+
+	/**
+	 * Minimise du css
+	 * @param string  $css Css à minimiser
+	 * @return string
+	 */
+	public static function minifyCss($css) {
+		// Supprime les commentaires
+		$css = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $css);
+		// Supprime les tabulations, espaces, nouvelles lignes, etc...
+		$css = str_replace(["\r\n", "\r", "\n" ,"\t", '  ', '    ', '     '], '', $css);
+		$css = preg_replace(['(( )+{)', '({( )+)'], '{', $css);
+		$css = preg_replace(['(( )+})', '(}( )+)', '(;( )*})'], '}', $css);
+		$css = preg_replace(['(;( )+)', '(( )+;)'], ';', $css);
+		// Retourne le css minifié
+		return $css;
 	}
 
 	/**
@@ -2741,9 +3014,11 @@ class template
 		$attributes = array_merge([
 			'id' => $nameId,
 			'name' => $nameId,
-			'selected' => '',
+			'value' => '',
+			'placeholder' => '',
+			'disabled' => '',
+			'readonly' => '',
 			'required' => '',
-			'ignore' => [],
 			'label' => '',
 			'help' => '',
 			'class' => '',
@@ -2754,37 +3029,11 @@ class template
 		// Champ requis
 		self::setRequired($nameId, $attributes);
 		// Sauvegarde des données en cas d'erreur
-		if($selected = self::getBefore($nameId)) {
-			$attributes['selected'] = $selected;
+		if(($value = self::getBefore($nameId)) !== null) {
+			$attributes['value'] = $value;
 		}
-		// Liste des couleurs
-		$colors = [
-			'#1ABC9C' => 'Turquoise',
-			'#16A085' => 'GreenSea',
-			'#2ECC71' => 'Emerald',
-			'#27AE60' => 'Nephritis',
-			'#3498DB' => 'PeterRiver',
-			'#2980B9' => 'BelizeHole',
-			'#9B59B6' => 'Amethyst',
-			'#8E44AD' => 'Wisteria',
-			'#34495E' => 'WetAsphalt',
-			'#2C3E50' => 'MidnightBlue',
-			'#F1C40F' => 'SunFlower',
-			'#F39C12' => 'Orange',
-			'#E67E22' => 'Carrot',
-			'#D35400' => 'Pumpkin',
-			'#E74C3C' => 'Alizarin',
-			'#C0392B' => 'Pomegranate',
-			'#FFFFFF' => 'White',
-			'#ECF0F1' => 'Clouds',
-			'#BDC3C7' => 'Silver',
-			'#95A5A6' => 'Concrete',
-			'#7F8C8D' => 'Asbestos'
-		];
-		// Supprime les couleurs à ignorer
-		$colors = array_diff($colors, $attributes['ignore']);
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
+		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper']. '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -2796,43 +3045,16 @@ class template
 			$html .= self::getNotice($nameId);
 			$attributes['class'] .= ' notice';
 		}
-		// Début sélecteur de couleur
+		// Texte
 		$html .= sprintf(
-			'<div id="%sColorPicker" class="colorPicker %s" %s>',
-			$attributes['id'],
+			'<input type="text" class="jscolor {shadow:false, borderRadius:false} %s" %s>',
 			$attributes['class'],
-			self::sprintAttributes($attributes, ['class', 'name', 'id', 'ignore'])
+			self::sprintAttributes($attributes, ['class'])
 		);
-		// Liste des couleurs
-		foreach($colors as $hex => $color) {
-			$html .= sprintf(
-				'<div data-color="' . $nameId . '%s" style="background:%s"%s></div>',
-				$color,
-				$hex,
-				$attributes['selected'] === $nameId . $color ? ' class="selected"' : ''
-			);
-		}
-		// Champ caché contenant la couleur sélectionnée
-		$html .= self::hidden($nameId, [
-			'value' => $attributes['selected']
-		]);
-		// Fin sélecteur de couleur
-		$html .= '</div>';
 		// Fin col
 		$html .= '</div>';
-		// Script
-		$html .= self::script('
-			// Sélectionne une couleur
-			$("#' . $nameId . 'ColorPicker div").on("click", function() {
-				var color = $(this);
-				var colorPicker = color.parents(".colorPicker");
-				// Sélectionne la couleur
-				colorPicker.find(".selected").removeClass("selected");
-				$(this).addClass("selected");
-				// Ajoute la couleur sélectionnée dans l\'input caché
-				colorPicker.find("input[type=hidden]").val(color.data("color")).trigger("change");
-			});
-		');
+		// Charge la librairie jsColor
+		core::$vendor['jscolor'] = true;
 		// Retourne le html
 		return $html;
 	}
@@ -3147,12 +3369,6 @@ class template
 	 */
 	public static function script($script)
 	{
-		// Supprime les commentaires
-		$script =  preg_replace('/((?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|\s*(?<![\:\=])\/\/.*)/', '', $script);
-		// Supprime les tabulations, espaces, nouvelles lignes, etc...
-		$script = str_replace(["\r\n", "\r", "\t", "\n", '  ', '    ', '     '], '', $script);
-		$script = preg_replace(['(( )+\))', '(\)( )+)'], ')', $script);
-		// Retourne le script minifié
-		return '<script>' . $script . '</script>';
+		return '<script>' . helper::minifyJs($script) . '</script>';
 	}
 }
