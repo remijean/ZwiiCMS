@@ -1861,7 +1861,7 @@ class core
 							}
 						}
 						// Cas simple (ignore les colorPickers)
-						else if(!input.hasClass(".jscolor")) {
+						else if(!inputDOM.hasClass(".jscolor")) {
 							bodyDOM.addClass(inputDOM.val());
 						}
 					});
