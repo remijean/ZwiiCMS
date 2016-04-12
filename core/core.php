@@ -644,6 +644,10 @@ class core
 			if($key === 'headerImage' AND !empty($value)) {
 				$class[] = 'themeHeaderImage';
 			}
+			// Cas spécifique pour l'image de fond
+			if($key === 'backgroundImage' AND !empty($value)) {
+				// Rien
+			}
 			// Pour les booleans
 			elseif($value === true) {
 				$class[] = 'theme' . ucfirst($key);
@@ -655,16 +659,7 @@ class core
 		}
 		return implode($class, ' ');
 	}
-
-	/**
-	 * Met en forme l'image de la bannière
-	 * @return string
-	 */
-	public function themeImage()
-	{
-		return $this->getData(['theme', 'headerImage']) ? 'background-image:url(\'' . helper::baseUrl(false) . $this->getData(['theme', 'headerImage']) . '\')' : '';
-	}
-
+	
 	/**
 	 * Met en forme le menu
 	 * @return string
@@ -1414,6 +1409,10 @@ class core
 				'theme',
 				[
 					'backgroundColor' => $this->getPost('themeBackgroundColor', helper::STRING),
+					'backgroundImage' => $this->getPost('themeBackgroundImage', helper::URL),
+					'backgroundImageRepeat' => $this->getPost('themeBackgroundImageRepeat', helper::STRING),
+					'backgroundImagePosition' => $this->getPost('themeBackgroundImagePosition', helper::STRING),
+					'backgroundImageAttachment' => $this->getPost('themeBackgroundImageAttachment', helper::STRING),
 					'elementColor' => $this->getPost('themeElementColor', helper::STRING),
 					'headerColor' => $this->getPost('themeHeaderColor', helper::STRING),
 					'headerHeight' => $this->getPost('themeHeaderHeight', helper::STRING),
@@ -1538,7 +1537,7 @@ class core
 					]).
 					template::closeRow(),
 				'Personnalisation du thème' =>
-					template::subTitle('Couleurs et image').
+					template::subTitle('Couleurs et images').
 					template::openRow().
 					template::colorPicker('themeHeaderColor', [
 						'label' => 'Couleur de la bannière',
@@ -1566,9 +1565,49 @@ class core
 					]).
 					template::newRow().
 					template::select('themeHeaderImage', helper::listUploads('Aucune image', ['png', 'jpeg', 'jpg', 'gif']), [
-						'label' => 'Afficher une image à la place du texte dans la bannière',
-						'help' => 'Seul les images png, gif, jpg ou jpeg de votre gestionnaire de fichiers peuvent être utilisées.',
+						'label' => 'Ajouter une image à la place du texte de la bannière',
+						'help' => 'Seules les images png, gif, jpg ou jpeg du gestionnaire de fichiers sont acceptées.',
 						'selected' => $this->getData(['theme', 'headerImage'])
+					]).
+					template::newRow().
+					template::select('themeBackgroundImage', helper::listUploads('Aucune image', ['png', 'jpeg', 'jpg', 'gif']), [
+						'label' => 'Ajouter une image de fond',
+						'help' => 'Seules les images png, gif, jpg ou jpeg du gestionnaire de fichiers sont acceptées.',
+						'selected' => $this->getData(['theme', 'backgroundImage']),
+						'col' => 6
+					]).
+					template::select('themeBackgroundImageRepeat', [
+						'themeBackgroundImageRepeatNo' => 'Ne pas répéter',
+						'themeBackgroundImageRepeatX' => 'Sur l\'axe horizontal',
+						'themeBackgroundImageRepeatY' => 'Sur l\'axe vertical',
+						'themeBackgroundImageRepeatAll' => 'Sur les deux axes'
+					], [
+						'label' => 'Répétition',
+						'selected' => $this->getData(['theme', 'backgroundImageRepeat']),
+						'col' => 2
+					]).
+					template::select('themeBackgroundImagePosition', [
+						'themeBackgroundImagePositionTopLeft' => 'En haut à gauche',
+						'themeBackgroundImagePositionTopCenter' => 'En haut au centre',
+						'themeBackgroundImagePositionTopRight' => 'En haut à droite',
+						'themeBackgroundImagePositionCenterLeft' => 'Au milieu à gauche',
+						'themeBackgroundImagePositionCenterCenter' => 'Au milieu au centre',
+						'themeBackgroundImagePositionCenterRight' => 'Au milieu à droite',
+						'themeBackgroundImagePositionBottomLeft' => 'En bas à gauche',
+						'themeBackgroundImagePositionBottomCenter' => 'En bas au centre',
+						'themeBackgroundImagePositionBottomRight' => 'En bas à droite',
+					], [
+						'label' => 'Alignement',
+						'selected' => $this->getData(['theme', 'backgroundImagePosition']),
+						'col' => 2
+					]).
+					template::select('themeBackgroundImageAttachment', [
+						'themeBackgroundImageAttachmentScroll' => 'Normale',
+						'themeBackgroundImageAttachmentFixed' => 'Fixe'
+					], [
+						'label' => 'Position',
+						'selected' => $this->getData(['theme', 'backgroundImageAttachment']),
+						'col' => 2
 					]).
 					template::closeRow().
 					template::subTitle('Organisation du site').
@@ -1622,7 +1661,8 @@ class core
 					template::select('themeHeaderHeight', [
 						'themeHeaderHeightSmall' => 'Petit',
 						'themeHeaderHeightMedium' => 'Moyen',
-						'themeHeaderHeightLarge' => 'Grand'
+						'themeHeaderHeightLarge' => 'Grand',
+						'themeHeaderHeightAuto' => 'Automatique'
 					], [
 						'label' => 'Hauteur de la bannière',
 						'selected' => $this->getData(['theme', 'headerHeight']),
@@ -1657,43 +1697,49 @@ class core
 			template::script('
 				// Aperçu de la personnalisation en direct
 				$(".tabContent[data-1=3]").on("change", function() {
-					var body = $("body");
+					var tabContentDOM = $(this);
+					var bodyDOM = $("body");
 					// Supprime les anciennes classes
-					body.removeClass();
+					bodyDOM.removeClass();
 					// Ajoute les nouvelles classes
 					// Pour les selects
-					$(this).find("select").each(function() {
-						var select = $(this);
-						var option = select.find("option:selected").val();
+					tabContentDOM.find("select").each(function() {
+						var selectDOM = $(this);
+						var option = selectDOM.find("option:selected").val();
 						// Pour le select d\'ajout d\'image dans la bannière
-						if(select.attr("id") === "themeHeaderImage") {
-							$("header").css("background-image", "url(\'" + option + "\')");
-							if(select.val() === "") {
-								body.removeClass("themeHeaderImage");
+						if(selectDOM.attr("id") === "themeHeaderImage") {
+							var headerDOM = $("header");
+							if(option === "") {
+								bodyDOM.removeClass("themeHeaderImage");
 							}
 							else {
-								body.addClass("themeHeaderImage");
+								bodyDOM.addClass("themeHeaderImage");
 							}
+							headerDOM.find("img").attr("src", "' . helper::baseUrl(false) . '" + option);
+						}
+						// Pour le select d\'ajout d\'image de fond
+						else if(selectDOM.attr("id") === "themeBackgroundImage") {
+							bodyDOM.css("background-image", "url(\'' . helper::baseUrl(false) . '" + option + "\')");
 						}
 						// Pour les autres
 						else {
 							if(option) {
-								body.addClass(option);
+								bodyDOM.addClass(option);
 							}
 						}
 					});
 					// Pour les inputs
-					$(this).find("input").each(function() {
-						var input = $(this);
+					tabContentDOM.find("input").each(function() {
+						var inputDOM = $(this);
 						// Cas spécifique pour les checkbox
-						if(input.is(":checkbox")) {
-							if(input.is(":checked")) {
-								body.addClass(input.attr("name").replace("[]", ""));
+						if(inputDOM.is(":checkbox")) {
+							if(inputDOM.is(":checked")) {
+								bodyDOM.addClass(inputDOM.attr("name").replace("[]", ""));
 							}
 						}
 						// Cas simple
 						else {
-							body.addClass(input.val());
+							bodyDOM.addClass(inputDOM.val());
 						}
 					});
 				});

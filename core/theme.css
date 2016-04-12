@@ -88,6 +88,12 @@ ol {
 	margin: 15px 0;
 }
 
+/* Image */
+img {
+	max-width: 100%;
+	height: auto;
+}
+
 /* Tableau */
 table {
 	width: 100%;
@@ -194,7 +200,7 @@ td > .col12 {
 
 /* Bannière */
 header {
-	background-repeat: no-repeat;
+	overflow: hidden;
 }
 header h1 {
 	display: inline-block;
@@ -204,6 +210,9 @@ header h1 {
 	font-size: 1.8em;
 	line-height: 1.2;
 	color: #FFF;
+}
+header img {
+	display: none;
 }
 
 /* Menu */
@@ -275,9 +284,6 @@ nav a:hover {
 /* Corps */
 section {
 	margin: 20px;
-}
-section img {
-	max-width: 100%;
 }
 
 /* Bas de page */
@@ -721,9 +727,11 @@ td.col12 {
  * Classes rapides
  */
 
-/* Cacher un élément */
 .hide {
 	display: none;
+}
+.clear {
+	clear: both;
 }
 
 /**
@@ -733,15 +741,12 @@ td.col12 {
 /* Alignement du contenu de la bannière */
 .themeHeaderTextAlignLeft header {
 	text-align: left;
-	background-position: left;
 }
 .themeHeaderTextAlignCenter header {
 	text-align: center;
-	background-position: center;
 }
 .themeHeaderTextAlignRight header {
 	text-align: right;
-	background-position: right;
 }
 
 /* Alignement du contenu du menu */
@@ -767,6 +772,9 @@ td.col12 {
 .themeHeaderHeightLarge header {
 	height: 320px;
 	line-height: 320px;
+}
+.themeHeaderHeightAuto header {
+	height: auto;
 }
 
 /* Hauteur du menu */
@@ -842,8 +850,65 @@ td.col12 {
 }
 
 /* Cache le titre de la bannière après l'ajout d'une image */
+.themeHeaderImage header {
+	font-size: 0; /* Fix le bug de whitespace */
+}
 .themeHeaderImage header h1 {
-	font-size: 0;
+	display: none;
+}
+.themeHeaderImage header img {
+	display: inline-block;
+}
+
+/* Répétition de l'image de fond */
+.themeBackgroundImageRepeatNo {
+	background-repeat: no-repeat;
+}
+.themeBackgroundImageRepeatX {
+	background-repeat: repeat-x;
+}
+.themeBackgroundImageRepeatY {
+	background-repeat: repeat-y;
+}
+.themeBackgroundImageRepeatAll {
+	background-repeat: repeat;
+}
+
+/* Allignement de l'image de fond */
+.themeBackgroundImagePositionTopLeft {
+	background-position: left top;
+}
+.themeBackgroundImagePositionTopCenter {
+	background-position: center top;
+}
+.themeBackgroundImagePositionTopRight {
+	background-position: right top;
+}
+.themeBackgroundImagePositionCenterLeft {
+	background-position: left center;
+}
+.themeBackgroundImagePositionCenterCenter {
+	background-position: center center;
+}
+.themeBackgroundImagePositionCenterRight {
+	background-position: right center;
+}
+.themeBackgroundImagePositionBottomLeft {
+	background-position: left bottom;
+}
+.themeBackgroundImagePositionBottomCenter {
+	background-position: center bottom;
+}
+.themeBackgroundImagePositionBottomRight {
+	background-position: right bottom;
+}
+
+/* Position de l'image de fond */
+.themeBackgroundImageAttachmentScroll {
+	background-attachment: scroll;
+}
+.themeBackgroundImageAttachmentFixed {
+	background-attachment: fixed;
 }
 
 /* Turquoise */

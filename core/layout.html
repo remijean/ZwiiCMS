@@ -8,19 +8,21 @@
 	<?php echo $this->vendor(); ?>
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/theme.css">
 </head>
-<body class="<?php echo $this->theme(); ?>">
+<body class="<?php echo $this->theme(); ?>" style="background-image: url('<?php echo helper::baseUrl(false) . $this->getData(['theme', 'backgroundImage']); ?>');">
 <?php echo $this->panel(); ?>
 <?php echo $this->notification(); ?>
-<header style="<?php echo $this->themeImage(); ?>">
+<header>
 	<h1><?php echo $this->getData(['config', 'title']); ?></h1>
+	<img src="<?php echo helper::baseUrl(false) . $this->getData(['theme', 'headerImage']); ?>" title="<?php echo $this->getData(['config', 'title']); ?>" alt="<?php echo $this->getData(['config', 'title']); ?>">
 </header>
 <div class="toggle"><span></span></div>
 <nav>
 	<ul><?php echo $this->menu(); ?></ul>
 </nav>
 <div id="container">
-	<header style="<?php echo $this->themeImage(); ?>">
+	<header>
 		<h1><?php echo $this->getData(['config', 'title']); ?></h1>
+		<img src="<?php echo helper::baseUrl(false) . $this->getData(['theme', 'headerImage']); ?>" title="<?php echo $this->getData(['config', 'title']); ?>" alt="<?php echo $this->getData(['config', 'title']); ?>">
 	</header>
 	<div class="toggle"><span></span></div>
 	<nav>
