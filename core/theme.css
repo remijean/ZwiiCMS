@@ -160,8 +160,8 @@ td > .col12 {
 	padding: 0;
 	margin: 0;
 	list-style: none;
-	height: 50px;
-	line-height: 50px;
+	height: 45px;
+	line-height: 45px;
 }
 #panel ul.left {
 	float: left;
@@ -197,6 +197,7 @@ td > .col12 {
 #panel select {
 	width: 250px;
 	border: 0;
+	padding: 5px;
 }
 @media (max-width: 768px)
 {
