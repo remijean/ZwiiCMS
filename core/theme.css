@@ -149,7 +149,9 @@ td > .col12 {
 /* Panneau */
 #panel {
 	background: #3C3C3C;
-	padding-left: 5px;
+}
+#panel .container {
+	margin: auto;
 }
 #panel:after {
 	content: " ";
@@ -220,7 +222,7 @@ td > .col12 {
 }
 
 /* Container du site */
-#container {
+body > .container {
 	margin: 20px auto;
 	background: #FFF;
 	overflow: hidden;
@@ -774,7 +776,7 @@ td.col12 {
 .themeHeaderPositionHide header {
 	display: none;
 }
-.themeHeaderPositionTop #container header {
+.themeHeaderPositionTop .container header {
 	display: none;
 }
 .themeHeaderPositionSite > header {
@@ -782,8 +784,8 @@ td.col12 {
 }
 
 /* Position du menu */
-.themeMenuPositionTop #container nav,
-.themeMenuPositionTop #container .toggle {
+.themeMenuPositionTop .container nav,
+.themeMenuPositionTop .container .toggle {
 	display: none !important; /* Important pour contrer le slideDown du JS */
 }
 .themeMenuPositionSite > nav,
@@ -792,39 +794,39 @@ td.col12 {
 }
 
 /* Largeur du site */
-.themeSiteWidthLarge #container {
+.themeSiteWidthLarge .container {
 	max-width: 1170px;
 }
-.themeSiteWidthMedium #container {
+.themeSiteWidthMedium .container {
 	max-width: 970px;
 }
-.themeSiteWidthSmall #container {
+.themeSiteWidthSmall .container {
 	max-width: 750px;
 }
 
 /* Marge autour de la bannière et du menu */
-.themeSiteMargin #container header {
+.themeSiteMargin .container header {
 	margin: 20px 20px 0;
 }
-.themeSiteMargin #container nav,
-.themeSiteMargin #container .toggle {
+.themeSiteMargin .container nav,
+.themeSiteMargin .container .toggle {
 	margin: 0 20px
 }
 /* Cas spécial si la bannière n'est pas dans le site */
-.themeSiteMargin.themeHeaderPositionTop #container header {
+.themeSiteMargin.themeHeaderPositionTop .container header {
 	margin-top: 0;
 }
-.themeSiteMargin.themeHeaderPositionTop #container nav {
+.themeSiteMargin.themeHeaderPositionTop .container nav {
 	margin-top: 20px;
 }
 
 /* Coins arrondis */
-.themeSiteRadius #container {
+.themeSiteRadius > .container {
 	border-radius: 15px;
 }
 
 /* Ombre autour du site */
-.themeSiteShadow #container {
+.themeSiteShadow > .container {
 	box-shadow: 1px 1px 10px #3C3C3C;
 }
 
