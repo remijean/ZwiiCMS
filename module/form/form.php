@@ -95,7 +95,7 @@ class formAdm extends core
 						'class' => 'position'
 					]).
 					template::button('move[]', [
-						'value' => '&#8597;',
+						'value' => template::ico('up-down'),
 						'class' => 'move',
 						'col' => 1
 					]).
@@ -120,7 +120,7 @@ class formAdm extends core
 						'col' => 2
 					]).
 					template::button('delete[]', [
-						'value' => '-',
+						'value' => template::ico('minus'),
 						'class' => 'delete',
 						'col' => 1
 					]).
@@ -139,7 +139,7 @@ class formAdm extends core
 						'class' => 'position'
 					]).
 					template::button('move[]', [
-						'value' => '&#8597;',
+						'value' => template::ico('up-down'),
 						'class' => 'move',
 						'col' => 1
 					]).
@@ -161,7 +161,7 @@ class formAdm extends core
 						'col' => 2
 					]).
 					template::button('delete[]', [
-						'value' => '-',
+						'value' => template::ico('minus'),
 						'class' => 'delete',
 						'col' => 1
 					]).
@@ -176,7 +176,7 @@ class formAdm extends core
 					]).
 					template::openRow().
 					template::button('add', [
-						'value' => '+',
+						'value' => template::ico('plus'),
 						'col' => 1,
 						'offset' => 11
 					]).

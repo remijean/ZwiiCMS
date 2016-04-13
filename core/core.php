@@ -67,7 +67,8 @@ class core
 		'jquery-ui' => false,
 		'jscolor' => false,
 		'normalize' => true,
-		'tinymce' => false
+		'tinymce' => false,
+		'zwiico' => true
 	];
 
 	/** Version de ZwiiCMS */
@@ -386,11 +387,6 @@ class core
 			if($this->getData(['config', 'password']) === $this->getCookie()) {
 				$method = $this->getUrl(0, false);
 				$this->$method();
-				// Passe en mode édition
-				// Sauf pour le module de configuration et le gestionnaire de fichiers afin de ne pas changer de mode en cliquant sur leur lien dans le panneau admin
-				if(!in_array($this->getUrl(0, false), ['config', 'manager'])) {
-					$this->setMode(true);
-				}
 			}
 			// Sinon il doit s'identifier
 			else {
@@ -422,8 +418,6 @@ class core
 				// Mise en cache en fonction du module
 				self::$cache = $module::$cache;
 			}
-			// Passe en mode public
-			$this->setMode(false);
 			// Titre, contenu et description de la page
 			self::$title = $this->getData(['pages', $this->getUrl(0, false), 'title']);
 			self::$description = $this->getData(['pages', $this->getUrl(0, false), 'description']);
@@ -476,19 +470,19 @@ class core
 			// Couleur du header
 			list($r, $g, $b) = helper::hexToRgb($this->getData(['colors', 'theme']));
 			$headerColor = $r . ',' . $g . ',' . $b;
-			$headerTextVariant = ($r + $g + $b / 3) < 350 ? 'FFF' : '333';
+			$headerTextVariant = ($r + $g + $b / 3) < 350 ? '#FFF' : 'inherit';
 			// Couleurs du menu
 			list($r, $g, $b) = helper::hexToRgb($this->getData(['colors', 'menu']));
 			$menuColor = $r . ',' . $g . ',' . $b;
 			$menuColorDark = ($r - 20) . ',' . ($g - 20) . ',' . ($b - 20);
-			$menuColorVeryDark = ($r - 40) . ',' . ($g - 40) . ',' . ($b - 40);
-			$menuTextVariant = intval($r + $g + $b / 3) < 350 ? 'FFF' : '333';
+			$menuColorVeryDark = ($r - 25) . ',' . ($g - 25) . ',' . ($b - 25);
+			$menuTextVariant = intval($r + $g + $b / 3) < 350 ? '#FFF' : 'inherit';
 			// Couleurs des éléments
 			list($r, $g, $b) = helper::hexToRgb($this->getData(['colors', 'element']));
 			$elementColor = $r . ',' . $g . ',' . $b;
 			$elementColorDark = ($r - 20) . ',' . ($g - 20) . ',' . ($b - 20);
-			$elementColorVeryDark = ($r - 40) . ',' . ($g - 40) . ',' . ($b - 40);
-			$elementTextVariant = intval($r + $g + $b / 3) < 350 ? 'FFF' : '333';
+			$elementColorVeryDark = ($r - 25) . ',' . ($g - 25) . ',' . ($b - 25);
+			$elementTextVariant = intval($r + $g + $b / 3) < 350 ? '#FFF' : 'inherit';
 			// Couleur de fond
 			list($r, $g, $b) = helper::hexToRgb($this->getData(['colors', 'background']));
 			$backgroundColor = $r . ',' . $g . ',' . $b;
@@ -498,16 +492,18 @@ class core
 				/* Bannière */
 				header {
 					background-color: rgb(' . $headerColor . ');
-					color: #' . $headerTextVariant . ';
+				}
+				header h1 {
+					color: ' . $headerTextVariant . ';
 				}
 				/* Menu */
 				.toggle,
 				nav ul {
 					background-color: rgb(' . $menuColor . ');
 				}
-				.toggle span:after,
+				.toggle span,
 				nav a {
-					color: #' . $menuTextVariant . ';
+					color: ' . $menuTextVariant . ';
 				}
 				/* Eléments */
 				input[type=\'submit\'],
@@ -515,16 +511,16 @@ class core
 				.pagination a,
 				input[type=\'checkbox\']:checked + label:before,
 				input[type=\'radio\']:checked + label:before,
-				.helpButton,
 				.helpContent {
 					background-color: rgb(' . $elementColor . ');
-					color: #' . $elementTextVariant . ';
+					color: ' . $elementTextVariant . ';
 				}
 				h2,
 				h4,
 				h6,
 				a,
-				.tabTitle.current {
+				.tabTitle.current,
+				.helpButton {
 					color: rgb(' . $elementColor . ');
 				}
 				input[type=\'text\']:hover,
@@ -552,19 +548,21 @@ class core
 				input[type=\'checkbox\']:not(:active):checked:hover + label:before,
 				input[type=\'checkbox\']:active + label:before,
 				input[type=\'radio\']:checked:hover + label:before,
-				input[type=\'radio\']:not(:checked):active + label:before,
-				.helpButton:hover {
+				input[type=\'radio\']:not(:checked):active + label:before {
 					background-color: rgb(' . $elementColorDark . ');
+				}
+				.helpButton:hover {
+					color: rgb(' . $elementColorDark . ');
 				}
 				
 				/* Couleur très foncée */
 				/* Menu */
 				.toggle:active,
-				nav a:active {
+				nav a:active,
+				nav a.current {
 					background-color: rgb(' . $menuColorVeryDark . ');
 				}
 				/* Eléments */
-				nav a.current,
 				input[type=\'submit\']:active,
 				.button:active,
 				.pagination a:active {
@@ -645,8 +643,12 @@ class core
 						$vendor .= '<script src="' . helper::baseUrl(false) . 'core/vendor/tinymce/tinymce.min.js"></script>';
 						$vendor .= '<script src="' . helper::baseUrl(false) . 'core/vendor/tinymce/jquery.tinymce.min.js"></script>';
 						break;
-					case 'normalize';
+					case 'normalize':
 						$vendor .= '<link rel="stylesheet" href="' . helper::baseUrl(false) . 'core/vendor/normalize/normalize.min.css">';
+						break;
+					case 'zwiico':
+						$vendor .= '<link rel="stylesheet" href="' . helper::baseUrl(false) . 'core/vendor/zwiico/css/zwiico.min.css">';
+						break;
 				}
 			}
 		}
@@ -661,41 +663,27 @@ class core
 	{
 		// Crée le panneau seulement si l'utilisateur est connecté
 		if($this->getCookie() === $this->getData(['config', 'password'])) {
-			$li = '<li>';
-			$li .= '<select onchange="$(location).attr(\'href\', $(this).val());">';
+			// Items de gauche
+			$left = '<li><select onchange="$(location).attr(\'href\', $(this).val());">';
 			// Affiche l'option "Choisissez une page" seulement pour le module de configuration et le gestionnaire de fichier
 			if(in_array($this->getUrl(0, false), ['config', 'manager'])) {
-				$li .= '<option value="">' . helper::translate('Choisissez une page') . '</option>';
+				$left .= '<option value="">' . helper::translate('Choisissez une page') . '</option>';
 			}
 			// Crée des options pour les pages en les triant par titre
 			$pages = helper::arrayCollumn($this->getData('pages'), 'title', 'SORT_ASC', true);
 			foreach($pages as $pageKey => $pageTitle) {
 				$current = ($pageKey === $this->getUrl(0)) ? ' selected' : false;
-				$li .= '<option value="' . helper::baseUrl() . $this->getMode() . $pageKey . '"' . $current . '>' . $pageTitle . '</option>';
+				$left .= '<option value="' . helper::baseUrl() . $this->getMode() . $pageKey . '"' . $current . '>' . $pageTitle . '</option>';
 			}
-			$li .= '</select>';
-			$li .= '</li>';
-			$li .= '<li>';
-			$li .= '<a href="' . helper::baseUrl() . 'create">' . helper::translate('Créer une page') . '</a>';
-			$li .= '</li>';
-			// Affiche le switch de mode pour toutes les pages sauf le module de configuration et le gestionnaire de fichiers
-			if(!in_array($this->getUrl(0, false), ['config', 'manager'])) {
-				$li .= '<li>';
-				$li .= '<a href="' . helper::baseUrl() . 'mode/' . $this->getUrl(null, false) . '"' . ($this->getMode() ? ' class="edit"' : '') . '>' . helper::translate('Mode édition') . '</a>';
-				$li .= '</li>';
-			};
-			$li .= '<li>';
-			$li .= '<a href="' . helper::baseUrl() . 'manager">' . helper::translate('Gestionnaire de fichiers') . '</a>';
-			$li .= '</li>';
-			$li .= '<li>';
-			$li .= '<a href="' . helper::baseUrl() . 'config">' . helper::translate('Configuration') . '</a>';
-			$li .= '</li>';
-			$li .= '<li>';
-			$li .= '<a href="' . helper::baseUrl() . 'logout" onclick="return confirm(\'' . helper::translate('Êtes-vous sûr de vouloir vous déconnecter ?') . '\');">';
-			$li .= helper::translate('Déconnexion');
-			$li .= '</a>';
-			$li .= '</li>';
-			return '<ul id="panel">' . $li . '</ul>';
+			$left .= '</select></li>';
+			// Items de droite
+			$right = '<li><a href="' . helper::baseUrl() . 'create" title="' . helper::translate('Créer une page') . '">' . template::ico('plus') . '</a></li>';
+			$right .= '<li><a href="' . helper::baseUrl() . 'mode/' . $this->getUrl(null, false) . '"' . ($this->getMode() ? ' class="edit"' : '') . ' title="' . helper::translate('Activer/désactiver le mode édition') . '">' . template::ico('pencil') . '</a></li>';
+			$right .= '<li><a href="' . helper::baseUrl() . 'manager" title="' . helper::translate('Gérer les fichiers') . '">' . template::ico('folder') . '</a></li>';
+			$right .= '<li><a href="' . helper::baseUrl() . 'config" title="' . helper::translate('Configurer le site') . '">' . template::ico('gear') . '</a></li>';
+			$right .= '<li><a href="' . helper::baseUrl() . 'logout" onclick="return confirm(\'' . helper::translate('Êtes-vous sûr de vouloir vous déconnecter ?') . '\');" title="' . helper::translate('Se déconnecter') . '">' . template::ico('logout') . '</a></li>';
+			// Retourne le panneau
+			return '<div id="panel"><ul class="left">' . $left . '</ul><ul class="right">' . $right . '</ul></div>';
 		}
 	}
 
@@ -1205,13 +1193,13 @@ class core
 				'label' => 'Inclure le module',
 				'help' => 'En cas de changement de module, les données du module précédent seront supprimées.',
 				'selected' => $this->getData(['pages', $this->getUrl(0), 'module']),
-				'col' => 10
+				'col' => 11
 			]).
 			template::button('admin', [
-				'value' => 'Administrer',
+				'value' => template::ico('gear'),
 				'href' => helper::baseUrl() . 'module/' . $this->getUrl(0),
 				'disabled' => $this->getData(['pages', $this->getUrl(0), 'module']) ? '' : 'disabled',
-				'col' => 2
+				'col' => 1
 			]).
 			template::script('
 				// Enregistre le module de la page en AJAX
@@ -1278,9 +1266,10 @@ class core
 				$this->setNotification('Impossible de supprimer la page d\'accueil !', true);
 			}
 			// Impossible de supprimer une page contenant des enfants
-			if(!empty($this->getHierarchy()[$this->getUrl(0)])) {
+			elseif(!empty($this->getHierarchy()[$this->getUrl(0)])) {
 				$this->setNotification('Impossible de supprimer une page contenant des enfants !', true);
 			}
+			// Supprime la page
 			elseif($this->getData(['pages', $this->getUrl(0)])) {
 				// Supprime la page et les données du module rattachées à la page
 				$this->removeData(['pages', $this->getUrl(0)]);
@@ -1358,16 +1347,19 @@ class core
 	/** Redirection vers le bon mode (édition ou public) */
 	public function mode()
 	{
-		// Redirection vers mode édition si page en mode public
+		// Si page en mode public passe en mode edition et redirection vers mode édition
 		if($this->getData(['pages', $this->getUrl(0)])) {
+			$this->setMode(true);
 			$url = 'edit/' . $this->getUrl(0);
 		}
-		// Redirection vers mode public si page en mode édition (utilisation de 0 pour détecter un module système car $this->getUrl() détecte déjà le module système "mode" en 0 et le supprime)
+		// Si page en mode édition passe en mode public et redirection vers mode public (utilisation de 0 pour détecter un module système car $this->getUrl() détecte déjà le module système "mode" en 0 et le supprime)
 		elseif(in_array($this->getUrl(0), ['edit', 'module'])) {
+			$this->setMode(false);
 			$url = $this->getUrl(1);
 		}
-		// Sinon redirection vers URL courante
+		// Sinon switch le mode et redirection vers URL courante
 		else {
+			$this->setMode(!$this->getMode());
 			$url = $this->getUrl(0); // Voir commentaire du elseif précédent pour l'utilisation du 0
 		}
 		// Applique la redirection
@@ -1387,12 +1379,12 @@ class core
 			$filesTable[] = [
 				$file,
 				template::button('preview[]', [
-					'value' => 'Aperçu',
+					'value' => template::ico('eye'),
 					'href' => $path,
 					'target' => '_blank'
 				]),
 				template::button('delete[]', [
-					'value' => 'Supprimer',
+					'value' => template::ico('cancel'),
 					'href' => helper::baseUrl() . 'delete/' . $file,
 					'onclick' => 'return confirm(\'' . helper::translate('Êtes-vous sûr de vouloir supprimer ce fichier ?') . '\');'
 				])
@@ -1401,7 +1393,7 @@ class core
 		if($filesTable) {
 			self::$content =
 				template::openRow() .
-				template::table([8, 2, 2], $filesTable) .
+				template::table([10, 1, 1], $filesTable) .
 				template::closeRow();
 		}
 		// Contenu de la page
@@ -1872,15 +1864,17 @@ class core
 						var rgb = hexToRgb(jscolorDOM.val());
 						var color = rgb.r + "," + rgb.g + "," + rgb.b;
 						var colorDark = (rgb.r - 20) + "," + (rgb.g - 20) + "," + (rgb.b - 20);
-						var colorVeryDark = (rgb.r - 40) + "," + (rgb.g - 40) + "," + (rgb.b - 40);
-						var textVariant = (rgb.r + rgb.g + rgb.b / 3) < 350 ? "FFF" : "333";
+						var colorVeryDark = (rgb.r - 25) + "," + (rgb.g - 25) + "," + (rgb.b - 25);
+						var textVariant = (rgb.r + rgb.g + rgb.b / 3) < 350 ? "#FFF" : "inherit";
 						// Couleur du header
 						if(jscolorDOM.attr("id") === "colorHeader") {
 							style += "
 								/* Couleur normale */
 								header {
 									background-color: rgb(" + color + ");
-									color: #" + textVariant + ";
+								}
+								header h1 {
+									color: " + textVariant + ";
 								}
 							";
 						}
@@ -1892,9 +1886,9 @@ class core
 								nav ul {
 									background-color: rgb(" + color + ");
 								}
-								.toggle span:after,
+								.toggle span,
 								nav a {
-									color: #" + textVariant + ";
+									color: " + textVariant + ";
 								}
 								/* Couleur foncée */
 								.toggle:hover,
@@ -1903,7 +1897,8 @@ class core
 								}
 								/* Couleur très foncée */
 								.toggle:active,
-								nav a:active {
+								nav a:active,
+								nav a.current {
 									background-color: rgb(" + colorVeryDark + ");
 								}
 							";
@@ -1917,16 +1912,16 @@ class core
 								.pagination a,
 								input[type=\'checkbox\']:checked + label:before,
 								input[type=\'radio\']:checked + label:before,
-								.helpButton,
 								.helpContent {
 									background-color: rgb(" + color + ");
-									color: #" + textVariant + ";
+									color: " + textVariant + ";
 								}
 								h2,
 								h4,
 								h6,
 								a,
-								.tabTitle.current {
+								.tabTitle.current,
+								.helpButton {
 									color: rgb(" + color + ");
 								}
 								input[type=\'text\']:hover,
@@ -1943,12 +1938,13 @@ class core
 								input[type=\'checkbox\']:not(:active):checked:hover + label:before,
 								input[type=\'checkbox\']:active + label:before,
 								input[type=\'radio\']:checked:hover + label:before,
-								input[type=\'radio\']:not(:checked):active + label:before,
-								.helpButton:hover {
+								input[type=\'radio\']:not(:checked):active + label:before {
 									background-color: rgb(" + colorDark + ");
 								}
+								.helpButton:hover {
+									color: rgb(" + colorDark + ");
+								}
 								/* Couleur très foncée */
-								nav a.current,
 								input[type=\'submit\']:active,
 								.button:active,
 								.pagination a:active {
@@ -3259,7 +3255,7 @@ class template
 	 */
 	public static function help($text)
 	{
-		return '<span class="helpButton">?<span class="helpContent">' . helper::translate($text) . '</span></span>';
+		return '<span class="helpButton">' . self::ico('help') . '<span class="helpContent">' . helper::translate($text) . '</span></span>';
 	}
 
 	/**
@@ -3362,6 +3358,7 @@ class template
 				}
 			');
 	}
+
 	/**
 	 * Crée un script et le minimise
 	 * @param  string $script Script à intégrer
@@ -3370,5 +3367,16 @@ class template
 	public static function script($script)
 	{
 		return '<script>' . helper::minifyJs($script) . '</script>';
+	}
+
+	/**
+	 * Crée un icône
+	 * @param  string $ico    Nom de l'icône à ajouter
+	 * @param  bool   $margin Ajoute un margin à droite de l'icône
+	 * @return string
+	 */
+	public static function ico($ico, $margin = false)
+	{
+		return '<span class="zwiico-' . $ico . ($margin ? ' zwiico-margin' : '') . '"></span>';
 	}
 }

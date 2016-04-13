@@ -56,11 +56,11 @@ class newsAdm extends core
 				$newsTable[] = [
 					$this->getData([$this->getUrl(0), $news[$i], 'title']),
 					template::button('edit[]', [
-						'value' => 'Modifier',
+						'value' => template::ico('pencil'),
 						'href' => helper::baseUrl() . 'module/' . $this->getUrl(0) . '/edit/' . $news[$i]
 					]),
 					template::button('delete[]', [
-						'value' => 'Supprimer',
+						'value' => template::ico('cancel'),
 						'href' => helper::baseUrl() . 'module/' . $this->getUrl(0) . '/delete/' . $news[$i],
 						'onclick' => 'return confirm(\'Êtes-vous sûr de vouloir supprimer cette news ?\');'
 					])
@@ -69,7 +69,7 @@ class newsAdm extends core
 			// Ajoute la liste des pages en dessous des news
 			self::$content .=
 				template::openRow().
-				template::table([8, 2, 2], $newsTable).
+				template::table([10, 1, 1], $newsTable).
 				template::closeRow().
 				$pagination['pages'];
 		}
