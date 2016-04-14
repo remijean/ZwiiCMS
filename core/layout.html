@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title><?php echo self::$title; ?> - <?php echo $this->getData(['config', 'title']); ?></title>
+	<title><?php echo self::$metaTitle; ?></title>
 	<meta name="description" content="<?php echo self::$description; ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- Import des librairies -->
@@ -43,8 +43,7 @@
 	</nav>
 	<!-- Corps -->
 	<section>
-		<h2><?php echo self::$title; ?></h2>
-		<?php echo self::$content; ?>
+		<?php echo $this->content(); ?>
 	</section>
 	<!-- Bas du site -->
 	<footer>

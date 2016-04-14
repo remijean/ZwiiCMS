@@ -23,6 +23,9 @@ class core
 	/** @var string Titre de la page */
 	public static $title = '';
 
+	/** @var string Meta title du site */
+	public static $metaTitle = '';
+
 	/** @var string Description de la page */
 	public static $description = '';
 
@@ -418,8 +421,9 @@ class core
 				// Mise en cache en fonction du module
 				self::$cache = $module::$cache;
 			}
-			// Titre, contenu et description de la page
+			// Titre, description et contenu de la page
 			self::$title = $this->getData(['pages', $this->getUrl(0, false), 'title']);
+			self::$metaTitle = $this->getData(['pages', $this->getUrl(0, false), 'metaTitle']);
 			self::$description = $this->getData(['pages', $this->getUrl(0, false), 'description']);
 			self::$content = $this->getData(['pages', $this->getUrl(0, false), 'content']) . self::$content;
 		}
@@ -433,6 +437,10 @@ class core
 		switch(self::$layout) {
 			// Affiche le layout
 			case 'LAYOUT':
+				// Méta titre par défaut
+				if(!self::$metaTitle) {
+					self::$metaTitle = self::$title . ' - ' . $this->getData(['config', 'title']);
+				}
 				// Description par défaut
 				if(!self::$description) {
 					self::$description = $this->getData(['config', 'description']);
@@ -796,6 +804,21 @@ class core
 	}
 
 	/**
+	 * Met en forme le contenu
+	 * @return string
+	 */
+	public function content()
+	{
+		// Affiche ou non le titre
+		$title = '';
+		if(!$this->getData(['pages', $this->getUrl(0, false)]) OR !$this->getData(['pages', $this->getUrl(0, false), 'hideTitle'])) {
+			$title = '<h2>' . self::$title . '</h2>';
+		}
+		// Retourne le contenu de la page
+		return $title . self::$content;
+	}
+
+	/**
 	 * Script Google Analytics
 	 * @return string
 	 */
@@ -956,12 +979,16 @@ class core
 			'pages',
 			$key,
 			[
-				'title' => $title,
-				'description' => false,
-				'position' => '0',
+				// Si cette partie est modifiée il faut modifier : la création, l'édition, et l'enregistrement ajax de la page
 				'blank' => false,
-				'module' => false,
-				'content' => '<p>' . helper::translate('Contenu de la page.') . '</p>'
+				'content' => '<p>' . helper::translate('Contenu de la page.') . '</p>',
+				'description' => '',
+				'hideTitle' => $this->getPost('hideTitle', helper::BOOLEAN),
+				'metaTitle' => '',
+				'module' => '',
+				'parent' => '',
+				'position' => 0,
+				'title' => $title
 			]
 		]);
 		// Enregistre les données
@@ -1061,13 +1088,16 @@ class core
 				'pages',
 				$key,
 				[
-					'title' => $title,
+					// Si cette partie est modifiée il faut modifier : la création, l'édition, et l'enregistrement ajax de la page
+					'blank' => $this->getPost('blank', helper::BOOLEAN),
+					'content' => $this->getPost('content'),
 					'description' => $this->getPost('description', helper::STRING),
+					'hideTitle' => $this->getPost('hideTitle', helper::BOOLEAN),
+					'metaTitle' => $this->getPost('metaTitle', helper::STRING),
+					'module' => $module,
 					'parent' => $parent,
 					'position' => $position,
-					'blank' => $this->getPost('blank', helper::BOOLEAN),
-					'module' => $module,
-					'content' => $this->getPost('content')
+					'title' => $title
 				]
 			]);
 			// Supprime l'ancienne page si la clef à changée
@@ -1099,146 +1129,162 @@ class core
 		self::$title = $this->getData(['pages', $this->getUrl(0), 'title']);
 		self::$content =
 			template::openForm().
+			template::tabs([
+				'Options principaux' =>
+					template::openRow().
+					template::text('title', [
+						'label' => 'Titre de la page',
+						'value' => $this->getData(['pages', $this->getUrl(0), 'title']),
+						'required' => true
+					]).
+					template::newRow().
+					template::select('parent', $pagesNoParent, [
+						'label' => 'Page parente',
+						'selected' => $selected,
+						'col' => 6,
+						'classWrapper' => (empty($hierarchy[$this->getUrl(0)]) ?: 'hide')
+					]).
+					template::select('position', [], [
+						'label' => 'Position dans le menu',
+						'col' => (empty($hierarchy[$this->getUrl(0)]) ? 6 : 12)
+					]).
+					template::script('
+						// Affiche les bonnes pages dans le select des positions en fonction de la page parente
+						var hierarchy = ' . json_encode($this->getHierarchy()) . ';
+						var pages = ' . json_encode($this->getData(['pages'])) . ';
+						$("#parent").on("change", function() {
+							var positionDOM = $("#position");
+							var positionLabelDOM = $("label[form=position]");
+							positionDOM.empty().append(
+								$("<option>").val(0).text("' . helper::translate('Ne pas afficher') . '"),
+								$("<option>").val(1).text("' . helper::translate('Au début') . '")
+							);
+							var parentSelected = $(this).find("option:selected").val();
+							var positionSelected = 0;
+							var positionPrevious = 1;
+							// Aucune page parente selectionnée
+							if(parentSelected === "") {
+								// Liste des pages sans parents
+								for(var key in hierarchy) {
+									// Pour page courante sélectionne la page précédente (pas de - 1 à positionSelected à cause des options par défaut)
+									if(key === "' . $this->getUrl(0) . '") {
+										positionSelected = positionPrevious;
+									}
+									// Sinon ajoute la page à la liste
+									else {
+										// Enregistre la position de cette page afin de la sélectionner si la prochaine page de la liste est la page courante
+										positionPrevious++;
+										// Ajout à la liste
+										positionDOM.append(
+											$("<option>").val(positionPrevious).text("' . helper::translate('Après') . ' \"" + pages[key].title + "\"")
+										);
+									}
+								}
+							}
+							// Un page parente est selectionnée
+							else {
+								// Liste des pages enfants de la page parente
+								for(var i = 0; i < hierarchy[parentSelected].length; i++) {
+									// Pour page courante sélectionne la page précédente (pas de - 1 à positionSelected à cause des options par défaut)
+									if(hierarchy[parentSelected][i] === "' . $this->getUrl(0) . '") {
+										positionSelected = positionPrevious;
+									}
+									// Sinon ajoute la page à la liste
+									else {
+										// Enregistre la position de cette page afin de la sélectionner si la prochaine page de la liste est la page courante
+										positionPrevious++;
+										// Ajout à la liste
+										positionDOM.append(
+											$("<option>").val(positionPrevious).text("' . helper::translate('Après') . ' \"" + pages[hierarchy[parentSelected][i]].title + "\"")
+										);
+									}
+								}
+							}
+							// Sélectionne la bonne position
+							positionDOM.find("option[value=" + positionSelected + "]").prop("selected", true);
+						}).trigger("change");
+					').
+					template::newRow().
+					template::textarea('content', [
+						'value' => $this->getData(['pages', $this->getUrl(0), 'content']),
+						'editor' => true
+					]).
+					template::newRow().
+					template::hidden('key', [
+						'value' => $this->getUrl(0)
+					]).
+					template::hidden('oldModule', [
+						'value' => $this->getData(['pages', $this->getUrl(0), 'module'])
+					]).
+					template::select('module', helper::listModules('Aucun module'), [
+						'label' => 'Inclure le module',
+						'help' => 'En cas de changement de module, les données du module précédent seront supprimées.',
+						'selected' => $this->getData(['pages', $this->getUrl(0), 'module']),
+						'col' => 11
+					]).
+					template::button('admin', [
+						'value' => template::ico('gear'),
+						'href' => helper::baseUrl() . 'module/' . $this->getUrl(0),
+						'disabled' => $this->getData(['pages', $this->getUrl(0), 'module']) ? '' : 'disabled',
+						'col' => 1
+					]).
+					template::script('
+							// Enregistre le module de la page en AJAX
+							$("#module").on("change", function() {
+								var newModule = $("#module").val();
+								var admin = $("#admin");
+								var ok = true;
+								if($("#oldModule").val() != "") {
+									ok = confirm("' . helper::translate('Si vous confirmez, les données du module précédent seront supprimées !') . '");
+								}
+								if(ok) {
+									$.ajax({
+										type: "POST",
+										url: "' . helper::baseUrl() . 'save/" + $("#key").val(),
+										data: {module: newModule},
+										success: function() {
+											$("#oldModule").val(newModule);
+											if(newModule == "") {
+												admin.addClass("disabled");
+											}
+											else {
+												admin.removeClass("disabled");
+												admin.attr("target", "_blank")
+											}
+										},
+										error: function() {
+											alert("' . helper::translate('Impossible d\"enregistrer le module !') . '");
+											admin.addClass("disabled");
+										}
+									});
+								}
+							});
+						').
+					template::closeRow(),
+				'Options avancés' =>
+					template::openRow().
+					template::text('metaTitle', [
+						'label' => 'Méta titre de la page',
+						'help' => 'Si le champ est vide, la description du site est utilisée.',
+						'value' => $this->getData(['pages', $this->getUrl(0), 'metaTitle'])
+					]).
+					template::newRow().
+					template::textarea('description', [
+						'label' => 'Méta description de la page',
+						'help' => 'Si le champ est vide, la description du site est utilisée.',
+						'value' => $this->getData(['pages', $this->getUrl(0), 'description'])
+					]).
+					template::newRow().
+					template::checkbox('hideTitle', true, 'Ne pas afficher le titre en mode public', [
+						'checked' => $this->getData(['pages', $this->getUrl(0), 'hideTitle'])
+					]).
+					template::newRow().
+					template::checkbox('blank', true, 'Ouvrir dans un nouvel onglet en mode public', [
+						'checked' => $this->getData(['pages', $this->getUrl(0), 'blank'])
+					]).
+					template::closeRow()
+			]).
 			template::openRow().
-			template::text('title', [
-				'label' => 'Titre de la page',
-				'value' => $this->getData(['pages', $this->getUrl(0), 'title']),
-				'required' => true
-			]).
-			template::newRow().
-			template::select('parent', $pagesNoParent, [
-				'label' => 'Page parente',
-				'selected' => $selected,
-				'col' => 6,
-				'classWrapper' => (empty($hierarchy[$this->getUrl(0)]) ?: 'hide')
-			]).
-			template::select('position', [], [
-				'label' => 'Position dans le menu',
-				'col' => (empty($hierarchy[$this->getUrl(0)]) ? 6 : 12)
-			]).
-			template::script('
-				// Affiche les bonnes pages dans le select des positions en fonction de la page parente
-				var hierarchy = ' . json_encode($this->getHierarchy()) . ';
-				var pages = ' . json_encode($this->getData(['pages'])) . ';
-				$("#parent").on("change", function() {
-					var positionDOM = $("#position");
-					var positionLabelDOM = $("label[form=position]");
-					positionDOM.empty().append(
-						$("<option>").val(0).text("' . helper::translate('Ne pas afficher') . '"),
-						$("<option>").val(1).text("' . helper::translate('Au début') . '")
-					);
-					var parentSelected = $(this).find("option:selected").val();
-					var positionSelected = 0;
-					var positionPrevious = 1;
-					// Aucune page parente selectionnée
-					if(parentSelected === "") {
-						// Liste des pages sans parents
-						for(var key in hierarchy) {
-							// Pour page courante sélectionne la page précédente (pas de - 1 à positionSelected à cause des options par défaut)
-							if(key === "' . $this->getUrl(0) . '") {
-								positionSelected = positionPrevious;
-							}
-							// Sinon ajoute la page à la liste
-							else {
-								// Enregistre la position de cette page afin de la sélectionner si la prochaine page de la liste est la page courante
-								positionPrevious++;
-								// Ajout à la liste
-								positionDOM.append(
-									$("<option>").val(positionPrevious).text("' . helper::translate('Après') . ' \"" + pages[key].title + "\"")
-								);
-							}
-						}
-					}
-					// Un page parente est selectionnée
-					else {
-						// Liste des pages enfants de la page parente
-						for(var i = 0; i < hierarchy[parentSelected].length; i++) {
-							// Pour page courante sélectionne la page précédente (pas de - 1 à positionSelected à cause des options par défaut)
-							if(hierarchy[parentSelected][i] === "' . $this->getUrl(0) . '") {
-								positionSelected = positionPrevious;
-							}
-							// Sinon ajoute la page à la liste
-							else {
-								// Enregistre la position de cette page afin de la sélectionner si la prochaine page de la liste est la page courante
-								positionPrevious++;
-								// Ajout à la liste
-								positionDOM.append(
-									$("<option>").val(positionPrevious).text("' . helper::translate('Après') . ' \"" + pages[hierarchy[parentSelected][i]].title + "\"")
-								);
-							}
-						}
-					}
-					// Sélectionne la bonne position
-					positionDOM.find("option[value=" + positionSelected + "]").prop("selected", true);
-				}).trigger("change");
-			').
-			template::newRow().
-			template::textarea('content', [
-				'value' => $this->getData(['pages', $this->getUrl(0), 'content']),
-				'editor' => true
-			]).
-			template::newRow().
-			template::textarea('description', [
-				'label' => 'Description de la page',
-				'help' => 'Si le champ est vide, la description du site est utilisée.',
-				'value' => $this->getData(['pages', $this->getUrl(0), 'description'])
-			]).
-			template::newRow().
-			template::hidden('key', [
-				'value' => $this->getUrl(0)
-			]).
-			template::hidden('oldModule', [
-				'value' => $this->getData(['pages', $this->getUrl(0), 'module'])
-			]).
-			template::select('module', helper::listModules('Aucun module'), [
-				'label' => 'Inclure le module',
-				'help' => 'En cas de changement de module, les données du module précédent seront supprimées.',
-				'selected' => $this->getData(['pages', $this->getUrl(0), 'module']),
-				'col' => 11
-			]).
-			template::button('admin', [
-				'value' => template::ico('gear'),
-				'href' => helper::baseUrl() . 'module/' . $this->getUrl(0),
-				'disabled' => $this->getData(['pages', $this->getUrl(0), 'module']) ? '' : 'disabled',
-				'col' => 1
-			]).
-			template::script('
-				// Enregistre le module de la page en AJAX
-				$("#module").on("change", function() {
-					var newModule = $("#module").val();
-					var admin = $("#admin");
-					var ok = true;
-					if($("#oldModule").val() != "") {
-						ok = confirm("' . helper::translate('Si vous confirmez, les données du module précédent seront supprimées !') . '");
-					}
-					if(ok) {
-						$.ajax({
-							type: "POST",
-							url: "' . helper::baseUrl() . 'save/" + $("#key").val(),
-							data: {module: newModule},
-							success: function() {
-								$("#oldModule").val(newModule);
-								if(newModule == "") {
-									admin.addClass("disabled");
-								}
-								else {
-									admin.removeClass("disabled");
-									admin.attr("target", "_blank")
-								}
-							},
-							error: function() {
-								alert("' . helper::translate('Impossible d\"enregistrer le module !') . '");
-								admin.addClass("disabled");
-							}
-						});
-					}
-				});
-			').
-			template::newRow().
-			template::checkbox('blank', true, 'Ouvrir dans un nouvel onglet en mode public', [
-				'checked' => $this->getData(['pages', $this->getUrl(0), 'blank'])
-			]).
-			template::newRow().
 			template::button('delete', [
 				'value' => 'Supprimer',
 				'href' => helper::baseUrl() . 'delete/' . $this->getUrl(0),
@@ -1315,12 +1361,16 @@ class core
 			'pages',
 			$this->getUrl(0),
 			[
-				'title' => $this->getData(['pages', $this->getUrl(0), 'title']),
-				'description' => $this->getData(['pages', $this->getUrl(0), 'description']),
-				'position' => $this->getData(['pages', $this->getUrl(0), 'position']),
+				// Si cette partie est modifiée il faut modifier : la création, l'édition, et l'enregistrement ajax de la page
 				'blank' => $this->getData(['pages', $this->getUrl(0), 'blank']),
+				'content' => $this->getData(['pages', $this->getUrl(0), 'content']),
+				'description' => $this->getData(['pages', $this->getUrl(0), 'description']),
+				'hideTitle' => $this->getData(['pages', $this->getUrl(0), 'hideTitle']),
+				'metaTitle' => $this->getData(['pages', $this->getUrl(0), 'metaTitle']),
 				'module' => $this->getPost('module', helper::STRING),
-				'content' => $this->getData(['pages', $this->getUrl(0), 'content'])
+				'parent' => $this->getData(['pages', $this->getUrl(0), 'parent']),
+				'position' => $this->getData(['pages', $this->getUrl(0), 'position']),
+				'title' => $this->getData(['pages', $this->getUrl(0), 'title'])
 			]
 		]);
 		// Enregistre les données
