@@ -537,7 +537,7 @@ class core
 				h6,
 				a,
 				.tabTitle.current,
-				.helpButton {
+				.helpButton span {
 					color: rgb(' . $elementColor . ');
 				}
 				input[type=\'text\']:hover,
@@ -568,7 +568,7 @@ class core
 				input[type=\'radio\']:not(:checked):active + label:before {
 					background-color: rgb(' . $elementColorDark . ');
 				}
-				.helpButton:hover {
+				.helpButton span:hover {
 					color: rgb(' . $elementColorDark . ');
 				}
 				
@@ -1977,7 +1977,7 @@ class core
 								h6,
 								a,
 								.tabTitle.current,
-								.helpButton {
+								.helpButton span {
 									color: rgb(" + color + ");
 								}
 								input[type=\'text\']:hover,
@@ -1997,7 +1997,7 @@ class core
 								input[type=\'radio\']:not(:checked):active + label:before {
 									background-color: rgb(" + colorDark + ");
 								}
-								.helpButton:hover {
+								.helpButton span:hover {
 									color: rgb(" + colorDark + ");
 								}
 								/* Couleur très foncée */
@@ -3321,7 +3321,7 @@ class template
 	 */
 	public static function help($text)
 	{
-		return '<span class="helpButton">' . self::ico('help') . '<span class="helpContent">' . helper::translate($text) . '</span></span>';
+		return '<span class="helpButton">' . self::ico('help') . '<div class="helpContent">' . helper::translate($text) . '</div></span>';
 	}
 
 	/**
