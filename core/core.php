@@ -1687,17 +1687,6 @@ class core
 						'value' => self::$version,
 						'disabled' => 'disabled'
 					]).
-					template::newRow().
-					template::button('clean', [
-						'value' => 'Vider le cache',
-						'href' => helper::baseUrl() . 'clean',
-						'col' => 3,
-					]).
-					template::button('export', [
-						'value' => 'Exporter les données',
-						'href' => helper::baseUrl() . 'export',
-						'col' => 4
-					]).
 					template::closeRow(),
 				'Personnalisation du thème' =>
 					template::subTitle('Fond de la page').
@@ -2037,9 +2026,19 @@ class core
 				});
 			').
 			template::openRow().
+			template::button('clean', [
+				'value' => 'Vider le cache',
+				'href' => helper::baseUrl() . 'clean',
+				'col' => 3,
+			]).
+			template::button('export', [
+				'value' => 'Exporter le contenu',
+				'href' => helper::baseUrl() . 'export',
+				'col' => 3
+			]).
 			template::submit('submit', [
 				'col' => 2,
-				'offset' => 10
+				'offset' => 4
 			]).
 			template::closeRow().
 			template::closeForm();
