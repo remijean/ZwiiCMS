@@ -840,6 +840,7 @@ td.col12 {
 /* Cache le titre de la bannière après l'ajout d'une image */
 .themeHeaderImage header {
 	font-size: 0; /* Fix le bug de whitespace */
+	padding: 0;
 }
 .themeHeaderImage header h1 {
 	display: none;
