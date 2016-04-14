@@ -484,7 +484,7 @@ class core
 		$md5Colors = md5(json_encode($this->getData('colors')));
 		if(!file_exists('core/cache/' . $md5Colors . '.css')) {
 			// Couleur du header
-			list($r, $g, $b) = helper::hexToRgb($this->getData(['colors', 'theme']));
+			list($r, $g, $b) = helper::hexToRgb($this->getData(['colors', 'header']));
 			$headerColor = $r . ',' . $g . ',' . $b;
 			$headerTextVariant = ($r + $g + $b / 3) < 350 ? '#FFF' : 'inherit';
 			// Couleurs du menu
@@ -1575,6 +1575,7 @@ class core
 			$this->setData([
 				'theme',
 				[
+					'backgroundImage' => $this->getPost('themeBackgroundImage', helper::URL),
 					'backgroundImageRepeat' => $this->getPost('themeBackgroundImageRepeat', helper::STRING),
 					'backgroundImagePosition' => $this->getPost('themeBackgroundImagePosition', helper::STRING),
 					'backgroundImageAttachment' => $this->getPost('themeBackgroundImageAttachment', helper::STRING),
@@ -1761,7 +1762,7 @@ class core
 							else {
 								themeBackgroundImageOptions.slideUp();
 							}
-						});
+						}).trigger("change");
 					').
 					template::closeRow().
 					template::subTitle('Site').

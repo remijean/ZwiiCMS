@@ -156,6 +156,7 @@ td > .col12 {
 /* Panneau */
 #panel {
 	background: #3C3C3C;
+	padding-left: 5px; /* Pour éviter que le select touche le bord lorsque la fenêtre est redimensionnée */
 }
 #panel:after {
 	content: " ";
@@ -218,6 +219,8 @@ td > .col12 {
 	}
 	#panel ul {
 		float: none !important;
+		height: 40px;
+		line-height: 40px;
 	}
 	#panel select {
 		width: 100%;
@@ -235,12 +238,12 @@ body > .container {
 /* Bannière */
 header {
 	overflow: hidden;
+	padding: 20px;
 }
 header h1 {
 	display: inline-block;
 	vertical-align: middle;
 	margin: 0;
-	padding: 20px 0;
 	font-size: 1.8em;
 	line-height: 1.2;
 }
@@ -748,15 +751,15 @@ td.col12 {
 /* Hauteur de la bannière */
 .themeHeaderHeightSmall header {
 	height: 80px;
-	line-height: 80px;
+	line-height: 40px; /* -40px à cause du padding de la bannière */
 }
 .themeHeaderHeightMedium header {
 	height: 160px;
-	line-height: 160px;
+	line-height: 120px; /* -40px à cause du padding de la bannière */
 }
 .themeHeaderHeightLarge header {
 	height: 320px;
-	line-height: 320px;
+	line-height: 280px; /* -40px à cause du padding de la bannière */
 }
 .themeHeaderHeightAuto header {
 	height: auto;
