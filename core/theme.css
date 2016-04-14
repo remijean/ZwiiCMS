@@ -99,10 +99,12 @@ table {
 	width: 100%;
 	border-spacing: 0;
 	border-collapse: collapse;
-	border: 1px solid #C5D1D4;
+}
+tr {
+	background: #F5F5F5;
 }
 tr:nth-child(2n + 2) {
-	background: #EEE;
+	background: #E9E9E9;
 }
 td {
 	padding: 10px;
@@ -492,7 +494,7 @@ input[type='radio'] + label:before {
 	line-height: 20px;
 	font-size: 10px;
 	font-weight: bold;
-	background: #D8E1E3;
+	background: #DDD;
 	vertical-align: top;
 }
 input[type='checkbox'].notice + label:before,
@@ -505,7 +507,7 @@ input[type='radio'] + label:before {
 input[type='checkbox']:hover + label:before,
 input[type='checkbox']:checked:active + label:before,
 input[type='radio']:hover + label:before {
-	background: #C5D1D4;
+	background: #CCC;
 }
 input[type='checkbox']:disabled + label:before,
 input[type='radio']:disabled + label:before {
