@@ -47,14 +47,15 @@ class core
 	/** @var array Url du site coupée à chaque "/" */
 	private $url;
 
-	/** @var array Liste des modules */
-	private static $modules = [
+	/** @var array Liste des modules du système */
+	private static $system = [
 		'clean',
 		'config',
 		'create',
 		'delete',
-		'edit',
+		// 'edit', faux module système
 		'export',
+		// 'login', faux module système
 		'logout',
 		'manager',
 		'mode',
@@ -252,7 +253,7 @@ class core
 			// Variable temporaire pour ne pas impacter la propriété $this->url avec le array_splice()
 			$url = $this->url;
 			// Supprime les modules système de $this->url[0] si ils sont présents
-			if($splice AND (in_array($url[0], self::$modules))) {
+			if($splice AND (in_array($url[0], self::$system))) {
 				array_splice($url, 0, 1);
 			}
 			// Retourne l'URL filtrée
@@ -315,12 +316,12 @@ class core
 	}
 
 	/**
-	 * Accède au mode d'affichage (ajoute "edit/" si le mode édition)
+	 * Accède au mode d'affichage
 	 * @return string
 	 */
 	public function getMode()
 	{
-		return empty($_SESSION['MODE']) ? '' : 'edit/';
+		return !empty($_SESSION['MODE']);
 	}
 
 	/**
@@ -385,10 +386,17 @@ class core
 	public function router()
 	{
 		// Module système
-		if(in_array($this->getUrl(0, false), self::$modules)) {
+		if(
+			// Si un module système est demandé et qu'il existe
+			in_array($this->getUrl(0, false), self::$system)
+			// Si le mode édition est activé et qu'une page est demandée
+			OR ($this->getMode() AND $page = $this->getData(['pages', $this->getUrl(0, false)]))
+		) {
+			// Retourne le module édition pour le cas "Si le mode édition est activé et qu'une page est demandée"
+			$module = isset($page) ? 'edit' : $this->getUrl(0, false);
 			// Si l'utilisateur est connecté le module système est retournée
 			if($this->getData(['config', 'password']) === $this->getCookie()) {
-				$method = $this->getUrl(0, false);
+				$method = $module;
 				$this->$method();
 			}
 			// Sinon il doit s'identifier
@@ -774,8 +782,6 @@ class core
 	 */
 	public function menu()
 	{
-		// Ajoute edit/ à l'URL si l'utilisateur est en mode édition
-		$edit = ($this->getCookie() === $this->getData(['config', 'password'])) ? $this->getMode() : false;
 		// Met en forme les items du menu
 		$items = '';
 		foreach($this->getHierarchy() as $parentKey => $childrenKeys) {
@@ -787,14 +793,14 @@ class core
 			$blank = ($this->getData(['pages', $parentKey, 'blank']) AND !$this->getMode()) ? ' target="_blank"' : '';
 			// Mise en page de l'item
 			$items .= '<li>';
-			$items .= '<a href="' . helper::baseUrl() . $edit . $parentKey . '"' . $current . $blank . '>' . $this->getData(['pages', $parentKey, 'title']) . '</a>';
+			$items .= '<a href="' . helper::baseUrl() . $parentKey . '"' . $current . $blank . '>' . $this->getData(['pages', $parentKey, 'title']) . '</a>';
 			$items .= '<ul>';
 			foreach($childrenKeys as $childKey) {
 				// Propriétés de l'item
 				$current = ($childKey === $this->getUrl(0)) ? ' class="current"' : '';
 				$blank = ($this->getData(['pages', $childKey, 'blank']) AND !$this->getMode()) ? ' target="_blank"' : '';
 				// Mise en page du sous-item
-				$items .= '<li><a href="' . helper::baseUrl() . $edit . $childKey . '"' . $current . $blank . '>' . $this->getData(['pages', $childKey, 'title']) . '</a></li>';
+				$items .= '<li><a href="' . helper::baseUrl() . $childKey . '"' . $current . $blank . '>' . $this->getData(['pages', $childKey, 'title']) . '</a></li>';
 			}
 			$items .= '</ul>';
 			$items .= '</li>';
@@ -995,11 +1001,11 @@ class core
 		$this->saveData();
 		// Notification de création
 		$this->setNotification('Nouvelle page créée avec succès !');
-		// Redirection vers l'édition de la page
-		helper::redirect('edit/' . $key);
+		// Redirection vers la page
+		helper::redirect($key);
 	}
 
-	/** Édition de page */
+	/** Édition de page (faux module système) */
 	public function edit()
 	{
 		// Erreur 404
@@ -1016,7 +1022,7 @@ class core
 			if($key !== $this->getUrl(0)) {
 				// Incrémente la nouvelle clef de la page pour éviter les doublons
 				$key = helper::increment($key, $this->getData('pages'));
-				$key = helper::increment($key, self::$modules); // Evite à une page d'avoir la même clef qu'un module système
+				$key = helper::increment($key, self::$system); // Evite à une page d'avoir la même clef qu'un module système
 				// Supprime l'ancienne page
 				$this->removeData(['pages', $this->getUrl(0)]);
 				// Crée les nouvelles données du module de la page (avec la nouvelle clef) en copiant les anciennes
@@ -1108,8 +1114,8 @@ class core
 			$this->saveData($removeAllCache);
 			// Notification de modification
 			$this->setNotification('Page modifiée avec succès !');
-			// Redirige vers la l'édition de la nouvelle page si la clef à changée ou sinon vers l'ancienne
-			helper::redirect('edit/' . $key);
+			// Redirige vers la nouvelle page si la clef à changée ou sinon vers l'ancienne
+			helper::redirect($key);
 		}
 		// Liste des pages sans parent
 		$pagesNoParent = ['' => 'Aucune'];
@@ -1326,8 +1332,8 @@ class core
 				// Notification de suppression
 				$this->setNotification('Page supprimée avec succès !');
 			}
-			// Redirige vers l'édition de la page d'accueil du site
-			helper::redirect('edit/' . $this->getData(['config', 'index']));
+			// Redirige vers la page d'accueil du site
+			helper::redirect($this->getData(['config', 'index']));
 		}
 		// Pour les fichiers
 		else {
@@ -1398,23 +1404,10 @@ class core
 	/** Redirection vers le bon mode (édition ou public) */
 	public function mode()
 	{
-		// Si page en mode public passe en mode edition et redirection vers mode édition
-		if($this->getData(['pages', $this->getUrl(0)])) {
-			$this->setMode(true);
-			$url = 'edit/' . $this->getUrl(0);
-		}
-		// Si page en mode édition passe en mode public et redirection vers mode public (utilisation de 0 pour détecter un module système car $this->getUrl() détecte déjà le module système "mode" en 0 et le supprime)
-		elseif(in_array($this->getUrl(0), ['edit', 'module'])) {
-			$this->setMode(false);
-			$url = $this->getUrl(1);
-		}
-		// Sinon switch le mode et redirection vers URL courante
-		else {
-			$this->setMode(!$this->getMode());
-			$url = $this->getUrl(0); // Voir commentaire du elseif précédent pour l'utilisation du 0
-		}
-		// Applique la redirection
-		helper::redirect($url);
+		// Switch de mode
+		$this->setMode(!$this->getMode());
+		// Redirection (utilisation de 0 pour détecter un module système car $this->getUrl() détecte déjà le module système "mode" en 0 et le supprime)
+		helper::redirect($this->getUrl(0));
 	}
 
 	/** Gestionnaire de fichiers */
@@ -2073,7 +2066,7 @@ class core
 		self::$layout = 'JSON';
 	}
 
-	/** Connexion */
+	/** Connexion (faux module système) */
 	public function login()
 	{
 		// Traitement du formulaire
