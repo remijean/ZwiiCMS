@@ -146,12 +146,14 @@ td > .col12 {
 	color: #F3674A;
 }
 
+/* Container */
+.container {
+	margin: auto;
+}
+
 /* Panneau */
 #panel {
 	background: #3C3C3C;
-}
-#panel .container {
-	margin: auto;
 }
 #panel:after {
 	content: " ";
@@ -236,7 +238,7 @@ header h1 {
 	display: inline-block;
 	vertical-align: middle;
 	margin: 0;
-	padding: 20px;
+	padding: 20px 0;
 	font-size: 1.8em;
 	line-height: 1.2;
 }

@@ -17,13 +17,17 @@
 <?php echo $this->panel() . $this->notification(); ?>
 <!-- Bannière dans le haut de page -->
 <header>
-	<h1><?php echo $this->getData(['config', 'title']); ?></h1>
+	<div class="container">
+		<h1><?php echo $this->getData(['config', 'title']); ?></h1>
+	</div>
 	<img src="<?php echo helper::baseUrl(false) . $this->getData(['theme', 'headerImage']); ?>" title="<?php echo $this->getData(['config', 'title']); ?>" alt="<?php echo $this->getData(['config', 'title']); ?>">
 </header>
 <!-- Menu dans le haut de page -->
 <div class="toggle"><?php echo template::ico('menu'); ?></div>
 <nav>
-	<ul><?php echo $this->menu(); ?></ul>
+	<div class="container">
+		<ul><?php echo $this->menu(); ?></ul>
+	</div>
 </nav>
 <!-- Site -->
 <div class="container">
