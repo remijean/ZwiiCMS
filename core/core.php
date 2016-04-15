@@ -75,16 +75,25 @@ class core
 		'zwiico' => true
 	];
 
+	/** @var array Liste des extensions autorisées à l'upload dans le gestionnaire de fichiers */
+	private static $managerExtensions = [
+		'7z',
+		'css',
+		'gif',
+		'html',
+		'ico',
+		'jpeg',
+		'jpg',
+		'pdf',
+		'png',
+		'rar',
+		'txt',
+		'xml',
+		'zip'
+	];
+
 	/** Version de ZwiiCMS */
 	private static $version = '7.5.1';
-
-	/** Récupère les données */
-	public function __construct()
-	{
-		if(empty($this->data)) {
-			$this->data = json_decode(file_get_contents('data/data.json'), true);
-		}
-	}
 
 	############################################################
 	# GETTERS/SETTERS
@@ -369,6 +378,14 @@ class core
 	############################################################
 	# SYSTÈME
 
+	/** Récupère les données */
+	public function __construct()
+	{
+		if(empty($this->data)) {
+			$this->data = json_decode(file_get_contents('data/data.json'), true);
+		}
+	}
+
 	/**
 	 * Auto-chargement des classes
 	 * @param string $className Nom de la classe à charger
@@ -635,11 +652,14 @@ class core
 		}
 	}
 
+	############################################################
+	# LAYOUT
+
 	/**
-	 * Importe les librairies
+	 * Met en forme l'import des librairies
 	 * @return string
 	 */
-	public function vendor()
+	public function writeVendor()
 	{
 		$vendor = '';
 		foreach(self::$vendor as $vendorName => $vendorStatus) {
@@ -676,7 +696,7 @@ class core
 	 * Met en forme le panneau d'administration
 	 * @return string
 	 */
-	public function panel()
+	public function writePanel()
 	{
 		// Crée le panneau seulement si l'utilisateur est connecté
 		if($this->getCookie() === $this->getData(['config', 'password'])) {
@@ -690,7 +710,7 @@ class core
 			$pages = helper::arrayCollumn($this->getData('pages'), 'title', 'SORT_ASC', true);
 			foreach($pages as $pageKey => $pageTitle) {
 				$current = ($pageKey === $this->getUrl(0)) ? ' selected' : false;
-				$left .= '<option value="' . helper::baseUrl() . $this->getMode() . $pageKey . '"' . $current . '>' . $pageTitle . '</option>';
+				$left .= '<option value="' . helper::baseUrl() . $pageKey . '"' . $current . '>' . $pageTitle . '</option>';
 			}
 			$left .= '</select></li>';
 			// Items de droite
@@ -708,7 +728,7 @@ class core
 	 * Met en forme la notification
 	 * @return string
 	 */
-	public function notification()
+	public function writeNotification()
 	{
 		$notification = $this->getNotification();
 		// Si une notice existe, affiche un message pour prévenir l'utilisateur
@@ -751,7 +771,7 @@ class core
 	 * Met en forme la liste des classes du thème
 	 * @return string
 	 */
-	public function theme()
+	public function writeTheme()
 	{
 		// Liste des classes
 		$class = [];
@@ -775,12 +795,12 @@ class core
 		}
 		return implode($class, ' ');
 	}
-	
+
 	/**
 	 * Met en forme le menu
 	 * @return string
 	 */
-	public function menu()
+	public function writeMenu()
 	{
 		// Met en forme les items du menu
 		$items = '';
@@ -806,14 +826,14 @@ class core
 			$items .= '</li>';
 		}
 		// Retourne les items du menu
-		return $items;
+		return '<ul>' . $items . '</ul>';
 	}
 
 	/**
 	 * Met en forme le contenu
 	 * @return string
 	 */
-	public function content()
+	public function writeContent()
 	{
 		// Affiche ou non le titre
 		$title = '';
@@ -825,10 +845,10 @@ class core
 	}
 
 	/**
-	 * Script Google Analytics
+	 * Met en forme le script Google Analytics
 	 * @return string
 	 */
-	public function analytics()
+	public function writeAnalytics()
 	{
 		$code = $this->getData(['config', 'analytics']);
 		// Check si ce n'est pas l'administrateur
@@ -844,10 +864,10 @@ class core
 	}
 
 	/**
-	 * Scripts communs
+	 * Met en forme les scripts communs
 	 * @return string
 	 */
-	public function scripts()
+	public function writeScripts()
 	{
 		$scripts = template::script('
 			// Modifications non enregistrées du formulaire
@@ -968,6 +988,17 @@ class core
 			');
 		}
 		return $scripts;
+	}
+
+	/**
+	 * Met en forme les scripts communs
+	 * @return string
+	 */
+	public function writeFavicon()
+	{
+		if($favicon = $this->getData(['config', 'favicon'])) {
+			return '<link rel="shortcut icon" href="' . $favicon . '">';
+		}
 	}
 
 	############################################################
@@ -1415,7 +1446,7 @@ class core
 	{
 		// Traitement du formulaire
 		if($this->getPost('submit')) {
-			$this->upload(['png', 'gif', 'jpg', 'jpeg', 'txt', 'pdf', 'zip', 'rar', '7z', 'css', 'html', 'xml']);
+			$this->upload(core::$managerExtensions);
 		}
 		// Met en forme les fichiers pour les afficher dans un tableau
 		$filesTable = [];
@@ -1450,7 +1481,7 @@ class core
 			template::openRow().
 			template::file('file', [
 				'label' => 'Parcourir mes fichiers',
-				'help' => 'Envoyez vos fichier sur votre site (formats autorisés : png, gif, jpg, jpeg, txt, pdf, zip, rar, 7z, css, html, xml).',
+				'help' => 'Les formats de fichiers autorisés sont : .' . implode(', .', core::$managerExtensions) . '.',
 				'col' => '10'
 			]).
 			template::submit('submit', [
@@ -1466,10 +1497,10 @@ class core
 	/**
 	 * Upload d'un fichier en POST et en AJAX
 	 * A importer entre un if($this->getPost()) en POST ; A appeler depuis un fichier JS en AJAX
-	 * @param array $extensions Extensions autorisées, par défaut seule les fichiers images sont autorisés
+	 * @param array $extensions Extensions autorisées
 	 * @return bool
 	 */
-	public function upload(array $extensions = ['png', 'gif', 'jpg', 'jpeg'])
+	public function upload(array $extensions = [])
 	{
 		// Erreur 404
 		if(!isset($_FILES['file'])) {
@@ -1552,13 +1583,14 @@ class core
 			$this->setData([
 				'config',
 				[
-					'title' => $this->getPost('title', helper::STRING),
+					'analytics' => $this->getPost('analytics', helper::STRING),
 					'description' => $this->getPost('description', helper::STRING),
-					'password' => $password,
+					'favicon' => $this->getPost('favicon', helper::URL),
+					'footer' => $this->getPost('footer', helper::STRING),
 					'index' => $this->getPost('index', helper::STRING),
 					'language' => $this->getPost('language', helper::STRING),
-					'analytics' => $this->getPost('analytics', helper::STRING),
-					'footer' => $this->getPost('footer', helper::STRING)
+					'password' => $password,
+					'title' => $this->getPost('title', helper::STRING)
 				]
 			]);
 			// Modifie les couleurs
@@ -1664,6 +1696,12 @@ class core
 					template::closeRow(),
 				'Configuration avancée' =>
 					template::openRow().
+					template::select('favicon', helper::listUploads('Aucune image', ['ico'], null, 16, 16), [
+						'label' => 'Favicon du site',
+						'help' => 'Seule une image de format .ico en 16x16 du gestionnaire de fichiers est acceptée.',
+						'selected' => $this->getData(['config', 'favicon'])
+					]).
+					template::newRow().
 					template::textarea('footer', [
 						'label' => 'Texte du bas de page',
 						'value' => $this->getData(['config', 'footer'])
@@ -1696,9 +1734,9 @@ class core
 						'value' => $this->getData(['colors', 'background']),
 						'col' => 6
 					]).
-					template::select('themeBackgroundImage', helper::listUploads('Aucune image', ['png', 'jpeg', 'jpg', 'gif']), [
+					template::select('themeBackgroundImage', helper::listUploads('Aucune image', ['png', 'gif', 'jpg', 'jpeg']), [
 						'label' => 'Image',
-						'help' => 'Seules les images png, gif, jpg ou jpeg du gestionnaire de fichiers sont acceptées.',
+						'help' => 'Seule une image de format .png, .gif, .jpg ou .jpeg du gestionnaire de fichiers est acceptée.',
 						'selected' => $this->getData(['theme', 'backgroundImage']),
 						'col' => 6
 					]).
@@ -1786,9 +1824,9 @@ class core
 						'value' => $this->getData(['colors', 'header']),
 						'col' => 6
 					]).
-					template::select('themeHeaderImage', helper::listUploads('Aucune image', ['png', 'jpeg', 'jpg', 'gif']), [
+					template::select('themeHeaderImage', helper::listUploads('Aucune image', ['png', 'gif', 'jpg', 'jpeg']), [
 						'label' => 'Remplacer le texte par une image',
-						'help' => 'Seules les images png, gif, jpg ou jpeg du gestionnaire de fichiers sont acceptées.',
+						'help' => 'Seule une image de format .png, .gif, .jpg ou .jpeg du gestionnaire de fichiers est acceptée.',
 						'selected' => $this->getData(['theme', 'headerImage']),
 						'col' => 6
 					]).
@@ -2394,11 +2432,14 @@ class helper
 
 	/**
 	 * Crée une liste des fichiers uploadés (format : chemin du fichier => fichier)
-	 * @param  mixed $default    Valeur par défaut
-	 * @param  mixed $extensions N'autorise que certains extensions
+	 * @param  mixed    $default    Valeur par défaut
+	 * @param  mixed    $extensions N'autorise que certains extensions
+	 * @param  null|int $size       N'autorise que les images de taille inférieure à x ko
+	 * @param  null|int $height     N'autorise que les images de x hauteur
+	 * @param  null|int $width      N'autorise que les images de x largeur
 	 * @return array
 	 */
-	public static function listUploads($default = false, array $extensions = [])
+	public static function listUploads($default = false, array $extensions = [], $size = null, $height = null, $width = null)
 	{
 		$uploads = [];
 		if($default) {
@@ -2406,8 +2447,31 @@ class helper
 		}
 		$it = new DirectoryIterator('data/upload/');
 		foreach($it as $file) {
-			if($file->isFile() AND $file->getBasename() !== '.gitkeep' AND (empty($extensions) OR in_array(strtolower($file->getExtension()), $extensions))) {
-				$uploads['data/upload/' . $file->getBasename()] = $file->getBasename();
+			if(
+				// Ingore les dossiers
+				$file->isFile()
+				// Ignore le fichier .gitkeep
+				AND $file->getBasename() !== '.gitkeep'
+				AND (
+					// Aucun check si aucune extension n'est précisée
+					empty($extensions)
+					// Ignore les fichiers avec une extension incorrecte
+					OR in_array(strtolower($file->getExtension()), $extensions)
+				)
+				// Ignore les fichiers trop volumineux
+				AND ($size === null OR $size < $file->getSize())
+			) {
+				if(
+					// Si le fichier est une image stock ses données dans une variable, sinon ignore le if
+					$imageSize = @getimagesize('data/upload/' . $file->getBasename())
+					// Ignore les fichiers qui dépassent la hauteur max
+					AND ($height !== null AND $height > $imageSize[1])
+					//Ignore les fichiers qui dépassent la largeur max
+					AND ($width !== null AND $width > $imageSize[0])
+				) {
+					continue;
+				}
+					$uploads['data/upload/' . $file->getBasename()] = $file->getBasename();
 			}
 		}
 		return $uploads;

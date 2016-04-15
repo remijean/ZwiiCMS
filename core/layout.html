@@ -5,16 +5,20 @@
 	<title><?php echo self::$metaTitle; ?></title>
 	<meta name="description" content="<?php echo self::$description; ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<!-- Import des librairies -->
-	<?php echo $this->vendor(); ?>
-	<!-- Import du thème et des couleurs -->
+	<!-- Ajout du favicon -->
+	<?php echo $this->writeFavicon(); ?>
+	<!-- Ajout des librairies -->
+	<?php echo $this->writeVendor(); ?>
+	<!-- Ajout du thème et des couleurs -->
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/theme.css">
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/cache/<?php echo md5(json_encode($this->getData('colors'))); ?>.css">
 </head>
 <!-- Ajout des classes du thème à la page -->
-<body class="<?php echo $this->theme(); ?>" style="background-image: url('<?php echo helper::baseUrl(false) . $this->getData(['theme', 'backgroundImage']); ?>');">
-<!-- Panneau d'administration et notifications -->
-<?php echo $this->panel() . $this->notification(); ?>
+<body class="<?php echo $this->writeTheme(); ?>" style="background-image: url('<?php echo helper::baseUrl(false) . $this->getData(['theme', 'backgroundImage']); ?>');">
+<!-- Ajout du panneau d'administration -->
+<?php echo $this->writePanel(); ?>
+<!-- Ajout des notifications -->
+<?php echo $this->writeNotification(); ?>
 <!-- Bannière dans le haut de page -->
 <header>
 	<div class="container">
@@ -26,7 +30,7 @@
 <div class="toggle"><?php echo template::ico('menu'); ?></div>
 <nav>
 	<div class="container">
-		<ul><?php echo $this->menu(); ?></ul>
+		<ul><?php echo $this->writeMenu(); ?></ul>
 	</div>
 </nav>
 <!-- Site -->
@@ -39,11 +43,13 @@
 	<!-- Menu dans le site -->
 	<div class="toggle"><?php echo template::ico('menu'); ?></div>
 	<nav>
-		<ul><?php echo $this->menu(); ?></ul>
+		<!-- Ajout du menu -->
+		<?php echo $this->writeMenu(); ?>
 	</nav>
 	<!-- Corps -->
 	<section>
-		<?php echo $this->content(); ?>
+		<!-- Ajout du contenu -->
+		<?php echo $this->writeContent(); ?>
 	</section>
 	<!-- Bas du site -->
 	<footer>
@@ -53,9 +59,9 @@
 </div>
 <!-- Lien remonter en haut -->
 <div id="backToTop"><?php echo template::ico('up'); ?></div>
-<!-- Coogle Analytics -->
-<?php echo $this->analytics(); ?>
-<!-- Scripts communs -->
-<?php echo $this->scripts(); ?>
+<!-- Ajout du code Google Analytics -->
+<?php echo $this->writeAnalytics(); ?>
+<!-- Ajout des scripts communs -->
+<?php echo $this->writeScripts(); ?>
 </body>
 </html>
