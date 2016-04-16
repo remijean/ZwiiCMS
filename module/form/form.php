@@ -147,7 +147,7 @@ class formAdm extends core
 		// Liste données entregistrées
 		if($this->getData([$this->getUrl(0), 'data'])) {
 			// Crée une pagination (retourne la première news et dernière news de la page et la liste des pages
-			$pagination = helper::pagination($this->getData([$this->getUrl(0), 'data']), $this->getUrl());
+			$pagination = helper::pagination($this->getData([$this->getUrl(0), 'data']), $this->getUrl(null, false), '#3');
 			// Inverse l'ordre du tableau pour afficher les données en ordre décroissant
 			$inputs = array_reverse($this->getData([$this->getUrl(0), 'data']));
 			// Crée l'affichage des données en fonction de la pagination
@@ -421,7 +421,7 @@ class formMod extends core
 					false,
 					$this->getData([$this->getUrl(0), 'config', 'mail']),
 					helper::translate('Nouvelle entrée dans votre formulaire'),
-					'<h2>' . helper::translate('Mail en provenance de votre site ZwiiCMS') . '</h2><h3>' . helper::baseUrl() . $this->getUrl() . '</h3><ul>' . $mail . '</ul>'
+					'<h2>' . helper::translate('Mail en provenance de votre site ZwiiCMS') . '</h2><h3>' . helper::baseUrl() . $this->getUrl(null, false) . '</h3><ul>' . $mail . '</ul>'
 				);
 			}
 			// Notification de soumission

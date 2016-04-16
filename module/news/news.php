@@ -47,7 +47,7 @@ class newsAdm extends core
 		// Liste les news
 		if($this->getData($this->getUrl(0))) {
 			// Crée une pagination (retourne la première news et dernière news de la page et la liste des pages
-			$pagination = helper::pagination($this->getData($this->getUrl(0)), $this->getUrl());
+			$pagination = helper::pagination($this->getData($this->getUrl(0)), $this->getUrl(null, false));
 			// Liste les news en les classant par date en ordre décroissant
 			$news = helper::arrayCollumn($this->getData($this->getUrl(0)), 'date', 'SORT_DESC');
 			// Met en forme les news pour les afficher dans un tableau
@@ -211,7 +211,7 @@ class newsMod extends core
 		// Contenu de la page
 		else {
 			// Crée une pagination (retourne la première news et dernière news de la page et la liste des pages
-			$pagination = helper::pagination($this->getData($this->getUrl(0)), $this->getUrl());
+			$pagination = helper::pagination($this->getData($this->getUrl(0)), $this->getUrl(null, false));
 			// Liste les news en classant les classant par date en ordre décroissant
 			$news = helper::arrayCollumn($this->getData($this->getUrl(0)), 'date', 'SORT_DESC');
 			// Crée l'affichage des news en fonction de la pagination

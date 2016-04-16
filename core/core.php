@@ -2796,11 +2796,12 @@ class helper
 
 	/**
 	 * Crée un système de pagination (retourne un tableau contenant les informations sur la pagination (first, last, pages))
-	 * @param  array  $array Tableau de donnée à utiliser
-	 * @param  string $url   URL à utiliser, la dernière partie doit correspondre au numéro de page, par défaut utiliser $this->getUrl()
+	 * @param  array    $array Tableau de donnée à utiliser
+	 * @param  string   $url   URL à utiliser, la dernière partie doit correspondre au numéro de page, par défaut utiliser $this->getUrl()
+	 * @param  null|int $tab   ID d'un onglet
 	 * @return array
 	 */
-	public static function pagination($array, $url)
+	public static function pagination($array, $url, $tab = null)
 	{
 		// Scinde l'url
 		$url = explode('/', $url);
@@ -2824,7 +2825,7 @@ class helper
 		for($i = 1; $i <= $nbPage; $i++)
 		{
 			$disabled = ($i === $currentPage) ? ' class="disabled"' : false;
-			$pages .= '<a href="' . helper::baseUrl() . $urlCurrent . '/' . $i . '"' . $disabled . '>' . $i . '</a>';
+			$pages .= '<a href="' . helper::baseUrl() . $urlCurrent . '/' . $i . $tab . '"' . $disabled . '>' . $i . '</a>';
 		}
 		// Retourne un tableau contenant les informations sur la pagination
 		return [
