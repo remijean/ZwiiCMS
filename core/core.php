@@ -2025,39 +2025,39 @@ class core
 					template::subTitle('Réseaux sociaux').
 					template::openRow().
 					template::text('facebook', [
-						'label' => 'ID Facebook',
+						'label' => 'Facebook',
 						'value' => $this->getData(['config', 'social', 'facebook']),
-						'help' => 'L\'ID correspond à la partie entre crochets : https://www.facebook.com/[VOTRE_ID]/',
+						'help' => 'Vous devez saisir la partie entre crochets : https://www.facebook.com/[VOTRE ID]/.',
 						'col' => 2
 					]).
 					template::text('googleplus', [
-						'label' => 'ID Google+',
+						'label' => 'Google+',
 						'value' => $this->getData(['config', 'social', 'googleplus']),
-						'help' => 'L\'ID correspond à la partie entre crochets : https://plus.google.com/[VOTRE_ID]/',
+						'help' => 'Vous devez saisir la partie entre crochets : https://plus.google.com/[VOTRE ID]/.',
 						'col' => 2
 					]).
 					template::text('instagram', [
-						'label' => 'ID Instagram',
+						'label' => 'Instagram',
 						'value' => $this->getData(['config', 'social', 'instagram']),
-						'help' => 'L\'ID correspond à la partie entre crochets : https://www.instagram.com/[VOTRE_ID]/',
+						'help' => 'Vous devez saisir la partie entre crochets : https://www.instagram.com/[VOTRE ID]/.',
 						'col' => 2
 					]).
 					template::text('pinterest', [
-						'label' => 'ID Pinterest',
+						'label' => 'Pinterest',
 						'value' => $this->getData(['config', 'social', 'pinterest']),
-						'help' => 'L\'ID correspond à la partie entre crochets : https://pinterest.com/[VOTRE_ID]/',
+						'help' => 'Vous devez saisir la partie entre crochets : https://pinterest.com/[VOTRE ID]/.',
 						'col' => 2
 					]).
 					template::text('twitter', [
-						'label' => 'ID Twitter+',
+						'label' => 'Twitter+',
 						'value' => $this->getData(['config', 'social', 'twitter']),
-						'help' => 'L\'ID correspond à la partie entre crochets : https://twitter.com/[VOTRE_ID]/',
+						'help' => 'Vous devez saisir la partie entre crochets : https://twitter.com/[VOTRE ID]/.',
 						'col' => 2
 					]).
 					template::text('youtube', [
-						'label' => 'ID Youtube',
+						'label' => 'Youtube',
 						'value' => $this->getData(['config', 'social', 'youtube']),
-						'help' => 'L\'ID correspond à la partie entre crochets : https://www.youtube.com/channel/[VOTRE_ID]/',
+						'help' => 'Vous devez saisir la partie entre crochets : https://www.youtube.com/channel/[VOTRE ID]/.',
 						'col' => 2
 					]).
 					template::closeRow().
