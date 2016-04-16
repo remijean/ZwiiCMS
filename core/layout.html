@@ -54,8 +54,12 @@
 	</section>
 	<!-- Bas du site -->
 	<footer>
-		<p><?php echo $this->getData(['config', 'footer']); ?></p>
-		<p><?php echo helper::translate('Motorisé par'); ?> <a href="http://zwiicms.com/" target="_blank">ZwiiCMS</a> | <a href="<?php echo helper::baseUrl(); ?>config"><?php echo helper::translate('Administration'); ?></a></p>
+		<!-- Ajout des réseaux sociaux -->
+		<?php echo $this->writeSocials(); ?>
+		<!-- Ajout du texte du bas du site -->
+		<?php echo $this->writeFooterText(); ?>
+		<!-- Copyright et lien d'administration -->
+		<?php echo helper::translate('Motorisé par'); ?> <a href="http://zwiicms.com/" target="_blank">ZwiiCMS</a> | <a href="<?php echo helper::baseUrl(); ?>config"><?php echo helper::translate('Administration'); ?></a>
 	</footer>
 </div>
 <!-- Lien remonter en haut -->

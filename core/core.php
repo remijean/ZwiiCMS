@@ -1072,6 +1072,58 @@ class core
 	}
 
 	/**
+	 * Met en forme les liens des réseaux sociaux
+	 * @return string
+	 */
+	public function writeSocials()
+	{
+		$socials = '';
+		foreach($this->getData(['config', 'social']) as $socialName => $socialId) {
+			// URL en fonction de réseau social
+			switch($socialName) {
+				case 'facebook':
+					$socialUrl = 'https://www.facebook.com/';
+					break;
+				case 'googleplus':
+					$socialUrl = 'https://plus.google.com/';
+					break;
+				case 'instagram':
+					$socialUrl = 'https://www.instagram.com/';
+					break;
+				case 'pinterest':
+					$socialUrl = 'https://pinterest.com/';
+					break;
+				case 'twitter':
+					$socialUrl = 'https://twitter.com/';
+					break;
+				case 'youtube':
+					$socialUrl = 'https://www.youtube.com/channel/';
+					break;
+				default:
+					$socialUrl = '';
+			}
+			if(!empty($socialId)) {
+				$socials .= '<a href="' . $socialUrl . $socialId . '" target="_blank">' . template::ico($socialName) . '</a>';
+			}
+		}
+		// Retourne les réseaux sociaux
+		if(!empty($socials)) {
+			return '<div id="socials">' . $socials . '</div>';
+		}
+	}
+
+	/**
+	 * Met en forme le texte du bas du site
+	 * @return string
+	 */
+	public function writeFooterText()
+	{
+		if($footer = $this->getData(['config', 'footer'])) {
+			return '<div id="text">' . $footer . '</div>';
+		}
+	}
+	
+	/**
 	 * Met en forme le script Google Analytics
 	 * @return string
 	 */
@@ -1823,6 +1875,14 @@ class core
 					'index' => $this->getPost('index', helper::STRING),
 					'language' => $this->getPost('language', helper::STRING),
 					'password' => $password,
+					'social' => [
+						'facebook' => $this->getPost('facebook', helper::STRING),
+						'googleplus' => $this->getPost('googleplus', helper::STRING),
+						'instagram' => $this->getPost('instagram', helper::STRING),
+						'pinterest' => $this->getPost('pinterest', helper::STRING),
+						'twitter' => $this->getPost('twitter', helper::STRING),
+						'youtube' => $this->getPost('youtube', helper::STRING)
+					],
 					'theme' => [
 						'class' => [
 							'backgroundImageRepeat' => $this->getPost('backgroundImageRepeat', helper::STRING),
@@ -1936,11 +1996,6 @@ class core
 						'selected' => $this->getData(['config', 'favicon'])
 					]).
 					template::newRow().
-					template::textarea('footer', [
-						'label' => 'Texte du bas de page',
-						'value' => $this->getData(['config', 'footer'])
-					]).
-					template::newRow().
 					template::text('analytics', [
 						'label' => 'Google Analytics',
 						'value' => $this->getData(['config', 'analytics']),
@@ -1948,12 +2003,58 @@ class core
 						'placeholder' => 'UA-XXXXXXXX-X',
 					]).
 					template::newRow().
+					template::textarea('footer', [
+						'label' => 'Texte du bas de page',
+						'value' => $this->getData(['config', 'footer'])
+					]).
+					template::newRow().
 					template::checkbox('rewrite', true, 'Activer la réécriture d\'URL', [
 						'checked' => helper::rewriteCheck(),
 						'help' => 'Supprime le point d\'interrogation de l\'URL (si vous n\'arrivez pas à cocher la case, vérifiez que le module d\'URL rewriting de votre serveur est bien activé).',
 						'disabled' => helper::modRewriteCheck() ? '' : 'disabled' // Check que l'URL rewriting fonctionne sur le serveur
 					]).
-					template::newRow().
+					template::closeRow().
+					template::subTitle('Réseaux sociaux').
+					template::openRow().
+					template::text('facebook', [
+						'label' => 'ID Facebook',
+						'value' => $this->getData(['config', 'social', 'facebook']),
+						'help' => 'L\'ID correspond à la partie entre crochets : https://www.facebook.com/[VOTRE_ID]/',
+						'col' => 2
+					]).
+					template::text('googleplus', [
+						'label' => 'ID Google+',
+						'value' => $this->getData(['config', 'social', 'googleplus']),
+						'help' => 'L\'ID correspond à la partie entre crochets : https://plus.google.com/[VOTRE_ID]/',
+						'col' => 2
+					]).
+					template::text('instagram', [
+						'label' => 'ID Instagram',
+						'value' => $this->getData(['config', 'social', 'instagram']),
+						'help' => 'L\'ID correspond à la partie entre crochets : https://www.instagram.com/[VOTRE_ID]/',
+						'col' => 2
+					]).
+					template::text('pinterest', [
+						'label' => 'ID Pinterest',
+						'value' => $this->getData(['config', 'social', 'pinterest']),
+						'help' => 'L\'ID correspond à la partie entre crochets : https://pinterest.com/[VOTRE_ID]/',
+						'col' => 2
+					]).
+					template::text('twitter', [
+						'label' => 'ID Twitter+',
+						'value' => $this->getData(['config', 'social', 'twitter']),
+						'help' => 'L\'ID correspond à la partie entre crochets : https://twitter.com/[VOTRE_ID]/',
+						'col' => 2
+					]).
+					template::text('youtube', [
+						'label' => 'ID Youtube',
+						'value' => $this->getData(['config', 'social', 'youtube']),
+						'help' => 'L\'ID correspond à la partie entre crochets : https://www.youtube.com/channel/[VOTRE_ID]/',
+						'col' => 2
+					]).
+					template::closeRow().
+					template::subTitle('Système').
+					template::openRow().
 					template::text('version', [
 						'label' => 'Version de ZwiiCMS',
 						'value' => self::$version,
@@ -2013,7 +2114,7 @@ class core
 						'col' => 6
 					]).
 					template::select('backgroundImage', helper::listUploads('Aucune image', ['png', 'jpeg', 'jpg', 'gif']), [
-						'label' => 'Image de fond du site',
+						'label' => 'Image du fond',
 						'help' => 'Seule une image de format .png, .gif, .jpg ou .jpeg du gestionnaire de fichiers est acceptée.',
 						'selected' => $this->getData(['config', 'theme', 'image', 'background']),
 						'col' => 6
