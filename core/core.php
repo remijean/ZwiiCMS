@@ -1861,20 +1861,17 @@ class core
 		// Traitement du formulaire
 		if($this->getPost('submit')) {
 			// Double vérification pour le mot de passe si il a changé
-			if($this->getPost('password')) {
-				// Change le mot de passe si la confirmation correspond au mot de passe
-				if($this->getPost('password') === $this->getPost('confirm')) {
-					$password = $this->getPost('password', helper::PASSWORD);
-				}
+			if($this->getPost('newPassword')) {
+				$newPassword = $this->getPost('newPassword', helper::PASSWORD);
 				// Ne change pas le mot de passe et crée une notice si la confirmation ne correspond pas au mot de passe
-				else {
-					$password = $this->getData(['config', 'password']);
-					template::$notices['confirm'] = 'La confirmation du mot de passe ne correspond pas au mot de passe';
+				if($newPassword !== $this->getPost('confirmPassword')) {
+					$newPassword = $this->getData(['config', 'password']);
+					template::$notices['confirmPassword'] = 'La confirmation ne correspond pas au mot de passe';
 				}
 			}
 			// Sinon conserve le mot de passe d'origine
 			else {
-				$password = $this->getData(['config', 'password']);
+				$newPassword = $this->getData(['config', 'password']);
 			}
 			// Modifie la configuration
 			$this->setData([
@@ -1886,7 +1883,7 @@ class core
 					'footer' => $this->getPost('footer', helper::STRING),
 					'index' => $this->getPost('index', helper::STRING),
 					'language' => $this->getPost('language', helper::STRING),
-					'password' => $password,
+					'password' => $newPassword,
 					'social' => [
 						'facebook' => $this->getPost('facebook', helper::STRING),
 						'googleplus' => $this->getPost('googleplus', helper::STRING),
@@ -1980,11 +1977,11 @@ class core
 						'value' => $this->getData(['config', 'description'])
 					]).
 					template::newRow().
-					template::password('password', [
+					template::password('newPassword', [
 						'label' => 'Nouveau mot de passe',
 						'col' => 6
 					]).
-					template::password('confirm', [
+					template::password('confirmPassword', [
 						'label' => 'Confirmation du mot de passe',
 						'col' => 6
 					]).
