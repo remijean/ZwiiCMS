@@ -1846,7 +1846,7 @@ class core
 				// Notification d'upload
 				$this->setNotification($data['success']);
 				// Redirige vers la page courante
-				helper::redirect($this->getUrl());
+				helper::redirect($this->getUrl(null, false));
 			}
 			// Sinon crée une notice en cas d'erreur
 			else {
@@ -1956,7 +1956,7 @@ class core
 			// Notification de modification
 			$this->setNotification('Configuration enregistrée avec succès !');
 			// Redirige vers l'URL courante
-			helper::redirect($this->getUrl());
+			helper::redirect($this->getUrl(null, false));
 		}
 		// Contenu de la page
 		self::$title = helper::translate('Configuration');
