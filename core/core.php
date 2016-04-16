@@ -94,22 +94,22 @@ class core
 
 	/** @var array Liste des polices de caractères Google Font */
 	public static $fonts = [
+		'Abril+Fatface' => 'Abril Fatface',
+		'Arvo' => 'Arvo',
+		'Berkshire+Swash' => 'Berkshire Swash',
+		'Dancing+Script' => 'Dancing Script',
+		'Inconsolata' => 'Inconsolata',
+		'Indie+Flower' => 'Indie Flower',
+		'Josefin+Slab' => 'Josefin Slab',
+		'Lato' => 'Lato',
+		'Lobster' => 'Lobster',
+		'Marvel' => 'Marvel',
+		'Old+Standard+TT' => 'Old Standard TT',
 		'Open+Sans' => 'Open Sans',
 		'Oswald' => 'Oswald',
-		'Arvo' => 'Arvo',
-		'Lato' => 'Lato',
-		'Ubuntu' => 'Ubuntu',
 		'Raleway' => 'Raleway',
-		'Inconsolata' => 'Inconsolata',
-		'Old+Standard+TT' => 'Old Standard TT',
-		'Josefin+Slab' => 'Josefin Slab',
-		'Abril+Fatface' => 'Abril Fatface',
-		'Indie+Flower' => 'Indie Flower',
-		'Lobster' => 'Lobster',
-		'Dancing+Script' => 'Dancing Script',
-		'Marvel' => 'Marvel',
-		'Berkshire+Swash' => 'Berkshire Swash',
-		'Rancho' => 'Rancho'
+		'Rancho' => 'Rancho',
+		'Ubuntu' => 'Ubuntu'
 	];
 
 	/** @var array Contenu par défaut de la base de données */
@@ -122,7 +122,6 @@ class core
 			'index' => 'accueil',
 			'language' => '',
 			'password' => '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8',
-			'title' => 'ZwiiCMS, votre site en quelques clics !',
 			'theme' => [
 				'class' => [
 					'backgroundImage' => '',
@@ -155,6 +154,14 @@ class core
 					'background' => '',
 					'header' => ''
 				]
+			],
+			'social' => [
+				'facebook' => 'ZwiiCMS',
+				'googleplus' => '',
+				'instagram' => '',
+				'pinterest' => '',
+				'twitter' => 'ZwiiCMS',
+				'youtube' => ''
 			]
 		],
 		'page' => [
