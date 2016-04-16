@@ -745,11 +745,11 @@ td.col12 {
  * Classes rapides
  */
 
-.hide {
+.displayNone {
 	display: none;
 }
-.clear {
-	clear: both;
+.backgroundWhite {
+	background: #FFF;
 }
 
 /**

@@ -29,7 +29,7 @@ class redirectionAdm extends core
 			// Notification de succès
 			$this->setNotification('URL de redirection enregistrée avec succès !');
 			// Redirige vers l'URL courante
-			helper::redirect($this->getUrl());
+			helper::redirect($this->getUrl(null, false));
 		}
 		// Contenu de la page
 		self::$content =

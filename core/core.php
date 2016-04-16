@@ -613,23 +613,27 @@ class core
 	public function router()
 	{
 		// Module système
-		if(
-			// Si un module système est demandé et qu'il existe
-			in_array($this->getUrl(0, false), self::$system)
-			// Si le mode édition est activé et qu'une page est demandée
-			OR ($this->getMode() AND $page = $this->getData(['page', $this->getUrl(0, false)]))
-		) {
-			// Retourne le module édition pour le cas "Si le mode édition est activé et qu'une page est demandée"
-			$module = isset($page) ? 'edit' : $this->getUrl(0, false);
+		if(in_array($this->getUrl(0, false), self::$system)) {
 			// Si l'utilisateur est connecté le module système est retournée
 			if($this->getData(['config', 'password']) === $this->getCookie()) {
-				$method = $module;
+				$method = $this->getUrl(0, false);
 				$this->$method();
 			}
 			// Sinon il doit s'identifier
 			else {
 				$this->login();
 			}
+		}
+		// Module système d'édition si :
+		// - L'utilisateur est connecté
+		// - Le mode édition est activé
+		// - Une page est demandée
+		elseif(
+			$this->getData(['config', 'password']) === $this->getCookie()
+			AND $this->getMode()
+			AND $page = $this->getData(['page', $this->getUrl(0, false)])
+		) {
+			$this->edit();
 		}
 		// Page et module de page
 		elseif($this->getData(['page', $this->getUrl(0, false)])) {
@@ -1216,7 +1220,7 @@ class core
 							enctype: "multipart/form-data",
 							method: "post"
 						}).append(
-							$("<input>").addClass("hide").attr({
+							$("<input>").addClass("displayNone").attr({
 								id: "editorFile",
 								type: "file"
 							}),
@@ -1459,14 +1463,14 @@ class core
 					template::text('title', [
 						'label' => 'Titre de la page',
 						'value' => $this->getData(['page', $this->getUrl(0), 'title']),
-						'required' => true
+						'required' => 'required'
 					]).
 					template::newRow().
 					template::select('parent', $pagesNoParent, [
 						'label' => 'Page parente',
 						'selected' => $selected,
 						'col' => 6,
-						'classWrapper' => (empty($hierarchy[$this->getUrl(0)]) ?: 'hide')
+						'classWrapper' => (empty($hierarchy[$this->getUrl(0)]) ?: 'displayNone')
 					]).
 					template::select('position', [], [
 						'label' => 'Position dans le menu',
@@ -2076,7 +2080,7 @@ class core
 						'label' => 'Fond du site',
 						'value' => $this->getData(['config', 'theme', 'color', 'background']),
 						'transparent' => false,
-						'required' => true,
+						'required' => 'required',
 						'col' => 3
 					]).
 					template::colorPicker('headerColor', [
@@ -2093,7 +2097,7 @@ class core
 						'label' => 'Éléments',
 						'value' => $this->getData(['config', 'theme', 'color', 'element']),
 						'transparent' => false,
-						'required' => true,
+						'required' => 'required',
 						'col' => 3
 					]).
 					template::closeRow().
@@ -2130,7 +2134,7 @@ class core
 					template::newRow().
 					template::div([
 						'id' => 'backgroundImageOptions',
-						'class' => 'hide',
+						'class' => 'displayNone',
 						'text' =>
 							template::select('backgroundImageRepeat', [
 								'themeBackgroundImageRepeatNo' => 'Ne pas répéter',
@@ -2226,7 +2230,7 @@ class core
 					template::newRow().
 					template::checkbox('headerMargin', true, 'Aligne la bannière avec le contenu du site', [
 						'checked' => $this->getData(['config', 'theme', 'class', 'headerMargin']),
-						'class' => 'hide'
+						'class' => 'displayNone'
 					]).
 					template::script('
 						// Affiche/cache l\'alignement de la bannière avec le contenu du site
@@ -2274,7 +2278,7 @@ class core
 					template::newRow().
 					template::checkbox('menuMargin', true, 'Aligne le menu avec le contenu du site', [
 						'checked' => $this->getData(['config', 'theme', 'class', 'menuMargin']),
-						'class' => 'hide'
+						'class' => 'displayNone'
 					]).
 					template::script('
 						// Affiche/cache l\'alignement du menu avec le contenu du site
@@ -2562,7 +2566,7 @@ class core
 				$this->setNotification('Mot de passe incorrect !', true);
 			}
 			// Redirection vers l'URL courante
-			helper::redirect($this->getUrl());
+			helper::redirect($this->getUrl(null, false));
 		}
 		// Contenu de la page
 		self::$title = helper::translate('Connexion');
@@ -3057,12 +3061,12 @@ class template
 
 	/**
 	 * Retourne une notice pour les champs obligatoires
-	 * @param  string|int $key
+	 * @param string $name Nom du champ
 	 */
-	public static function getRequired($key)
+	public static function getRequired($name)
 	{
-		if(!empty($_SESSION['REQUIRED']) AND array_key_exists($key . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED'])) {
-			self::$notices[$key] = 'Ce champ est requis';
+		if(!empty($_SESSION['REQUIRED']) AND array_key_exists($name . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED'])) {
+			self::$notices[$name] = 'Ce champ est requis';
 		}
 	}
 
@@ -3094,11 +3098,11 @@ class template
 
 	/**
 	 * Valeur du champ avant validation et erreur dans le formulaire
-	 * @param  string $nameId Nom ou id du champ
+	 * @param  string $id Dd du champ
 	 * @return mixed
 	 */
-	private static function getBefore($nameId) {
-		return array_key_exists($nameId, self::$before) ? self::$before[$nameId] : null;
+	private static function getBefore($id) {
+		return array_key_exists($id, self::$before) ? self::$before[$id] : null;
 	}
 
 	/**
@@ -3271,7 +3275,7 @@ class template
 			'class' => ''
 		], $attributes);
 		// Sauvegarde des données en cas d'erreur
-		if(($value = self::getBefore($nameId)) !== null) {
+		if(($value = self::getBefore($attributes['id'])) !== null) {
 			$attributes['value'] = $value;
 		}
 		// Texte
@@ -3305,22 +3309,22 @@ class template
 			'offset' => 0
 		], $attributes);
 		// Champ requis
-		self::setRequired($nameId, $attributes);
+		self::setRequired($attributes['id'], $attributes);
 		// Sauvegarde des données en cas d'erreur
-		if(($value = self::getBefore($nameId)) !== null) {
+		if(($value = self::getBefore($attributes['id'])) !== null) {
 			$attributes['value'] = $value;
 		}
 		// Début col
-		$html = '<div id="' . $nameId . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper']. '">';
+		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper']. '">';
 		// Label
 		if($attributes['label']) {
-			$html .= self::label($nameId, $attributes['label'], [
+			$html .= self::label($attributes['id'], $attributes['label'], [
 				'help' => $attributes['help']
 			]);
 		}
 		// Notice
-		if(!empty(self::$notices[$nameId])) {
-			$html .= self::getNotice($nameId);
+		if(!empty(self::$notices[$attributes['id']])) {
+			$html .= self::getNotice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
 		// Texte
@@ -3359,22 +3363,22 @@ class template
 			'offset' => 0
 		], $attributes);
 		// Champ requis
-		self::setRequired($nameId, $attributes);
+		self::setRequired($attributes['id'], $attributes);
 		// Sauvegarde des données en cas d'erreur
-		if(($value = self::getBefore($nameId)) !== null) {
+		if(($value = self::getBefore($attributes['id'])) !== null) {
 			$attributes['value'] = $value;
 		}
 		// Début col
-		$html = '<div id="' . $nameId . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
+		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Label
 		if($attributes['label']) {
-			$html .= self::label($nameId, $attributes['label'], [
+			$html .= self::label($attributes['id'], $attributes['label'], [
 				'help' => $attributes['help']
 			]);
 		}
 		// Notice
-		if(!empty(self::$notices[$nameId])) {
-			$html .= self::getNotice($nameId);
+		if(!empty(self::$notices[$attributes['id']])) {
+			$html .= self::getNotice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
 		// Texte long
@@ -3393,7 +3397,7 @@ class template
 				var language = navigator.languages ? navigator.languages[0] : (navigator.language || navigator.userLanguage);
 				var body = $("body");
 				tinymce.init({
-					selector: "#' . $nameId . '",
+					selector: "#' . $attributes['id'] . '",
 					language: language.split("-")[0],
 					plugins: "advlist anchor autolink autoresize charmap code colorpicker contextmenu fullscreen hr image imagetools legacyoutput link lists media nonbreaking noneditable paste preview print searchreplace tabfocus table textcolor textpattern visualchars wordcount",
 					toolbar: "insertfile undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media",
@@ -3436,18 +3440,18 @@ class template
 			'offset' => 0
 		], $attributes);
 		// Champ requis
-		self::setRequired($nameId, $attributes);
+		self::setRequired($attributes['id'], $attributes);
 		// Début col
-		$html = '<div id="' . $nameId . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
+		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Label
 		if($attributes['label']) {
-			$html .= self::label($nameId, $attributes['label'], [
+			$html .= self::label($attributes['id'], $attributes['label'], [
 				'help' => $attributes['help']
 			]);
 		}
 		// Notice
-		if(!empty(self::$notices[$nameId])) {
-			$html .= self::getNotice($nameId);
+		if(!empty(self::$notices[$attributes['id']])) {
+			$html .= self::getNotice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
 		// Mot de passe
@@ -3484,22 +3488,22 @@ class template
 			'offset' => 0
 		], $attributes);
 		// Champ requis
-		self::setRequired($nameId, $attributes);
+		self::setRequired($attributes['id'], $attributes);
 		// Sauvegarde des données en cas d'erreur
-		if(($value = self::getBefore($nameId)) !== null) {
+		if(($value = self::getBefore($attributes['id'])) !== null) {
 			$attributes['value'] = $value;
 		}
 		// Début col
-		$html = '<div id="' . $nameId . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
+		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Label
 		if($attributes['label']) {
-			$html .= self::label($nameId, $attributes['label'], [
+			$html .= self::label($attributes['id'], $attributes['label'], [
 				'help' => $attributes['help']
 			]);
 		}
 		// Notice
-		if(!empty(self::$notices[$nameId])) {
-			$html .= self::getNotice($nameId);
+		if(!empty(self::$notices[$attributes['id']])) {
+			$html .= self::getNotice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
 		// Texte
@@ -3537,22 +3541,22 @@ class template
 			'offset' => 0
 		], $attributes);
 		// Champ requis
-		self::setRequired($nameId, $attributes);
+		self::setRequired($attributes['id'], $attributes);
 		// Sauvegarde des données en cas d'erreur
-		if($selected = self::getBefore($nameId)) {
+		if($selected = self::getBefore($attributes['id'])) {
 			$attributes['selected'] = $selected;
 		}
 		// Début col
-		$html = '<div id="' . $nameId . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
+		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Label
 		if($attributes['label']) {
-			$html .= self::label($nameId, $attributes['label'], [
+			$html .= self::label($attributes['id'], $attributes['label'], [
 				'help' => $attributes['help']
 			]);
 		}
 		// Notice
-		if(!empty(self::$notices[$nameId])) {
-			$html .= self::getNotice($nameId);
+		if(!empty(self::$notices[$attributes['id']])) {
+			$html .= self::getNotice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
 		// Début sélection
@@ -3602,9 +3606,9 @@ class template
 			'offset' => 0
 		], $attributes);
 		// Champ requis
-		self::setRequired($nameId, $attributes);
+		self::setRequired($attributes['id'], $attributes);
 		// Sauvegarde des données en cas d'erreur
-		if(($value = self::getBefore($nameId)) !== null) {
+		if(($value = self::getBefore($attributes['id'])) !== null) {
 			$attributes['value'] = $value;
 		}
 		// Message d'aide si la transparence est activée
@@ -3612,16 +3616,16 @@ class template
 			$attributes['help'] = 'Vous pouvez utiliser la transparence en laissant le champ vide.';
 		}
 		// Début col
-		$html = '<div id="' . $nameId . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper']. '">';
+		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper']. '">';
 		// Label
 		if($attributes['label']) {
-			$html .= self::label($nameId, $attributes['label'], [
+			$html .= self::label($attributes['id'], $attributes['label'], [
 				'help' => $attributes['help']
 			]);
 		}
 		// Notice
-		if(!empty(self::$notices[$nameId])) {
-			$html .= self::getNotice($nameId);
+		if(!empty(self::$notices[$attributes['id']])) {
+			$html .= self::getNotice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
 		// Texte
@@ -3651,6 +3655,8 @@ class template
 	{
 		// Attributs possibles
 		$attributes = array_merge([
+			'id' => $nameId,
+			'name' => $nameId,
 			'checked' => '',
 			'disabled' => '',
 			'required' => '',
@@ -3661,24 +3667,24 @@ class template
 			'offset' => 0
 		], $attributes);
 		// Champ requis
-		self::setRequired($nameId, $attributes);
+		self::setRequired($attributes['id'], $attributes);
 		// Début col
-		$html = '<div id="' . $nameId . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
+		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Notice
-		if(!empty(self::$notices[$nameId])) {
-			$html .= self::getNotice($nameId);
+		if(!empty(self::$notices[$attributes['id']])) {
+			$html .= self::getNotice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
 		// Case à cocher
 		$html .= sprintf(
 			'<input type="checkbox" id="%s" name="%s" value="%s" %s>',
-			$nameId . '_' . $value,
-			$nameId . '[]',
+			$attributes['id'] . '_' . $value,
+			$attributes['name'] . '[]',
 			$value,
-			self::sprintAttributes($attributes)
+			self::sprintAttributes($attributes, ['id', 'name'])
 		);
 		// Label
-		$html .= self::label($nameId . '_' . $value, $label, [
+		$html .= self::label($attributes['id'] . '_' . $value, $label, [
 			'help' => $attributes['help']
 		]);
 		// Fin col
@@ -3699,6 +3705,8 @@ class template
 	{
 		// Attributs possibles
 		$attributes = array_merge([
+			'id' => $nameId,
+			'name' => $nameId,
 			'checked' => '',
 			'disabled' => '',
 			'required' => '',
@@ -3709,24 +3717,24 @@ class template
 			'offset' => 0
 		], $attributes);
 		// Champ requis
-		self::setRequired($nameId, $attributes);
+		self::setRequired($attributes['id'], $attributes);
 		// Début col
-		$html = '<div id="' . $nameId . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
+		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Notice
-		if(!empty(self::$notices[$nameId])) {
-			$html .= self::getNotice($nameId);
+		if(!empty(self::$notices[$attributes['id']])) {
+			$html .= self::getNotice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
 		// Case à cocher
 		$html .= sprintf(
 			'<input type="radio" id="%s" name="%s" value="%s" %s>',
-			$nameId . '_' . $value,
-			$nameId . '[]',
+			$attributes['id'] . '_' . $value,
+			$attributes['name'] . '[]',
 			$value,
-			self::sprintAttributes($attributes)
+			self::sprintAttributes($attributes, ['id', 'name'])
 		);
 		// Label
-		$html .= self::label($nameId . '_' . $value, $label, [
+		$html .= self::label($attributes['id'] . '_' . $value, $label, [
 			'help' => $attributes['help']
 		]);
 		// Fin col
@@ -3755,7 +3763,7 @@ class template
 			'offset' => 0
 		], $attributes);
 		// Début col
-		$html = '<div id="' . $nameId . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
+		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Bouton
 		$html .= sprintf(
 			'<input type="submit" value="%s" %s>',
@@ -3792,7 +3800,7 @@ class template
 		], $attributes);
 
 		// Début col
-		$html = '<div id="' . $nameId . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
+		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Bouton
 		$html .= sprintf(
 			'<a %s class="button %s %s">%s</a>',
@@ -3801,31 +3809,6 @@ class template
 			$attributes['class'],
 			helper::translate($attributes['value'])
 		);
-		// Fin col
-		$html .= '</div>';
-		// Retourne le html
-		return $html;
-	}
-
-	/**
-	 * Crée un background
-	 * @param  array  $text       Test à afficher dans le background
-	 * @param  array  $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
-	 * @return string
-	 */
-	public static function background($text, array $attributes = [])
-	{
-		// Attributs possibles
-		$attributes = array_merge([
-			'class' => '',
-			'classWrapper' => '',
-			'col' => 12,
-			'offset' => 0
-		], $attributes);
-		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
-		// Background
-		$html .= '<div class="background ' . $attributes['class']. '">' . helper::translate($text) . '</div>';
 		// Fin col
 		$html .= '</div>';
 		// Retourne le html
@@ -3903,7 +3886,7 @@ class template
 				'text' => $title
 			]);
 			$contents .= self::div([
-				'class' => 'tabContent ' . $id . ($i === 1 ? '' : ' hide'),
+				'class' => 'tabContent ' . $id . ($i === 1 ? '' : ' displayNone'),
 				'data-1' => $i,
 				'text' => $content
 			]);

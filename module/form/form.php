@@ -17,9 +17,6 @@ class formAdm extends core
 	/** @var string Nom du module */
 	public static $name = 'Générateur de formulaire';
 
-	/** @var array Liste des vues du module */
-	public static $views = ['send', 'data'];
-
 	/** @var array Liste des types */
 	public static $types = [
 		'text' => 'Champ texte',
@@ -59,16 +56,17 @@ class formAdm extends core
 			]);
 			// Génération des champs
 			$inputs = [];
-			foreach($this->getPost('position') as $key => $value) {
-				$value = helper::filter($value, helper::INT);
-				// Supprime le premier élément (= le champ caché pour la copie)
-				if(!empty($value)) {
+			foreach($this->getPost('position') as $index => $position) {
+				$position = helper::filter($position, helper::INT);
+				// Supprime le premier élément (= le champ caché pour la copie) car il n'a pas de position
+				if(!empty($position)) {
 					$inputs[] = [
-						'position' => $value,
-						'name' => $this->getPost(['name', $key], helper::STRING),
-						'type' => $this->getPost(['type', $key], helper::STRING),
-						'values' => $this->getPost(['values', $key], helper::STRING),
-						'width' => $this->getPost(['width', $key], helper::INT)
+						'name' => $this->getPost(['name', $index], helper::STRING),
+						'position' => $position,
+						'required' => $this->getPost(['required', $index], helper::BOOLEAN),
+						'type' => $this->getPost(['type', $index], helper::STRING),
+						'values' => $this->getPost(['values', $index], helper::STRING),
+						'width' => $this->getPost(['width', $index], helper::INT)
 					];
 				}
 			}
@@ -80,7 +78,7 @@ class formAdm extends core
 			// Notification de succès
 			$this->setNotification('Formulaire enregistré avec succès !');
 			// Redirige vers l'URL courante
-			helper::redirect($this->getUrl());
+			helper::redirect($this->getUrl(null, false));
 		}
 		// Liste des champs
 		if($this->getData([$this->getUrl(0), 'input'])) {
@@ -89,83 +87,142 @@ class formAdm extends core
 			// Crée l'affichage des champs en fonction
 			for($i = 0; $i < count($inputs); $i++) {
 				self::$content .=
-					template::openRow().
-					template::hidden('position[]', [
-						'value' => $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'position']),
-						'class' => 'position'
-					]).
-					template::button('move[]', [
-						'value' => template::ico('up-down'),
-						'class' => 'move',
-						'col' => 1
-					]).
-					template::text('name[]', [
-						'placeholder' => 'Nom',
-						'value' => $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'name']),
-						'col' => 3
-					]).
-					template::select('type[]', self::$types, [
-						'selected'  => $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'type']),
-						'class' => 'type',
-						'col' => 2
-					]).
-					template::text('values[]', [
-						'placeholder' => 'Liste des valeurs (valeur1,valeur2,...)',
-						'value' => $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'values']),
-						'class' => 'values',
-						'col' => 3
-					]).
-					template::select('width[]', self::$widths, [
-						'selected' => (int) $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'width']),
-						'col' => 2
-					]).
-					template::button('delete[]', [
-						'value' => template::ico('minus'),
-						'class' => 'delete',
-						'col' => 1
-					]).
-					template::closeRow();
+					template::div([
+						'class' => 'input backgroundWhite',
+						'text' =>
+							template::openRow().
+							template::hidden('position[]', [
+								'value' => $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'position']),
+								'class' => 'position'
+							]).
+							template::button('move[]', [
+								'value' => template::ico('up-down'),
+								'class' => 'move',
+								'col' => 1
+							]).
+							template::text('name[]', [
+								'placeholder' => 'Nom',
+								'value' => $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'name']),
+								'col' => 2
+							]).
+							template::select('type[]', self::$types, [
+								'selected'  => $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'type']),
+								'class' => 'type',
+								'col' => 2
+							]).
+							template::text('values[]', [
+								'placeholder' => 'Liste des valeurs (valeur1,valeur2,...)',
+								'value' => $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'values']),
+								'class' => 'values',
+								'col' => 3
+							]).
+							template::select('width[]', self::$widths, [
+								'selected' => (int) $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'width']),
+								'col' => 2
+							]).
+							template::button('more[]', [
+								'value' => template::ico('gear'),
+								'class' => 'moreToggle',
+								'col' => 1
+							]).
+							template::button('delete[]', [
+								'value' => template::ico('minus'),
+								'class' => 'delete',
+								'col' => 1
+							]).
+							template::closeRow().
+							template::div([
+								'class' => 'more displayNone',
+								'text' =>
+									template::openRow().
+									template::checkbox('required', true, 'Champ obligatoire', [
+										'id' => 'required_' . uniqid(), // Sinon les checkboxs ont le même nom et elles plantent
+										'checked' => $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'required'])
+									]).
+									template::closeRow()
+							])
+					]);
 			}
+		}
+		// Liste données entregistrées
+		if($this->getData([$this->getUrl(0), 'data'])) {
+			// Crée une pagination (retourne la première news et dernière news de la page et la liste des pages
+			$pagination = helper::pagination($this->getData([$this->getUrl(0), 'data']), $this->getUrl());
+			// Inverse l'ordre du tableau pour afficher les données en ordre décroissant
+			$inputs = array_reverse($this->getData([$this->getUrl(0), 'data']));
+			// Crée l'affichage des données en fonction de la pagination
+			$row = [];
+			for($i = $pagination['first']; $i < $pagination['last']; $i++) {
+				$content = '';
+				foreach($inputs[$i] as $input => $value) {
+					$content .= $input . ' : ' . $value . '<br>';
+				}
+				$row[] = [$content];
+			}
+			// Tableau et liste des pages
+			$data =
+				template::openRow().
+				template::table([12], $row).
+				template::closeRow().
+				$pagination['page'];
 		}
 		// Contenu de la page
 		self::$vendor['jquery-ui'] = true;
 		self::$content =
 			template::div([
 				'id' => 'copy',
-				'class' => 'hide',
+				'class' => 'displayNone',
 				'text' =>
-					template::openRow().
-					template::hidden('position[]', [
-						'class' => 'position'
-					]).
-					template::button('move[]', [
-						'value' => template::ico('up-down'),
-						'class' => 'move',
-						'col' => 1
-					]).
-					template::text('name[]', [
-						'placeholder' => 'Nom',
-						'col' => 3
-					]).
-					template::select('type[]', self::$types, [
-						'class' => 'type',
-						'col' => 2
-					]).
-					template::text('values[]', [
-						'placeholder' => 'Liste des valeurs (valeur1,valeur2,...)',
-						'class' => 'values',
-						'col' => 3
-					]).
-					template::select('width[]', self::$widths, [
-						'selected' => 12,
-						'col' => 2
-					]).
-					template::button('delete[]', [
-						'value' => template::ico('minus'),
-						'class' => 'delete',
-						'col' => 1
-					]).
-					template::closeRow()
+					template::div([
+						'class' => 'input backgroundWhite',
+						'text' =>
+							template::openRow().
+							template::hidden('position[]', [
+								'class' => 'position'
+							]).
+							template::button('move[]', [
+								'value' => template::ico('up-down'),
+								'class' => 'move',
+								'col' => 1
+							]).
+							template::text('name[]', [
+								'placeholder' => 'Nom',
+								'col' => 2
+							]).
+							template::select('type[]', self::$types, [
+								'class' => 'type',
+								'col' => 2
+							]).
+							template::text('values[]', [
+								'placeholder' => 'Liste des valeurs (valeur1,valeur2,...)',
+								'class' => 'values',
+								'col' => 3
+							]).
+							template::select('width[]', self::$widths, [
+								'selected' => 12,
+								'col' => 2
+							]).
+							template::button('more[]', [
+								'value' => template::ico('gear'),
+								'class' => 'moreToggle',
+								'col' => 1
+							]).
+							template::button('delete[]', [
+								'value' => template::ico('minus'),
+								'class' => 'delete',
+								'col' => 1
+							]).
+							template::closeRow().
+							template::div([
+								'class' => 'more displayNone',
+								'text' =>
+									template::openRow().
+									template::checkbox('required', true, 'Champ obligatoire', [
+										'id' => 'required_' . uniqid() // Sinon les checkboxs ont le même nom et elles plantent
+									]).
+									template::closeRow()
+							])
+					])
 			]).
 			template::openForm().
 			template::tabs([
@@ -182,15 +239,20 @@ class formAdm extends core
 					]).
 					template::closeRow().
 					template::script('
-						// Copie du champ type
+						// Afficher/cacher les options supplémentaires
+						$(".moreToggle").on("click", function() {
+							$(this).parents(".input").find(".more").slideToggle();
+						});
+						
+						// Copie des champs cachés
 						var copy = $("#copy").html();
 						
-						// Crée un nouveau champ à partir du champ type
+						// Crée un nouveau champ à partir des champs cachés
 						$("#add").on("click", function() {
 							// Colle le nouveau champ
 							$("#inputs")
 								.append($(copy).hide())
-								.find(".row").last().slideDown();
+								.find(".input").last().slideDown();
 							// Check les types
 							$(".type").trigger("change");
 							// Actualise les positions
@@ -220,17 +282,17 @@ class formAdm extends core
 							// Suppression du champ
 							.on("click", ".delete", function() {
 								// Cache le champ
-								$(this).parents(".row").slideUp(400, function() {
+								$(this).parents(".input").slideUp(400, function() {
 									// Supprime le champ
 									$(this).remove();
 									// Actualise les positions
 									position();
 								});
 							})
-							// Affiche/cache le champ "Valeurs" en fonction du type de champ
+							// Affiche/cache le champ "Valeurs" en fonction des champs cachés
 							.on("change", ".type", function() {
 								var typeCol = $(this).parent();
-								var valuesCol = $(this).parents(".row").find(".values").parent();
+								var valuesCol = $(this).parents(".input").find(".values").parent();
 								typeCol.removeClass();
 								if($(this).val() === "select") {
 									typeCol.addClass("col2");
@@ -255,14 +317,16 @@ class formAdm extends core
 				'Configuration' =>
 					template::openRow().
 					template::text('mail', [
-						'label' => 'Recevoir à chaque validation un mail contenant les données saisies',
+						'label' => 'Adresse mail pour recevoir les données saisies à chaque soumission du formulaire',
 						'value' => $this->getData([$this->getUrl(0), 'config', 'mail'])
 					]).
 					template::text('button', [
-						'label' => 'Personnaliser le texte du bouton',
+						'label' => 'Texte du bouton de soumission',
 						'value' => $this->getData([$this->getUrl(0), 'config', 'button'])
 					]).
-					template::closeRow()
+					template::closeRow(),
+				'Données entregistrées' =>
+					(isset($data) ? $data : template::subTitle('Aucune donnée...'))
 			]).
 			template::openRow().
 			template::button('back', [
@@ -270,63 +334,12 @@ class formAdm extends core
 				'href' => helper::baseUrl() . 'edit/' . $this->getUrl(0),
 				'col' => 2
 			]).
-			template::button('data', [
-				'value' => 'Données saisies',
-				'href' => helper::baseUrl() . $this->getUrl() . '/data',
-				'col' => 2,
-				'offset' => 6
-			]).
 			template::submit('submit', [
-				'col' => 2
+				'col' => 2,
+				'offset' => 8
 			]).
 			template::closeRow().
 			template::closeForm();
-	}
-
-	/** MODULE : Aperçu des données saisies */
-	public function data()
-	{
-		// Liste données saisies
-		if($this->getData([$this->getUrl(0), 'data'])) {
-			// Crée une pagination (retourne la première news et dernière news de la page et la liste des pages
-			$pagination = helper::pagination($this->getData([$this->getUrl(0), 'data']), $this->getUrl());
-			// Inverse l'ordre du tableau pour afficher les données en ordre décroissant
-			$inputs = array_reverse($this->getData([$this->getUrl(0), 'data']));
-			// Check si l'id du premier résultat est paire
-			$firstPair = ($pagination['first'] % 2 === 0);
-			// Crée l'affichage des données en fonction de la pagination
-			for($i = $pagination['first']; $i < $pagination['last']; $i++) {
-				// Ouvre la row ouverte à chaque id paire/impaire (dépend du premier résultat)
-				if(($firstPair AND $i % 2 === 0) OR (!$firstPair AND $i % 2 === 1)) {
-					self::$content .= template::openRow();
-				}
-				// Formatage des données
-				$content = '';
-				foreach($inputs[$i] as $input => $value) {
-					$content .= $input . ' : ' . $value . '<br>';
-				}
-				self::$content .= template::background($content, [
-					'col' => 6
-				]);
-				// Ferme la row ouverte à chaque id paire/impaire (dépend du premier résultat) ou pour le dernier champ
-				if(($firstPair AND $i % 2 === 1) OR (!$firstPair AND $i % 2 === 0) OR !isset($inputs[$i + 1])) {
-					self::$content .= template::closeRow();
-				}
-			}
-			// Ajoute la liste des pages en dessous des news
-			self::$content .= $pagination['page'];
-		}
-		// Contenu de la page
-		self::$content =
-			template::title('Données saisies').
-			(self::$content ? self::$content : template::subTitle('Aucune donnée...')).
-			template::openRow().
-			template::button('back', [
-				'value' => 'Retour',
-				'href' => helper::baseUrl() . 'module/' . $this->getUrl(0),
-				'col' => 2
-			]).
-			template::closeRow();
 	}
 }
 
@@ -337,28 +350,31 @@ class formMod extends core
 
 	/**
 	 * Génère un champ en fonction de son type
+	 * @param  $index int   Index de l'input à générer
 	 * @param  $input array Input à générer
 	 * @return string
 	 */
-	private function generateInput($input)
+	private function generateInput($index, $input)
 	{
 		switch($input['type']) {
 			case 'text':
 				// Génère le champ texte
 				return
 					template::openRow().
-					template::text('input[]', [
+					template::text('input[' . $index . ']', [
 						'label' => $input['name'],
-						'col' => $input['width']
+						'col' => $input['width'],
+						'required' => $input['required'] ? 'required' : ''
 					]).
 					template::closeRow();
 			case 'textarea':
 				// Génère le grand champ texte
 				return
 					template::openRow().
-					template::textarea('input[]', [
+					template::textarea('input[' . $index . ']', [
 						'label' => $input['name'],
-						'col' => $input['width']
+						'col' => $input['width'],
+						'required' => $input['required'] ? 'required' : ''
 					]).
 					template::closeRow();
 			case 'select':
@@ -370,9 +386,10 @@ class formMod extends core
 				// Génère le champ de sélection
 				return
 					template::openRow().
-					template::select('input[]', $values, [
+					template::select('input[' . $index . ']', [
 						'label' => $input['name'],
-						'col' => $input['width']
+						'col' => $input['width'],
+						'required' => $input['required'] ? 'required' : ''
 					]).
 					template::closeRow();
 		}
@@ -387,6 +404,8 @@ class formMod extends core
 			$data = [];
 			$mail = '';
 			foreach($this->getPost('input') as $key => $value) {
+				// Erreur champ obligatoire
+				template::getRequired('input[' . $key . ']');
 				// Préparation des données pour la création dans la base
 				$data[$this->getData([$this->getUrl(0), 'input', $key, 'name'])] = $value;
 				// Préparation des données pour le mail
@@ -417,8 +436,8 @@ class formMod extends core
 		}
 		// Génère les inputs
 		if($this->getData([$this->getUrl(0), 'input'])) {
-			foreach($this->getData([$this->getUrl(0), 'input']) as $input) {
-				self::$content .= $this->generateInput($input);
+			foreach($this->getData([$this->getUrl(0), 'input']) as $index => $input) {
+				self::$content .= $this->generateInput($index, $input);
 			}
 			// Texte du bouton de validation
 			$submitText = $this->getData([$this->getUrl(0), 'config', 'button']);
