@@ -4,6 +4,9 @@ core/cache/*
 # Fichiers temporaires
 core/tmp/*
 
+# Base de données
+data/data.json
+
 # Fichiers uploadés
 data/upload/*
 

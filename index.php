@@ -28,6 +28,6 @@ $core = new core;
 spl_autoload_register('core::autoload');
 $core->cleanTmpFiles();
 $core->importLanguage();
-$core->generateColorCss();
+$core->generateCss();
 $core->router();
 echo $core->putGetCache();

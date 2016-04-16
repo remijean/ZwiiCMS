@@ -14,10 +14,7 @@
  * Éléments génériques
  */
 
-@import url(http://fonts.googleapis.com/css?family=Lato|Oswald);
-
 body {
-	font-family: 'Lato', sans-serif;
 	color: #555;
 }
 body.editor {
@@ -40,7 +37,6 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: 'Oswald', sans-serif;
 	font-weight: normal;
 	text-transform: uppercase;
 }
@@ -247,9 +243,6 @@ header h1 {
 	font-size: 1.8em;
 	line-height: 1.2;
 }
-header img {
-	display: none;
-}
 
 /* Menu */
 .toggle {
@@ -355,7 +348,6 @@ footer p {
 /* Onglet */
 .tabTitles {
 	margin: 15px 0;
-	font-family: 'Oswald', sans-serif;
 	text-transform: uppercase;
 	font-size: 1.2em;
 	color: #555;
@@ -811,19 +803,19 @@ td.col12 {
 	max-width: 750px;
 }
 
-/* Marge autour de la bannière et du menu */
-.themeSiteMargin .container header {
+/* Marge autour de la bannière */
+.themeHeaderMargin.themeHeaderPositionSite .container header {
 	margin: 20px 20px 0;
 }
-.themeSiteMargin .container nav,
-.themeSiteMargin .container .toggle {
+
+/* Marge autour du menu */
+.themeMenuMargin.themeMenuPositionSite .container nav,
+.themeMenuMargin.themeMenuPositionSite .container .toggle {
 	margin: 0 20px
 }
 /* Cas spécial si la bannière n'est pas dans le site */
-.themeSiteMargin.themeHeaderPositionTop .container header {
-	margin-top: 0;
-}
-.themeSiteMargin.themeHeaderPositionTop .container nav {
+.themeMenuMargin.themeMenuPositionSite.themeHeaderPositionTop .container nav,
+.themeMenuMargin.themeMenuPositionSite.themeHeaderPositionHide .container nav {
 	margin-top: 20px;
 }
 
@@ -844,9 +836,6 @@ td.col12 {
 }
 .themeHeaderImage header h1 {
 	display: none;
-}
-.themeHeaderImage header img {
-	display: inline-block;
 }
 
 /* Répétition de l'image de fond */

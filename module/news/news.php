@@ -71,7 +71,7 @@ class newsAdm extends core
 				template::openRow().
 				template::table([10, 1, 1], $newsTable).
 				template::closeRow().
-				$pagination['pages'];
+				$pagination['page'];
 		}
 		// Contenu de la page
 		self::$content =
@@ -222,7 +222,7 @@ class newsMod extends core
 					$this->getData([$this->getUrl(0), $news[$i], 'content']);
 			}
 			// Ajoute la liste des pages en dessous des news
-			self::$content .= $pagination['pages'];
+			self::$content .= $pagination['page'];
 		}
 	}
 }

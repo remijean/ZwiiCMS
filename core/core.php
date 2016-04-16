@@ -92,6 +92,199 @@ class core
 		'zip'
 	];
 
+	/** @var array Liste des polices de caractères Google Font */
+	public static $fonts = [
+		'Open+Sans' => 'Open Sans',
+		'Oswald' => 'Oswald',
+		'Arvo' => 'Arvo',
+		'Lato' => 'Lato',
+		'Ubuntu' => 'Ubuntu',
+		'Raleway' => 'Raleway',
+		'Inconsolata' => 'Inconsolata',
+		'Old+Standard+TT' => 'Old Standard TT',
+		'Josefin+Slab' => 'Josefin Slab',
+		'Abril+Fatface' => 'Abril Fatface',
+		'Indie+Flower' => 'Indie Flower',
+		'Lobster' => 'Lobster',
+		'Dancing+Script' => 'Dancing Script',
+		'Marvel' => 'Marvel',
+		'Berkshire+Swash' => 'Berkshire Swash',
+		'Rancho' => 'Rancho'
+	];
+
+	/** @var array Contenu par défaut de la base de données */
+	private static $default = [
+		'config' => [
+			'analytics' => '',
+			'description' => 'ZwiiCMS est un logiciel sans base de données qui permet à ses utilisateurs de créer et gérer facilement un site web sans aucune connaissance en programmation.',
+			'favicon' => '',
+			'footer' => '',
+			'index' => 'accueil',
+			'language' => '',
+			'password' => '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8',
+			'title' => 'ZwiiCMS, votre site en quelques clics !',
+			'theme' => [
+				'class' => [
+					'backgroundImage' => '',
+					'backgroundImageRepeat' => 'themeBackgroundImageRepeatNo',
+					'backgroundImagePosition' => 'themeBackgroundImagePositionTopLeft',
+					'backgroundImageAttachment' => 'themeBackgroundImageAttachmentScroll',
+					'headerHeight' => 'themeHeaderHeightMedium',
+					'headerMargin' => false,
+					'headerPosition' => 'themeHeaderPositionSite',
+					'headerTextAlign' => 'themeHeaderTextAlignCenter',
+					'menuHeight' => 'themeMenuHeightMedium',
+					'menuMargin' => false,
+					'menuPosition' => 'themeMenuPositionSite',
+					'menuTextAlign' => 'themeMenuTextAlignLeft',
+					'siteRadius' => false,
+					'siteShadow' => false,
+					'siteWidth' => 'themeSiteWidthLarge'
+				],
+				'color' => [
+					'background' => 'E8E8E8',
+					'element' => '477BB8',
+					'header' => 'FFFFFF',
+					'menu' => '477BB8'
+				],
+				'font' => [
+					'text' => 'Lato',
+					'title' => 'Oswald',
+				],
+				'image' => [
+					'background' => '',
+					'header' => ''
+				]
+			]
+		],
+		'page' => [
+			'accueil' => [
+				'blank' => false,
+				'content' => "<h3>Félicitations ZwiiCMS est 100% opérationnel !</h3>\r\n<p>Pour entrer dans l'administration, rendez-vous <a href='/ZwiiCMS/?config'>ici</a> ou cliquez sur le lien 'Administration' en bas de page. Le mot de passe d'administration par défaut est <strong>password</strong>.</p>\r\n<p>Si vous rencontrez un problème ou si vous avez besoin d'aide, n'hésitez pas à jeter un œil au <a href='http://zwiicms.com/'>site</a> ou au <a title='dépôt' href='https://github.com/remijean/ZwiiCMS/'>dépôt</a> de ZwiiCMS.</p>\r\n<h4>Suivez-nous sur <a href='https://twitter.com/ZwiiCMS/'>Twitter</a> et <a href='https://www.facebook.com/ZwiiCMS/'>Facebook</a> pour ne manquer aucune nouveauté !</h4>",
+				'description' => '',
+				'hideTitle' => false,
+				'metaTitle' => '',
+				'module' => false,
+				'parent' => '',
+				'position' => 1,
+				'title' => 'Accueil'
+			],
+			'exemple-de-page' => [
+				'blank' => false,
+				'content' => "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce porttitor nibh justo. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis condimentum dui metus, ac scelerisque risus varius quis. Nulla elementum urna nec turpis congue, at iaculis nunc blandit. Mauris volutpat metus mauris, vitae dignissim nunc malesuada sed. Duis vel enim elit. Morbi et enim molestie, tincidunt dui eu, sagittis lacus. Pellentesque nec ornare ipsum, nec ultricies nunc. Pellentesque maximus eros blandit, sagittis tortor in, venenatis ligula. Maecenas efficitur tempor risus vehicula sodales. Pellentesque efficitur malesuada lobortis. Ut iaculis neque vehicula rutrum varius. Pellentesque sit amet efficitur velit.</p>\r\n<p>Sed vel tellus et nisl lacinia accumsan non laoreet dui. Sed commodo et mi sed ultricies. Etiam vel ante sit amet nibh posuere interdum ac vel est. Aliquam tristique porttitor lobortis. Donec sed lacinia leo. Nam convallis semper odio, quis mollis lacus euismod eget. Pellentesque quam odio, rhoncus ac dolor eget, vehicula consectetur leo. Duis fermentum facilisis tortor, nec suscipit magna finibus nec. Nam vulputate orci sed arcu varius, auctor viverra magna rutrum. Suspendisse aliquet auctor erat vel sagittis. Cras a vestibulum mi. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>\r\n<p>In ut maximus odio. Etiam quis sem vitae nibh egestas facilisis at non libero. Mauris ac augue sagittis, imperdiet libero id, tempus ligula. Etiam eget arcu nec odio tristique cursus vel et nisi. Praesent quis odio mattis massa faucibus mattis id ut justo. Curabitur ut venenatis massa, semper fringilla quam. Donec placerat ut ligula vel dignissim. Maecenas ullamcorper dapibus libero. Nunc vehicula sem sem, gravida aliquam lorem malesuada sed. Quisque non neque lacinia, gravida risus vitae, sodales magna.</p>",
+				'description' => '',
+				'hideTitle' => false,
+				'metaTitle' => '',
+				'module' => false,
+				'parent' => '',
+				'position' => 2,
+				'title' => 'Exemple de page'
+			],
+			'exemple-de-news' => [
+				'blank' => false,
+				'content' => '<p>Cette page contient une instance du module de news, il est possible d\'ouvrir une infinité d\'instances en créant d\'autres pages incluant le même module !</p>',
+				'description' => '',
+				'hideTitle' => false,
+				'metaTitle' => '',
+				'module' => 'news',
+				'parent' => '',
+				'position' => 3,
+				'title' => 'Exemple de news'
+			],
+			'exemple-de-redirection' => [
+				'blank' => true,
+				'content' => '',
+				'description' => '',
+				'hideTitle' => false,
+				'metaTitle' => '',
+				'module' => 'redirection',
+				'parent' => '',
+				'position' => 5,
+				'title' => 'Exemple de redirection'
+			],
+			'exemple-de-formulaire' => [
+				'blank' => false,
+				'content' => '',
+				'description' => '',
+				'hideTitle' => false,
+				'metaTitle' => '',
+				'module' => 'form',
+				'parent' => '',
+				'position' => 4,
+				'title' => 'Exemple de formulaire'
+			],
+			'premiere-page-enfant' => [
+				'blank' => false,
+				'content' => "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam molestie suscipit consequat. Sed eget augue dignissim, fermentum mauris eu, consectetur mi. Quisque rutrum sodales dapibus. Aliquam tellus ligula, vulputate eu nibh quis, pretium tincidunt ex. Duis tempor nisl at mauris molestie volutpat. Ut sodales leo finibus lectus pharetra porttitor. Sed ullamcorper ligula fermentum varius venenatis. Praesent quis consectetur diam. Vivamus orci ex, ultricies eleifend velit a, tristique cursus tellus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec pulvinar velit vitae ornare sagittis. Donec eget velit hendrerit lorem sagittis congue et et nunc. Pellentesque sit amet interdum enim. Morbi porta sit amet lacus id porttitor.</p>\r\n<p>Morbi ullamcorper, leo quis dapibus finibus, velit sem pharetra risus, sit amet aliquet ex nulla ac velit. Aenean ac faucibus nunc, non aliquam est. Ut at quam condimentum, commodo orci et, efficitur nisl. Morbi leo quam, luctus sed turpis eget, eleifend dapibus mi. Morbi lobortis magna mollis leo ultricies molestie. Mauris quis sagittis nisl, a tempus quam. Vivamus egestas lacinia nulla ac condimentum. Integer quis risus nisi. Nullam sagittis ipsum ut orci eleifend feugiat.</p>\r\n<p>Integer elementum lacus urna, vitae lacinia massa pretium sed. Donec et libero ligula. Integer ac blandit neque. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec pellentesque nibh hendrerit sapien dapibus maximus. Vivamus sed sollicitudin ante, quis blandit lorem. Fusce placerat molestie risus ut pretium. Etiam mollis dictum elit vel iaculis. Maecenas tincidunt dictum fringilla. Nunc libero ipsum, lobortis vel ligula ut, congue commodo diam. Duis ac turpis blandit, sodales metus cursus, hendrerit mauris.</p>\r\n<p>Integer eget augue at metus ultrices lacinia ut imperdiet eros. Suspendisse laoreet lectus at risus porta euismod. Aenean sit amet turpis sed libero egestas pellentesque. Morbi hendrerit massa vel convallis sagittis. Maecenas elit nisl, posuere sit amet metus nec, fringilla fringilla massa. Cras in augue sed leo tempor iaculis non ut massa. Vivamus in dictum erat. Nam sit amet nisi lorem.</p>\r\n<p>Etiam eu aliquam lacus. Mauris pharetra rhoncus massa nec sollicitudin. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis nec lobortis nisi. Ut quis tortor sit amet odio luctus ultrices. Nulla et imperdiet quam, vel fermentum diam. Mauris convallis ullamcorper nibh id convallis. Pellentesque lobortis sem vitae lorem interdum, ac malesuada nisi tempus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sit amet enim tempus, sollicitudin eros sit amet, ultricies dui. Ut luctus elit non nulla rutrum consectetur. Praesent interdum erat risus, a suscipit mi rutrum at. Etiam id ex diam. Suspendisse ut lectus sit amet odio efficitur consectetur at non elit.</p>",
+				'description' => '',
+				'hideTitle' => false,
+				'metaTitle' => '',
+				'module' => false,
+				'parent' => 'exemple-de-page',
+				'position' => 1,
+				'title' => 'Première page enfant'
+			],
+			'deuxieme-page-enfant' => [
+				'blank' => false,
+				'content' => "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nibh purus, posuere et pellentesque ut, finibus sed tortor. Vestibulum rutrum diam ut metus ultricies, a dignissim ante fringilla. Vestibulum odio tortor, imperdiet nec blandit et, pellentesque ac nisi. Vestibulum id bibendum odio. In convallis commodo enim non iaculis. Donec tristique mi non nibh semper, et tincidunt mauris gravida. Nullam mollis nisl ex, feugiat tincidunt velit consequat et. Praesent ornare sodales magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vulputate, felis at tristique rhoncus, nulla quam placerat dolor, at mollis diam lectus ac urna. Vivamus et tristique mi, nec congue lorem. Suspendisse efficitur sapien at faucibus rutrum. Fusce orci metus, feugiat sed cursus eu, rutrum eu libero. Mauris sit amet ipsum lorem. In iaculis eros nec tristique ultrices. Nunc laoreet mi orci, euismod eleifend ipsum ultrices vitae.</p>\r\n<p>Sed vel ante sit amet orci auctor scelerisque eu sit amet quam. Quisque lobortis leo ut consectetur fermentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Ut venenatis vulputate elit at feugiat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin volutpat, lacus ac gravida rutrum, nunc justo pulvinar libero, ut tincidunt turpis ligula non tellus. Suspendisse congue consectetur ligula quis tincidunt. Etiam aliquam finibus eleifend. Maecenas lacinia sit amet velit viverra lobortis. Curabitur eget tempor sapien, in placerat lectus. Donec tempor mattis nibh, vel dictum risus dignissim eget. Sed sagittis consectetur diam ac lobortis. In ex nibh, placerat non lacus sit amet, finibus tincidunt dui. Cras semper pellentesque interdum. Nunc semper congue ex. Curabitur tempus lectus vitae vehicula consectetur.</p>\r\n<p>Vivamus eu ornare augue. Aliquam non faucibus sapien. Maecenas rhoncus augue vel ligula congue venenatis. Duis interdum suscipit consectetur. Nulla nec massa erat. Vivamus at ex eu odio finibus efficitur. Quisque sed interdum dolor. Integer imperdiet turpis vel diam gravida, posuere porttitor justo accumsan. Morbi ultricies velit sed elit finibus, a fringilla sapien fermentum. Nunc odio mi, suscipit id commodo sit amet, porta ac dolor.</p>",
+				'description' => '',
+				'hideTitle' => false,
+				'metaTitle' => '',
+				'module' => false,
+				'parent' => 'exemple-de-page',
+				'position' => 2,
+				'title' => 'Deuxième page enfant'
+			]
+		],
+		'exemple-de-news' => [
+			'ma-premiere-news' => [
+				'title' => 'Ma première news',
+				'date' => 1420580231,
+				'content' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut nec mi nec purus efficitur vulputate quis ut nisi. Fusce vel luctus tortor. Curabitur aliquet arcu lacus, sed lobortis dui mattis sit amet. Ut vehicula, magna id commodo lobortis, lectus enim dignissim augue, et lacinia libero mi vitae sapien. Curabitur faucibus nunc sapien, nec lobortis tellus vestibulum ut. Curabitur vitae metus tempor, feugiat nisl id, lacinia metus. Praesent in erat tempus, laoreet nisl vitae, vulputate elit. Cras ornare eleifend libero. Duis vitae lacus et lacus sagittis viverra. </p>'
+			],
+			'encore-une-news' => [
+				'title' => 'Encore une news',
+				'date' => 1420580347,
+				'content' => '<p>Duis iaculis gravida felis, at pharetra mi rutrum non. Duis a laoreet est. Sed vitae pretium quam, sed scelerisque lacus. Nulla velit justo, vestibulum nec efficitur eget, consectetur vel augue. Sed tempor faucibus dolor, in tempor nisi. Mauris sit amet eleifend orci. Suspendisse potenti. Etiam porttitor semper ante, quis lacinia leo ultricies sed. Duis et sapien nec turpis mollis molestie vel sit amet mauris. Suspendisse tempus id tortor eget feugiat. Donec tincidunt ac ipsum id tristique. Ut sodales ligula justo, non pharetra massa sollicitudin at. Curabitur odio risus, porta ut semper quis, bibendum nec ipsum.</p>'
+			]
+		],
+		'exemple-de-redirection' => [
+			'url' => 'http://zwiicms.com/'
+		],
+		'exemple-de-formulaire' => [
+			'config' => [
+				'mail' => 'zwiicms@outlook.com',
+				'button' => 'Envoyer'
+			],
+			'input' => [
+				[
+					'position' => '1',
+					'name' => 'Adresse mail',
+					'type' => 'text',
+					'values' => '',
+					'width' => '6'
+				],
+				[
+					'position' => '2',
+					'name' => 'Sujet',
+					'type' => 'text',
+					'values' => '',
+					'width' => '6'
+				],
+				[
+					'position' => '3',
+					'name' => 'Message',
+					'type' => 'textarea',
+					'values' => '',
+					'width' => '8'
+				]
+			],
+		]
+	];
+
+	/** Version du css */
+	public static $cssVersion = 0;
+	
 	/** Version de ZwiiCMS */
 	private static $version = '7.5.1';
 
@@ -190,7 +383,7 @@ class core
 	{
 		// Enregistre les données si aucune notice n'existe
 		if(!template::$notices) {
-			// Liste les les fichiers de cache
+			// Liste les fichiers de cache
 			$it = new DirectoryIterator('core/cache/');
 			foreach($it as $file) {
 				// Check que la cible est un fichier
@@ -217,16 +410,16 @@ class core
 		if(empty($this->hierarchy)) {
 			$children = [];
 			// Liste les pages par position en ordre croissant
-			$pages = helper::arrayCollumn($this->getData('pages'), 'position', 'SORT_ASC', true);
+			$pages = helper::arrayCollumn($this->getData('page'), 'position', 'SORT_ASC', true);
 			// Passe en revue les pages
 			foreach($pages as $pageKey => $pagePosition) {
 				// Si la page n'a pas de parent = page parente
-				if(!$this->getData(['pages', $pageKey, 'parent'])) {
+				if(!$this->getData(['page', $pageKey, 'parent'])) {
 					$this->hierarchy[$pageKey] = [];
 				}
 				// Si la page a un parent = page enfant
 				else {
-					$children[$this->getData(['pages', $pageKey, 'parent'])][] = $pageKey;
+					$children[$this->getData(['page', $pageKey, 'parent'])][] = $pageKey;
 				}
 			}
 			// Ajoute les enfants au parents
@@ -253,18 +446,18 @@ class core
 			$this->url = helper::filter($this->url, helper::URL);
 			$this->url = explode('/', $this->url);
 		}
+		// Variable temporaire pour ne pas impacter la propriété $this->url avec le array_splice()
+		$url = $this->url;
+		// Supprime les modules système de $this->url[0] si ils sont présents
+		if($splice AND (in_array($url[0], self::$system))) {
+			array_splice($url, 0, 1);
+		}
 		// Retourne l'URL complète
 		if($key === null) {
-			return implode('/', $this->url);
+			return implode('/', $url);
 		}
 		// Retourne une partie de l'URL
 		else {
-			// Variable temporaire pour ne pas impacter la propriété $this->url avec le array_splice()
-			$url = $this->url;
-			// Supprime les modules système de $this->url[0] si ils sont présents
-			if($splice AND (in_array($url[0], self::$system))) {
-				array_splice($url, 0, 1);
-			}
 			// Retourne l'URL filtrée
 			return empty($url[$key]) ? '' : helper::filter($url[$key], helper::URL);
 		}
@@ -378,11 +571,20 @@ class core
 	############################################################
 	# SYSTÈME
 
-	/** Récupère les données */
+	/** Récupère les données et détermine la version du css */
 	public function __construct()
 	{
 		if(empty($this->data)) {
-			$this->data = json_decode(file_get_contents('data/data.json'), true);
+			if(file_exists('data/data.json')) {
+				$this->data = json_decode(file_get_contents('data/data.json'), true);
+			}
+			else {
+				$this->data = self::$default;
+				$this->saveData(true);
+			}
+		}
+		if(!self::$cssVersion) {
+			self::$cssVersion = md5(json_encode(array_merge($this->getData(['config', 'theme', 'color']), $this->getData(['config', 'theme', 'font']))));
 		}
 	}
 
@@ -407,7 +609,7 @@ class core
 			// Si un module système est demandé et qu'il existe
 			in_array($this->getUrl(0, false), self::$system)
 			// Si le mode édition est activé et qu'une page est demandée
-			OR ($this->getMode() AND $page = $this->getData(['pages', $this->getUrl(0, false)]))
+			OR ($this->getMode() AND $page = $this->getData(['page', $this->getUrl(0, false)]))
 		) {
 			// Retourne le module édition pour le cas "Si le mode édition est activé et qu'une page est demandée"
 			$module = isset($page) ? 'edit' : $this->getUrl(0, false);
@@ -422,7 +624,7 @@ class core
 			}
 		}
 		// Page et module de page
-		elseif($this->getData(['pages', $this->getUrl(0, false)])) {
+		elseif($this->getData(['page', $this->getUrl(0, false)])) {
 			// Utilisateur non connecté et layout LAYOUT utilisé
 			if(!$this->getCookie() AND self::$layout === 'LAYOUT') {
 				// Remplace les / de l'URL par des _
@@ -438,8 +640,8 @@ class core
 				}
 			}
 			// Importe le module de la page
-			if($this->getData(['pages', $this->getUrl(0), 'module'])) {
-				$module = $this->getData(['pages', $this->getUrl(0), 'module']) . 'Mod';
+			if($this->getData(['page', $this->getUrl(0), 'module'])) {
+				$module = $this->getData(['page', $this->getUrl(0), 'module']) . 'Mod';
 				$module = new $module;
 				$method = in_array($this->getUrl(1), $module::$views) ? $this->getUrl(1) : 'index';
 				$module->$method();
@@ -447,10 +649,10 @@ class core
 				self::$cache = $module::$cache;
 			}
 			// Titre, description et contenu de la page
-			self::$title = $this->getData(['pages', $this->getUrl(0, false), 'title']);
-			self::$metaTitle = $this->getData(['pages', $this->getUrl(0, false), 'metaTitle']);
-			self::$description = $this->getData(['pages', $this->getUrl(0, false), 'description']);
-			self::$content = $this->getData(['pages', $this->getUrl(0, false), 'content']) . self::$content;
+			self::$title = $this->getData(['page', $this->getUrl(0, false), 'title']);
+			self::$metaTitle = $this->getData(['page', $this->getUrl(0, false), 'metaTitle']);
+			self::$description = $this->getData(['page', $this->getUrl(0, false), 'description']);
+			self::$content = $this->getData(['page', $this->getUrl(0, false), 'content']) . self::$content;
 		}
 		// Erreur 404
 		if(!self::$content) {
@@ -495,115 +697,133 @@ class core
 		}
 	}
 
-	/** Génération dynamique du css des couleurs */
-	public function generateColorCss()
+	/** Génère les css des couleurs et des polices de caractères */
+	public function generateCss()
 	{
-		$md5Colors = md5(json_encode($this->getData('colors')));
-		if(!file_exists('core/cache/' . $md5Colors . '.css')) {
-			// Couleur du header
-			list($r, $g, $b) = helper::hexToRgb($this->getData(['colors', 'header']));
-			$headerColor = $r . ',' . $g . ',' . $b;
-			$headerTextVariant = ($r + $g + $b / 3) < 350 ? '#FFF' : 'inherit';
-			// Couleurs du menu
-			list($r, $g, $b) = helper::hexToRgb($this->getData(['colors', 'menu']));
-			$menuColor = $r . ',' . $g . ',' . $b;
-			$menuColorDark = ($r - 20) . ',' . ($g - 20) . ',' . ($b - 20);
-			$menuColorVeryDark = ($r - 25) . ',' . ($g - 25) . ',' . ($b - 25);
-			$menuTextVariant = intval($r + $g + $b / 3) < 350 ? '#FFF' : 'inherit';
-			// Couleurs des éléments
-			list($r, $g, $b) = helper::hexToRgb($this->getData(['colors', 'element']));
-			$elementColor = $r . ',' . $g . ',' . $b;
-			$elementColorDark = ($r - 20) . ',' . ($g - 20) . ',' . ($b - 20);
-			$elementColorVeryDark = ($r - 25) . ',' . ($g - 25) . ',' . ($b - 25);
-			$elementTextVariant = intval($r + $g + $b / 3) < 350 ? '#FFF' : 'inherit';
-			// Couleur de fond
-			list($r, $g, $b) = helper::hexToRgb($this->getData(['colors', 'background']));
-			$backgroundColor = $r . ',' . $g . ',' . $b;
-			// Mise en forme du css
+		if(!file_exists('core/cache/' . self::$cssVersion . '.css')) {
+			// Police de caractères
 			$css = '
-				/* Couleur normale */
-				/* Bannière */
-				header {
-					background-color: rgb(' . $headerColor . ');
-				}
-				header h1 {
-					color: ' . $headerTextVariant . ';
-				}
-				/* Menu */
-				.toggle,
-				nav,
-				nav ul {
-					background-color: rgb(' . $menuColor . ');
-				}
-				.toggle span,
-				nav a {
-					color: ' . $menuTextVariant . ';
-				}
-				/* Eléments */
-				input[type=\'submit\'],
-				.button,
-				.pagination a,
-				input[type=\'checkbox\']:checked + label:before,
-				input[type=\'radio\']:checked + label:before,
-				.helpContent {
-					background-color: rgb(' . $elementColor . ');
-					color: ' . $elementTextVariant . ';
-				}
-				h2,
-				h4,
-				h6,
-				a,
-				.tabTitle.current,
-				.helpButton span {
-					color: rgb(' . $elementColor . ');
-				}
-				input[type=\'text\']:hover,
-				input[type=\'password\']:hover,
-				input[type=\'file\']:hover,
-				select:hover,
-				textarea:hover {
-					border: 1px solid rgb(' . $elementColor . ');
-				}
-				/* Fond */
 				body {
-					background-color: rgb(' . $backgroundColor . ');
+					font-family: "' . self::$fonts[$this->getData(['config', 'theme', 'font', 'text'])] . '", sans-serif;
 				}
-				
-				/* Couleur foncée */
-				/* Menu */
-				.toggle:hover,
-				nav a:hover {
-					background-color: rgb(' . $menuColorDark . ');
-				}
-				/* Eléments */
-				input[type=\'submit\']:hover,
-				.button:hover,
-				.pagination a:hover,
-				input[type=\'checkbox\']:not(:active):checked:hover + label:before,
-				input[type=\'checkbox\']:active + label:before,
-				input[type=\'radio\']:checked:hover + label:before,
-				input[type=\'radio\']:not(:checked):active + label:before {
-					background-color: rgb(' . $elementColorDark . ');
-				}
-				.helpButton span:hover {
-					color: rgb(' . $elementColorDark . ');
-				}
-				
-				/* Couleur très foncée */
-				/* Menu */
-				.toggle:active,
-				nav a:active,
-				nav a.current {
-					background-color: rgb(' . $menuColorVeryDark . ');
-				}
-				/* Eléments */
-				input[type=\'submit\']:active,
-				.button:active,
-				.pagination a:active {
-					background-color: rgb(' . $elementColorVeryDark . ');
+				h1,
+				h2,
+				h3,
+				h4,
+				h5,
+				h6,
+				.tabTitles {
+					font-family: "' . self::$fonts[$this->getData(['config', 'theme', 'font', 'title'])] . '", sans-serif;
 				}
 			';
-			file_put_contents('core/cache/' . $md5Colors . '.css', helper::minifyCss($css));
+			// Couleur du header
+			if($rgb = helper::hexToRgb($this->getData(['config', 'theme', 'color', 'header']))) {
+				$color = $rgb['r'] . ',' . $rgb['g'] . ',' . $rgb['b'];
+				$textVariant = (.213 * $rgb['r'] + .715 * $rgb['g'] + .072 * $rgb['b'] > 127.5) ? 'inherit' : '#FFF';
+				$css .= '
+					/* Couleur normale */
+					header {
+						background-color: rgb(' . $color . ');
+					}
+					header h1 {
+						color: ' . $textVariant . ';
+					}
+				';
+			}
+			// Couleurs du menu
+			if($rgb = helper::hexToRgb($this->getData(['config', 'theme', 'color', 'menu']))) {
+				$color = $rgb['r'] . ',' . $rgb['g'] . ',' . $rgb['b'];
+				$colorDark = ($rgb['r'] - 20) . ',' . ($rgb['g'] - 20) . ',' . ($rgb['b'] - 20);
+				$colorVeryDark = ($rgb['r'] - 25) . ',' . ($rgb['g'] - 25) . ',' . ($rgb['b'] - 25);
+				$textVariant = (.213 * $rgb['r'] + .715 * $rgb['g'] + .072 * $rgb['b'] > 127.5) ? 'inherit' : '#FFF';
+				$css .= '
+					/* Couleur normale */
+					.toggle,
+					nav,
+					nav ul {
+						background-color: rgb(' . $color . ');
+					}
+					.toggle span,
+					nav a {
+						color: ' . $textVariant . ';
+					}
+					/* Couleur foncée */
+					.toggle:hover,
+					nav a:hover {
+						background-color: rgb(' . $colorDark . ');
+					}
+					/* Couleur très foncée */
+					.toggle:active,
+					nav a:active,
+					nav a.current {
+						background-color: rgb(' . $colorVeryDark . ');
+					}
+				';
+			}
+			// Couleurs des éléments
+			if($rgb = helper::hexToRgb($this->getData(['config', 'theme', 'color', 'element']))) {
+				$color = $rgb['r'] . ',' . $rgb['g'] . ',' . $rgb['b'];
+				$colorDark = ($rgb['r'] - 20) . ',' . ($rgb['g'] - 20) . ',' . ($rgb['b'] - 20);
+				$colorVeryDark = ($rgb['r'] - 25) . ',' . ($rgb['g'] - 25) . ',' . ($rgb['b'] - 25);
+				$textVariant = (.213 * $rgb['r'] + .715 * $rgb['g'] + .072 * $rgb['b'] > 127.5) ? 'inherit' : '#FFF';
+				$css .= '
+					/* Couleur normale */
+					input[type=\'submit\'],
+					.button,
+					.pagination a,
+					input[type=\'checkbox\']:checked + label:before,
+					input[type=\'radio\']:checked + label:before,
+					.helpContent {
+						background-color: rgb(' . $color . ');
+						color: ' . $textVariant . ';
+					}
+					h2,
+					h4,
+					h6,
+					a,
+					.tabTitle.current,
+					.helpButton span {
+						color: rgb(' . $color . ');
+					}
+					input[type=\'text\']:hover,
+					input[type=\'password\']:hover,
+					input[type=\'file\']:hover,
+					select:hover,
+					textarea:hover {
+						border: 1px solid rgb(' . $color . ');
+					}
+					/* Couleur foncée */
+					input[type=\'submit\']:hover,
+					.button:hover,
+					.pagination a:hover,
+					input[type=\'checkbox\']:not(:active):checked:hover + label:before,
+					input[type=\'checkbox\']:active + label:before,
+					input[type=\'radio\']:checked:hover + label:before,
+					input[type=\'radio\']:not(:checked):active + label:before {
+						background-color: rgb(' . $colorDark . ');
+					}
+					.helpButton span:hover {
+						color: rgb(' . $colorDark . ');
+					}
+					/* Couleur très foncée */
+					input[type=\'submit\']:active,
+					.button:active,
+					.pagination a:active {
+						background-color: rgb(' . $colorVeryDark . ');
+					}
+				';
+			}
+			// Couleur de fond
+			if($rgb = helper::hexToRgb($this->getData(['config', 'theme', 'color', 'background']))) {
+				$color = $rgb['r'] . ',' . $rgb['g'] . ',' . $rgb['b'];
+				$css .= '
+					/* Couleur normale */
+					body {
+						background-color: rgb(' . $color . ');
+					}
+				';
+			}
+			file_put_contents('core/cache/' . self::$cssVersion . '.css', helper::minifyCss($css));
 		}
 	}
 
@@ -622,7 +842,7 @@ class core
 		// - le fichier de cache n'existe pas
 		// - le layout utilisé est LAYOUT
 		if(
-			$this->getData(['pages', $this->getUrl(0)])
+			$this->getData(['page', $this->getUrl(0)])
 			AND self::$cache
 			AND !$this->getCookie()
 			AND !file_exists('core/cache/' . $url . '.html')
@@ -646,7 +866,7 @@ class core
 			self::$language = json_decode(file_get_contents($language), true);
 		}
 		// Importe le fichier langue pour le module de la page
-		$language = 'module/' . $this->getData(['pages', $this->getUrl(0), 'module']) . '/langs/' . $this->getData(['config', 'language']);
+		$language = 'module/' . $this->getData(['page', $this->getUrl(0), 'module']) . '/langs/' . $this->getData(['config', 'language']);
 		if(is_file($language)) {
 			self::$language = array_merge(self::$language, json_decode(file_get_contents($language), true));
 		}
@@ -707,7 +927,7 @@ class core
 				$left .= '<option value="">' . helper::translate('Choisissez une page') . '</option>';
 			}
 			// Crée des options pour les pages en les triant par titre
-			$pages = helper::arrayCollumn($this->getData('pages'), 'title', 'SORT_ASC', true);
+			$pages = helper::arrayCollumn($this->getData('page'), 'title', 'SORT_ASC', true);
 			foreach($pages as $pageKey => $pageTitle) {
 				$current = ($pageKey === $this->getUrl(0)) ? ' selected' : false;
 				$left .= '<option value="' . helper::baseUrl() . $pageKey . '"' . $current . '>' . $pageTitle . '</option>';
@@ -771,21 +991,13 @@ class core
 	 * Met en forme la liste des classes du thème
 	 * @return string
 	 */
-	public function writeTheme()
+	public function writeThemeClass()
 	{
 		// Liste des classes
 		$class = [];
-		foreach($this->getData(['theme']) as $key => $value) {
-			// Cas spécifique pour l'image de la bannière
-			if($key === 'headerImage' AND !empty($value)) {
-				$class[] = 'themeHeaderImage';
-			}
-			// Cas spécifique pour l'image de fond
-			if($key === 'backgroundImage' AND !empty($value)) {
-				// Rien
-			}
+		foreach($this->getData(['config', 'theme', 'class']) as $key => $value) {
 			// Pour les booleans
-			elseif($value === true) {
+			if($value === true) {
 				$class[] = 'theme' . ucfirst($key);
 			}
 			// Pour les autres
@@ -793,7 +1005,22 @@ class core
 				$class[] = $value;
 			}
 		}
+		// Cas spécifique pour l'image de la bannière
+		if($this->getData(['config', 'theme', 'image', 'header'])) {
+			$class[] = 'themeHeaderImage';
+		}
 		return implode($class, ' ');
+	}
+
+	/**
+	 * Met en forme l'image de la bannière
+	 * @return string
+	 */
+	public function writeHeaderImage()
+	{
+		if($headerImage = $this->getData(['config', 'theme', 'image', 'header'])) {
+			return '<img src="' . helper::baseUrl(false) . $headerImage . '" title="' . $this->getData(['config', 'title']) . '" alt="' . $this->getData(['config', 'title']) . '">';
+		}
 	}
 
 	/**
@@ -810,17 +1037,17 @@ class core
 			if($parentKey === $this->getUrl(0) OR in_array($this->getUrl(0), $childrenKeys)) {
 				$current = ' class="current"';
 			}
-			$blank = ($this->getData(['pages', $parentKey, 'blank']) AND !$this->getMode()) ? ' target="_blank"' : '';
+			$blank = ($this->getData(['page', $parentKey, 'blank']) AND !$this->getMode()) ? ' target="_blank"' : '';
 			// Mise en page de l'item
 			$items .= '<li>';
-			$items .= '<a href="' . helper::baseUrl() . $parentKey . '"' . $current . $blank . '>' . $this->getData(['pages', $parentKey, 'title']) . '</a>';
+			$items .= '<a href="' . helper::baseUrl() . $parentKey . '"' . $current . $blank . '>' . $this->getData(['page', $parentKey, 'title']) . '</a>';
 			$items .= '<ul>';
 			foreach($childrenKeys as $childKey) {
 				// Propriétés de l'item
 				$current = ($childKey === $this->getUrl(0)) ? ' class="current"' : '';
-				$blank = ($this->getData(['pages', $childKey, 'blank']) AND !$this->getMode()) ? ' target="_blank"' : '';
+				$blank = ($this->getData(['page', $childKey, 'blank']) AND !$this->getMode()) ? ' target="_blank"' : '';
 				// Mise en page du sous-item
-				$items .= '<li><a href="' . helper::baseUrl() . $childKey . '"' . $current . $blank . '>' . $this->getData(['pages', $childKey, 'title']) . '</a></li>';
+				$items .= '<li><a href="' . helper::baseUrl() . $childKey . '"' . $current . $blank . '>' . $this->getData(['page', $childKey, 'title']) . '</a></li>';
 			}
 			$items .= '</ul>';
 			$items .= '</li>';
@@ -837,7 +1064,7 @@ class core
 	{
 		// Affiche ou non le titre
 		$title = '';
-		if(!$this->getData(['pages', $this->getUrl(0, false)]) OR !$this->getData(['pages', $this->getUrl(0, false), 'hideTitle'])) {
+		if(!$this->getData(['page', $this->getUrl(0, false)]) OR !$this->getData(['page', $this->getUrl(0, false), 'hideTitle'])) {
 			$title = '<h2>' . self::$title . '</h2>';
 		}
 		// Retourne le contenu de la page
@@ -1003,17 +1230,17 @@ class core
 
 	############################################################
 	# MODULES
-	
+
 	/** Création d'une page */
 	public function create()
 	{
 		// Titre de la nouvelle page
 		$title = helper::translate('Nouvelle page');
 		// Incrémente la clef de la page pour éviter les doublons
-		$key = helper::increment(helper::filter($title, helper::URL), $this->getData('pages'));
+		$key = helper::increment(helper::filter($title, helper::URL), $this->getData('page'));
 		// Crée la page
 		$this->setData([
-			'pages',
+			'page',
 			$key,
 			[
 				// Si cette partie est modifiée il faut modifier : la création, l'édition, et l'enregistrement ajax de la page
@@ -1040,7 +1267,7 @@ class core
 	public function edit()
 	{
 		// Erreur 404
-		if(!$this->getData(['pages', $this->getUrl(0)])) {
+		if(!$this->getData(['page', $this->getUrl(0)])) {
 			return false;
 		}
 		// Traitement du formulaire
@@ -1048,14 +1275,14 @@ class core
 			// Modifie la clef de la page si le titre a été modifié
 			$key = $this->getPost('title') ? $this->getPost('title', helper::URL_STRICT) : $this->getUrl(0);
 			// Sauvegarde le module de la page
-			$module = $this->getData(['pages', $this->getUrl(0), 'module']);
+			$module = $this->getData(['page', $this->getUrl(0), 'module']);
 			// Si la clef à changée
 			if($key !== $this->getUrl(0)) {
 				// Incrémente la nouvelle clef de la page pour éviter les doublons
-				$key = helper::increment($key, $this->getData('pages'));
+				$key = helper::increment($key, $this->getData('page'));
 				$key = helper::increment($key, self::$system); // Evite à une page d'avoir la même clef qu'un module système
 				// Supprime l'ancienne page
-				$this->removeData(['pages', $this->getUrl(0)]);
+				$this->removeData(['page', $this->getUrl(0)]);
 				// Crée les nouvelles données du module de la page (avec la nouvelle clef) en copiant les anciennes
 				$this->setData([$key, $this->getData($this->getUrl(0))]);
 				// Supprime les données du module de l'ancienne page
@@ -1073,9 +1300,9 @@ class core
 			$parent = $this->getPost('parent', helper::STRING);
 			$title = $this->getPost('title', helper::STRING);
 			if(
-				$position !== $this->getData(['pages', $this->getUrl(0), 'position'])
-				OR $parent !== $this->getData(['pages', $this->getUrl(0), 'parent'])
-				OR $title !== $this->getData(['pages', $this->getUrl(0), 'title'])
+				$position !== $this->getData(['page', $this->getUrl(0), 'position'])
+				OR $parent !== $this->getData(['page', $this->getUrl(0), 'parent'])
+				OR $title !== $this->getData(['page', $this->getUrl(0), 'title'])
 			) {
 				$removeAllCache = true;
 			}
@@ -1084,13 +1311,13 @@ class core
 			}
 			// Actualise la positions des pages suivantes de même parent si la position ou le parent de la page à changée
 			if(
-				$position !== $this->getData(['pages', $this->getUrl(0), 'position'])
-				OR $parent !== $this->getData(['pages', $this->getUrl(0), 'parent'])
+				$position !== $this->getData(['page', $this->getUrl(0), 'position'])
+				OR $parent !== $this->getData(['page', $this->getUrl(0), 'parent'])
 			) {
 				$hierarchy = $this->getHierarchy();
 				// Supérieur à 1 pour ignorer les options ne pas afficher et au début
 				// Sinon incrémente de +1 si la nouvelle position est supérieure à la position actuelle afin de prendre en compte la page courante qui n'appraît pas dans la liste
-				if($position > 1 AND $position >= $this->getData(['pages', $this->getUrl(0), 'position'])) {
+				if($position > 1 AND $position >= $this->getData(['page', $this->getUrl(0), 'position'])) {
 					$position++;
 				}
 				// Modifie les positions des pages dans parents
@@ -1103,7 +1330,7 @@ class core
 							$index++;
 						}
 						// Change les positions
-						$this->setData(['pages', $parentKey, 'position', $index]);
+						$this->setData(['page', $parentKey, 'position', $index]);
 					}
 				}
 				// Modifie les positions des pages avec le même parent
@@ -1116,13 +1343,13 @@ class core
 							$index++;
 						}
 						// Change les positions
-						$this->setData(['pages', $childKey, 'position', $index]);
+						$this->setData(['page', $childKey, 'position', $index]);
 					}
 				}
 			}
 			// Modifie la page ou en crée une nouvelle si la clef à changée
 			$this->setData([
-				'pages',
+				'page',
 				$key,
 				[
 					// Si cette partie est modifiée il faut modifier : la création, l'édition, et l'enregistrement ajax de la page
@@ -1139,7 +1366,7 @@ class core
 			]);
 			// Supprime l'ancienne page si la clef à changée
 			if($key !== $this->getUrl(0)) {
-				$this->removeData(['pages', $this->getUrl(0)]);
+				$this->removeData(['page', $this->getUrl(0)]);
 			}
 			// Enregistre les données
 			$this->saveData($removeAllCache);
@@ -1154,16 +1381,16 @@ class core
 		$hierarchy = $this->getHierarchy();
 		foreach($hierarchy as $parentKey => $childrenKeys) {
 			// Sélectionne le parent de la page courante
-			if($parentKey === $this->getData(['pages', $this->getUrl(0), 'parent'])) {
+			if($parentKey === $this->getData(['page', $this->getUrl(0), 'parent'])) {
 				$selected = $parentKey;
 			}
 			// Ajoute la page à la liste des pages parentes si elle ne correspond pas à la page courante
 			if($parentKey !== $this->getUrl(0)) {
-				$pagesNoParent[$parentKey] = $this->getData(['pages', $parentKey, 'title']);
+				$pagesNoParent[$parentKey] = $this->getData(['page', $parentKey, 'title']);
 			}
 		}
 		// Template de la page
-		self::$title = $this->getData(['pages', $this->getUrl(0), 'title']);
+		self::$title = $this->getData(['page', $this->getUrl(0), 'title']);
 		self::$content =
 			template::openForm().
 			template::tabs([
@@ -1171,7 +1398,7 @@ class core
 					template::openRow().
 					template::text('title', [
 						'label' => 'Titre de la page',
-						'value' => $this->getData(['pages', $this->getUrl(0), 'title']),
+						'value' => $this->getData(['page', $this->getUrl(0), 'title']),
 						'required' => true
 					]).
 					template::newRow().
@@ -1188,7 +1415,7 @@ class core
 					template::script('
 						// Affiche les bonnes pages dans le select des positions en fonction de la page parente
 						var hierarchy = ' . json_encode($this->getHierarchy()) . ';
-						var pages = ' . json_encode($this->getData(['pages'])) . ';
+						var pages = ' . json_encode($this->getData(['page'])) . ';
 						$("#parent").on("change", function() {
 							var positionDOM = $("#position");
 							var positionLabelDOM = $("label[form=position]");
@@ -1243,7 +1470,7 @@ class core
 					').
 					template::newRow().
 					template::textarea('content', [
-						'value' => $this->getData(['pages', $this->getUrl(0), 'content']),
+						'value' => $this->getData(['page', $this->getUrl(0), 'content']),
 						'editor' => true
 					]).
 					template::newRow().
@@ -1251,18 +1478,18 @@ class core
 						'value' => $this->getUrl(0)
 					]).
 					template::hidden('oldModule', [
-						'value' => $this->getData(['pages', $this->getUrl(0), 'module'])
+						'value' => $this->getData(['page', $this->getUrl(0), 'module'])
 					]).
 					template::select('module', helper::listModules('Aucun module'), [
 						'label' => 'Inclure le module',
 						'help' => 'En cas de changement de module, les données du module précédent seront supprimées.',
-						'selected' => $this->getData(['pages', $this->getUrl(0), 'module']),
+						'selected' => $this->getData(['page', $this->getUrl(0), 'module']),
 						'col' => 11
 					]).
 					template::button('admin', [
 						'value' => template::ico('gear'),
 						'href' => helper::baseUrl() . 'module/' . $this->getUrl(0),
-						'disabled' => $this->getData(['pages', $this->getUrl(0), 'module']) ? '' : 'disabled',
+						'disabled' => $this->getData(['page', $this->getUrl(0), 'module']) ? '' : 'disabled',
 						'col' => 1
 					]).
 					template::script('
@@ -1303,21 +1530,21 @@ class core
 					template::text('metaTitle', [
 						'label' => 'Méta titre de la page',
 						'help' => 'Si le champ est vide, la description du site est utilisée.',
-						'value' => $this->getData(['pages', $this->getUrl(0), 'metaTitle'])
+						'value' => $this->getData(['page', $this->getUrl(0), 'metaTitle'])
 					]).
 					template::newRow().
 					template::textarea('description', [
 						'label' => 'Méta description de la page',
 						'help' => 'Si le champ est vide, la description du site est utilisée.',
-						'value' => $this->getData(['pages', $this->getUrl(0), 'description'])
+						'value' => $this->getData(['page', $this->getUrl(0), 'description'])
 					]).
 					template::newRow().
 					template::checkbox('hideTitle', true, 'Ne pas afficher le titre en mode public', [
-						'checked' => $this->getData(['pages', $this->getUrl(0), 'hideTitle'])
+						'checked' => $this->getData(['page', $this->getUrl(0), 'hideTitle'])
 					]).
 					template::newRow().
 					template::checkbox('blank', true, 'Ouvrir dans un nouvel onglet en mode public', [
-						'checked' => $this->getData(['pages', $this->getUrl(0), 'blank'])
+						'checked' => $this->getData(['page', $this->getUrl(0), 'blank'])
 					]).
 					template::closeRow()
 			]).
@@ -1340,11 +1567,11 @@ class core
 	public function delete()
 	{
 		// Erreur 404
-		if(!$this->getData(['pages', $this->getUrl(0)]) AND !is_file('data/upload/' . $this->getUrl(0))) {
+		if(!$this->getData(['page', $this->getUrl(0)]) AND !is_file('data/upload/' . $this->getUrl(0))) {
 			return false;
 		}
 		// Pour les pages
-		elseif($this->getData(['pages', $this->getUrl(0)])) {
+		elseif($this->getData(['page', $this->getUrl(0)])) {
 			// La page est utilisée comme page d'accueil et ne peut être supprimée
 			if($this->getUrl(0) === $this->getData(['config', 'index'])) {
 				$this->setNotification('Impossible de supprimer la page d\'accueil !', true);
@@ -1354,9 +1581,9 @@ class core
 				$this->setNotification('Impossible de supprimer une page contenant des enfants !', true);
 			}
 			// Supprime la page
-			elseif($this->getData(['pages', $this->getUrl(0)])) {
+			elseif($this->getData(['page', $this->getUrl(0)])) {
 				// Supprime la page et les données du module rattachées à la page
-				$this->removeData(['pages', $this->getUrl(0)]);
+				$this->removeData(['page', $this->getUrl(0)]);
 				$this->removeData($this->getUrl(0));
 				// Enregistre les données
 				$this->saveData();
@@ -1386,28 +1613,28 @@ class core
 	public function save()
 	{
 		// Erreur 404
-		if(!$this->getData(['pages', $this->getUrl(0)])) {
+		if(!$this->getData(['page', $this->getUrl(0)])) {
 			return false;
 		}
 		// Supprime les données du module de la page si le module à changé
-		if($this->getPost('module') !== $this->getData(['pages', $this->getUrl(0), 'module'])) {
+		if($this->getPost('module') !== $this->getData(['page', $this->getUrl(0), 'module'])) {
 			$this->removeData($this->getUrl(0));
 		}
 		// Modifie le module de la page
 		$this->setData([
-			'pages',
+			'page',
 			$this->getUrl(0),
 			[
 				// Si cette partie est modifiée il faut modifier : la création, l'édition, et l'enregistrement ajax de la page
-				'blank' => $this->getData(['pages', $this->getUrl(0), 'blank']),
-				'content' => $this->getData(['pages', $this->getUrl(0), 'content']),
-				'description' => $this->getData(['pages', $this->getUrl(0), 'description']),
-				'hideTitle' => $this->getData(['pages', $this->getUrl(0), 'hideTitle']),
-				'metaTitle' => $this->getData(['pages', $this->getUrl(0), 'metaTitle']),
+				'blank' => $this->getData(['page', $this->getUrl(0), 'blank']),
+				'content' => $this->getData(['page', $this->getUrl(0), 'content']),
+				'description' => $this->getData(['page', $this->getUrl(0), 'description']),
+				'hideTitle' => $this->getData(['page', $this->getUrl(0), 'hideTitle']),
+				'metaTitle' => $this->getData(['page', $this->getUrl(0), 'metaTitle']),
 				'module' => $this->getPost('module', helper::STRING),
-				'parent' => $this->getData(['pages', $this->getUrl(0), 'parent']),
-				'position' => $this->getData(['pages', $this->getUrl(0), 'position']),
-				'title' => $this->getData(['pages', $this->getUrl(0), 'title'])
+				'parent' => $this->getData(['page', $this->getUrl(0), 'parent']),
+				'position' => $this->getData(['page', $this->getUrl(0), 'position']),
+				'title' => $this->getData(['page', $this->getUrl(0), 'title'])
 			]
 		]);
 		// Enregistre les données
@@ -1421,15 +1648,15 @@ class core
 	public function module()
 	{
 		// Erreur 404
-		if(!$this->getData(['pages', $this->getUrl(0), 'module'])) {
+		if(!$this->getData(['page', $this->getUrl(0), 'module'])) {
 			return false;
 		}
 		// Contenu de la page
-		$module = $this->getData(['pages', $this->getUrl(0), 'module']) . 'Adm';
+		$module = $this->getData(['page', $this->getUrl(0), 'module']) . 'Adm';
 		$module = new $module;
 		$method = in_array($this->getUrl(1), $module::$views) ? $this->getUrl(1) : 'index';
 		$module->$method(); // Retourne la variable self::content
-		self::$title = $this->getData(['pages', $this->getUrl(0), 'title']);
+		self::$title = $this->getData(['page', $this->getUrl(0), 'title']);
 	}
 
 	/** Redirection vers le bon mode (édition ou public) */
@@ -1437,8 +1664,14 @@ class core
 	{
 		// Switch de mode
 		$this->setMode(!$this->getMode());
-		// Redirection (utilisation de 0 pour détecter un module système car $this->getUrl() détecte déjà le module système "mode" en 0 et le supprime)
-		helper::redirect($this->getUrl(0));
+		// Redirection spécifique pour le module système "module" pour pointer vers la page
+		if($this->getUrl(0) === 'module') {
+			helper::redirect($this->getUrl(1));
+		}
+		// Sinon redirection vers la page courante
+		else {
+			helper::redirect($this->getUrl());
+		}
 	}
 
 	/** Gestionnaire de fichiers */
@@ -1590,38 +1823,39 @@ class core
 					'index' => $this->getPost('index', helper::STRING),
 					'language' => $this->getPost('language', helper::STRING),
 					'password' => $password,
+					'theme' => [
+						'class' => [
+							'backgroundImageRepeat' => $this->getPost('backgroundImageRepeat', helper::STRING),
+							'backgroundImagePosition' => $this->getPost('backgroundImagePosition', helper::STRING),
+							'backgroundImageAttachment' => $this->getPost('backgroundImageAttachment', helper::STRING),
+							'headerHeight' => $this->getPost('headerHeight', helper::STRING),
+							'headerMargin' => $this->getPost('headerMargin', helper::BOOLEAN),
+							'headerPosition' => $this->getPost('headerPosition', helper::STRING),
+							'headerTextAlign' => $this->getPost('headerTextAlign', helper::STRING),
+							'menuHeight' => $this->getPost('menuHeight', helper::STRING),
+							'menuMargin' => $this->getPost('menuMargin', helper::BOOLEAN),
+							'menuPosition' => $this->getPost('menuPosition', helper::STRING),
+							'menuTextAlign' => $this->getPost('menuTextAlign', helper::STRING),
+							'siteRadius' => $this->getPost('siteRadius', helper::BOOLEAN),
+							'siteShadow' => $this->getPost('siteShadow', helper::BOOLEAN),
+							'siteWidth' => $this->getPost('siteWidth', helper::STRING)
+						],
+						'color' => [
+							'background' => $this->getPost('backgroundColor', helper::STRING),
+							'element' => $this->getPost('elementColor', helper::STRING),
+							'header' => $this->getPost('headerColor', helper::STRING),
+							'menu' => $this->getPost('menuColor', helper::STRING)
+						],
+						'font' => [
+							'text' => $this->getPost('textFont', helper::STRING),
+							'title' => $this->getPost('titleFont', helper::STRING)
+						],
+						'image' => [
+							'background' => $this->getPost('backgroundImage', helper::URL),
+							'header' => $this->getPost('headerImage', helper::URL)
+						]
+					],
 					'title' => $this->getPost('title', helper::STRING)
-				]
-			]);
-			// Modifie les couleurs
-			$this->setData([
-				'colors',
-				[
-					'background' => $this->getPost('colorBackground', helper::STRING),
-					'element' => $this->getPost('colorElement', helper::STRING),
-					'header' => $this->getPost('colorHeader', helper::STRING),
-					'menu' => $this->getPost('colorMenu', helper::STRING)
-				]
-			]);
-			// Modifie le theme
-			$this->setData([
-				'theme',
-				[
-					'backgroundImage' => $this->getPost('themeBackgroundImage', helper::URL),
-					'backgroundImageRepeat' => $this->getPost('themeBackgroundImageRepeat', helper::STRING),
-					'backgroundImagePosition' => $this->getPost('themeBackgroundImagePosition', helper::STRING),
-					'backgroundImageAttachment' => $this->getPost('themeBackgroundImageAttachment', helper::STRING),
-					'headerHeight' => $this->getPost('themeHeaderHeight', helper::STRING),
-					'headerImage' => $this->getPost('themeHeaderImage', helper::URL),
-					'headerPosition' => $this->getPost('themeHeaderPosition', helper::STRING),
-					'headerTextAlign' => $this->getPost('themeHeaderTextAlign', helper::STRING),
-					'menuHeight' => $this->getPost('themeMenuHeight', helper::STRING),
-					'menuPosition' => $this->getPost('themeMenuPosition', helper::STRING),
-					'menuTextAlign' => $this->getPost('themeMenuTextAlign', helper::STRING),
-					'siteMargin' => $this->getPost('themeSiteMargin', helper::BOOLEAN),
-					'siteRadius' => $this->getPost('themeSiteRadius', helper::BOOLEAN),
-					'siteShadow' => $this->getPost('themeSiteShadow', helper::BOOLEAN),
-					'siteWidth' => $this->getPost('themeSiteWidth', helper::STRING)
 				]
 			]);
 			// Active/désactive l'URL rewriting
@@ -1683,7 +1917,7 @@ class core
 						'col' => 6
 					]).
 					template::newRow().
-					template::select('index', helper::arrayCollumn($this->getData('pages'), 'title', 'SORT_ASC', true), [
+					template::select('index', helper::arrayCollumn($this->getData('page'), 'title', 'SORT_ASC', true), [
 						'label' => 'Page d\'accueil',
 						'required' => 'required',
 						'selected' => $this->getData(['config', 'index'])
@@ -1727,35 +1961,79 @@ class core
 					]).
 					template::closeRow(),
 				'Personnalisation du thème' =>
-					template::subTitle('Fond de la page').
+					template::subTitle('Couleurs').
 					template::openRow().
-					template::colorPicker('colorBackground', [
-						'label' => 'Couleur',
-						'value' => $this->getData(['colors', 'background']),
+					template::colorPicker('backgroundColor', [
+						'label' => 'Fond du site',
+						'value' => $this->getData(['config', 'theme', 'color', 'background']),
+						'transparent' => false,
+						'required' => true,
+						'col' => 3
+					]).
+					template::colorPicker('headerColor', [
+						'label' => 'Bannière',
+						'value' => $this->getData(['config', 'theme', 'color', 'header']),
+						'col' => 3
+					]).
+					template::colorPicker('menuColor', [
+						'label' => 'Menu',
+						'value' => $this->getData(['config', 'theme', 'color', 'menu']),
+						'col' => 3
+					]).
+					template::colorPicker('elementColor', [
+						'label' => 'Éléments',
+						'value' => $this->getData(['config', 'theme', 'color', 'element']),
+						'transparent' => false,
+						'required' => true,
+						'col' => 3
+					]).
+					template::closeRow().
+					template::subTitle('Polices de caractères').
+					template::openRow().
+					template::select('titleFont', self::$fonts, [
+						'label' => 'Titres',
+						'selected' => $this->getData(['config', 'theme', 'font', 'title']),
 						'col' => 6
 					]).
-					template::select('themeBackgroundImage', helper::listUploads('Aucune image', ['png', 'gif', 'jpg', 'jpeg']), [
-						'label' => 'Image',
+					template::select('textFont', self::$fonts, [
+						'label' => 'Texte',
+						'selected' => $this->getData(['config', 'theme', 'font', 'text']),
+						'col' => 6
+					]).
+					template::closeRow().
+					template::subTitle('Site').
+					template::openRow().
+					template::select('siteWidth', [
+						'themeSiteWidthSmall' => 'Petit',
+						'themeSiteWidthMedium' => 'Moyen',
+						'themeSiteWidthLarge' => 'Large'
+					], [
+						'label' => 'Largeur',
+						'selected' => $this->getData(['config', 'theme', 'class', 'siteWidth']),
+						'col' => 6
+					]).
+					template::select('backgroundImage', helper::listUploads('Aucune image', ['png', 'jpeg', 'jpg', 'gif']), [
+						'label' => 'Image de fond du site',
 						'help' => 'Seule une image de format .png, .gif, .jpg ou .jpeg du gestionnaire de fichiers est acceptée.',
-						'selected' => $this->getData(['theme', 'backgroundImage']),
+						'selected' => $this->getData(['config', 'theme', 'image', 'background']),
 						'col' => 6
 					]).
 					template::newRow().
 					template::div([
-						'id' => 'themeBackgroundImageOptions',
+						'id' => 'backgroundImageOptions',
 						'class' => 'hide',
 						'text' =>
-							template::select('themeBackgroundImageRepeat', [
+							template::select('backgroundImageRepeat', [
 								'themeBackgroundImageRepeatNo' => 'Ne pas répéter',
 								'themeBackgroundImageRepeatX' => 'Sur l\'axe horizontal',
 								'themeBackgroundImageRepeatY' => 'Sur l\'axe vertical',
 								'themeBackgroundImageRepeatAll' => 'Sur les deux axes'
 							], [
 								'label' => 'Répétition',
-								'selected' => $this->getData(['theme', 'backgroundImageRepeat']),
+								'selected' => $this->getData(['config', 'theme', 'class', 'backgroundImageRepeat']),
 								'col' => 4
 							]).
-							template::select('themeBackgroundImagePosition', [
+							template::select('backgroundImagePosition', [
 								'themeBackgroundImagePositionTopLeft' => 'En haut à gauche',
 								'themeBackgroundImagePositionTopCenter' => 'En haut au centre',
 								'themeBackgroundImagePositionTopRight' => 'En haut à droite',
@@ -1767,139 +2045,142 @@ class core
 								'themeBackgroundImagePositionBottomRight' => 'En bas à droite',
 							], [
 								'label' => 'Alignement',
-								'selected' => $this->getData(['theme', 'backgroundImagePosition']),
+								'selected' => $this->getData(['config', 'theme', 'class', 'backgroundImagePosition']),
 								'col' => 4
 							]).
-							template::select('themeBackgroundImageAttachment', [
+							template::select('backgroundImageAttachment', [
 								'themeBackgroundImageAttachmentScroll' => 'Normale',
 								'themeBackgroundImageAttachmentFixed' => 'Fixe'
 							], [
 								'label' => 'Position',
-								'selected' => $this->getData(['theme', 'backgroundImageAttachment']),
+								'selected' => $this->getData(['config', 'theme', 'class', 'backgroundImageAttachment']),
 								'col' => 4
 							])
 					]).
 					template::script('
 						// Affiche/cache les options de l\'image du fond
-						$("#themeBackgroundImage").on("change", function() {
-							var themeBackgroundImageOptions = $("#themeBackgroundImageOptions");
-							if($(this).val() !== "") {
-								themeBackgroundImageOptions.slideDown();
+						$("#backgroundImage").on("change", function() {
+							var backgroundImageOptionsDOM = $("#backgroundImageOptions");
+							if($(this).val() === "") {
+								backgroundImageOptionsDOM.slideUp();
 							}
 							else {
-								themeBackgroundImageOptions.slideUp();
+								backgroundImageOptionsDOM.slideDown();
 							}
 						}).trigger("change");
 					').
-					template::closeRow().
-					template::subTitle('Site').
-					template::openRow().
-					template::colorPicker('colorElement', [
-						'label' => 'Couleur des éléments',
-						'value' => $this->getData(['colors', 'element']),
-						'col' => 6
-					]).
-					template::select('themeSiteWidth', [
-						'themeSiteWidthSmall' => 'Petit',
-						'themeSiteWidthMedium' => 'Moyen',
-						'themeSiteWidthLarge' => 'Large'
-					], [
-						'label' => 'Largeur',
-						'selected' => $this->getData(['theme', 'siteWidth']),
-						'col' => 6
+					template::newRow().
+					template::checkbox('siteRadius', true, 'Arrondir les coins du site', [
+						'checked' => $this->getData(['config', 'theme', 'class', 'siteRadius'])
 					]).
 					template::newRow().
-					template::checkbox('themeSiteRadius', true, 'Arrondir les coins du site', [
-						'checked' => $this->getData(['theme', 'siteRadius'])
-					]).
-					template::newRow().
-					template::checkbox('themeSiteShadow', true, 'Ajouter une ombre autour du site', [
-						'checked' => $this->getData(['theme', 'siteShadow'])
+					template::checkbox('siteShadow', true, 'Ajouter une ombre autour du site', [
+						'checked' => $this->getData(['config', 'theme', 'class', 'siteShadow'])
 					]).
 					template::closeRow().
 					template::subTitle('Bannière').
 					template::openRow().
-					template::colorPicker('colorHeader', [
-						'label' => 'Couleur',
-						'value' => $this->getData(['colors', 'header']),
-						'col' => 6
-					]).
-					template::select('themeHeaderImage', helper::listUploads('Aucune image', ['png', 'gif', 'jpg', 'jpeg']), [
-						'label' => 'Remplacer le texte par une image',
+					template::select('headerImage', helper::listUploads('Aucune image', ['png', 'jpeg', 'jpg', 'gif']), [
+						'label' => 'Remplacer le titre par une image',
 						'help' => 'Seule une image de format .png, .gif, .jpg ou .jpeg du gestionnaire de fichiers est acceptée.',
-						'selected' => $this->getData(['theme', 'headerImage']),
-						'col' => 6
+						'selected' => $this->getData(['config', 'theme', 'image', 'header'])
 					]).
 					template::newRow().
-					template::select('themeHeaderPosition', [
+					template::select('headerPosition', [
 						'themeHeaderPositionHide' => 'Invisible',
 						'themeHeaderPositionTop' => 'Dans le haut de la page',
 						'themeHeaderPositionSite' => 'Dans le site'
 					], [
 						'label' => 'Emplacement',
-						'selected' => $this->getData(['theme', 'headerPosition']),
+						'selected' => $this->getData(['config', 'theme', 'class', 'headerPosition']),
 						'col' => 4
 					]).
-					template::select('themeHeaderHeight', [
+					template::select('headerHeight', [
 						'themeHeaderHeightSmall' => 'Petit',
 						'themeHeaderHeightMedium' => 'Moyen',
 						'themeHeaderHeightLarge' => 'Grand',
 						'themeHeaderHeightAuto' => 'Automatique'
 					], [
 						'label' => 'Hauteur',
-						'selected' => $this->getData(['theme', 'headerHeight']),
+						'selected' => $this->getData(['config', 'theme', 'class', 'headerHeight']),
 						'col' => 4
 					]).
-					template::select('themeHeaderTextAlign', [
+					template::select('headerTextAlign', [
 						'themeHeaderTextAlignLeft' => 'Gauche',
 						'themeHeaderTextAlignCenter' => 'Centre',
 						'themeHeaderTextAlignRight' => 'Droite'
 					], [
 						'label' => 'Alignement du contenu',
-						'selected' => $this->getData(['theme', 'headerTextAlign']),
+						'selected' => $this->getData(['config', 'theme', 'class', 'headerTextAlign']),
 						'col' => 4
 					]).
+					template::newRow().
+					template::checkbox('headerMargin', true, 'Aligne la bannière avec le contenu du site', [
+						'checked' => $this->getData(['config', 'theme', 'class', 'headerMargin']),
+						'class' => 'hide'
+					]).
+					template::script('
+						// Affiche/cache l\'alignement de la bannière avec le contenu du site
+						$("#headerPosition").on("change", function() {
+							var headerMarginWrapperDOM = $("#headerMarginWrapper");
+							if($(this).val() === "themeHeaderPositionSite") {
+								headerMarginWrapperDOM.slideDown();
+							}
+							else {
+								headerMarginWrapperDOM.slideUp(function() {
+									$("#headerMargin_1").prop("checked", false);
+								});
+							}
+						}).trigger("change");
+					').
 					template::closeRow().
 					template::subTitle('Menu').
 					template::openRow().
-					template::colorPicker('colorMenu', [
-						'label' => 'Couleur',
-						'value' => $this->getData(['colors', 'menu'])
-					]).
-					template::newRow().
-					template::select('themeMenuPosition', [
+					template::select('menuPosition', [
 						'themeMenuPositionTop' => 'Dans le haut de la page',
 						'themeMenuPositionSite' => 'Dans le site'
 					], [
 						'label' => 'Emplacement',
-						'selected' => $this->getData(['theme', 'menuPosition']),
+						'selected' => $this->getData(['config', 'theme', 'class', 'menuPosition']),
 						'col' => 4
 					]).
-					template::select('themeMenuHeight', [
+					template::select('menuHeight', [
 						'themeMenuHeightSmall' => 'Petit',
 						'themeMenuHeightMedium' => 'Moyen',
 						'themeMenuHeightLarge' => 'Grand'
 					], [
 						'label' => 'Hauteur',
-						'selected' => $this->getData(['theme', 'menuHeight']),
+						'selected' => $this->getData(['config', 'theme', 'class', 'menuHeight']),
 						'col' => 4
 					]).
-					template::select('themeMenuTextAlign', [
+					template::select('menuTextAlign', [
 						'themeMenuTextAlignLeft' => 'Gauche',
 						'themeMenuTextAlignCenter' => 'Centre',
 						'themeMenuTextAlignRight' => 'Droite'
 					], [
 						'label' => 'Alignement du contenu',
-						'selected' => $this->getData(['theme', 'menuTextAlign']),
+						'selected' => $this->getData(['config', 'theme', 'class', 'menuTextAlign']),
 						'col' => 4
 					]).
-					template::closeRow().
-					template::subTitle('Autres').
-					template::openRow().
-					template::checkbox('themeSiteMargin', true, 'Aligne la bannière et le menu avec le contenu du site', [
-						'help' => 'Ajoute une marge à la bannière et au menu si l\'un des deux éléments est placé dans le site.',
-						'checked' => $this->getData(['theme', 'siteMargin'])
+					template::newRow().
+					template::checkbox('menuMargin', true, 'Aligne le menu avec le contenu du site', [
+						'checked' => $this->getData(['config', 'theme', 'class', 'menuMargin']),
+						'class' => 'hide'
 					]).
+					template::script('
+						// Affiche/cache l\'alignement du menu avec le contenu du site
+						$("#menuPosition").on("change", function() {
+							var menuMarginWrapperDOM = $("#menuMarginWrapper");
+							if($(this).val() === "themeMenuPositionSite") {
+								menuMarginWrapperDOM.slideDown();
+							}
+							else {
+								menuMarginWrapperDOM.slideUp(function() {
+									$("#menuMargin_1").prop("checked", false);
+								});
+							}
+						}).trigger("change");
+					').
 					template::closeRow()
 			]).
 			template::script('
@@ -1907,6 +2188,8 @@ class core
 				$(".tabContent[data-1=3]").on("change", function() {
 					var tabContentDOM = $(this);
 					var bodyDOM = $("body");
+					var css = "";
+					var fonts = ' . json_encode(self::$fonts) . ';
 					// Supprime les anciennes classes
 					bodyDOM.removeClass();
 					// Ajoute les nouvelles classes
@@ -1915,19 +2198,55 @@ class core
 						var selectDOM = $(this);
 						var option = selectDOM.find("option:selected").val();
 						// Pour le select d\'ajout d\'image dans la bannière
-						if(selectDOM.attr("id") === "themeHeaderImage") {
-							var headerDOM = $("header");
+						if(selectDOM.attr("id") === "headerImage") {
+							$("header img").remove();
 							if(option === "") {
 								bodyDOM.removeClass("themeHeaderImage");
 							}
 							else {
 								bodyDOM.addClass("themeHeaderImage");
+								$("header").append(
+									$("<img>").attr("src", "' . helper::baseUrl(false) . '" + option)
+								);
 							}
-							headerDOM.find("img").attr("src", "' . helper::baseUrl(false) . '" + option);
 						}
 						// Pour le select d\'ajout d\'image de fond
-						else if(selectDOM.attr("id") === "themeBackgroundImage") {
+						else if(selectDOM.attr("id") === "backgroundImage") {
 							bodyDOM.css("background-image", "url(\'' . helper::baseUrl(false) . '" + option + "\')");
+						}
+						// Pour les select de choix de la police de caractères
+						else if(selectDOM.attr("id") === "textFont" || selectDOM.attr("id") === "titleFont") {
+							// Ajout l\'import de la police de caractères
+							if($("link[href=\'https://fonts.googleapis.com/css?family=" + option + "\']").length === 0) {
+								$("head").append(
+									$("<link>").attr({
+										rel: "stylesheet",
+										href: "https://fonts.googleapis.com/css?family=" + option
+									})
+								);
+							}
+							// Ajout du css pour le texte
+							if(selectDOM.attr("id") === "textFont") {
+								css += "
+									body {
+										font-family: \'" + fonts[option] + "\', sans-serif;
+									}
+								";
+							}
+							// Ajout du css pour les titres
+							else if(selectDOM.attr("id") === "titleFont") {
+								css += "
+									h1,
+									h2,
+									h3,
+									h4,
+									h5,
+									h6,
+									.tabTitles {
+										font-family: \'" + fonts[option] + "\', sans-serif;
+									}
+								";
+							}
 						}
 						// Pour les autres
 						else {
@@ -1939,32 +2258,47 @@ class core
 					// Pour les inputs
 					tabContentDOM.find("input").each(function() {
 						var inputDOM = $(this);
-						// Cas spécifique pour les checkbox
+						// Cas spécifique pour les checkboxs
 						if(inputDOM.is(":checkbox")) {
 							if(inputDOM.is(":checked")) {
-								bodyDOM.addClass(inputDOM.attr("name").replace("[]", ""));
+								var name = inputDOM.attr("name").replace("[]", "");
+								bodyDOM.addClass("theme" + name.charAt(0).toUpperCase() + name.slice(1));
 							}
 						}
 						// Cas simple (ignore les colorPickers)
-						else if(!inputDOM.hasClass(".jscolor")) {
+						else if(!inputDOM.hasClass("jscolor")) {
 							bodyDOM.addClass(inputDOM.val());
 						}
 					});
 					// Pour les colorPickers
-					var style = "";
 					$(this).find(".jscolor").each(function() {
 						var jscolorDOM = $(this);
-						var rgb = hexToRgb(jscolorDOM.val());
-						var color = rgb.r + "," + rgb.g + "," + rgb.b;
-						var colorDark = (rgb.r - 20) + "," + (rgb.g - 20) + "," + (rgb.b - 20);
-						var colorVeryDark = (rgb.r - 25) + "," + (rgb.g - 25) + "," + (rgb.b - 25);
-						var textVariant = (rgb.r + rgb.g + rgb.b / 3) < 350 ? "#FFF" : "inherit";
+						var rgb;
+						var color;
+						var colorDark;
+						var colorVeryDark;
+						var textVariant;
+						// Calcul des couleurs
+						if(jscolorDOM.val()) {
+							rgb = hexToRgb(jscolorDOM.val());
+							color = rgb.r + "," + rgb.g + "," + rgb.b + ",1";
+							colorDark = (rgb.r - 20) + "," + (rgb.g - 20) + "," + (rgb.b - 20) + ",1";
+							colorVeryDark = (rgb.r - 25) + "," + (rgb.g - 25) + "," + (rgb.b - 25) + ",1";
+							textVariant = (.213 * rgb.r + .715 * rgb.g + .072 * rgb.b > 127.5) ? "inherit" : "#FFF";
+						}
+						// Transparence
+						else {
+							color = "0,0,0,0";
+							colorDark = color;
+							colorVeryDark = color;
+							textVariant = "inherit";
+						}
 						// Couleur du header
-						if(jscolorDOM.attr("id") === "colorHeader") {
-							style += "
+						if(jscolorDOM.attr("id") === "headerColor") {
+							css += "
 								/* Couleur normale */
 								header {
-									background-color: rgb(" + color + ");
+									background-color: rgba(" + color + ");
 								}
 								header h1 {
 									color: " + textVariant + ";
@@ -1972,13 +2306,13 @@ class core
 							";
 						}
 						// Couleurs du menu
-						else if(jscolorDOM.attr("id") === "colorMenu") {
-							style += "
+						else if(jscolorDOM.attr("id") === "menuColor") {
+							css += "
 								/* Couleur normale */
 								.toggle,
 								nav,
 								nav ul {
-									background-color: rgb(" + color + ");
+									background-color: rgba(" + color + ");
 								}
 								.toggle span,
 								nav a {
@@ -1987,19 +2321,19 @@ class core
 								/* Couleur foncée */
 								.toggle:hover,
 								nav a:hover {
-									background-color: rgb(" + colorDark + ");
+									background-color: rgba(" + colorDark + ");
 								}
 								/* Couleur très foncée */
 								.toggle:active,
 								nav a:active,
 								nav a.current {
-									background-color: rgb(" + colorVeryDark + ");
+									background-color: rgba(" + colorVeryDark + ");
 								}
 							";
 						}
 						// Couleurs des éléments
-						else if(jscolorDOM.attr("id") === "colorElement") {
-							style += "
+						else if(jscolorDOM.attr("id") === "elementColor") {
+							css += "
 								/* Couleur normale */
 								input[type=\'submit\'],
 								.button,
@@ -2007,7 +2341,7 @@ class core
 								input[type=\'checkbox\']:checked + label:before,
 								input[type=\'radio\']:checked + label:before,
 								.helpContent {
-									background-color: rgb(" + color + ");
+									background-color: rgba(" + color + ");
 									color: " + textVariant + ";
 								}
 								h2,
@@ -2016,14 +2350,14 @@ class core
 								a,
 								.tabTitle.current,
 								.helpButton span {
-									color: rgb(" + color + ");
+									color: rgba(" + color + ");
 								}
 								input[type=\'text\']:hover,
 								input[type=\'password\']:hover,
 								input[type=\'file\']:hover,
 								select:hover,
 								textarea:hover {
-									border: 1px solid rgb(" + color + ");
+									border: 1px solid rgba(" + color + ");
 								}
 								/* Couleur foncée */
 								input[type=\'submit\']:hover,
@@ -2033,34 +2367,34 @@ class core
 								input[type=\'checkbox\']:active + label:before,
 								input[type=\'radio\']:checked:hover + label:before,
 								input[type=\'radio\']:not(:checked):active + label:before {
-									background-color: rgb(" + colorDark + ");
+									background-color: rgba(" + colorDark + ");
 								}
 								.helpButton span:hover {
-									color: rgb(" + colorDark + ");
+									color: rgba(" + colorDark + ");
 								}
 								/* Couleur très foncée */
 								input[type=\'submit\']:active,
 								.button:active,
 								.pagination a:active {
-									background-color: rgb(" + colorVeryDark + ");
+									background-color: rgba(" + colorVeryDark + ");
 								}
 							";
 						}
 						// Couleur du fond
-						else if(jscolorDOM.attr("id") === "colorBackground") {
-							style += "
+						else if(jscolorDOM.attr("id") === "backgroundColor") {
+							css += "
 								/* Couleur normale */
 								body {
-									background-color: rgb(" + color + ");
+									background-color: rgba(" + color + ");
 								}
 							";
 						}
-						// Supprime le css déjà ajouté
-						var headDOM = $("head");
-						headDOM.find("style").remove();
-						// Retourne le nouveau css
-						$("<style>").text(style).appendTo(headDOM);
 					});
+					// Supprime le css déjà ajouté
+					var headDOM = $("head");
+					headDOM.find("style").remove();
+					// Retourne le nouveau css
+					$("<style>").text(css).appendTo(headDOM);
 				});
 			').
 			template::openRow().
@@ -2184,7 +2518,7 @@ class helper
 		$pathInfo = pathinfo($currentPath);
 		$hostName = $_SERVER['HTTP_HOST'];
 		$protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"], 0, 5)) == 'https://' ? 'https://' : 'http://';
-		return ($host ? $protocol . $hostName  : '') . rtrim($pathInfo['dirname'], ' \/') . '/' . (($queryString AND !helper::rewriteCheck()) ? '?' : '');
+		return ($host ? $protocol . $hostName  : '') . rtrim($pathInfo['dirname'], ' /') . '/' . (($queryString AND !helper::rewriteCheck()) ? '?' : '');
 	}
 
 	/**
@@ -2240,13 +2574,18 @@ class helper
 	/**
 	 * Convertit un code hexadecimal en rgb
 	 * @param  mixed  $hex Code hexadecimal à convertir
-	 * @return string
+	 * @return mixed
 	 */
 	public static function hexToRgb($hex)
 	{
-		$hex = $hex ? $hex : 'FFFFFF'; // Compatibilité anciennes versions
-    	list($r, $g, $b) = str_split($hex, 2);
-		return array(hexdec($r), hexdec($g), hexdec($b));
+		if(!empty($hex)) {
+			list($r, $g, $b) = str_split($hex, 2);
+			return array(
+				'r' => hexdec($r),
+				'g' => hexdec($g),
+				'b' => hexdec($b)
+			);
+		}
 	}
 
 	/**
@@ -2381,7 +2720,7 @@ class helper
 		return [
 			'first' => $firstElement,
 			'last' => $lastElement,
-			'pages' => template::div([
+			'page' => template::div([
 				'text' => $pages,
 				'class' => 'pagination'
 			])
@@ -2863,7 +3202,7 @@ class template
 			$attributes['value'] = $value;
 		}
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper']. '">';
+		$html = '<div id="' . $nameId . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper']. '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -2917,7 +3256,7 @@ class template
 			$attributes['value'] = $value;
 		}
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
+		$html = '<div id="' . $nameId . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -2990,7 +3329,7 @@ class template
 		// Champ requis
 		self::setRequired($nameId, $attributes);
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
+		$html = '<div id="' . $nameId . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -3042,7 +3381,7 @@ class template
 			$attributes['value'] = $value;
 		}
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
+		$html = '<div id="' . $nameId . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -3095,7 +3434,7 @@ class template
 			$attributes['selected'] = $selected;
 		}
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
+		$html = '<div id="' . $nameId . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -3147,6 +3486,7 @@ class template
 			'required' => '',
 			'label' => '',
 			'help' => '',
+			'transparent' => true,
 			'class' => '',
 			'classWrapper' => '',
 			'col' => 12,
@@ -3158,8 +3498,12 @@ class template
 		if(($value = self::getBefore($nameId)) !== null) {
 			$attributes['value'] = $value;
 		}
+		// Message d'aide si la transparence est activée
+		if($attributes['transparent']) {
+			$attributes['help'] = 'Vous pouvez utiliser la transparence en laissant le champ vide.';
+		}
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper']. '">';
+		$html = '<div id="' . $nameId . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper']. '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($nameId, $attributes['label'], [
@@ -3173,9 +3517,10 @@ class template
 		}
 		// Texte
 		$html .= sprintf(
-			'<input type="text" class="jscolor {shadow:false, borderRadius:false} %s" %s>',
+			'<input type="text" class="jscolor {required: %s, shadow: false, borderRadius: false} %s" %s>',
+			$attributes['transparent'] ? 'false' : 'true', // Pour afficher les booleans en string
 			$attributes['class'],
-			self::sprintAttributes($attributes, ['class'])
+			self::sprintAttributes($attributes, ['class', 'transparent'])
 		);
 		// Fin col
 		$html .= '</div>';
@@ -3209,7 +3554,7 @@ class template
 		// Champ requis
 		self::setRequired($nameId, $attributes);
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
+		$html = '<div id="' . $nameId . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Notice
 		if(!empty(self::$notices[$nameId])) {
 			$html .= self::getNotice($nameId);
@@ -3257,7 +3602,7 @@ class template
 		// Champ requis
 		self::setRequired($nameId, $attributes);
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
+		$html = '<div id="' . $nameId . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Notice
 		if(!empty(self::$notices[$nameId])) {
 			$html .= self::getNotice($nameId);
@@ -3301,7 +3646,7 @@ class template
 			'offset' => 0
 		], $attributes);
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
+		$html = '<div id="' . $nameId . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Bouton
 		$html .= sprintf(
 			'<input type="submit" value="%s" %s>',
@@ -3338,7 +3683,7 @@ class template
 		], $attributes);
 
 		// Début col
-		$html = '<div class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
+		$html = '<div id="' . $nameId . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper'] . '">';
 		// Bouton
 		$html .= sprintf(
 			'<a %s class="button %s %s">%s</a>',

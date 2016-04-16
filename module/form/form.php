@@ -74,7 +74,7 @@ class formAdm extends core
 			}
 
 			// Crée les champs
-			$this->setData([$this->getUrl(0), 'inputs', $inputs]);
+			$this->setData([$this->getUrl(0), 'input', $inputs]);
 			// Enregistre les données
 			$this->saveData();
 			// Notification de succès
@@ -83,15 +83,15 @@ class formAdm extends core
 			helper::redirect($this->getUrl());
 		}
 		// Liste des champs
-		if($this->getData([$this->getUrl(0), 'inputs'])) {
+		if($this->getData([$this->getUrl(0), 'input'])) {
 			// Liste les champs en les classant par position en ordre croissant
-			$inputs = helper::arrayCollumn($this->getData([$this->getUrl(0), 'inputs']), 'position', 'SORT_ASC');
+			$inputs = helper::arrayCollumn($this->getData([$this->getUrl(0), 'input']), 'position', 'SORT_ASC');
 			// Crée l'affichage des champs en fonction
 			for($i = 0; $i < count($inputs); $i++) {
 				self::$content .=
 					template::openRow().
 					template::hidden('position[]', [
-						'value' => $this->getData([$this->getUrl(0), 'inputs', $inputs[$i], 'position']),
+						'value' => $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'position']),
 						'class' => 'position'
 					]).
 					template::button('move[]', [
@@ -101,22 +101,22 @@ class formAdm extends core
 					]).
 					template::text('name[]', [
 						'placeholder' => 'Nom',
-						'value' => $this->getData([$this->getUrl(0), 'inputs', $inputs[$i], 'name']),
+						'value' => $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'name']),
 						'col' => 3
 					]).
 					template::select('type[]', self::$types, [
-						'selected'  => $this->getData([$this->getUrl(0), 'inputs', $inputs[$i], 'type']),
+						'selected'  => $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'type']),
 						'class' => 'type',
 						'col' => 2
 					]).
 					template::text('values[]', [
 						'placeholder' => 'Liste des valeurs (valeur1,valeur2,...)',
-						'value' => $this->getData([$this->getUrl(0), 'inputs', $inputs[$i], 'values']),
+						'value' => $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'values']),
 						'class' => 'values',
 						'col' => 3
 					]).
 					template::select('width[]', self::$widths, [
-						'selected' => (int) $this->getData([$this->getUrl(0), 'inputs', $inputs[$i], 'width']),
+						'selected' => (int) $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'width']),
 						'col' => 2
 					]).
 					template::button('delete[]', [
@@ -314,7 +314,7 @@ class formAdm extends core
 				}
 			}
 			// Ajoute la liste des pages en dessous des news
-			self::$content .= $pagination['pages'];
+			self::$content .= $pagination['page'];
 		}
 		// Contenu de la page
 		self::$content =
@@ -388,9 +388,9 @@ class formMod extends core
 			$mail = '';
 			foreach($this->getPost('input') as $key => $value) {
 				// Préparation des données pour la création dans la base
-				$data[$this->getData([$this->getUrl(0), 'inputs', $key, 'name'])] = $value;
+				$data[$this->getData([$this->getUrl(0), 'input', $key, 'name'])] = $value;
 				// Préparation des données pour le mail
-				$mail .= '<li>' . $this->getData([$this->getUrl(0), 'inputs', $key, 'name']) . ' : ' . $value . '</li>';
+				$mail .= '<li>' . $this->getData([$this->getUrl(0), 'input', $key, 'name']) . ' : ' . $value . '</li>';
 			}
 			// Crée les données
 			$this->setData([$this->getUrl(0), 'data', helper::increment(1, $this->getData([$this->getUrl(0), 'data'])), $data]);
@@ -416,8 +416,8 @@ class formMod extends core
 			helper::redirect($this->getUrl());
 		}
 		// Génère les inputs
-		if($this->getData([$this->getUrl(0), 'inputs'])) {
-			foreach($this->getData([$this->getUrl(0), 'inputs']) as $input) {
+		if($this->getData([$this->getUrl(0), 'input'])) {
+			foreach($this->getData([$this->getUrl(0), 'input']) as $input) {
 				self::$content .= $this->generateInput($input);
 			}
 			// Texte du bouton de validation
