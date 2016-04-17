@@ -50,8 +50,9 @@ class formAdm extends core
 				$this->getUrl(0),
 				'config',
 				[
-					'mail' => $this->getPost('mail', helper::EMAIL),
-					'button' => $this->getPost('button', helper::STRING)
+					'button' => $this->getPost('button', helper::STRING),
+					'capcha' => $this->getPost('capcha', helper::BOOLEAN),
+					'mail' => $this->getPost('mail', helper::EMAIL)
 				]
 			]);
 			// Génération des champs
@@ -320,9 +321,14 @@ class formAdm extends core
 						'label' => 'Adresse mail pour recevoir les données saisies à chaque soumission du formulaire',
 						'value' => $this->getData([$this->getUrl(0), 'config', 'mail'])
 					]).
+					template::newRow().
 					template::text('button', [
 						'label' => 'Texte du bouton de soumission',
 						'value' => $this->getData([$this->getUrl(0), 'config', 'button'])
+					]).
+					template::newRow().
+					template::checkbox('capcha', true, 'Ajouter un capcha à remplir pour soumettre le formulaire', [
+						'checked' => $this->getData([$this->getUrl(0), 'config', 'capcha'])
 					]).
 					template::closeRow(),
 				'Données entregistrées' =>
@@ -400,6 +406,13 @@ class formMod extends core
 	{
 		// Traitement du formulaire
 		if($this->getPost('submit')) {
+			// Check la capcha
+			if(
+				$this->getData([$this->getUrl(0), 'config', 'capcha'])
+				AND $this->getPost('capcha', helper::INT) !== $this->getPost('capchaFirstNumber', helper::INT) + $this->getPost('capchaSecondNumber', helper::INT))
+			{
+				template::$notices['capcha'] = 'La somme indiquée est incorrecte';
+			}
 			// Préparation des données
 			$data = [];
 			$mail = '';
@@ -416,20 +429,22 @@ class formMod extends core
 			// Enregistre les données
 			$this->saveData();
 			// Envoi du mail
-			if($this->getData([$this->getUrl(0), 'config', 'mail'])) {
-				$sent = helper::mail(
-					false,
-					$this->getData([$this->getUrl(0), 'config', 'mail']),
-					helper::translate('Nouvelle entrée dans votre formulaire'),
-					'<h2>' . helper::translate('Mail en provenance de votre site ZwiiCMS') . '</h2><h3>' . helper::baseUrl() . $this->getUrl(null, false) . '</h3><ul>' . $mail . '</ul>'
-				);
-			}
-			// Notification de soumission
-			if(isset($sent)) {
-				$this->setNotification('Formulaire soumis avec succès !');
-			}
-			else {
-				$this->setNotification('Impossible d\'envoyer le mail mais formulaire soumis avec succès !', true);
+			if(!template::$notices) {
+				if($this->getData([$this->getUrl(0), 'config', 'mail'])) {
+					$sent = helper::mail(
+						false,
+						$this->getData([$this->getUrl(0), 'config', 'mail']),
+						helper::translate('Nouvelle entrée dans votre formulaire'),
+						'<h2>' . helper::translate('Mail en provenance de votre site ZwiiCMS') . '</h2><h3>' . helper::baseUrl() . $this->getUrl(null, false) . '</h3><ul>' . $mail . '</ul>'
+					);
+				}
+				// Notification de soumission
+				if(isset($sent)) {
+					$this->setNotification('Formulaire soumis avec succès !');
+				}
+				else {
+					$this->setNotification('Impossible d\'envoyer le mail mais formulaire soumis avec succès !', true);
+				}
 			}
 			// Redirige vers la page courante
 			helper::redirect($this->getUrl());
@@ -439,14 +454,20 @@ class formMod extends core
 			foreach($this->getData([$this->getUrl(0), 'input']) as $index => $input) {
 				self::$content .= $this->generateInput($index, $input);
 			}
-			// Texte du bouton de validation
-			$submitText = $this->getData([$this->getUrl(0), 'config', 'button']);
+			$capcha = '';
+			if($this->getData([$this->getUrl(0), 'config', 'capcha'])) {
+				$capcha = template::capcha('capcha', [
+					'col' => 3
+				]);
+			}
 			// Ajout du bouton de validation
 			self::$content .=
 				template::openRow().
+				$capcha.
 				template::submit('submit', [
-					'value' => $submitText ? $submitText : 'Enregistrer',
-					'col' => 2
+					'value' => $this->getData([$this->getUrl(0), 'config', 'button']) ? $this->getData([$this->getUrl(0), 'config', 'button']) : 'Enregistrer',
+					'col' => 2,
+					'offset' => (empty($capcha) ? 10 : 7)
 				]).
 				template::closeRow();
 		}

@@ -261,27 +261,31 @@ class core
 		],
 		'exemple-de-formulaire' => [
 			'config' => [
-				'mail' => 'zwiicms@outlook.com',
-				'button' => 'Envoyer'
+				'button' => 'Envoyer',
+				'capcha' => true,
+				'mail' => 'zwiicms@outlook.com'
 			],
 			'input' => [
 				[
-					'position' => '1',
 					'name' => 'Adresse mail',
+					'position' => '1',
+					'required' => true,
 					'type' => 'text',
 					'values' => '',
 					'width' => '6'
 				],
 				[
-					'position' => '2',
 					'name' => 'Sujet',
+					'position' => '2',
+					'required' => true,
 					'type' => 'text',
 					'values' => '',
 					'width' => '6'
 				],
 				[
-					'position' => '3',
 					'name' => 'Message',
+					'position' => '3',
+					'required' => true,
 					'type' => 'textarea',
 					'values' => '',
 					'width' => '8'
@@ -3406,6 +3410,60 @@ class template
 				});
 			');
 		}
+		// Retourne le html
+		return $html;
+	}
+
+	/**
+	 * Crée un champ capcha
+	 * @param  string $nameId     Nom & id du champ texte court
+	 * @param  array  $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @return string
+	 */
+	public static function capcha($nameId, array $attributes = [])
+	{
+		// Attributs possibles
+		$attributes = array_merge([
+			'id' => $nameId,
+			'name' => $nameId,
+			'value' => '',
+			'required' => 'required',
+			'help' => '',
+			'class' => '',
+			'classWrapper' => '',
+			'col' => 12,
+			'offset' => 0
+		], $attributes);
+		// Champ requis
+		self::setRequired($attributes['id'], $attributes);
+		// Génère deux nombres pour le capcha
+		$firstNumber = mt_rand(1, 15);
+		$secondNumber = mt_rand(1, 15);
+		// Début col
+		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper']. '">';
+		// Label
+		$html .= self::label($attributes['id'], 'Qu\'elle est la somme de ' . $firstNumber . ' + ' . $secondNumber . ' ?', [
+			'help' => $attributes['help']
+		]);
+		// Notice
+		if(!empty(self::$notices[$attributes['id']])) {
+			$html .= self::getNotice($attributes['id']);
+			$attributes['class'] .= ' notice';
+		}
+		// Capcha
+		$html .= sprintf(
+			'<input type="text" %s>',
+			self::sprintAttributes($attributes)
+		);
+		// Champs cachés contenant les nombres
+		$html .= self::hidden($nameId . 'FirstNumber', [
+			'value' => $firstNumber
+		]);
+		$html .= self::hidden($nameId . 'SecondNumber', [
+			'value' => $secondNumber
+		]);
+		// Fin col
+		$html .= '</div>';
 		// Retourne le html
 		return $html;
 	}
