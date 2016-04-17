@@ -2534,15 +2534,26 @@ class core
 		helper::redirect('config');
 	}
 
-	/** Exporte le fichier de données */
+	/** Exporte les données et fichiers uploadés */
 	public function export()
 	{
-		// Force le téléchargement du fichier data/data.json
-		header('Content-disposition: attachment; filename=data.json');
-		header('Content-type: application/json');
-		self::$content = $this->getData();
-		// Utilise le layout JSON
-		self::$layout = 'JSON';
+		// Creation du ZIP
+		$fileName = 'data_' . date('Ymdhis', time()) . '.zip';
+		$zip = new ZipArchive();
+		if($zip->open('core/tmp/' . $fileName, ZipArchive::CREATE) == TRUE){
+			$zip->addFile('data/data.json');
+			foreach(helper::listUploads() as $uploadPath => $uploadName) {
+				$zip->addFile($uploadPath);
+			}
+		}
+		$zip->close();
+		// Téléchargement du ZIP
+		header('Content-Transfer-Encoding: binary');
+		header('Content-Disposition: attachment; filename="' . $fileName . '"');
+		header('Content-Length: ' . filesize('core/tmp/' . $fileName));
+		readfile('core/tmp/' . $fileName);
+		// Utilise le layout vide
+		self::$layout = 'BLANK';
 	}
 
 	/** Connexion (faux module système) */
