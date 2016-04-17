@@ -411,7 +411,7 @@ footer #socials .zwiico-youtube:hover {
 
 input[type='text'],
 input[type='password'],
-input[type='file'],
+.inputFile,
 select,
 textarea {
 	padding: 9px; /* -1px à cause des bordures */
@@ -421,7 +421,7 @@ textarea {
 }
 input[type='text'].notice,
 input[type='password'].notice,
-input[type='file'].notice,
+.inputFile.notice,
 select.notice,
 textarea.notice {
 	border: 1px solid #F3674A;
@@ -431,10 +431,6 @@ select:disabled,
 textarea:disabled {
 	background: #EEE !important;
 	color: #CCC !important;
-}
-input[type='file'] {
-	padding: 6px 9px;
-	max-height: 40px;
 }
 input[type='submit'] {
 	width: 100%;
@@ -448,6 +444,13 @@ textarea {
 label {
 	display: block;
 	margin-bottom: 2px;
+}
+.inputFile {
+	cursor: pointer;
+	margin: 0;
+}
+.inputFile input[type='file'] {
+	display: none;
 }
 
 /**

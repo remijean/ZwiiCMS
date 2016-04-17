@@ -804,7 +804,7 @@ class core
 					}
 					input[type=\'text\']:hover,
 					input[type=\'password\']:hover,
-					input[type=\'file\']:hover,
+					.inputFile:hover,
 					select:hover,
 					textarea:hover {
 						border: 1px solid rgb(' . $color . ');
@@ -1784,7 +1784,8 @@ class core
 			template::file('file', [
 				'label' => 'Parcourir mes fichiers',
 				'help' => 'Les formats de fichiers autorisés sont : .' . implode(', .', core::$managerExtensions) . '.',
-				'col' => '10'
+				'col' => '10',
+				'required' => 'required'
 			]).
 			template::submit('submit', [
 				'value' => 'Envoyer',
@@ -2461,7 +2462,7 @@ class core
 								}
 								input[type=\'text\']:hover,
 								input[type=\'password\']:hover,
-								input[type=\'file\']:hover,
+								.inputFile:hover,
 								select:hover,
 								textarea:hover {
 									border: 1px solid rgba(" + color + ");
@@ -3571,11 +3572,23 @@ class template
 		}
 		// Texte
 		$html .= sprintf(
-			'<input type="file" %s>',
-			self::sprintAttributes($attributes)
+			'<label class="inputFile %s">' . self::ico('download') . '<span class="inputFileLabel">' . helper::translate('Choisissez un fichier') . '</span><input type="file" %s></label>',
+			$attributes['class'],
+			self::sprintAttributes($attributes, ['class'])
 		);
 		// Fin col
 		$html .= '</div>';
+		// Script
+		$html .= self::script('			
+			$("#' . $attributes['id'] . '").on("change", function() {
+				var fileDOM = $(this);
+				var fileName = fileDOM.val().split("\\\").pop();
+				if(!fileName) {
+					fileName = "' . helper::translate('Choisissez un fichier') . '";
+				}
+				fileDOM.parents(".inputFile").find(".inputFileLabel").text(fileName);
+			})
+		');
 		// Retourne le html
 		return $html;
 	}
