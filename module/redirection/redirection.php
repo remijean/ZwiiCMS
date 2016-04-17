@@ -37,12 +37,13 @@ class redirectionAdm extends core
 			template::openRow().
 			template::text('url', [
 				'label' => 'URL de redirection',
-				'value' => $this->getData([$this->getUrl(0), 'url'])
+				'value' => $this->getData([$this->getUrl(0), 'url']),
+				'required' => 'required'
 			]).
 			template::newRow().
 			template::button('back', [
 				'value' => 'Retour',
-				'href' => helper::baseUrl() . 'edit/' . $this->getUrl(0),
+				'href' => helper::baseUrl() . $this->getUrl(0),
 				'col' => 2
 			]).
 			template::submit('submit', [
