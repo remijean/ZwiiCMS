@@ -768,8 +768,8 @@ class core
 			}
 			// Couleur de survole des liens et couleur de fond blanche pour les sous menu si le menu est transparent
 			else {
-				$colorDark = '0,0,0,.05';
-				$colorVeryDark = '0,0,0,.1';
+				$colorDark = '0,0,0,.09';
+				$colorVeryDark = '0,0,0,.12';
 				$css .= '
 					/* Couleur blanche des sous menus */
 					nav li ul {
@@ -2415,8 +2415,8 @@ class core
 						// Transparence
 						else {
 							color = "0,0,0,0";
-							colorDark = "0,0,0,.05";
-							colorVeryDark = "0,0,0,.1";
+							colorDark = "0,0,0,.09";
+							colorVeryDark = "0,0,0,.12";
 							textVariant = "inherit";
 							// Sous menu blanc car le menu est transparent
 							colorMenuChildren = "255,255,255,1";
