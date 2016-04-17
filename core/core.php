@@ -715,6 +715,7 @@ class core
 		if(!file_exists('core/cache/' . self::$cssVersion . '.css')) {
 			// Police de caractères
 			$css = '
+				@import url("https://fonts.googleapis.com/css?family=' . $this->getData(['config', 'theme', 'font', 'text']) . '|' . $this->getData(['config', 'theme', 'font', 'title']) . '");
 				body {
 					font-family: "' . self::$fonts[$this->getData(['config', 'theme', 'font', 'text'])] . '", sans-serif;
 				}
@@ -2298,8 +2299,9 @@ class core
 				$(".tabContent[data-1=3]").on("change", function() {
 					var tabContentDOM = $(this);
 					var bodyDOM = $("body");
-					var css = "";
 					var fonts = ' . json_encode(self::$fonts) . ';
+					// Importe les polices de caractères
+					var css = "@import url(\'https://fonts.googleapis.com/css?family=" + $("#textFont option:selected").val() + "|" + $("#titleFont option:selected").val() + "\');";
 					// Supprime les anciennes classes
 					bodyDOM.removeClass();
 					// Ajoute les nouvelles classes
@@ -2326,15 +2328,6 @@ class core
 						}
 						// Pour les select de choix de la police de caractères
 						else if(selectDOM.attr("id") === "textFont" || selectDOM.attr("id") === "titleFont") {
-							// Ajout l\'import de la police de caractères
-							if($("link[href=\'https://fonts.googleapis.com/css?family=" + option + "\']").length === 0) {
-								$("head").append(
-									$("<link>").attr({
-										rel: "stylesheet",
-										href: "https://fonts.googleapis.com/css?family=" + option
-									})
-								);
-							}
 							// Ajout du css pour le texte
 							if(selectDOM.attr("id") === "textFont") {
 								css += "
@@ -3399,8 +3392,11 @@ class template
 					language: language.split("-")[0],
 					plugins: "advlist anchor autolink autoresize charmap code colorpicker contextmenu fullscreen hr image imagetools legacyoutput link lists media nonbreaking noneditable paste preview print searchreplace tabfocus table textcolor textpattern visualchars wordcount",
 					toolbar: "insertfile undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media",
-					body_class: body.attr("class") + " editor",
-					content_css: ["core/theme.css"],
+					body_class: "editor",
+					content_css: [
+						"core/theme.css",
+						"core/cache/' . core::$cssVersion . '.css",
+					],
 					relative_urls: false,
 					file_browser_callback: function(fieldName) {
 						$("#editorField").val(fieldName);
