@@ -1243,7 +1243,7 @@ class core
 					var editorFieldShort = editorField.substring(0, editorField.length - 3);
 					// Affiche le statut de l\'upload
 					function uploadStatus(color) {
-						$("#" + editorField).val("").css("border-color", color);
+						$("#" + editorField).val("").css({borderColor: color, color: color});
 						$("#" + editorFieldShort + "l").css("color", color);
 						$("#" + editorFieldShort + "action").css({
 							backgroundColor: color,
@@ -1252,7 +1252,7 @@ class core
 					}
 					// Upload d\'image
 					var file = this.files[0];
-					if(file !== undefined && file.type.substring(0, 5) === "image") {
+					if(file !== undefined) {
 						var formData = new FormData();
 						formData.append("file", file);
 						$.ajax({
@@ -1265,20 +1265,18 @@ class core
 							processData: false,
 							success: function(data) {
 								if(data.error) {
-									uploadStatus("#E74C3C");
+									uploadStatus("#F3674A");
+									$("#" + editorField).val(data.error);
 								}
 								else {
-									uploadStatus("#1ABC9C");
+									uploadStatus("#67C672");
 									$("#" + editorField).val(data.link);
 								}
 							},
 							error: function() {
-								uploadStatus("#E74C3C");
+								uploadStatus("#F3674A");
 							}
 						});
-					}
-					else {
-						uploadStatus("#E74C3C");
 					}
 				});
 			');
@@ -1803,7 +1801,7 @@ class core
 	 * @param array $extensions Extensions autorisées
 	 * @return bool
 	 */
-	public function upload(array $extensions = [])
+	public function upload(array $extensions = ['png', 'gif', 'jpg', 'jpeg'])
 	{
 		// Erreur 404
 		if(!isset($_FILES['file'])) {
@@ -1835,15 +1833,8 @@ class core
 		}
 		// Pour une requête en AJAX
 		if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-			// En cas de succès retourne les données
-			if(isset($data['success'])) {
-				self::$layout = 'JSON';
-				self::$content = $data;
-			}
-			// Sinon statut de requête incorrecte
-			else {
-				http_response_code(400);
-			}
+			self::$layout = 'JSON';
+			self::$content = $data;
 		}
 		// Pour une requête en POST
 		else {
