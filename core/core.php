@@ -2015,6 +2015,7 @@ class core
 					]).
 					template::closeRow(),
 				'Configuration avancée' =>
+					template::subTitle('Site').
 					template::openRow().
 					template::select('favicon', helper::listUploads('Aucune image', ['ico'], null, 16, 16), [
 						'label' => 'Favicon du site',
@@ -2022,22 +2023,18 @@ class core
 						'selected' => $this->getData(['config', 'favicon'])
 					]).
 					template::newRow().
+					template::textarea('footer', [
+						'label' => 'Texte du bas de page',
+						'value' => $this->getData(['config', 'footer'])
+					]).
+					template::closeRow().
+					template::subTitle('Statistiques').
+					template::openRow().
 					template::text('analytics', [
 						'label' => 'Google Analytics',
 						'value' => $this->getData(['config', 'analytics']),
 						'help' => 'Saisissez l\'ID de suivi de votre propriété Google Analytics.',
 						'placeholder' => 'UA-XXXXXXXX-X',
-					]).
-					template::newRow().
-					template::textarea('footer', [
-						'label' => 'Texte du bas de page',
-						'value' => $this->getData(['config', 'footer'])
-					]).
-					template::newRow().
-					template::checkbox('rewrite', true, 'Activer la réécriture d\'URL', [
-						'checked' => helper::rewriteCheck(),
-						'help' => 'Supprime le point d\'interrogation de l\'URL (si vous n\'arrivez pas à cocher la case, vérifiez que le module d\'URL rewriting de votre serveur est bien activé).',
-						'disabled' => helper::modRewriteCheck() ? '' : 'disabled' // Check que l'URL rewriting fonctionne sur le serveur
 					]).
 					template::closeRow().
 					template::subTitle('Réseaux sociaux').
@@ -2081,6 +2078,12 @@ class core
 					template::closeRow().
 					template::subTitle('Système').
 					template::openRow().
+					template::checkbox('rewrite', true, 'Activer la réécriture d\'URL', [
+						'checked' => helper::rewriteCheck(),
+						'help' => 'Supprime le point d\'interrogation de l\'URL (si vous n\'arrivez pas à cocher la case, vérifiez que le module d\'URL rewriting de votre serveur est bien activé).',
+						'disabled' => helper::modRewriteCheck() ? '' : 'disabled' // Check que l'URL rewriting fonctionne sur le serveur
+					]).
+					template::newRow().
 					template::text('version', [
 						'label' => 'Version de ZwiiCMS',
 						'value' => self::$version,
