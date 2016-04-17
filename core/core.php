@@ -168,7 +168,7 @@ class core
 		'page' => [
 			'accueil' => [
 				'blank' => false,
-				'content' => "<h3>Félicitations ZwiiCMS est 100% opérationnel !</h3>\r\n<p>Pour entrer dans l'administration, rendez-vous <a href='/ZwiiCMS/?config'>ici</a> ou cliquez sur le lien 'Administration' en bas de page. Le mot de passe d'administration par défaut est <strong>password</strong>.</p>\r\n<p>Si vous rencontrez un problème ou si vous avez besoin d'aide, n'hésitez pas à jeter un œil au <a title='site' href='http://zwiicms.com/'>site</a> ou au <a title='forum' href='http://forum.zwiicms.com/'>forum</a> de ZwiiCMS.</p>\r\n<h4>Suivez-nous sur <a href='https://twitter.com/ZwiiCMS/'>Twitter</a> et <a href='https://www.facebook.com/ZwiiCMS/'>Facebook</a> pour ne manquer aucune nouveauté !</h4>",
+				'content' => "<h3>Félicitations ZwiiCMS est 100% opérationnel !</h3>\r\n<p>Pour entrer dans l'administration, rendez-vous <a href='/ZwiiCMS/?config'>ici</a> ou cliquez sur le lien \"Administration\" en bas de page. Le mot de passe d'administration par défaut est <strong>password</strong>.</p>\r\n<p>Si vous rencontrez un problème ou si vous avez besoin d'aide, n'hésitez pas à jeter un œil au <a title='site' href='http://zwiicms.com/'>site</a> ou au <a title='forum' href='http://forum.zwiicms.com/'>forum</a> de ZwiiCMS.</p>\r\n<h4>Suivez-nous sur <a href='https://twitter.com/ZwiiCMS/'>Twitter</a> et <a href='https://www.facebook.com/ZwiiCMS/'>Facebook</a> pour ne manquer aucune nouveauté !</h4>",
 				'description' => '',
 				'hideTitle' => false,
 				'metaTitle' => '',
@@ -1869,7 +1869,7 @@ class core
 			if($this->getPost('newPassword')) {
 				$newPassword = $this->getPost('newPassword', helper::PASSWORD);
 				// Ne change pas le mot de passe et crée une notice si la confirmation ne correspond pas au mot de passe
-				if($newPassword !== $this->getPost('confirmPassword')) {
+				if($newPassword !== $this->getPost('confirmPassword', helper::PASSWORD)) {
 					$newPassword = $this->getData(['config', 'password']);
 					template::$notices['confirmPassword'] = 'La confirmation ne correspond pas au mot de passe';
 				}
@@ -2033,37 +2033,37 @@ class core
 					template::text('facebook', [
 						'label' => 'Facebook',
 						'value' => $this->getData(['config', 'social', 'facebook']),
-						'help' => 'Vous devez saisir la partie entre crochets : https://www.facebook.com/[VOTRE ID]/.',
+						'help' => 'Saisissez votre ID Facebook, elle correspond à la partie suivante de l\'URL de Facebook : https://www.facebook.com/CETTE PARTIE/.',
 						'col' => 2
 					]).
 					template::text('googleplus', [
 						'label' => 'Google+',
 						'value' => $this->getData(['config', 'social', 'googleplus']),
-						'help' => 'Vous devez saisir la partie entre crochets : https://plus.google.com/[VOTRE ID]/.',
+						'help' => 'Saisissez votre ID Google+, elle correspond à la partie suivante de l\'URL de Google+ : https://plus.google.com/CETTE PARTIE/.',
 						'col' => 2
 					]).
 					template::text('instagram', [
 						'label' => 'Instagram',
 						'value' => $this->getData(['config', 'social', 'instagram']),
-						'help' => 'Vous devez saisir la partie entre crochets : https://www.instagram.com/[VOTRE ID]/.',
+						'help' => 'Saisissez votre ID Instagram, elle correspond à la partie suivante de l\'URL de Instagram : https://www.instagram.com/CETTE PARTIE/.',
 						'col' => 2
 					]).
 					template::text('pinterest', [
 						'label' => 'Pinterest',
 						'value' => $this->getData(['config', 'social', 'pinterest']),
-						'help' => 'Vous devez saisir la partie entre crochets : https://pinterest.com/[VOTRE ID]/.',
+						'help' => 'Saisissez votre ID Pinterest, elle correspond à la partie suivante de l\'URL de Pinterest : https://pinterest.com/CETTE PARTIE/.',
 						'col' => 2
 					]).
 					template::text('twitter', [
-						'label' => 'Twitter+',
+						'label' => 'Twitter',
 						'value' => $this->getData(['config', 'social', 'twitter']),
-						'help' => 'Vous devez saisir la partie entre crochets : https://twitter.com/[VOTRE ID]/.',
+						'help' => 'Saisissez votre ID Twitter, elle correspond à la partie suivante de l\'URL de Twitter : https://twitter.com/CETTE PARTIE/.',
 						'col' => 2
 					]).
 					template::text('youtube', [
 						'label' => 'Youtube',
 						'value' => $this->getData(['config', 'social', 'youtube']),
-						'help' => 'Vous devez saisir la partie entre crochets : https://www.youtube.com/channel/[VOTRE ID]/.',
+						'help' => 'Saisissez votre ID Youtube, elle correspond à la partie suivante de l\'URL de Youtube : https://www.youtube.com/channel/CETTE PARTIE/.',
 						'col' => 2
 					]).
 					template::closeRow().
