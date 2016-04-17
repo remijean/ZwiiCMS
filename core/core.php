@@ -2045,37 +2045,37 @@ class core
 					template::text('facebook', [
 						'label' => 'Facebook',
 						'value' => $this->getData(['config', 'social', 'facebook']),
-						'help' => 'Saisissez votre ID Facebook, elle correspond à la partie suivante de l\'URL de Facebook : https://www.facebook.com/CETTE PARTIE/.',
+						'help' => 'Saisissez votre ID Facebook, il correspond à la partie suivante de l\'URL de Facebook : https://www.facebook.com/CETTE PARTIE',
 						'col' => 2
 					]).
 					template::text('googleplus', [
 						'label' => 'Google+',
 						'value' => $this->getData(['config', 'social', 'googleplus']),
-						'help' => 'Saisissez votre ID Google+, elle correspond à la partie suivante de l\'URL de Google+ : https://plus.google.com/CETTE PARTIE/.',
+						'help' => 'Saisissez votre ID Google+, il correspond à la partie suivante de l\'URL de Google+ : https://plus.google.com/CETTE PARTIE',
 						'col' => 2
 					]).
 					template::text('instagram', [
 						'label' => 'Instagram',
 						'value' => $this->getData(['config', 'social', 'instagram']),
-						'help' => 'Saisissez votre ID Instagram, elle correspond à la partie suivante de l\'URL de Instagram : https://www.instagram.com/CETTE PARTIE/.',
+						'help' => 'Saisissez votre ID Instagram, il correspond à la partie suivante de l\'URL de Instagram : https://www.instagram.com/CETTE PARTIE',
 						'col' => 2
 					]).
 					template::text('pinterest', [
 						'label' => 'Pinterest',
 						'value' => $this->getData(['config', 'social', 'pinterest']),
-						'help' => 'Saisissez votre ID Pinterest, elle correspond à la partie suivante de l\'URL de Pinterest : https://pinterest.com/CETTE PARTIE/.',
+						'help' => 'Saisissez votre ID Pinterest, il correspond à la partie suivante de l\'URL de Pinterest : https://pinterest.com/CETTE PARTIE',
 						'col' => 2
 					]).
 					template::text('twitter', [
 						'label' => 'Twitter',
 						'value' => $this->getData(['config', 'social', 'twitter']),
-						'help' => 'Saisissez votre ID Twitter, elle correspond à la partie suivante de l\'URL de Twitter : https://twitter.com/CETTE PARTIE/.',
+						'help' => 'Saisissez votre ID Twitter, il correspond à la partie suivante de l\'URL de Twitter : https://twitter.com/CETTE PARTIE',
 						'col' => 2
 					]).
 					template::text('youtube', [
 						'label' => 'Youtube',
 						'value' => $this->getData(['config', 'social', 'youtube']),
-						'help' => 'Saisissez votre ID Youtube, elle correspond à la partie suivante de l\'URL de Youtube : https://www.youtube.com/channel/CETTE PARTIE/.',
+						'help' => 'Saisissez votre ID Youtube, il correspond à la partie suivante de l\'URL de Youtube : https://www.youtube.com/channel/CETTE PARTIE',
 						'col' => 2
 					]).
 					template::closeRow().
