@@ -277,6 +277,7 @@ nav li:hover ul {
 }
 nav a {
 	display: inherit;
+	color: #555;
 }
 nav a:hover {
 	text-decoration: none;

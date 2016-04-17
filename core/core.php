@@ -750,8 +750,8 @@ class core
 			// Couleurs du menu
 			if($rgb = helper::hexToRgb($this->getData(['config', 'theme', 'color', 'menu']))) {
 				$color = $rgb['r'] . ',' . $rgb['g'] . ',' . $rgb['b'];
-				$colorDark = ($rgb['r'] - 20) . ',' . ($rgb['g'] - 20) . ',' . ($rgb['b'] - 20);
-				$colorVeryDark = ($rgb['r'] - 25) . ',' . ($rgb['g'] - 25) . ',' . ($rgb['b'] - 25);
+				$colorDark = ($rgb['r'] - 20) . ',' . ($rgb['g'] - 20) . ',' . ($rgb['b'] - 20) . ',1';
+				$colorVeryDark = ($rgb['r'] - 25) . ',' . ($rgb['g'] - 25) . ',' . ($rgb['b'] - 25) . ',1';
 				$textVariant = (.213 * $rgb['r'] + .715 * $rgb['g'] + .072 * $rgb['b'] > 127.5) ? 'inherit' : '#FFF';
 				$css .= '
 					/* Couleur normale */
@@ -764,19 +764,39 @@ class core
 					nav a {
 						color: ' . $textVariant . ';
 					}
-					/* Couleur foncée */
-					.toggle:hover,
-					nav a:hover {
-						background-color: rgb(' . $colorDark . ');
+				';
+			}
+			// Couleur de survole des liens et couleur de fond blanche pour les sous menu si le menu est transparent
+			else {
+				$colorDark = '0,0,0,.1';
+				$colorVeryDark = '0,0,0,.2';
+				$css .= '
+					/* Couleur blanche des sous menus */
+					nav li ul {
+						background-color: rgb(255, 255, 255);
 					}
-					/* Couleur très foncée */
-					.toggle:active,
-					nav a:active,
-					nav a.current {
-						background-color: rgb(' . $colorVeryDark . ');
+					nav li ul a:hover {
+						background-color: rgb(235, 235, 235);
+					}
+					nav li ul a:active,
+					nav li ul a.current {
+						background-color: rgb(230, 230, 230);
 					}
 				';
 			}
+			$css .= '
+				/* Couleur foncée */
+				.toggle:hover,
+				nav a:hover {
+					background-color: rgba(' . $colorDark . ');
+				}
+				/* Couleur très foncée */
+				.toggle:active,
+				nav a:active,
+				nav a.current {
+					background-color: rgba(' . $colorVeryDark . ');
+				}
+			';
 			// Couleurs des éléments
 			if($rgb = helper::hexToRgb($this->getData(['config', 'theme', 'color', 'element']))) {
 				$color = $rgb['r'] . ',' . $rgb['g'] . ',' . $rgb['b'];
@@ -2377,6 +2397,9 @@ class core
 						var colorDark;
 						var colorVeryDark;
 						var textVariant;
+						var colorMenuChildren;
+						var colorDarkMenuChildren;
+						var colorVeryDarkMenuChildren;
 						// Calcul des couleurs
 						if(jscolorDOM.val()) {
 							rgb = hexToRgb(jscolorDOM.val());
@@ -2384,13 +2407,21 @@ class core
 							colorDark = (rgb.r - 20) + "," + (rgb.g - 20) + "," + (rgb.b - 20) + ",1";
 							colorVeryDark = (rgb.r - 25) + "," + (rgb.g - 25) + "," + (rgb.b - 25) + ",1";
 							textVariant = (.213 * rgb.r + .715 * rgb.g + .072 * rgb.b > 127.5) ? "inherit" : "#FFF";
+							// Sous menu de la même couleur que le menu
+							colorMenuChildren = color;
+							colorDarkMenuChildren = color;
+							colorVeryDarkMenuChildren = color;
 						}
 						// Transparence
 						else {
 							color = "0,0,0,0";
-							colorDark = color;
-							colorVeryDark = color;
+							colorDark = "0,0,0,.1";
+							colorVeryDark = "0,0,0,.2";
 							textVariant = "inherit";
+							// Sous menu blanc car le menu est transparent
+							colorMenuChildren = "255,255,255,1";
+							colorDarkMenuChildren = "235,235,235,1";
+							colorVeryDarkMenuChildren = "230,230,230,1";
 						}
 						// Couleur du header
 						if(jscolorDOM.attr("id") === "headerColor") {
@@ -2413,6 +2444,9 @@ class core
 								nav ul {
 									background-color: rgba(" + color + ");
 								}
+								nav li ul {
+									background-color: rgba(" + colorMenuChildren + ");
+								}
 								.toggle span,
 								nav a {
 									color: " + textVariant + ";
@@ -2422,11 +2456,18 @@ class core
 								nav a:hover {
 									background-color: rgba(" + colorDark + ");
 								}
+								nav li ul a:hover {
+									background-color: rgba(" + colorDarkMenuChildren + ");
+								}
 								/* Couleur très foncée */
 								.toggle:active,
 								nav a:active,
 								nav a.current {
 									background-color: rgba(" + colorVeryDark + ");
+								}
+								nav li ul a:active,
+								nav li ul a.current {
+									background-color: rgba(" + colorVeryDarkMenuChildren + ");
 								}
 							";
 						}
