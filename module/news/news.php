@@ -81,7 +81,7 @@ class newsAdm extends core
 					template::openRow().
 					template::button('back', [
 						'value' => 'Retour',
-						'href' => helper::baseUrl() . 'edit/' . $this->getUrl(0),
+						'href' => helper::baseUrl() . $this->getUrl(0),
 						'col' => 2
 					]).
 					template::closeRow(),
@@ -99,7 +99,7 @@ class newsAdm extends core
 					template::newRow().
 					template::button('back', [
 						'value' => 'Retour',
-						'href' => helper::baseUrl() . 'edit/' . $this->getUrl(0),
+						'href' => helper::baseUrl() . $this->getUrl(0),
 						'col' => 2
 					]).
 					template::submit('submit', [
