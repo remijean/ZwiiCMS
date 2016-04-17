@@ -418,7 +418,9 @@ class formMod extends core
 			$mail = '';
 			foreach($this->getPost('input') as $key => $value) {
 				// Erreur champ obligatoire
-				template::getRequired('input[' . $key . ']');
+				if(empty($value)) {
+					template::getRequired('input[' . $key . ']');
+				}
 				// Préparation des données pour la création dans la base
 				$data[$this->getData([$this->getUrl(0), 'input', $key, 'name'])] = $value;
 				// Préparation des données pour le mail

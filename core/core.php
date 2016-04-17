@@ -2977,7 +2977,16 @@ class helper
 	{
 		// Sauvegarde des données en méthode POST si une notice existe
 		if(template::$notices) {
-			template::$before = $_POST;
+			foreach($_POST as $postKey => $postValue) {
+				if(is_array($postValue)) {
+					foreach($postValue as $subPostKey => $subPostValue) {
+						template::$before[$postKey . '[' . $subPostKey . ']'] = $subPostValue;
+					}
+				}
+				else {
+					template::$before[$postKey] = $postValue;
+				}
+			}
 		}
 		// Sinon redirection
 		else {
@@ -3311,10 +3320,11 @@ class template
 			'id' => $nameId,
 			'name' => $nameId,
 			'value' => '',
-			'class' => ''
+			'class' => '',
+			'before' => true
 		], $attributes);
 		// Sauvegarde des données en cas d'erreur
-		if(($value = self::getBefore($attributes['id'])) !== null) {
+		if(($value = self::getBefore($attributes['id'])) !== null AND $attributes['before']) {
 			$attributes['value'] = $value;
 		}
 		// Texte
@@ -3501,10 +3511,12 @@ class template
 		);
 		// Champs cachés contenant les nombres
 		$html .= self::hidden($nameId . 'FirstNumber', [
-			'value' => $firstNumber
+			'value' => $firstNumber,
+			'before' => false
 		]);
 		$html .= self::hidden($nameId . 'SecondNumber', [
-			'value' => $secondNumber
+			'value' => $secondNumber,
+			'before' => false
 		]);
 		// Fin col
 		$html .= '</div>';
