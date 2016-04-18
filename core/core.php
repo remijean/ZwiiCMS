@@ -549,31 +549,30 @@ class core
 
 	/**
 	 * Accède à une valeur de la variable HTTP POST et lui applique un filtre
-	 * @param  mixed  $keys   Clé(s) de la valeur
+	 * @param  mixed  $key    Clé de la valeur
 	 * @param  string $filter Filtre à appliquer
 	 * @return mixed
 	 */
-	public function getPost($keys, $filter = null)
+	public function getPost($key, $filter = null)
 	{
-		// Si la clef n'est pas un tableau
-		if(!is_array($keys)) {
-			// Erreur champ obligatoire
-			if(empty($_POST[$keys])) {
-				template::getRequired($keys);
+		$post = '';
+		// Si la clef est un tableau
+		if(preg_match('#\[(.*)\]#', $key, $subKey)) {
+			$key = explode('[', $key)[0];
+			if(isset($_POST[$key][$subKey[1]])) {
+				$post = $_POST[$key][$subKey[1]];
+				// Erreur champ obligatoire
+				if(empty($post)) {
+					template::getRequired($key . $subKey[0]);
+				}
 			}
-			// Transforme la clé en tableau
-			$keys = [$keys];
 		}
-		// Décent dans les niveaux de la variable HTTP POST
-		$post = $_POST;
-		foreach($keys as $key) {
-			// Retourne une valeur si la clef n'existe pas (sinon bug avec les cases à cocher non cochées)
-			if(isset($post[$key])) {
-				$post = $post[$key];
-			}
-			else {
-				$post = '';
-				break;
+		// Si la clef est une chaine
+		elseif(isset($_POST[$key])) {
+			$post = $_POST[$key];
+			// Erreur champ obligatoire
+			if(empty($post)) {
+				template::getRequired($key);
 			}
 		}
 		// Applique le filtre et retourne la valeur
@@ -2258,7 +2257,7 @@ class core
 							}
 							else {
 								headerMarginWrapperDOM.slideUp(function() {
-									$("#headerMargin_1").prop("checked", false);
+									$("#headerMargin").prop("checked", false);
 								});
 							}
 						}).trigger("change");
@@ -2306,7 +2305,7 @@ class core
 							}
 							else {
 								menuMarginWrapperDOM.slideUp(function() {
-									$("#menuMargin_1").prop("checked", false);
+									$("#menuMargin").prop("checked", false);
 								});
 							}
 						}).trigger("change");
@@ -3331,7 +3330,7 @@ class template
 			$attributes['value'] = $value;
 		}
 		// Texte
-		$html = sprintf('<input type="hidden" %s>', self::sprintAttributes($attributes));
+		$html = sprintf('<input type="hidden" %s>', self::sprintAttributes($attributes, ['before']));
 		// Retourne le html
 		return $html;
 	}
@@ -3800,14 +3799,12 @@ class template
 		}
 		// Case à cocher
 		$html .= sprintf(
-			'<input type="checkbox" id="%s" name="%s" value="%s" %s>',
-			$attributes['id'] . '_' . $value,
-			$attributes['name'] . '[]',
+			'<input type="checkbox" value="%s" %s>',
 			$value,
-			self::sprintAttributes($attributes, ['id', 'name'])
+			self::sprintAttributes($attributes)
 		);
 		// Label
-		$html .= self::label($attributes['id'] . '_' . $value, $label, [
+		$html .= self::label($attributes['id'], $label, [
 			'help' => $attributes['help']
 		]);
 		// Fin col
@@ -3850,14 +3847,12 @@ class template
 		}
 		// Case à cocher
 		$html .= sprintf(
-			'<input type="radio" id="%s" name="%s" value="%s" %s>',
-			$attributes['id'] . '_' . $value,
-			$attributes['name'] . '[]',
+			'<input type="radio" value="%s" %s>',
 			$value,
-			self::sprintAttributes($attributes, ['id', 'name'])
+			self::sprintAttributes($attributes)
 		);
 		// Label
-		$html .= self::label($attributes['id'] . '_' . $value, $label, [
+		$html .= self::label($attributes['id'], $label, [
 			'help' => $attributes['help']
 		]);
 		// Fin col

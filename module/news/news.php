@@ -20,7 +20,7 @@ class newsAdm extends core
 	/** @var array Liste des vues du module */
 	public static $views = ['delete', 'edit'];
 
-	/** MODULE : Ajout de news & liste des news */
+	/** Ajout de news & liste des news */
 	public function index()
 	{
 		// Traitement du formulaire
@@ -113,7 +113,7 @@ class newsAdm extends core
 	}
 
 	/**
-	 * MODULE : Édition d'une news */
+	 * Édition d'une news */
 	public function edit()
 	{
 		// Erreur 404
@@ -178,7 +178,7 @@ class newsAdm extends core
 			template::closeForm();
 	}
 
-	/** MODULE : Suppression d'une news */
+	/** Suppression d'une news */
 	public function delete()
 	{
 		// Erreur 404
@@ -201,7 +201,7 @@ class newsAdm extends core
 
 class newsMod extends core
 {
-	/** MODULE : Liste des news */
+	/** Liste des news */
 	public function index()
 	{
 		// Erreur 404

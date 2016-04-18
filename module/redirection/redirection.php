@@ -17,7 +17,7 @@ class redirectionAdm extends core
 	/** @var string Nom du module */
 	public static $name = 'URL de redirection';
 
-	/** MODULE : Configuration de la redirection*/
+	/** Configuration de la redirection*/
 	public function index()
 	{
 		// Traitement du formulaire
@@ -57,7 +57,7 @@ class redirectionAdm extends core
 
 class redirectionMod extends core
 {
-	/** MODULE : Redirection */
+	/** Redirection */
 	public function index()
 	{
 		// Redirection vers l'URL saisie

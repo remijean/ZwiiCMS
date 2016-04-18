@@ -40,7 +40,7 @@ class formAdm extends core
 		12 => 'Largeur 12',
 	];
 
-	/** MODULE : Configuration du formulaire */
+	/** Configuration du formulaire */
 	public function index()
 	{
 		// Traitement du formulaire
@@ -62,16 +62,15 @@ class formAdm extends core
 				// Supprime le premier élément (= le champ caché pour la copie) car il n'a pas de position
 				if(!empty($position)) {
 					$inputs[] = [
-						'name' => $this->getPost(['name', $index], helper::STRING),
+						'name' => $this->getPost('name[' . $index . ']', helper::STRING),
 						'position' => $position,
-						'required' => $this->getPost(['required', $index], helper::BOOLEAN),
-						'type' => $this->getPost(['type', $index], helper::STRING),
-						'values' => $this->getPost(['values', $index], helper::STRING),
-						'width' => $this->getPost(['width', $index], helper::INT)
+						'required' => $this->getPost('required[' . $index . ']', helper::BOOLEAN),
+						'type' => $this->getPost('type[' . $index . ']', helper::STRING),
+						'values' => $this->getPost('values[' . $index . ']', helper::STRING),
+						'width' => $this->getPost('width[' . $index . ']', helper::INT)
 					];
 				}
 			}
-
 			// Crée les champs
 			$this->setData([$this->getUrl(0), 'input', $inputs]);
 			// Enregistre les données
@@ -79,71 +78,7 @@ class formAdm extends core
 			// Notification de succès
 			$this->setNotification('Formulaire enregistré avec succès !');
 			// Redirige vers l'URL courante
-			helper::redirect($this->getUrl(null, false));
-		}
-		// Liste des champs
-		if($this->getData([$this->getUrl(0), 'input'])) {
-			// Liste les champs en les classant par position en ordre croissant
-			$inputs = helper::arrayCollumn($this->getData([$this->getUrl(0), 'input']), 'position', 'SORT_ASC');
-			// Crée l'affichage des champs en fonction
-			for($i = 0; $i < count($inputs); $i++) {
-				self::$content .=
-					template::div([
-						'class' => 'input backgroundWhite',
-						'text' =>
-							template::openRow().
-							template::hidden('position[]', [
-								'value' => $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'position']),
-								'class' => 'position'
-							]).
-							template::button('move[]', [
-								'value' => template::ico('up-down'),
-								'class' => 'move',
-								'col' => 1
-							]).
-							template::text('name[]', [
-								'placeholder' => 'Nom',
-								'value' => $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'name']),
-								'col' => 2
-							]).
-							template::select('type[]', self::$types, [
-								'selected'  => $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'type']),
-								'class' => 'type',
-								'col' => 2
-							]).
-							template::text('values[]', [
-								'placeholder' => 'Liste des valeurs (valeur1,valeur2,...)',
-								'value' => $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'values']),
-								'class' => 'values',
-								'col' => 3
-							]).
-							template::select('width[]', self::$widths, [
-								'selected' => (int) $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'width']),
-								'col' => 2
-							]).
-							template::button('more[]', [
-								'value' => template::ico('gear'),
-								'class' => 'moreToggle',
-								'col' => 1
-							]).
-							template::button('delete[]', [
-								'value' => template::ico('minus'),
-								'class' => 'delete',
-								'col' => 1
-							]).
-							template::closeRow().
-							template::div([
-								'class' => 'more displayNone',
-								'text' =>
-									template::openRow().
-									template::checkbox('required', true, 'Champ obligatoire', [
-										'id' => 'required_' . uniqid(), // Sinon les checkboxs ont le même nom et elles plantent
-										'checked' => $this->getData([$this->getUrl(0), 'input', $inputs[$i], 'required'])
-									]).
-									template::closeRow()
-							])
-					]);
-			}
+			//helper::redirect($this->getUrl(null, false));
 		}
 		// Liste données entregistrées
 		if($this->getData([$this->getUrl(0), 'data'])) {
@@ -203,7 +138,7 @@ class formAdm extends core
 								'selected' => 12,
 								'col' => 2
 							]).
-							template::button('more[]', [
+							template::button('moreToggle[]', [
 								'value' => template::ico('gear'),
 								'class' => 'moreToggle',
 								'col' => 1
@@ -218,9 +153,7 @@ class formAdm extends core
 								'class' => 'more displayNone',
 								'text' =>
 									template::openRow().
-									template::checkbox('required', true, 'Champ obligatoire', [
-										'id' => 'required_' . uniqid() // Sinon les checkboxs ont le même nom et elles plantent
-									]).
+									template::checkbox('required[]', true, 'Champ obligatoire').
 									template::closeRow()
 							])
 					])
@@ -240,24 +173,27 @@ class formAdm extends core
 					]).
 					template::closeRow().
 					template::script('
+						// Liste les champs en les classant par position en ordre croissant
+						var inputsPerPosition = ' . json_encode(helper::arrayCollumn($this->getData([$this->getUrl(0), 'input']), 'position', 'SORT_ASC')) . ';
+						var inputs = ' . json_encode($this->getData([$this->getUrl(0), 'input'])) . ';
+
+						// Unique ID des inputs
+						var inputUid = 0;
+						
+						// Ajout des champs déjà existant
+						for(var i = 0; i < inputs.length; i++) {
+							add(inputUid, inputs[inputsPerPosition[i]]);
+							inputUid++;
+						}
+					
 						// Afficher/cacher les options supplémentaires
-						$(".moreToggle").on("click", function() {
+						$(document).on("click", ".moreToggle", function() {
 							$(this).parents(".input").find(".more").slideToggle();
 						});
 						
-						// Copie des champs cachés
-						var copy = $("#copy").html();
-						
 						// Crée un nouveau champ à partir des champs cachés
 						$("#add").on("click", function() {
-							// Colle le nouveau champ
-							$("#inputs")
-								.append($(copy).hide())
-								.find(".input").last().slideDown();
-							// Check les types
-							$(".type").trigger("change");
-							// Actualise les positions
-							position();
+							add();
 						});
 						
 						// Actions sur les champs
@@ -307,6 +243,45 @@ class formAdm extends core
 						
 						// Simule un changement de type au chargement de la page
 						$(".type").trigger("change");
+						
+						// Ajout un champ
+						function add(inputUid, input) {
+							// Nouveau champ
+							var newInput = $($("#copy").html());
+							// Attribue les bonnes valeurs
+							if(input) {
+								// Nom du champ
+								newInput.find("[name=\'name[]\']").val(input.name);
+								// Type de champ
+								newInput.find("[name=\'type[]\'] option[value=\'" + input.type + "\']").prop("selected", true);
+								// Valeurs du champ
+								newInput.find("[name=\'values[]\']").val(input.values);
+								// Largeur du champ
+								newInput.find("[name=\'width[]\'] option[value=\'" + input.width + "\']").prop("selected", true);
+								// Champ obligatoire
+								newInput.find("[name=\'required[]\']").prop("checked", input.required);
+							}
+							// Ajout de l\'ID unique aux champs
+							newInput.find("a, input, select").each(function() {
+								var _this = $(this);
+								_this.attr({
+									id: _this.attr("id").replace("[]", "[" + inputUid + "]"),
+									name: _this.attr("name").replace("[]", "[" + inputUid + "]")
+								});
+							});
+							newInput.find("label").each(function() {
+								var _this = $(this);
+								_this.attr("for", _this.attr("for").replace("[]", "[" + inputUid + "]"));
+							});
+							// Ajout du nouveau champ au DOM
+							$("#inputs")
+								.append(newInput.hide())
+								.find(".input").last().slideDown();
+							// Check le type
+							$(".type").trigger("change");
+							// Actualise les positions
+							position();
+						}
 						
 						// Calcul des positions
 						function position() {
@@ -401,7 +376,7 @@ class formMod extends core
 		}
 	}
 
-	/** MODULE : Formulaire */
+	/** Formulaire public */
 	public function index()
 	{
 		// Traitement du formulaire
@@ -416,15 +391,15 @@ class formMod extends core
 			// Préparation des données
 			$data = [];
 			$mail = '';
-			foreach($this->getPost('input') as $key => $value) {
+			foreach($this->getPost('input') as $index => $value) {
 				// Erreur champ obligatoire
 				if(empty($value)) {
-					template::getRequired('input[' . $key . ']');
+					template::getRequired('input[' . $index . ']');
 				}
 				// Préparation des données pour la création dans la base
-				$data[$this->getData([$this->getUrl(0), 'input', $key, 'name'])] = $value;
+				$data[$this->getData([$this->getUrl(0), 'input', $index, 'name'])] = $value;
 				// Préparation des données pour le mail
-				$mail .= '<li>' . $this->getData([$this->getUrl(0), 'input', $key, 'name']) . ' : ' . $value . '</li>';
+				$mail .= '<li>' . $this->getData([$this->getUrl(0), 'input', $index, 'name']) . ' : ' . $value . '</li>';
 			}
 			// Crée les données
 			$this->setData([$this->getUrl(0), 'data', helper::increment(1, $this->getData([$this->getUrl(0), 'data'])), $data]);
