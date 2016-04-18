@@ -90,6 +90,12 @@ img {
 	max-width: 100%;
 	height: auto;
 }
+img[align='left'] {
+	margin-right: 10px;
+}
+img[align='right'] {
+	margin-left: 10px;
+}
 
 /* Tableau */
 table {

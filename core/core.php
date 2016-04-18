@@ -1238,7 +1238,7 @@ class core
 			$scripts .= template::script('
 				// Ajoute le formulaire d\'upload de TinyMCE si il n\'existe pas
 				if(!$("#editorFileForm").length) {
-					body.append(
+					$("body").append(
 						$("<form>").attr({
 							id: "editorForm",
 							enctype: "multipart/form-data",
