@@ -915,7 +915,7 @@ class core
 	 * Met en forme l'import des librairies
 	 * @return string
 	 */
-	public function writeVendor()
+	public function showVendor()
 	{
 		$vendor = '';
 		foreach(self::$vendor as $vendorName => $vendorStatus) {
@@ -952,7 +952,7 @@ class core
 	 * Met en forme le panneau d'administration
 	 * @return string
 	 */
-	public function writePanel()
+	public function showPanel()
 	{
 		// Crée le panneau seulement si l'utilisateur est connecté
 		if($this->getCookie() === $this->getData(['config', 'password'])) {
@@ -984,7 +984,7 @@ class core
 	 * Met en forme la notification
 	 * @return string
 	 */
-	public function writeNotification()
+	public function showNotification()
 	{
 		$notification = $this->getNotification();
 		// Si une notice existe, affiche un message pour prévenir l'utilisateur
@@ -1027,7 +1027,7 @@ class core
 	 * Met en forme la liste des classes du thème
 	 * @return string
 	 */
-	public function writeThemeClass()
+	public function showThemeClass()
 	{
 		// Liste des classes
 		$class = [];
@@ -1052,7 +1052,7 @@ class core
 	 * Met en forme l'image de la bannière
 	 * @return string
 	 */
-	public function writeHeaderImage()
+	public function showHeaderImage()
 	{
 		if($headerImage = $this->getData(['config', 'theme', 'image', 'header'])) {
 			return '<img src="' . helper::baseUrl(false) . $headerImage . '" title="' . $this->getData(['config', 'title']) . '" alt="' . $this->getData(['config', 'title']) . '">';
@@ -1063,7 +1063,7 @@ class core
 	 * Met en forme le menu
 	 * @return string
 	 */
-	public function writeMenu()
+	public function showMenu()
 	{
 		// Met en forme les items du menu
 		$items = '';
@@ -1096,7 +1096,7 @@ class core
 	 * Met en forme le contenu
 	 * @return string
 	 */
-	public function writeContent()
+	public function showContent()
 	{
 		// Affiche ou non le titre
 		$title = '';
@@ -1111,7 +1111,7 @@ class core
 	 * Met en forme les liens des réseaux sociaux
 	 * @return string
 	 */
-	public function writeSocials()
+	public function showSocials()
 	{
 		$socials = '';
 		foreach($this->getData(['config', 'social']) as $socialName => $socialId) {
@@ -1152,7 +1152,7 @@ class core
 	 * Met en forme le texte du bas du site
 	 * @return string
 	 */
-	public function writeFooterText()
+	public function showFooterText()
 	{
 		if($footer = $this->getData(['config', 'footer'])) {
 			return '<div id="text">' . $footer . '</div>';
@@ -1163,7 +1163,7 @@ class core
 	 * Met en forme le script Google Analytics
 	 * @return string
 	 */
-	public function writeAnalytics()
+	public function showAnalytics()
 	{
 		$code = $this->getData(['config', 'analytics']);
 		// Check si ce n'est pas l'administrateur
@@ -1182,7 +1182,7 @@ class core
 	 * Met en forme les scripts communs
 	 * @return string
 	 */
-	public function writeScripts()
+	public function showScripts()
 	{
 		$scripts = template::script('
 			// Modifications non enregistrées du formulaire
@@ -1307,7 +1307,7 @@ class core
 	 * Met en forme les scripts communs
 	 * @return string
 	 */
-	public function writeFavicon()
+	public function showFavicon()
 	{
 		if($favicon = $this->getData(['config', 'favicon'])) {
 			return '<link rel="shortcut icon" href="' . $favicon . '">';
@@ -2537,7 +2537,7 @@ class core
 					headDOM.find("style").remove();
 					// Retourne le nouveau css
 					$("<style>").text(css).appendTo(headDOM);
-				});
+				}).trigger("change");
 			').
 			template::openRow().
 			template::button('clean', [

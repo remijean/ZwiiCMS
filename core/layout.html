@@ -6,57 +6,59 @@
 	<meta name="description" content="<?php echo self::$description; ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- Ajout du favicon -->
-	<?php echo $this->writeFavicon(); ?>
+	<?php echo $this->showFavicon(); ?>
 	<!-- Ajout des librairies -->
-	<?php echo $this->writeVendor(); ?>
+	<?php echo $this->showVendor(); ?>
 	<!-- Ajout du thème, des couleurs et des polices de caractères -->
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/theme.css">
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/cache/<?php echo self::$cssVersion; ?>.css">
 </head>
 <!-- Ajout des classes du thème à la page -->
-<body class="<?php echo $this->writeThemeClass(); ?>" style="background-image: url('<?php echo helper::baseUrl(false) . $this->getData(['config', 'theme', 'image', 'background']); ?>');">
+<body class="<?php echo $this->showThemeClass(); ?>" style="background-image: url('<?php echo helper::baseUrl(false) . $this->getData(['config', 'theme', 'image', 'background']); ?>');">
 <!-- Ajout du panneau d'administration -->
-<?php echo $this->writePanel(); ?>
+<?php echo $this->showPanel(); ?>
 <!-- Ajout des notifications -->
-<?php echo $this->writeNotification(); ?>
+<?php echo $this->showNotification(); ?>
 <!-- Bannière dans le haut de page -->
 <header>
 	<div class="container">
 		<h1><?php echo $this->getData(['config', 'title']); ?></h1>
 	</div>
-	<?php echo $this->writeHeaderImage(); ?>
+	<?php echo $this->showHeaderImage(); ?>
 </header>
 <!-- Menu dans le haut de page -->
 <div class="toggle"><?php echo template::ico('menu'); ?></div>
 <nav>
 	<div class="container">
-		<ul><?php echo $this->writeMenu(); ?></ul>
+		<ul><?php echo $this->showMenu(); ?></ul>
 	</div>
 </nav>
 <!-- Site -->
 <div class="container">
+	<!-- Ajout des scripts communs -->
+	<?php echo $this->showScripts(); ?>
 	<!-- Bannière dans le site -->
 	<header>
 		<h1><?php echo $this->getData(['config', 'title']); ?></h1>
-		<?php echo $this->writeHeaderImage(); ?>
+		<?php echo $this->showHeaderImage(); ?>
 	</header>
 	<!-- Menu dans le site -->
 	<div class="toggle"><?php echo template::ico('menu'); ?></div>
 	<nav>
 		<!-- Ajout du menu -->
-		<?php echo $this->writeMenu(); ?>
+		<?php echo $this->showMenu(); ?>
 	</nav>
 	<!-- Corps -->
 	<section>
 		<!-- Ajout du contenu -->
-		<?php echo $this->writeContent(); ?>
+		<?php echo $this->showContent(); ?>
 	</section>
 	<!-- Bas du site -->
 	<footer>
 		<!-- Ajout des réseaux sociaux -->
-		<?php echo $this->writeSocials(); ?>
+		<?php echo $this->showSocials(); ?>
 		<!-- Ajout du texte du bas du site -->
-		<?php echo $this->writeFooterText(); ?>
+		<?php echo $this->showFooterText(); ?>
 		<!-- Copyright et lien d'administration -->
 		<?php echo helper::translate('Motorisé par'); ?> <a href="http://zwiicms.com/" target="_blank">ZwiiCMS</a> | <a href="<?php echo helper::baseUrl(); ?>config"><?php echo helper::translate('Administration'); ?></a>
 	</footer>
@@ -64,8 +66,6 @@
 <!-- Lien remonter en haut -->
 <div id="backToTop"><?php echo template::ico('up'); ?></div>
 <!-- Ajout du code Google Analytics -->
-<?php echo $this->writeAnalytics(); ?>
-<!-- Ajout des scripts communs -->
-<?php echo $this->writeScripts(); ?>
+<?php echo $this->showAnalytics(); ?>
 </body>
 </html>

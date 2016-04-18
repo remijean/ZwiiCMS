@@ -16,6 +16,7 @@
 
 body {
 	color: #555;
+	margin: 0 10px;
 }
 body.editor {
 	font-size: 15px !important;
@@ -130,6 +131,7 @@ td > .col12 {
 	text-align: center;
 	padding: 15px;
 	color: #FFF;
+	margin: 0 -10px;
 }
 #notification.success {
 	background: #67C672;
@@ -153,6 +155,7 @@ td > .col12 {
 #panel {
 	background: #3C3C3C;
 	padding-left: 5px; /* Pour éviter que le select touche le bord lorsque la fenêtre est redimensionnée */
+	margin: 0 -10px;
 }
 #panel:after {
 	content: " ";
@@ -232,6 +235,9 @@ body > .container {
 }
 
 /* Bannière */
+body > header {
+	margin: 0 -10px;
+}
 header {
 	overflow: hidden;
 	padding: 20px;
@@ -245,6 +251,10 @@ header h1 {
 }
 
 /* Menu */
+body > .toggle,
+body > nav {
+	margin: 0 -10px;
+}
 .toggle {
 	cursor: pointer;
 	text-align: right;
