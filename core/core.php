@@ -358,10 +358,11 @@ class common
 	}
 
 	/**
-	 * Génère la liste des pages parentes et de leurs enfants
+	 * Accède à la liste des pages parentes et de leurs enfants ou aux enfants d'un parent
+	 * @param  int   $parent Clef du parent
 	 * @return array
 	 */
-	public function getHierarchy() {
+	public function getHierarchy($parent = null) {
 		if(empty($this->hierarchy)) {
 			$children = [];
 			// Liste les pages par position en ordre croissant
@@ -384,7 +385,20 @@ class common
 				}
 			}
 		}
-		return $this->hierarchy;
+		// Retourne les enfants d'un parent
+		if($parent) {
+			if(isset($this->hierarchy[$parent])) {
+				$hierarchy = $this->hierarchy[$parent];
+			}
+			else {
+				$hierarchy = false;
+			}
+		}
+		// Retourne les parents et leurs enfants
+		else {
+			$hierarchy = $this->hierarchy;
+		}
+		return $hierarchy;
 	}
 
 	/**
@@ -2163,6 +2177,10 @@ class core extends common
 				$key = helper::increment($key, self::$system); // Evite à une page d'avoir la même clef qu'un module système
 				// Supprime l'ancienne page
 				$this->removeData(['page', $this->getUrl(0)]);
+				// Modifie les enfants si la page est une page parente
+				foreach ($this->getHierarchy($this->getUrl(0)) as $childrenKey) {
+					$this->setData(['page', $childrenKey, 'parent', $key]);
+				}
 				// Crée les nouvelles données du module de la page (avec la nouvelle clef) en copiant les anciennes
 				$this->setData([$key, $this->getData($this->getUrl(0))]);
 				// Supprime les données du module de l'ancienne page
@@ -2552,8 +2570,7 @@ class core extends common
 			template::file('file', [
 				'label' => 'Parcourir mes fichiers',
 				'help' => 'Les formats de fichiers autorisés sont : .' . implode(', .', core::$managerExtensions) . '.',
-				'col' => '10',
-				'required' => 'required'
+				'col' => '10'
 			]).
 			template::submit('submit', [
 				'value' => 'Envoyer',
@@ -3871,11 +3888,25 @@ class template
 	/**
 	 * Crée un sous-titre
 	 * @param  string $text Texte du sous-titre
+	 * @param  array  $attributes Liste des attributs en fonction des attributs disponibles dans la fonction ($key => $value)
 	 * @return string
 	 */
-	public static function subTitle($text)
+	public static function subTitle($text, $attributes = [])
 	{
-		return '<h4>' . helper::translate($text) . '</h4>';
+		// Attributs possibles
+		$attributes = array_merge([
+			'id' => '',
+			'class' => '',
+			'data-1' => '',
+			'data-2' => '',
+			'data-3' => ''
+		], $attributes);
+		// Retourne le html
+		return sprintf(
+			'<h4 %s>%s</h4>',
+			self::sprintAttributes($attributes),
+			$text
+		);
 	}
 
 	/**
@@ -4117,10 +4148,24 @@ class template
 	/**
 	 * Crée un titre
 	 * @param  string $text Texte du titre
+	 * @param  array  $attributes Liste des attributs en fonction des attributs disponibles dans la fonction ($key => $value)
 	 * @return string
 	 */
-	public static function title($text)
+	public static function title($text, $attributes = [])
 	{
-		return '<h3>' . helper::translate($text) . '</h3>';
+		// Attributs possibles
+		$attributes = array_merge([
+			'id' => '',
+			'class' => '',
+			'data-1' => '',
+			'data-2' => '',
+			'data-3' => ''
+		], $attributes);
+		// Retourne le html
+		return sprintf(
+			'<h3 %s>%s</h3>',
+			self::sprintAttributes($attributes),
+			$text
+		);
 	}
 }

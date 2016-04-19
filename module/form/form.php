@@ -161,6 +161,9 @@ class formAdm extends common
 			template::openForm().
 			template::tabs([
 				'Liste des champs' =>
+					template::subTitle('Aucun champ...', [
+						'id' => 'noInput'
+					]).
 					template::div([
 						'id' => 'inputs',
 						'text' => self::$content
@@ -193,7 +196,8 @@ class formAdm extends common
 						
 						// Crée un nouveau champ à partir des champs cachés
 						$("#add").on("click", function() {
-							add();
+							add(inputUid);
+							inputUid++;
 						});
 						
 						// Actions sur les champs
@@ -218,6 +222,10 @@ class formAdm extends common
 							})
 							// Suppression du champ
 							.on("click", ".delete", function() {
+								// Affiche le texte d\'absence de champ (avant la suppression pour effet visuel)
+								if($(".input").length === 2) { // 2 à cause du champ caché et du champ actuel qui n\est toujours pas supprimé
+									 $("#noInput").slideDown();
+								}
 								// Cache le champ
 								$(this).parents(".input").slideUp(400, function() {
 									// Supprime le champ
@@ -273,15 +281,21 @@ class formAdm extends common
 								var _this = $(this);
 								_this.attr("for", _this.attr("for").replace("[]", "[" + inputUid + "]"));
 							});
-							// Ajout du nouveau champ au DOM sans effet (pour les champs à déjà présents)
+							// Ajout du nouveau champ au DOM et cache le texte d\'absence de champ sans effet (pour les champs à déjà présents)
+							var noInputDOM = $("#noInput:visible");
 							if(input) {
-								$("#inputs").append(newInput)
+								$("#inputs").append(newInput);
+								// Cache le texte d\'absence de champ
+								noInputDOM.hide();
 							}
-							// Ajout du nouveau champ au DOM avec un effet de slide (pour les nouveaux champs)
+							// Ajout du nouveau champ au DOM et cache le texte d\'absence de champcavec un effet (pour les nouveaux champs)
 							else {
+								// Ajout du nouveau champ au DOM
 								$("#inputs")
 									.append(newInput.hide())
 									.find(".input").last().slideDown();
+								// Cache le texte d\'absence de champ
+								noInputDOM.slideUp();
 							}
 							// Check le type
 							$(".type").trigger("change");
