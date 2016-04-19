@@ -1,6 +1,33 @@
 ZwiiCMS 7
 =========
 
+## 7.6.0
+* Ajout de la génération automatique du fichier data.json pour faciliter les mises à jour
+* Ajout d'un champ favicon
+* Ajout d'un champ afficher/cacher le titre des pages
+* Ajout d'une case à cocher "champ obligatoire" dans le générateur de formulaires
+* Ajout d'une capcha dans le générateur de formulaires
+* Ajout de boutons réseaux sociaux
+* Ajout d'un champ pour personnaliser le meta title des pages
+* Ajout d'un champ pour ajouter une image de fond
+* Ajout d'un champ pour choisir de la police de caractères
+* Ajout de commentaires dans le fichier core/layout.html
+* Amélioration des colorPickers
+* Amélioration de l'interface d'administration
+* Amélioration du design des tableaux
+* Amélioration de l'affichage des données enregistrées dans le générateur de formulaires
+* Amélioration de l'export avec la prise en compte du dossier data/upload
+* Amélioration de l'image de la bannière en mode responsive
+* Amélioration du design de l'input d'upload
+* Correction d'un bug avec les images responsives
+* Correction d'un bug bloquant l'enregistrement de la configuration du site
+* Correction d'un bug supprimant les pages enfants lorsque la page parente était renommée
+* Correction d'une dizaine de bugs mineurs
+* Optimisation du coeur
+* Optimisation de l'ajout de champ dans le gestionnaire de formulaires
+* Réorganisation de l'interface d'édition du thème
+* Suppression de la partie "edit/" de l'URL lors de l'édition d'une page
+
 ## 7.5.1
 * Ajustement de l'espacement des items dans le petit menu
 * Correction de bugs mineurs
