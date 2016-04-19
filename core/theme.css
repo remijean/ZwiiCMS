@@ -771,6 +771,9 @@ td.col12 {
 .backgroundWhite {
 	background: #FFF;
 }
+.clearBoth {
+	clear: both;
+}
 
 /**
  * Thème

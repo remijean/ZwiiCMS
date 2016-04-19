@@ -12,7 +12,7 @@
  * @link http://zwiicms.com/
  */
 
-class redirectionAdm extends core
+class redirectionAdm extends common
 {
 	/** @var string Nom du module */
 	public static $name = 'URL de redirection';

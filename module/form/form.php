@@ -12,7 +12,7 @@
  * @link http://zwiicms.com/
  */
 
-class formAdm extends core
+class formAdm extends common
 {
 	/** @var string Nom du module */
 	public static $name = 'Générateur de formulaire';
@@ -273,10 +273,16 @@ class formAdm extends core
 								var _this = $(this);
 								_this.attr("for", _this.attr("for").replace("[]", "[" + inputUid + "]"));
 							});
-							// Ajout du nouveau champ au DOM
-							$("#inputs")
-								.append(newInput.hide())
-								.find(".input").last().slideDown();
+							// Ajout du nouveau champ au DOM sans effet (pour les champs à déjà présents)
+							if(input) {
+								$("#inputs").append(newInput)
+							}
+							// Ajout du nouveau champ au DOM avec un effet de slide (pour les nouveaux champs)
+							else {
+								$("#inputs")
+									.append(newInput.hide())
+									.find(".input").last().slideDown();
+							}
 							// Check le type
 							$(".type").trigger("change");
 							// Actualise les positions
@@ -435,7 +441,8 @@ class formMod extends core
 			if($this->getData([$this->getUrl(0), 'config', 'capcha'])) {
 				$capcha = template::capcha('capcha', [
 					'col' => 3
-				]);
+				]).
+				template::newRow();
 			}
 			// Ajout du bouton de validation
 			self::$content .=
@@ -443,8 +450,7 @@ class formMod extends core
 				$capcha.
 				template::submit('submit', [
 					'value' => $this->getData([$this->getUrl(0), 'config', 'button']) ? $this->getData([$this->getUrl(0), 'config', 'button']) : 'Enregistrer',
-					'col' => 2,
-					'offset' => (empty($capcha) ? 10 : 7)
+					'col' => 2
 				]).
 				template::closeRow();
 		}

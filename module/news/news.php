@@ -12,7 +12,7 @@
  * @link http://zwiicms.com/
  */
 
-class newsAdm extends core
+class newsAdm extends common
 {
 	/** @var string Nom du module */
 	public static $name = 'Gestionnaire de news';
@@ -219,7 +219,11 @@ class newsMod extends core
 				self::$content .=
 					template::title($this->getData([$this->getUrl(0), $news[$i], 'title'])).
 					template::subTitle(date('d/m/Y - H:i', $this->getData([$this->getUrl(0), $news[$i], 'date']))).
-					$this->getData([$this->getUrl(0), $news[$i], 'content']);
+					$this->getData([$this->getUrl(0), $news[$i], 'content']).
+					// ClearBoth au cas ou l'utilisateur ajoute une image en float dans la news
+					template::div([
+						'class' => 'clearBoth'
+					]);
 			}
 			// Ajoute la liste des pages en dessous des news
 			self::$content .= $pagination['page'];
