@@ -15,19 +15,19 @@
 class redirectionAdm extends common
 {
 	/** @var string Nom du module */
-	public static $name = 'URL de redirection';
+	public static $name = 'Lien de redirection';
 
 	/** Configuration de la redirection*/
 	public function index()
 	{
 		// Traitement du formulaire
 		if($this->getPost('submit')) {
-			// Modifie l'URL de redirection
+			// Modifie l'Lien de redirection
 			$this->setData([$this->getUrl(0), 'url', $this->getPost('url', helper::URL)]);
 			// Enregistre les données
 			$this->saveData();
 			// Notification de succès
-			$this->setNotification('URL de redirection enregistrée avec succès !');
+			$this->setNotification('Lien de redirection enregistrée avec succès !');
 			// Redirige vers l'URL courante
 			helper::redirect($this->getUrl(null, false));
 		}
@@ -36,9 +36,10 @@ class redirectionAdm extends common
 			template::openForm().
 			template::openRow().
 			template::text('url', [
-				'label' => 'URL de redirection',
+				'label' => 'Lien de redirection',
 				'value' => $this->getData([$this->getUrl(0), 'url']),
-				'required' => 'required'
+				'required' => 'required',
+				'placeholder' => 'http://'
 			]).
 			template::newRow().
 			template::button('back', [

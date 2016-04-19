@@ -303,6 +303,21 @@ class common
 	/** @var array Url du site coupée à chaque "/" */
 	private $url;
 
+	/** Import les données */
+	public function __construct()
+	{
+		if(empty($this->data)) {
+			if(file_exists('data/data.json')) {
+				$this->setData([json_decode(file_get_contents('data/data.json'), true)]);
+			}
+			else {
+				$this->setData([$this->default]);
+				$this->setData(['config', 'dataVersion', self::$version]);
+				$this->saveData(true);
+			}
+		}
+	}
+
 	############################################################
 	# GETTERS/SETTERS
 
@@ -322,17 +337,6 @@ class common
 	 */
 	public function getData($keys = null)
 	{
-		// Importe le fichier de données
-		if(empty($this->data)) {
-			if(file_exists('data/data.json')) {
-				$this->setData([json_decode(file_get_contents('data/data.json'), true)]);
-			}
-			else {
-				$this->setData([$this->default]);
-				$this->setData(['config', 'dataVersion', self::$version]);
-				$this->saveData(true);
-			}
-		}
 		// Retourne l'ensemble des données
 		if($keys === null) {
 			return $this->data;
@@ -628,6 +632,8 @@ class core extends common
 	 */
 	public function __construct()
 	{
+		// Hérite de la méthode __construct() parente
+		parent::__construct();
 		// Scripts de mise à jour
 		// Vers ZwiiCMS 7.6.0
 		if(!$this->getData(['config', 'dataVersion'])) {
