@@ -1515,10 +1515,12 @@ class core extends common
 					template::newRow().
 					template::password('newPassword', [
 						'label' => 'Nouveau mot de passe',
+						'autocomplete' => 'off',
 						'col' => 6
 					]).
 					template::password('confirmPassword', [
 						'label' => 'Confirmation du mot de passe',
+						'autocomplete' => 'off',
 						'col' => 6
 					]).
 					template::newRow().
@@ -2181,12 +2183,12 @@ class core extends common
 				// Incrémente la nouvelle clef de la page pour éviter les doublons
 				$key = helper::increment($key, $this->getData('page'));
 				$key = helper::increment($key, self::$system); // Evite à une page d'avoir la même clef qu'un module système
-				// Supprime l'ancienne page
-				$this->removeData(['page', $this->getUrl(0)]);
 				// Modifie les enfants si la page est une page parente
 				foreach ($this->getHierarchy($this->getUrl(0)) as $childrenKey) {
 					$this->setData(['page', $childrenKey, 'parent', $key]);
 				}
+				// Supprime l'ancienne page
+				$this->removeData(['page', $this->getUrl(0)]);
 				// Crée les nouvelles données du module de la page (avec la nouvelle clef) en copiant les anciennes
 				$this->setData([$key, $this->getData($this->getUrl(0))]);
 				// Supprime les données du module de l'ancienne page
@@ -3700,6 +3702,7 @@ class template
 		$attributes = array_merge([
 			'id' => $nameId,
 			'name' => $nameId,
+			'autocomplete' => 'on',
 			'placeholder' => '',
 			'disabled' => '',
 			'readonly' => '',
