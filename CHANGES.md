@@ -1,6 +1,10 @@
 ZwiiCMS 7
 =========
 
+## 7.6.1
+* Correction d'un bug bloquant l'enregistrement de la configuration
+* Correction d'un bug bloquant l'édition du nom des pages
+
 ## 7.6.0
 * Ajout de la génération automatique du fichier data.json pour faciliter les mises à jour
 * Ajout d'un champ favicon
