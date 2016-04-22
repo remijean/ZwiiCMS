@@ -120,7 +120,7 @@ class common
 		'config' => [
 			'analytics' => '',
 			'description' => 'ZwiiCMS est un logiciel sans base de données qui permet à ses utilisateurs de créer et gérer facilement un site web sans aucune connaissance en programmation.',
-			'favicon' => '',
+			'favicon' => 'data/upload/favicon.ico',
 			'footer' => '',
 			'index' => 'accueil',
 			'language' => '',
@@ -635,7 +635,7 @@ class core extends common
 		// Hérite de la méthode __construct() parente
 		parent::__construct();
 		// Scripts de mise à jour
-		// Vers ZwiiCMS 7.6.0
+		// De 7.5.1 vers 7.6.0 - 7.6.2
 		if(!$this->getData(['config', 'dataVersion'])) {
 			// Déplace les classes vers config > theme > class
 			foreach($this->getData('theme') as $key => $class) {
@@ -652,6 +652,8 @@ class core extends common
 				'twitter' => 'ZwiiCMS',
 				'youtube' => ''
 			]]);
+			// Ajoute le favicon
+			$this->setData(['config', 'favicon', 'data/upload/favicon.ico']);
 			// Ajoute les couleurs par défaut
 			$this->setData(['config', 'theme', 'color', [
 				'background' => 'E8E8E8',
@@ -1026,7 +1028,7 @@ class core extends common
 	public function showFavicon()
 	{
 		if($favicon = $this->getData(['config', 'favicon'])) {
-			return '<link rel="shortcut icon" href="' . $favicon . '">';
+			return '<link rel="shortcut icon" href="' . helper::baseUrl(false) . $favicon . '">';
 		}
 	}
 
