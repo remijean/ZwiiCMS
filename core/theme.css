@@ -584,6 +584,7 @@ input[type='radio']:disabled + label:before {
 	text-align: left;
 	padding: 10px;
 	z-index: 10;
+	max-width: 600px;
 }
 .helpButton,
 .helpContent {

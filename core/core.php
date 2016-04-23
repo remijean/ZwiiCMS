@@ -1542,7 +1542,7 @@ class core extends common
 					template::openRow().
 					template::select('favicon', helper::listUploads('Aucune image', ['ico'], null, 16, 16), [
 						'label' => 'Favicon du site',
-						'help' => 'Seule une image de format .ico en 16x16 du gestionnaire de fichiers est acceptée.',
+						'help' => 'Seule une image de format .ico en 16x16 du gestionnaire de fichiers est acceptée. Attention si le favicon ne change pas, supprimez le cache de votre navigateur !',
 						'selected' => $this->getData(['config', 'favicon'])
 					]).
 					template::newRow().
