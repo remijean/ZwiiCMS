@@ -1541,7 +1541,7 @@ class core extends common
 					template::subTitle('Site').
 					template::openRow().
 					template::select('favicon', helper::listUploads('Aucune image', ['ico'], null, 16, 16), [
-						'label' => 'Favicon du site',
+						'label' => 'Favicon',
 						'help' => 'Seule une image de format .ico en 16x16 du gestionnaire de fichiers est acceptée. Attention si le favicon ne change pas, supprimez le cache de votre navigateur !',
 						'selected' => $this->getData(['config', 'favicon'])
 					]).
@@ -2437,7 +2437,7 @@ class core extends common
 					template::openRow().
 					template::text('metaTitle', [
 						'label' => 'Méta titre de la page',
-						'help' => 'Si le champ est vide, la description du site est utilisée.',
+						'help' => 'Si le champ est vide, le titre du site est utilisé.',
 						'value' => $this->getData(['page', $this->getUrl(0), 'metaTitle'])
 					]).
 					template::newRow().
@@ -3916,7 +3916,7 @@ class template
 		return sprintf(
 			'<h4 %s>%s</h4>',
 			self::sprintAttributes($attributes),
-			$text
+			helper::translate($text)
 		);
 	}
 
@@ -4176,7 +4176,7 @@ class template
 		return sprintf(
 			'<h3 %s>%s</h3>',
 			self::sprintAttributes($attributes),
-			$text
+			helper::translate($text)
 		);
 	}
 }
