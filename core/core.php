@@ -6,7 +6,7 @@
  * For full copyright and license information, please see the LICENSE
  * file that was distributed with this source code.
  *
- * @author Rémi Jean <remi.jean@outlook.com>
+ * @author Rémi Jean <moi@remijean.fr>
  * @copyright Copyright (C) 2008-2016, Rémi Jean
  * @license GNU General Public License, version 3
  * @link http://zwiicms.com/
@@ -266,7 +266,7 @@ class common
 			'config' => [
 				'button' => 'Envoyer',
 				'capcha' => true,
-				'mail' => 'zwiicms@outlook.com'
+				'mail' => 'moi@remijean.fr'
 			],
 			'input' => [
 				[
