@@ -1,6 +1,14 @@
 ZwiiCMS 7
 =========
 
+## 7.6.2
+* Mise à jour de la traduction anglaise
+* Ajout d'un favicon par défaut
+* Ajout d'une aide supplémentaire pour l'ajout de favicon
+* Correction d'un bug lorsqu'une page enfant était renommée
+* Correction d'un bug bloquant potentiellement l'affichage des modules dans les pages
+* Correction d'un bug entre l'URL rewriting et le favicon
+
 ## 7.6.1
 * Correction d'un bug bloquant l'enregistrement de la configuration
 * Correction d'un bug bloquant l'édition du nom des pages
