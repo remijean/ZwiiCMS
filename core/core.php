@@ -395,7 +395,7 @@ class common
 				$hierarchy = $this->hierarchy[$parent];
 			}
 			else {
-				$hierarchy = false;
+				$hierarchy = [];
 			}
 		}
 		// Retourne les parents et leurs enfants
