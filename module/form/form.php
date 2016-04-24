@@ -431,8 +431,8 @@ class formMod extends common
 					$sent = helper::mail(
 						false,
 						$this->getData([$this->getUrl(0), 'config', 'mail']),
-						helper::translate('Nouvelle entrée dans votre formulaire'),
-						'<h2>' . helper::translate('Mail en provenance de votre site ZwiiCMS') . '</h2><h3>' . helper::baseUrl() . $this->getUrl(null, false) . '</h3><ul>' . $mail . '</ul>'
+						helper::translate('Mail en provenance de votre site'),
+						'<h3>' . helper::translate('Mail en provenance de votre site : ') . ' ' . helper::baseUrl() . $this->getUrl(null, false) . '</h3><ul>' . $mail . '</ul>'
 					);
 				}
 				// Notification de soumission
