@@ -171,7 +171,7 @@ class common
 		'page' => [
 			'accueil' => [
 				'blank' => false,
-				'content' => "<h3>Félicitations ZwiiCMS est 100% opérationnel !</h3>\r\n<p>Pour entrer dans l'administration, rendez-vous <a href='/ZwiiCMS/?config'>ici</a> ou cliquez sur le lien \"Administration\" en bas de page. Le mot de passe d'administration par défaut est <strong>password</strong>.</p>\r\n<p>Si vous rencontrez un problème ou si vous avez besoin d'aide, n'hésitez pas à jeter un œil au <a title='site' href='http://zwiicms.com/'>site</a> ou au <a title='forum' href='http://forum.zwiicms.com/'>forum</a> de ZwiiCMS.</p>\r\n<h4>Suivez-nous sur <a href='https://twitter.com/ZwiiCMS/'>Twitter</a> et <a href='https://www.facebook.com/ZwiiCMS/'>Facebook</a> pour ne manquer aucune nouveauté !</h4>",
+				'content' => "<h3>Félicitations ZwiiCMS est 100% opérationnel !</h3>\r\n<p>Pour entrer dans l'administration, rendez-vous <a href='?config'>ici</a> ou cliquez sur le lien \"Administration\" en bas de page. Le mot de passe d'administration par défaut est <strong>password</strong>.</p>\r\n<p>Si vous rencontrez un problème ou si vous avez besoin d'aide, n'hésitez pas à jeter un œil au <a title='site' href='http://zwiicms.com/'>site</a> ou au <a title='forum' href='http://forum.zwiicms.com/'>forum</a> de ZwiiCMS.</p>\r\n<h4>Suivez-nous sur <a href='https://twitter.com/ZwiiCMS/'>Twitter</a> et <a href='https://www.facebook.com/ZwiiCMS/'>Facebook</a> pour ne manquer aucune nouveauté !</h4>",
 				'description' => '',
 				'hideTitle' => false,
 				'metaTitle' => '',
