@@ -326,7 +326,7 @@ class formAdm extends common
 						'checked' => $this->getData([$this->getUrl(0), 'config', 'capcha'])
 					]).
 					template::closeRow(),
-				'Données entregistrées' =>
+				'Données enregistrées' =>
 					(isset($data) ? $data : template::subTitle('Aucune donnée...'))
 			]).
 			template::openRow().
@@ -432,7 +432,7 @@ class formMod extends common
 						false,
 						$this->getData([$this->getUrl(0), 'config', 'mail']),
 						helper::translate('Mail en provenance de votre site'),
-						'<h3>' . helper::translate('Mail en provenance de votre site : ') . ' ' . helper::baseUrl() . $this->getUrl(null, false) . '</h3><ul>' . $mail . '</ul>'
+						'<h3>' . helper::translate('Mail en provenance de votre site :') . ' ' . helper::baseUrl() . $this->getUrl(null, false) . '</h3><ul>' . $mail . '</ul>'
 					);
 				}
 				// Notification de soumission

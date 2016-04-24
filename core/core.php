@@ -849,7 +849,7 @@ class core extends common
 			self::$language = json_decode(file_get_contents($language), true);
 		}
 		// Fichier langue pour le module de la page
-		$language = 'module/' . $this->getData(['page', $this->getUrl(0), 'module']) . '/langs/' . $this->getData(['config', 'language']);
+		$language = 'module/' . $this->getData(['page', $this->getUrl(0), 'module']) . '/lang/' . $this->getData(['config', 'language']);
 		if(is_file($language)) {
 			self::$language = array_merge(self::$language, json_decode(file_get_contents($language), true));
 		}
@@ -2579,7 +2579,7 @@ class core extends common
 			template::openRow().
 			template::file('file', [
 				'label' => 'Parcourir mes fichiers',
-				'help' => 'Les formats de fichiers autorisés sont : .' . implode(', .', core::$managerExtensions) . '.',
+				'help' => helper::translate('Les formats de fichiers autorisés sont :') . ' ' . implode(', .', core::$managerExtensions) . '.',
 				'col' => '10'
 			]).
 			template::submit('submit', [
@@ -3248,7 +3248,13 @@ class template
 		$attributes = [];
 		foreach($array as $key => $value) {
 			if($value AND !in_array($key, $exclude)) {
-				$attributes[] = sprintf('%s="%s"', $key, $value);
+				// Champs à traduire
+				if(in_array($key, ['placeholder'])) {
+					$attributes[] = sprintf('%s="%s"', $key, helper::translate($value));
+				}
+				else {
+					$attributes[] = sprintf('%s="%s"', $key, $value);
+				}
 			}
 		}
 		return implode(' ', $attributes);
