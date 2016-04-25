@@ -387,7 +387,7 @@ class formMod extends common
 				// Génère le champ de sélection
 				return
 					template::openRow().
-					template::select('input[' . $index . ']', [
+					template::select('input[' . $index . ']', $values, [
 						'label' => $input['name'],
 						'col' => $input['width'],
 						'required' => $input['required'] ? 'required' : ''
