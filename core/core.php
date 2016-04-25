@@ -119,6 +119,7 @@ class common
 	private $default = [
 		'config' => [
 			'analytics' => '',
+			'cookieConsent' => true,
 			'description' => 'ZwiiCMS est un logiciel sans base de données qui permet à ses utilisateurs de créer et gérer facilement un site web sans aucune connaissance en programmation.',
 			'favicon' => 'data/upload/favicon.ico',
 			'footer' => '',
@@ -322,12 +323,13 @@ class common
 	# GETTERS/SETTERS
 
 	/**
-	 * Accède au cookie contenant le mot de passe
+	 * Accède à un cookie
+	 * @param  null|string $name Nom du cookie
 	 * @return string
 	 */
-	public function getCookie()
+	public function getCookie($name)
 	{
-		return isset($_COOKIE['PASSWORD']) ? $_COOKIE['PASSWORD'] : '';
+		return isset($_COOKIE[$name]) ? $_COOKIE[$name] : '';
 	}
 
 	/**
@@ -462,10 +464,14 @@ class common
 
 	}
 
-	/** Supprime le cookie contenant le mot de passe */
-	public function removeCookie()
+	/**
+	 * Supprime un cookie
+	 * @param  null|string $name Nom du cookie
+	 * @return string
+	 */
+	public function removeCookie($name)
 	{
-		setcookie('PASSWORD');
+		setcookie($name);
 	}
 
 	/**
@@ -526,13 +532,14 @@ class common
 	}
 
 	/**
-	 * Insert le mot de passe dans le cookie
-	 * @param string $password Mot de passe
-	 * @param int    $time     Temps de vie du cookie
+	 * Insert un cookie
+	 * @param null|string $name    Nom du cookie
+	 * @param string      $content Mot de passe
+	 * @param int         $time    Temps de vie du cookie
 	 */
-	public function setCookie($password, $time)
+	public function setCookie($name, $content, $time)
 	{
-		setcookie('PASSWORD', helper::filter($password, helper::PASSWORD), $time);
+		setcookie($name, $content, $time);
 	}
 
 	/**
@@ -874,7 +881,7 @@ class core extends common
 		// Module système
 		if(in_array($this->getUrl(0, false), self::$system)) {
 			// Si l'utilisateur est connecté le module système est retournée
-			if($this->getData(['config', 'password']) === $this->getCookie()) {
+			if($this->getData(['config', 'password']) === $this->getCookie('PASSWORD')) {
 				$method = $this->getUrl(0, false);
 				$this->$method();
 			}
@@ -888,7 +895,7 @@ class core extends common
 		// - Le mode édition est activé
 		// - Une page est demandée
 		elseif(
-			$this->getData(['config', 'password']) === $this->getCookie()
+			$this->getData(['config', 'password']) === $this->getCookie('PASSWORD')
 			AND $this->getMode()
 			AND $page = $this->getData(['page', $this->getUrl(0, false)])
 		) {
@@ -897,7 +904,7 @@ class core extends common
 		// Page et module de page
 		elseif($this->getData(['page', $this->getUrl(0, false)])) {
 			// Utilisateur non connecté et layout LAYOUT utilisé
-			if(!$this->getCookie() AND self::$layout === 'LAYOUT') {
+			if(!$this->getCookie('PASSWORD') AND self::$layout === 'LAYOUT') {
 				// Remplace les / de l'URL par des _
 				$url = str_replace('/', '_', $this->getUrl());
 				// Importe le fichier si il existe
@@ -965,7 +972,7 @@ class core extends common
 		if(
 			$this->getData(['page', $this->getUrl(0)])
 			AND self::$cache
-			AND !$this->getCookie()
+			AND !$this->getCookie('PASSWORD')
 			AND !file_exists('core/cache/' . $url . '.html')
 			AND self::$layout === 'LAYOUT'
 		) {
@@ -1136,7 +1143,7 @@ class core extends common
 	public function showPanel()
 	{
 		// Crée le panneau seulement si l'utilisateur est connecté
-		if($this->getCookie() === $this->getData(['config', 'password'])) {
+		if($this->getCookie('PASSWORD') === $this->getData(['config', 'password'])) {
 			// Items de gauche
 			$left = '<li><select onchange="$(location).attr(\'href\', $(this).val());">';
 			// Affiche l'option "Choisissez une page" seulement pour le module de configuration et le gestionnaire de fichier
@@ -1208,8 +1215,8 @@ class core extends common
 	 */
 	public function showCommonScript()
 	{
-		// Fonction communes
-		$functions = '
+		// Script en début de page
+		$start = '
 			// Convertit un code hexadecimal en rgb
 			function hexToRgb(hex) {
 				var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -1220,8 +1227,8 @@ class core extends common
 				} : null;
 			}
 		';
-		// Script commun
-		$script = '
+		// Script en fin de page
+		$end = '
 			// Modifications non enregistrées du formulaire
 			var form = $("form");
 			form.data("serialize", form.serialize());
@@ -1258,8 +1265,34 @@ class core extends common
 				$("body, html").animate({scrollTop: 0}, "400");
 			});
 		';
+		if($this->getData(['config', 'cookieConsent'])) {
+			$end .= '
+				// Message sur l\'utilisation des cookies
+				var name = "CONSENT";
+				if(document.cookie.indexOf(name) === -1) {
+					$("body").append(
+						$("<div>").attr("id", "cookieConsentMessage").append(
+							$("<span>").text("' . helper::translate('En poursuivant votre navigation sur ce site, vous acceptez l\'utilisation de cookies.') . '"),
+							$("<span>")
+								.attr("id", "cookieConsentConfirm")
+								.text("' . helper::translate('OK') . '")
+								.on("click", function() {
+									// Créé le cookie d\'acceptation
+									var expires = new Date();
+									expires.setFullYear(expires.getFullYear() + 1);
+									expires = "expires=" + expires.toUTCString();
+									var value = "true";
+									document.cookie = name + "=" + value + ";" + expires;
+									// Ferme le message
+									$(this).parents("#cookieConsentMessage").fadeOut();
+								})
+						)
+					);
+				}
+			';
+		}
 		if(self::$vendor['tinymce']) {
-			$script .= '
+			$end .= '
 				// Ajoute le formulaire d\'upload de TinyMCE si il n\'existe pas
 				if(!$("#editorFileForm").length) {
 					$("body").append(
@@ -1323,7 +1356,7 @@ class core extends common
 				});
 			';
 		}
-		return template::script($functions . '$(function() {' . $script . '});');
+		return template::script($start . '$(function() {' . $end . '});');
 	}
 
 	/**
@@ -1414,6 +1447,7 @@ class core extends common
 				'config',
 				[
 					'analytics' => $this->getPost('analytics', helper::STRING),
+					'cookieConsent' => $this->getPost('cookieConsent', helper::BOOLEAN),
 					'dataVersion' => $this->getData(['config', 'dataVersion']),
 					'description' => $this->getPost('description', helper::STRING),
 					'favicon' => $this->getPost('favicon', helper::URL),
@@ -1600,6 +1634,10 @@ class core extends common
 					template::closeRow().
 					template::subTitle('Système').
 					template::openRow().
+					template::checkbox('cookieConsent', true, 'Message de consentement pour l\'utilisation des cookies', [
+						'checked' => $this->getData(['config', 'cookieConsent'])
+					]).
+					template::newRow().
 					template::checkbox('rewrite', true, 'Activer la réécriture d\'URL', [
 						'checked' => helper::rewriteCheck(),
 						'help' => 'Supprime le point d\'interrogation de l\'URL (si vous n\'arrivez pas à cocher la case, vérifiez que le module d\'URL rewriting de votre serveur est bien activé).',
@@ -2500,7 +2538,7 @@ class core extends common
 			// Crée un cookie (de durée infinie si la case est cochée) si le mot de passe est correct
 			if($this->getPost('password', helper::PASSWORD) === $this->getData(['config', 'password'])) {
 				$time = $this->getPost('time') ? 0 : time() + 10 * 365 * 24 * 60 * 60;
-				$this->setCookie($this->getPost('password'), $time);
+				$this->setCookie('PASSWORD', $this->getPost('password', helper::PASSWORD), $time);
 			}
 			// Notification d'échec si le mot de passe incorrect
 			else {
@@ -2533,7 +2571,7 @@ class core extends common
 	public function logout()
 	{
 		// Supprime le cookie de connexion
-		$this->removeCookie();
+		$this->removeCookie('PASSWORD');
 		// Redirige vers la page d'accueil du site
 		helper::redirect('./', false);
 	}

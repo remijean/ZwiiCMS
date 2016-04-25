@@ -422,6 +422,30 @@ footer #socials .zwiico-youtube:hover {
 	text-decoration: none;
 }
 
+/* Message sur les cookies */
+#cookieConsentMessage {
+	font-size: .9em;
+	opacity: .7;
+	background: #3C3C3C;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	color: #FFF;
+	text-align: center;
+	padding: 10px;
+}
+#cookieConsentConfirm {
+	cursor: pointer;
+	margin-left: 10px;
+	background: #666;
+	padding: 5px 10px;
+	display: inline-block;
+}
+#cookieConsentConfirm:hover {
+	background: #777;
+}
+
 /**
  * Inputs génériques
  */
