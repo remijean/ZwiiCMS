@@ -1,6 +1,17 @@
 ZwiiCMS 7
 =========
 
+## 7.6.3
+* Ajout d'un message de consentement à l'utilisation des cookies
+* Ajout du code Google Analytics même si l'utilisateur est connecté en administrateur
+* Ajout de l'insertion de balises script dans l'éditeur TinyMCE
+* Amélioration de la traduction Correction d'un bug bloquant la traduction des modules Correction d
+* Correction d'un bug bloquant la traduction des modules
+* Correction d'un mauvais lien dans la page d'accueil
+* Correction d'un bug avec le titre des mails envoyés depuis le générateur de formulaires
+* Correction d'un bug avec les valeurs des champs de sélection dans le générateur de formulaire
+* Correction de fautes d'orthographe
+
 ## 7.6.2
 * Mise à jour de la traduction anglaise
 * Ajout d'un favicon par défaut
