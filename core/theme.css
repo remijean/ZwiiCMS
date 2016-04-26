@@ -282,11 +282,12 @@ nav li {
 nav li ul {
 	display: none;
 	position: absolute;
-	min-width: 200px;
+	width: 250px;
 	z-index: 20;
 }
 nav li ul li {
 	display: block;
+	text-align: left;
 }
 nav li:hover ul {
 	display: block;
