@@ -2339,7 +2339,7 @@ class core extends common
 		self::$content =
 			template::openForm().
 			template::tabs([
-				'Options principaux' =>
+				'Options principales' =>
 					template::openRow().
 					template::text('title', [
 						'label' => 'Titre de la page',
@@ -2470,7 +2470,7 @@ class core extends common
 							});
 						').
 					template::closeRow(),
-				'Options avancés' =>
+				'Options avancées' =>
 					template::openRow().
 					template::text('metaTitle', [
 						'label' => 'Méta titre de la page',

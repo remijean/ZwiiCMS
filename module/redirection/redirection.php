@@ -27,7 +27,7 @@ class redirectionAdm extends common
 			// Enregistre les données
 			$this->saveData();
 			// Notification de succès
-			$this->setNotification('Lien de redirection enregistrée avec succès !');
+			$this->setNotification('Lien de redirection enregistré avec succès !');
 			// Redirige vers l'URL courante
 			helper::redirect($this->getUrl(null, false));
 		}
