@@ -89,6 +89,7 @@ class common
 		'mode',
 		'module',
 		'phpinfo',
+		'rename',
 		'save',
 		'upload'
 	];
@@ -2593,6 +2594,10 @@ class core extends common
 					'href' => $path,
 					'target' => '_blank'
 				]),
+				template::button('rename[]', [
+					'value' => template::ico('pencil'),
+					'href' => helper::baseUrl() . 'rename/' . $file
+				]),
 				template::button('delete[]', [
 					'value' => template::ico('cancel'),
 					'href' => helper::baseUrl() . 'delete/' . $file,
@@ -2603,7 +2608,7 @@ class core extends common
 		if($filesTable) {
 			self::$content =
 				template::openRow() .
-				template::table([10, 1, 1], $filesTable) .
+				template::table([9, 1, 1, 1], $filesTable) .
 				template::closeRow();
 		}
 		// Contenu de la page
@@ -2664,6 +2669,52 @@ class core extends common
 	{
 		self::$layout = 'BLANK';
 		self::$content = phpinfo();
+	}
+
+	/** Renommage de fichiers uploadés */
+	public function rename()
+	{
+		// Erreur 404
+		if(!is_file('data/upload/' . $this->getUrl(0))) {
+			return false;
+		}
+		// Traitement du formulaire
+		elseif($this->getPost('submit')) {
+			/// Tente de supprimer le fichier
+			if(@rename('data/upload/' . $this->getUrl(0), 'data/upload/' . $this->getPost('name', helper::URL) . '.' . pathinfo($this->getUrl(0), PATHINFO_EXTENSION))) {
+				// Notification de suppression
+				$this->setNotification('Fichier renommé avec succès !');
+			}
+			else {
+				// Notification de suppression
+				$this->setNotification('Impossible de renommer le fichier !', true);
+			}
+			// Redirige vers le gestionnaire de fichiers
+			helper::redirect('manager');
+		}
+		// Template de la page
+		self::$title = $this->getUrl(0);
+		self::$content =
+			template::openForm().
+			template::openRow().
+			template::text('name', [
+				'label' => 'Nom du fichier',
+				'value' => pathinfo($this->getUrl(0), PATHINFO_FILENAME),
+				'required' => 'required',
+				'col' => 12
+			]).
+			template::newRow().
+			template::button('back', [
+				'value' => 'Retour',
+				'href' => helper::baseUrl() . 'manager',
+				'col' => 2
+			]).
+			template::submit('submit', [
+				'col' => 2,
+				'offset' => 8
+			]).
+			template::closeRow().
+			template::closeForm();
 	}
 
 	/** Enregistrement du module en AJAX */
