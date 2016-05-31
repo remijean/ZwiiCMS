@@ -99,10 +99,11 @@ class common
 
 	/** @var array Librairies à charger */
 	public static $vendor = [
-		'jquery' => true,
-		'jquery-ui' => false,
+		'jquery' => true, // À placer avant les autres librairies
+		'jquery-ui' => false, // À placer avant les autres librairies
 		'jscolor' => false,
 		'normalize' => true,
+		'remodal' => true,
 		'tinymce' => false,
 		'zwiico' => true
 	];
@@ -1163,7 +1164,7 @@ class core extends common
 			$right .= '<li><a href="' . helper::baseUrl() . 'mode/' . $this->getUrl(null, false) . '"' . ($this->getMode() ? ' class="edit"' : '') . ' title="' . helper::translate('Activer/désactiver le mode édition') . '">' . template::ico('pencil') . '</a></li>';
 			$right .= '<li><a href="' . helper::baseUrl() . 'manager" title="' . helper::translate('Gérer les fichiers') . '">' . template::ico('folder') . '</a></li>';
 			$right .= '<li><a href="' . helper::baseUrl() . 'config" title="' . helper::translate('Configurer le site') . '">' . template::ico('gear') . '</a></li>';
-			$right .= '<li><a href="' . helper::baseUrl() . 'logout" onclick="return confirm(\'' . helper::translate('Êtes-vous sûr de vouloir vous déconnecter ?') . '\');" title="' . helper::translate('Se déconnecter') . '">' . template::ico('logout') . '</a></li>';
+			$right .= '<li><a href="' . helper::baseUrl() . 'logout" data-remodal-target="modal" title="' . helper::translate('Se déconnecter') . '">' . template::ico('logout') . '</a></li>';
 			// Retourne le panneau
 			return '<div id="panel"><div class="container"><ul class="left">' . $left . '</ul><ul class="right">' . $right . '</ul></div></div>';
 		}
@@ -1391,31 +1392,39 @@ class core extends common
 	 */
 	public function showVendor()
 	{
+		// Fusionne la liste des librairies système avec les librairies du module
+		$moduleVendorPath = 'module/' . $this->getData(['page', $this->getUrl(0), 'module']) . '/vendor/';
+		if(is_dir($moduleVendorPath)) {
+			$it = new DirectoryIterator($moduleVendorPath);
+			foreach($it as $file) {
+				if($file->isDir() AND !in_array($file->getBasename(), ['.', '..'])) {
+					self::$vendor[$file->getBasename()] = null;
+				}
+			}
+		}
+		// Importe les librairies
 		$vendor = '';
 		foreach(self::$vendor as $vendorName => $vendorStatus) {
-			if($vendorStatus) {
-				switch($vendorName) {
-					case 'jquery':
-						$vendor .= '<script src="' . helper::baseUrl(false) . 'core/vendor/jquery/jquery.min.js"></script>';
-						break;
-					case 'jquery-ui':
-						$vendor .= '<script src="' . helper::baseUrl(false) . 'core/vendor/jquery-ui/jquery-ui.min.js"></script>';
-						$vendor .= '<script src="' . helper::baseUrl(false) . 'core/vendor/jquery-ui/jquery-ui.touch-punch.min.js"></script>';
-						$vendor .= '<link rel="stylesheet" href="' . helper::baseUrl(false) . 'core/vendor/jquery-ui/jquery-ui.min.css">';
-						break;
-					case 'jscolor':
-						$vendor .= '<script src="' . helper::baseUrl(false) . 'core/vendor/jscolor/jscolor.min.js"></script>';
-						break;
-					case 'tinymce':
-						$vendor .= '<script src="' . helper::baseUrl(false) . 'core/vendor/tinymce/tinymce.min.js"></script>';
-						$vendor .= '<script src="' . helper::baseUrl(false) . 'core/vendor/tinymce/jquery.tinymce.min.js"></script>';
-						break;
-					case 'normalize':
-						$vendor .= '<link rel="stylesheet" href="' . helper::baseUrl(false) . 'core/vendor/normalize/normalize.min.css">';
-						break;
-					case 'zwiico':
-						$vendor .= '<link rel="stylesheet" href="' . helper::baseUrl(false) . 'core/vendor/zwiico/css/zwiico.min.css">';
-						break;
+			// Check le statut (true = librairie système à inclure ; null = librairie du module)
+			if($vendorStatus !== false) {
+				// Chemin en fonction du type de librairie (système ou module)
+				$path = ($vendorStatus === null) ? $moduleVendorPath . $vendorName . '/' : 'core/vendor/' . $vendorName . '/';
+				// Check si le fichier d'inclusion existe
+				if(is_file($path . 'inc.json')) {
+					// Détermine le type d'import en fonction de l'extension de la librairie
+					$files = json_decode(file_get_contents($path . 'inc.json'));
+					foreach($files as $file) {
+						$extension = explode('.', $file);
+						$extension = end($extension); // Déclaration séparée pour éviter l'erreur "Only variables should be passed by reference"
+						switch($extension) {
+							case 'css':
+								$vendor .= '<link rel="stylesheet" href="' . helper::baseUrl(false) . $path . $file . '">';
+								break;
+							case 'js':
+								$vendor .= '<script src="' . helper::baseUrl(false) . $path . $file . '"></script>';
+								break;
+						}
+					}
 				}
 			}
 		}
@@ -2582,7 +2591,19 @@ class core extends common
 	{
 		// Traitement du formulaire
 		if($this->getPost('submit')) {
-			$this->upload(core::$managerExtensions);
+			// Upload le fichier
+			$upload = helper::upload(self::$managerExtensions);
+			// En cas de succès
+			if(isset($upload['success'])) {
+				// Notification d'upload
+				$this->setNotification($upload['success']);
+				// Redirige vers la page courante
+				helper::redirect($this->getUrl(null, false));
+			}
+			// Sinon crée une notice en cas d'erreur
+			else {
+				template::$notices['file'] = $upload['error'];
+			}
 		}
 		// Met en forme les fichiers pour les afficher dans un tableau
 		$filesTable = [];
@@ -2621,7 +2642,7 @@ class core extends common
 			template::openRow().
 			template::file('file', [
 				'label' => 'Parcourir mes fichiers',
-				'help' => helper::translate('Les formats de fichiers autorisés sont :') . ' ' . implode(', .', core::$managerExtensions) . '.',
+				'help' => helper::translate('Les formats de fichiers autorisés sont :') . ' ' . implode(', .', self::$managerExtensions) . '.',
 				'col' => '10'
 			]).
 			template::submit('submit', [
@@ -2753,60 +2774,17 @@ class core extends common
 	}
 
 	/**
-	 * Upload d'un fichier en POST et en AJAX
-	 * A importer entre un if($this->getPost()) en POST ; A appeler depuis un fichier JS en AJAX
-	 * @param array $extensions Extensions autorisées
+	 * Upload d'une image dans TinyMCE
 	 * @return bool
 	 */
-	public function upload(array $extensions = ['png', 'gif', 'jpg', 'jpeg'])
+	public function upload()
 	{
 		// Erreur 404
 		if(!isset($_FILES['file'])) {
 			return false;
 		}
-		$target = 'data/upload/' . helper::filter(basename($_FILES['file']['name']), helper::URL);
-		// Check la taille du fichier (limité à environs 100 mo)
-		if($_FILES['file']['size'] > 100000000) {
-			$data['error'] = 'Fichier trop volumineux !';
-		}
-		// Check le type de fichier
-		elseif(!in_array(strtolower(pathinfo($target, PATHINFO_EXTENSION)), $extensions)) {
-			$data['error'] = 'Format du fichier non autorisé !';
-		}
-		// Check les erreurs au chargement du fichier
-		elseif($_FILES['file']['error']) {
-			$data['error'] = 'Erreur au chargement du fichier !';
-		}
-		// Check qu'il n'existe aucune notice
-		if(empty($data['error'])) {
-			// Tente de déplacer le fichier dans le bon dossier
-			if(@move_uploaded_file($_FILES['file']['tmp_name'], $target)) {
-				$data['success'] = 'Fichier envoyé avec succès !';
-				$data['link'] = helper::baseUrl(false) . $target;
-			}
-			else {
-				$data['error'] = 'Impossible de communiquer avec le serveur !';
-			}
-		}
-		// Pour une requête en AJAX
-		if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-			self::$layout = 'JSON';
-			self::$content = $data;
-		}
-		// Pour une requête en POST
-		else {
-			// En cas de succès
-			if(isset($data['success'])) {
-				// Notification d'upload
-				$this->setNotification($data['success']);
-				// Redirige vers la page courante
-				helper::redirect($this->getUrl(null, false));
-			}
-			// Sinon crée une notice en cas d'erreur
-			else {
-				template::$notices['file'] = $data['error'];
-			}
-		}
+		self::$layout = 'JSON';
+		self::$content = helper::upload();
 	}
 }
 
@@ -3002,7 +2980,7 @@ class helper
 	/**
 	 * Crée une liste des fichiers uploadés (format : chemin du fichier => fichier)
 	 * @param  mixed    $default    Valeur par défaut
-	 * @param  mixed    $extensions N'autorise que certains extensions
+	 * @param  mixed    $extensions N'autorise que certaines extensions
 	 * @param  null|int $size       N'autorise que les images de taille inférieure à x ko
 	 * @param  null|int $height     N'autorise que les images de x hauteur
 	 * @param  null|int $width      N'autorise que les images de x largeur
@@ -3264,6 +3242,46 @@ class helper
 		}
 		return $text;
 	}
+
+	/**
+	 * Upload d'un fichier
+	 * @param array $extensions Extensions autorisées
+	 * @return array
+	 */
+	public static function upload(array $extensions = ['png', 'gif', 'jpg', 'jpeg'])
+	{
+		// Check de la présence d'un fichier
+		if(!isset($_FILES['file'])) {
+			$data['error'] = 'Aucun fichier à envoyer !';
+		}
+		else {
+			$target = 'data/upload/' . helper::filter(basename($_FILES['file']['name']), helper::URL);
+			// Check la taille du fichier (limité à environs 100 mo)
+			if($_FILES['file']['size'] > 100000000) {
+				$data['error'] = 'Fichier trop volumineux !';
+			}
+			// Check le type de fichier
+			elseif(!in_array(strtolower(pathinfo($target, PATHINFO_EXTENSION)), $extensions)) {
+				$data['error'] = 'Format du fichier non autorisé !';
+			}
+			// Check les erreurs au chargement du fichier
+			elseif($_FILES['file']['error']) {
+				$data['error'] = 'Erreur au chargement du fichier !';
+			}
+			// Check qu'il n'existe aucune notice
+			if(empty($data['error'])) {
+				// Tente de déplacer le fichier dans le bon dossier
+				if(@move_uploaded_file($_FILES['file']['tmp_name'], $target)) {
+					$data['success'] = 'Fichier envoyé avec succès !';
+					$data['link'] = helper::baseUrl(false) . $target;
+				}
+				else {
+					$data['error'] = 'Impossible de communiquer avec le serveur !';
+				}
+			}
+		}
+		return $data;
+	}
 }
 
 class template
@@ -3410,6 +3428,32 @@ class template
 
 	############################################################
 	# CHAMPS
+
+	/**
+	 * Crée un lien
+	 * @param  string $href       Chemin du lien
+	 * @param  string $text       Text du lien
+	 * @param  array  $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @return string
+	 */
+	public static function a($href, $text, array $attributes = [])
+	{
+		// Attributs possibles
+		$attributes = array_merge([
+			'id' => '',
+			'class' => '',
+			'data-1' => '',
+			'data-2' => '',
+			'data-3' => ''
+		], $attributes);
+		// Retourne le html
+		return sprintf(
+			'<a href="%s" %s>%s</a>',
+			$href,
+			self::sprintAttributes($attributes),
+			$text
+		);
+	}
 
 	/**
 	 * Crée un bouton
@@ -3755,6 +3799,30 @@ class template
 	public static function ico($ico, $margin = false)
 	{
 		return '<span class="zwiico-' . $ico . ($margin ? ' zwiico-margin' : '') . '"></span>';
+	}
+
+	/**
+	 * Crée une image
+	 * @param  string $src        Chemin de l'image source
+	 * @param  array  $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @return string
+	 */
+	public static function img($src, array $attributes = [])
+	{
+		// Attributs possibles
+		$attributes = array_merge([
+			'id' => '',
+			'class' => '',
+			'data-1' => '',
+			'data-2' => '',
+			'data-3' => ''
+		], $attributes);
+		// Retourne le html
+		return sprintf(
+			'<img src="%s" %s></img>',
+			$src,
+			self::sprintAttributes($attributes)
+		);
 	}
 
 	/**

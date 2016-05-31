@@ -22,7 +22,7 @@ class redirectionAdm extends common
 	{
 		// Traitement du formulaire
 		if($this->getPost('submit')) {
-			// Modifie l'Lien de redirection
+			// Modifie le lien de redirection
 			$this->setData([$this->getUrl(0), 'url', $this->getPost('url', helper::URL)]);
 			// Enregistre les données
 			$this->saveData();
