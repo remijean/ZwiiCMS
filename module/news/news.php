@@ -90,7 +90,7 @@ class newsAdm extends common
 					template::openRow().
 					template::text('title', [
 						'label' => 'Titre de la news',
-						'required' => 'required'
+						'required' => true
 					]).
 					template::newRow().
 					template::textarea('content', [
@@ -157,7 +157,7 @@ class newsAdm extends common
 			template::text('title', [
 				'label' => 'Titre de la news',
 				'value' => $this->getData([$this->getUrl(0), $this->getUrl(2), 'title']),
-				'required' => 'required'
+				'required' => true
 			]).
 			template::newRow().
 			template::textarea('content', [

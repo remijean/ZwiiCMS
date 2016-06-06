@@ -38,7 +38,7 @@ class redirectionAdm extends common
 			template::text('url', [
 				'label' => 'Lien de redirection',
 				'value' => $this->getData([$this->getUrl(0), 'url']),
-				'required' => 'required',
+				'required' => true,
 				'placeholder' => 'http://'
 			]).
 			template::newRow().

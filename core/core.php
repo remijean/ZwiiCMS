@@ -1548,13 +1548,13 @@ class core extends common
 					template::openRow().
 					template::text('title', [
 						'label' => 'Titre du site',
-						'required' => 'required',
+						'required' => true,
 						'value' => $this->getData(['config', 'title'])
 					]).
 					template::newRow().
 					template::textarea('description', [
 						'label' => 'Description du site',
-						'required' => 'required',
+						'required' => true,
 						'value' => $this->getData(['config', 'description'])
 					]).
 					template::newRow().
@@ -1571,7 +1571,7 @@ class core extends common
 					template::newRow().
 					template::select('index', helper::arrayCollumn($this->getData('page'), 'title', 'SORT_ASC', true), [
 						'label' => 'Page d\'accueil',
-						'required' => 'required',
+						'required' => true,
 						'selected' => $this->getData(['config', 'index'])
 					]).
 					template::newRow().
@@ -1651,13 +1651,13 @@ class core extends common
 					template::checkbox('rewrite', true, 'Activer la réécriture d\'URL', [
 						'checked' => helper::rewriteCheck(),
 						'help' => 'Supprime le point d\'interrogation de l\'URL (si vous n\'arrivez pas à cocher la case, vérifiez que le module d\'URL rewriting de votre serveur est bien activé).',
-						'disabled' => helper::modRewriteCheck() ? '' : 'disabled' // Check que l'URL rewriting fonctionne sur le serveur
+						'disabled' => !helper::modRewriteCheck() // Check que l'URL rewriting fonctionne sur le serveur
 					]).
 					template::newRow().
 					template::text('version', [
 						'label' => 'Version de ZwiiCMS',
 						'value' => self::$version,
-						'disabled' => 'disabled'
+						'disabled' => true
 					]).
 					template::closeRow(),
 				'Personnalisation du thème' =>
@@ -1667,7 +1667,7 @@ class core extends common
 						'label' => 'Fond du site',
 						'value' => $this->getData(['config', 'theme', 'color', 'background']),
 						'transparent' => false,
-						'required' => 'required',
+						'required' => true,
 						'col' => 3
 					]).
 					template::colorPicker('headerColor', [
@@ -1684,7 +1684,7 @@ class core extends common
 						'label' => 'Éléments',
 						'value' => $this->getData(['config', 'theme', 'color', 'element']),
 						'transparent' => false,
-						'required' => 'required',
+						'required' => true,
 						'col' => 3
 					]).
 					template::closeRow().
@@ -2354,7 +2354,7 @@ class core extends common
 					template::text('title', [
 						'label' => 'Titre de la page',
 						'value' => $this->getData(['page', $this->getUrl(0), 'title']),
-						'required' => 'required'
+						'required' => true
 					]).
 					template::newRow().
 					template::select('parent', $pagesNoParent, [
@@ -2444,7 +2444,7 @@ class core extends common
 					template::button('admin', [
 						'value' => template::ico('gear'),
 						'href' => helper::baseUrl() . 'module/' . $this->getUrl(0),
-						'disabled' => $this->getData(['page', $this->getUrl(0), 'module']) ? '' : 'disabled',
+						'disabled' => !(bool)$this->getData(['page', $this->getUrl(0), 'module']),
 						'col' => 1
 					]).
 					template::script('
@@ -2563,7 +2563,7 @@ class core extends common
 			template::openForm().
 			template::openRow().
 			template::password('password', [
-				'required' => 'required',
+				'required' => true,
 				'col' => 4
 			]).
 			template::newRow().
@@ -2605,6 +2605,13 @@ class core extends common
 				template::$notices['file'] = $upload['error'];
 			}
 		}
+		// Liste des fichiers rattachés à des modules
+		$modulesFiles = [];
+		foreach($this->getData() as $key => $subKeys) {
+			if(array_key_exists('upload', $subKeys)) {
+				$modulesFiles = array_merge($modulesFiles, $this->getData([$key, 'upload']));
+			}
+		}
 		// Met en forme les fichiers pour les afficher dans un tableau
 		$filesTable = [];
 		foreach(helper::listUploads() as $path => $file) {
@@ -2617,12 +2624,13 @@ class core extends common
 				]),
 				template::button('rename[]', [
 					'value' => template::ico('pencil'),
-					'href' => helper::baseUrl() . 'rename/' . $file
+					'href' => helper::baseUrl() . 'rename/' . $file,
+					'onclick' => array_key_exists($file, $modulesFiles) ? 'return confirm(\'' . helper::translate('Ce fichier est rattaché à un module, vous risquez de détruire ce lien en le renommant !') . '\');' : ''
 				]),
 				template::button('delete[]', [
 					'value' => template::ico('cancel'),
 					'href' => helper::baseUrl() . 'delete/' . $file,
-					'onclick' => 'return confirm(\'' . helper::translate('Êtes-vous sûr de vouloir supprimer ce fichier ?') . '\');'
+					'onclick' => 'return confirm(\'' . (array_key_exists($file, $modulesFiles) ? helper::translate('Ce fichier est rattaché à un module, vous risquez de détruire ce lien en le supprimant !') : '') . ' ' . helper::translate('Êtes-vous sûr de vouloir supprimer ce fichier ?') . '\');'
 				])
 			];
 		}
@@ -2721,7 +2729,7 @@ class core extends common
 			template::text('name', [
 				'label' => 'Nom du fichier',
 				'value' => pathinfo($this->getUrl(0), PATHINFO_FILENAME),
-				'required' => 'required',
+				'required' => true,
 				'col' => 12
 			]).
 			template::newRow().
@@ -3336,7 +3344,7 @@ class template
 			unset($_SESSION['REQUIRED'][$id . '.' . md5($_SERVER['QUERY_STRING'])]);
 		}
 		// Enregistre l'id du champ comme obligatoire
-		if(!empty($attributes['required']) AND (empty($_SESSION['REQUIRED']) OR !array_key_exists($id . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED']))) {
+		if(isset($attributes['required']) AND (empty($_SESSION['REQUIRED']) OR !array_key_exists($id . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED']))) {
 			$_SESSION['REQUIRED'][$id . '.' . md5($_SERVER['QUERY_STRING'])] = true;
 		}
 	}
@@ -3357,6 +3365,10 @@ class template
 				// Champs à traduire
 				if(in_array($key, ['placeholder'])) {
 					$attributes[] = sprintf('%s="%s"', $key, helper::translate($value));
+				}
+				// Disabled
+				elseif($key === 'disabled') {
+					$attributes[] = sprintf('%s', $key);
 				}
 				else {
 					$attributes[] = sprintf('%s="%s"', $key, $value);
@@ -3444,7 +3456,9 @@ class template
 			'class' => '',
 			'data-1' => '',
 			'data-2' => '',
-			'data-3' => ''
+			'data-3' => '',
+			'style' => '',
+			'title' => ''
 		], $attributes);
 		// Retourne le html
 		return sprintf(
@@ -3471,7 +3485,7 @@ class template
 			'href' => 'javascript:void(0);',
 			'target' => '',
 			'onclick' => '',
-			'disabled' => '',
+			'disabled' => false,
 			'class' => '',
 			'classWrapper' => '',
 			'col' => 12,
@@ -3507,7 +3521,7 @@ class template
 			'id' => $nameId,
 			'name' => $nameId,
 			'value' => '',
-			'required' => 'required',
+			'required' => true,
 			'help' => '',
 			'class' => '',
 			'classWrapper' => '',
@@ -3565,8 +3579,8 @@ class template
 			'id' => $nameId,
 			'name' => $nameId,
 			'checked' => '',
-			'disabled' => '',
-			'required' => '',
+			'disabled' => false,
+			'required' => false,
 			'help' => '',
 			'class' => '',
 			'classWrapper' => '',
@@ -3612,9 +3626,9 @@ class template
 			'name' => $nameId,
 			'value' => '',
 			'placeholder' => '',
-			'disabled' => '',
+			'disabled' => false,
 			'readonly' => '',
-			'required' => '',
+			'required' => false,
 			'label' => '',
 			'help' => '',
 			'transparent' => true,
@@ -3703,8 +3717,8 @@ class template
 			'id' => $nameId,
 			'name' => $nameId,
 			'value' => '',
-			'disabled' => '',
-			'required' => '',
+			'disabled' => false,
+			'required' => false,
 			'label' => '',
 			'help' => '',
 			'class' => '',
@@ -3868,9 +3882,9 @@ class template
 			'name' => $nameId,
 			'autocomplete' => 'on',
 			'placeholder' => '',
-			'disabled' => '',
+			'disabled' => false,
 			'readonly' => '',
-			'required' => '',
+			'required' => false,
 			'label' => '',
 			'help' => '',
 			'class' => '',
@@ -3919,8 +3933,8 @@ class template
 			'id' => $nameId,
 			'name' => $nameId,
 			'checked' => '',
-			'disabled' => '',
-			'required' => '',
+			'disabled' => false,
+			'required' => false,
 			'help' => '',
 			'class' => '',
 			'classWrapper' => '',
@@ -3976,8 +3990,8 @@ class template
 			'id' => $nameId,
 			'name' => $nameId,
 			'selected' => '',
-			'disabled' => '',
-			'required' => '',
+			'disabled' => false,
+			'required' => false,
 			'label' => '',
 			'help' => '',
 			'class' => '',
@@ -4038,7 +4052,7 @@ class template
 			'id' => $nameId,
 			'name' => $nameId,
 			'value' => 'Enregistrer',
-			'disabled' => '',
+			'disabled' => false,
 			'class' => '',
 			'classWrapper' => '',
 			'col' => 12,
@@ -4197,9 +4211,9 @@ class template
 			'name' => $nameId,
 			'value' => '',
 			'placeholder' => '',
-			'disabled' => '',
+			'disabled' => false,
 			'readonly' => '',
-			'required' => '',
+			'required' => false,
 			'label' => '',
 			'help' => '',
 			'class' => '',
@@ -4250,9 +4264,9 @@ class template
 			'id' => $nameId,
 			'name' => $nameId,
 			'value' => '',
-			'disabled' => '',
+			'disabled' => false,
 			'readonly' => '',
-			'required' => '',
+			'required' => false,
 			'label' => '',
 			'help' => '',
 			'editor' => false,

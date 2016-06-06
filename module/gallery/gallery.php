@@ -17,6 +17,9 @@ class galleryAdm extends common
 	/** @var string Nom du module */
 	public static $name = 'Galerie d\'images';
 
+	/** @var array Liste des vues du module */
+	public static $views = ['delete', 'rename'];
+
 	/** @var array Extensions autorisées dans le gestionnaire de fichiers */
 	public static $galleryExtensions = [
 		'gif',
@@ -30,38 +33,49 @@ class galleryAdm extends common
 	{
 		// Traitement des formulaires
 		if($this->getPost('send')) {
-			helper::upload(self::$galleryExtensions);
-		}
-		if($this->getPost('submit')) {
-			// Liste les images cochées
-			$images = [];
-			foreach($this->getPost('add') as $image => $bool) {
-				$images[] = $image;
+			// Upload l'image
+			$data = helper::upload(self::$galleryExtensions);
+			if(isset($data['error'])) {
+				// Notification d'échec
+				$this->setNotification($data['error'], true);
 			}
-			// Crée les données
-			$this->setData([$this->getUrl(0), 'image', $images]);
-			// Enregistre les données
-			$this->saveData();
+			elseif(isset($data['success'])) {
+				// Ajoute l'image à la galerie
+				$this->setData([$this->getUrl(0), 'upload', helper::filter(basename($_FILES['file']['name']), helper::URL), $this->getPost('legend', helper::STRING)]);
+				// Enregistre les données
+				$this->saveData();
+				// Notification d'upload
+				$this->setNotification($data['success']);
+			}
 		}
-		// Met en forme les fichiers pour les afficher dans un tableau
-		$filesTable = [];
-		foreach(helper::listUploads(false, self::$galleryExtensions) as $path => $file) {
-			$filesTable[] = [
-				template::checkbox('add[' . $file . ']', true, $file, [
-					'checked' => ($this->getData([$this->getUrl(0), 'image']) AND in_array($file, $this->getData([$this->getUrl(0), 'image']))),
-					'target' => '_blank'
-				]),
-				template::button('preview[' . $file . ']', [
-					'value' => template::ico('eye'),
-					'href' => $path,
-					'target' => '_blank'
-				])
-			];
-		}
-		if($filesTable) {
+		// Met en forme les images pour les afficher dans un tableau
+		if($images = $this->getData([$this->getUrl(0), 'upload'])) {
+			asort($images);
+			$filesTable = [];
+			foreach($images as $image => $legend) {
+				$filesTable[] = [
+					template::div([
+						'text' => $legend
+					]),
+					template::button('preview[' . $image . ']', [
+						'value' => template::ico('eye'),
+						'href' => helper::baseUrl(false) . 'data/upload/' . $image,
+						'target' => '_blank'
+					]),
+					template::button('rename[]', [
+						'value' => template::ico('pencil'),
+						'href' => helper::baseUrl() . 'module/' . $this->getUrl(0) . '/rename/' . $image
+					]),
+					template::button('delete[' . $image . ']', [
+						'value' => template::ico('cancel'),
+						'href' => helper::baseUrl() . 'module/' . $this->getUrl(0) . '/delete/' . $image,
+						'onclick' => 'return confirm(\'Êtes-vous sûr de vouloir supprimer cette image ? Elle sera également supprimée du gestionnaire de fichiers !\');'
+					])
+				];
+			}
 			self::$content =
-				template::openRow() .
-				template::table([11, 1], $filesTable) .
+				template::openRow().
+				template::table([9, 1, 1, 1], $filesTable).
 				template::closeRow();
 		}
 		// Contenu de la page
@@ -74,8 +88,13 @@ class galleryAdm extends common
 			template::openRow().
 			template::file('file', [
 				'label' => 'Parcourir mes fichiers',
-				'help' => helper::translate('Les formats de fichiers autorisés sont :') . ' ' . implode(', .', core::$managerExtensions) . '.',
-				'col' => '10'
+				'help' => helper::translate('Les formats de fichiers autorisés sont :') . ' ' . implode(', .', self::$galleryExtensions) . '.',
+				'col' => '4'
+			]).
+			template::text('legend', [
+				'label' => 'Legende de l\'image',
+				'col' => '6',
+				'required' => true
 			]).
 			template::submit('send', [
 				'value' => 'Envoyer',
@@ -83,16 +102,86 @@ class galleryAdm extends common
 			]).
 			template::closeRow().
 			template::closeForm().
-			template::title('Liste des images disponibles').
-			template::openForm('files').
+			template::title('Images de la galerie').
 			(self::$content ? self::$content : template::subTitle('Aucune image...')).
 			template::openRow().
-			template::submit('submit', [
-				'value' => 'Enregistrer',
-				'col' => '2',
-				'offset' => '10'
+			template::button('back', [
+				'value' => 'Retour',
+				'href' => helper::baseUrl() . $this->getUrl(0),
+				'col' => 2
 			]).
 			template::closeRow();
+	}
+
+	/** Recommage d'une image */
+	public function rename()
+	{
+		// Erreur 404
+		if(!array_key_exists($this->getUrl(2), $this->getData([$this->getUrl(0), 'upload']))) {
+			return false;
+		}
+		// Traitement du formulaire
+		elseif($this->getPost('submit')) {
+			// Renomme l'image
+			$this->setData([$this->getUrl(0), 'upload', $this->getUrl(2), $this->getPost('name', helper::STRING)]);
+			// Enregistre les données
+			$this->saveData();
+			// Notification de renommage
+			$this->setNotification('Image renommée avec succès !');
+			// Redirige vers le module de la page
+			helper::redirect('module/' . $this->getUrl(0));
+		}
+		// Template de la page
+		self::$title = $this->getUrl(0);
+		self::$content =
+			template::openForm().
+			template::openRow().
+			template::text('name', [
+				'label' => 'Légende de l\'image',
+				'value' => $this->getData([$this->getUrl(0), 'upload', $this->getUrl(2)]),
+				'required' => true,
+				'col' => 12
+			]).
+			template::newRow().
+			template::button('back', [
+				'value' => 'Retour',
+				'href' => helper::baseUrl() . 'module/' . $this->getUrl(0),
+				'col' => 2
+			]).
+			template::submit('submit', [
+				'col' => 2,
+				'offset' => 8
+			]).
+			template::closeRow().
+			template::closeForm();
+	}
+	
+	/** Suppression d'une image */
+	public function delete()
+	{
+		// Erreur 404
+		if(!array_key_exists($this->getUrl(2), $this->getData([$this->getUrl(0), 'upload']))) {
+			return false;
+		}
+		// Suppression de l'image
+		else {
+			// Supprime l'image de la galerie
+			$image = 'data/upload/' . $this->getUrl(2);
+			$this->removeData([$this->getUrl(0), 'upload', $this->getUrl(2)]);
+			// Enregistre les données
+			$this->saveData();
+			// Tente de supprimer l'image du gestionnaire de fichiers
+			if(is_file($image) AND @unlink($image)) {
+				// Notification de suppression
+				$this->setNotification('Fichier supprimé avec succès !');
+			}
+			else {
+				// Notification de suppression
+				$this->setNotification('Fichier supprimé de la galerie mais échec de la suppression du gestionnaire de fichiers !', true);
+			}
+			// Redirige vers le module de la page
+			helper::redirect('module/' . $this->getUrl(0));
+		}
 	}
 }
 
@@ -101,10 +190,16 @@ class galleryMod extends common
 	/** Formulaire public */
 	public function index()
 	{
-		$images = $this->getData([$this->getUrl(0), 'image']);
-		foreach($images as $index => $image) {
+		$images = $this->getData([$this->getUrl(0), 'upload']);
+		$imagesNb = count($images);
+		$i = 1;
+		foreach($images as $image => $legend) {
+			// Ingore l'image si elle n'existe plus dans les fichiers uploadés
+			if(!is_file('data/upload/' . $image)) {
+				continue;
+			}
 			// Ouvre une ligne
-			if($index % 4 === 0) {
+			if($i % 6 === 1) {
 				self::$content .= template::openRow();
 			}
 			// Ajoute les images
@@ -112,18 +207,28 @@ class galleryMod extends common
 				'text' =>
 					template::a(
 						helper::baseUrl(false) . 'data/upload/' . $image,
-						template::img(helper::baseUrl(false) . 'data/upload/' . $image),
+						template::div([
+							'text' => $legend
+						]),
 						[
-							'class' => 'gallery'
+							'class' => 'gallery',
+							'style' => 'background-image:url(\'' . helper::baseUrl(false) . 'data/upload/' . $image . '\')',
+							'title' => $legend
 						]
 					),
-				'col' => 3
+				'col' => 2
 			]);
 			// Ferme la ligne
-			if($index % 4 === 3 OR !isset($images[$index + 1])) {
+			if($i % 6 === 0 OR $i === $imagesNb) {
 				self::$content .= template::closeRow();
 			}
+			// Incrémente l'index
+			$i++;
 		}
-		self::$content .= template::script('$(".gallery").simpleLightbox();');
+		self::$content .= template::script(
+			'$(".gallery").simpleLightbox({
+				captionSelector: "self"
+			});
+		');
 	}
 }
