@@ -1669,6 +1669,7 @@ class core extends common
 					template::colorPicker('menuColor', [
 						'label' => 'Menu',
 						'value' => $this->getData(['config', 'theme', 'color', 'menu']),
+						'required' => true,
 						'col' => 3
 					]).
 					template::colorPicker('elementColor', [
@@ -3615,6 +3616,10 @@ class template
 		if(($value = self::getBefore($attributes['id'])) !== null) {
 			$attributes['value'] = $value;
 		}
+		// Message d'aide si le champ n'est pas obligatoire
+		if(!$attributes['required']) {
+			$attributes['help'] = 'Vous pouvez supprimer la couleur en laissant le champ vide.';
+		}
 		// Début col
 		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper']. '">';
 		// Label
@@ -3630,7 +3635,8 @@ class template
 		}
 		// Texte
 		$html .= sprintf(
-			'<input type="text" class="jscolor {required: true, shadow: false, borderRadius: false} %s" %s>',
+			'<input type="text" class="jscolor {required: %s, shadow: false, borderRadius: false} %s" %s>',
+			$attributes['required'] ? 'true' : 'false', // Bool en string
 			$attributes['class'],
 			self::sprintAttributes($attributes, ['class'])
 		);
