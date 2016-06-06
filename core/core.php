@@ -733,59 +733,51 @@ class core extends common
 					}
 				';
 			}
-			// Si le menu a un couleur, définition des couleurs du menu
+			// Couleurs du menu
 			if($rgb = helper::hexToRgb($this->getData(['config', 'theme', 'color', 'menu']))) {
 				$color = $rgb['r'] . ',' . $rgb['g'] . ',' . $rgb['b'];
-				$colorDark = ($rgb['r'] - 20) . ',' . ($rgb['g'] - 20) . ',' . ($rgb['b'] - 20) . ',1';
-				$colorVeryDark = ($rgb['r'] - 25) . ',' . ($rgb['g'] - 25) . ',' . ($rgb['b'] - 25) . ',1';
+				$colorDark = ($rgb['r'] - 20) . ',' . ($rgb['g'] - 20) . ',' . ($rgb['b'] - 20);
+				$colorVeryDark = ($rgb['r'] - 25) . ',' . ($rgb['g'] - 25) . ',' . ($rgb['b'] - 25);
 				$textVariant = (.213 * $rgb['r'] + .715 * $rgb['g'] + .072 * $rgb['b'] > 127.5) ? 'inherit' : '#FFF';
+				if($this->getData(['config', 'theme', 'class', 'menuPosition']) === 'themeMenuPositionHeader') {
+					$color = 'background-color: rgba(' . $color . ', .7);';
+					$colorDark = 'background-color: rgba(' . $colorDark . ', .7);';
+					$colorVeryDark = 'background-color: rgba(' . $colorVeryDark . ', .7);';
+				}
+				else {
+					$color = 'background-color: rgb(' . $color . ');';
+					$colorDark = 'background-color: rgb(' . $colorDark . ');';
+					$colorVeryDark = 'background-color: rgb(' . $colorVeryDark . ');';
+				}
 				$css .= '
 					/* Couleur normale */
-					.toggle,
-					nav,
-					nav ul {
-						background-color: rgb(' . $color . ');
+					nav {
+						' . $color . '
 					}
-					.toggle span,
+					@media (min-width: 768px) {
+						nav li ul {
+							' . $color . '
+						}
+					}
+					nav .toggle span,
 					nav a {
 						color: ' . $textVariant . ';
 					}
 				';
-			}
-			// Sinon, définition de la couleur de survole des liens et de la couleur de fond blanche pour les sous-menus
-			else {
-				$colorDark = '0,0,0,.09';
-				$colorVeryDark = '0,0,0,.12';
 				$css .= '
-					@media (min-width: 768px) {
-						/* Couleur blanche des sous menus */
-						nav li ul {
-							background-color: rgb(255,255,255);
-						}
-						nav li ul a:hover {
-							background-color: rgb(245,245,245);
-						}
-						nav li ul a:active,
-						nav li ul a.current {
-							background-color: rgb(235,235,235);
-						}
+					/* Couleur foncée */
+					nav .toggle:hover,
+					nav a:hover {
+						' . $colorDark . '
+					}
+					/* Couleur très foncée */
+					nav .toggle:active,
+					nav a:active,
+					nav a.current {
+						' . $colorVeryDark . '
 					}
 				';
 			}
-			// Couleurs communes avec et sans transparence du menu
-			$css .= '
-				/* Couleur foncée */
-				.toggle:hover,
-				nav a:hover {
-					background-color: rgba(' . $colorDark . ');
-				}
-				/* Couleur très foncée */
-				.toggle:active,
-				nav a:active,
-				nav a.current {
-					background-color: rgba(' . $colorVeryDark . ');
-				}
-			';
 			// Couleurs des éléments
 			if($rgb = helper::hexToRgb($this->getData(['config', 'theme', 'color', 'element']))) {
 				$color = $rgb['r'] . ',' . $rgb['g'] . ',' . $rgb['b'];
@@ -1058,7 +1050,7 @@ class core extends common
 	public function showHeaderImage()
 	{
 		if($headerImage = $this->getData(['config', 'theme', 'image', 'header'])) {
-			return '<img src="' . helper::baseUrl(false) . $headerImage . '" title="' . $this->getData(['config', 'title']) . '" alt="' . $this->getData(['config', 'title']) . '">';
+			return '<div class="image"><img src="' . helper::baseUrl(false) . $headerImage . '" title="' . $this->getData(['config', 'title']) . '" alt="' . $this->getData(['config', 'title']) . '"></div>';
 		}
 	}
 
@@ -1232,38 +1224,38 @@ class core extends common
 		// Script en fin de page
 		$end = '
 			// Modifications non enregistrées du formulaire
-			var form = $("form");
-			form.data("serialize", form.serialize());
+			var formDOM = $("form");
+			formDOM.data("serialize", formDOM.serialize());
 			$(window).on("beforeunload", function() {
-				if(form.length && form.serialize() !== form.data("serialize")) {
+				if(formDOM.length && formDOM.serialize() !== formDOM.data("serialize")) {
 					return "' . helper::translate('Attention, si vous continuez, vous allez perdre les modifications non enregistrées !') . '";
 				}
 			});
-			form.submit(function() {
+			formDOM.submit(function() {
 				$(window).off("beforeunload");
 			});
 			// Affiche/cache le menu en mode responsive
-			var nav = $("nav");
+			var menuDOM = $(".menu");
 			$(".toggle").on("click", function() {
-				nav.slideToggle();
+				menuDOM.slideToggle();
 			});
 			$(window).on("resize", function() {
 				if($(window).width() > 768) {
-					nav.css("display", "");
+					menuDOM.css("display", "");
 				}
 			});
 			// Affiche/cache le bouton pour remonter en haut
-			var backToTop = $("#backToTop");
+			var backToTopDOM = $("#backToTop");
 			$(window).on("scroll", function() {
 				if($(this).scrollTop() > 200) {
-					backToTop.fadeIn();
+					backToTopDOM.fadeIn();
 				}
 				else {
-					backToTop.fadeOut();
+					backToTopDOM.fadeOut();
 				}
 			});
 			// Remonter en haut au clic sur le bouton
-			backToTop.on("click", function() {
+			backToTopDOM.on("click", function() {
 				$("body, html").animate({scrollTop: 0}, "400");
 			});
 		';
@@ -1666,7 +1658,6 @@ class core extends common
 					template::colorPicker('backgroundColor', [
 						'label' => 'Fond du site',
 						'value' => $this->getData(['config', 'theme', 'color', 'background']),
-						'transparent' => false,
 						'required' => true,
 						'col' => 3
 					]).
@@ -1683,7 +1674,6 @@ class core extends common
 					template::colorPicker('elementColor', [
 						'label' => 'Éléments',
 						'value' => $this->getData(['config', 'theme', 'color', 'element']),
-						'transparent' => false,
 						'required' => true,
 						'col' => 3
 					]).
@@ -1838,7 +1828,8 @@ class core extends common
 					template::openRow().
 					template::select('menuPosition', [
 						'themeMenuPositionTop' => 'Dans le haut de la page',
-						'themeMenuPositionSite' => 'Dans le site'
+						'themeMenuPositionSite' => 'Dans le site',
+						'themeMenuPositionHeader' => 'En transparence au dessus de la bannière'
 					], [
 						'label' => 'Emplacement',
 						'selected' => $this->getData(['config', 'theme', 'class', 'menuPosition']),
@@ -1906,7 +1897,7 @@ class core extends common
 							}
 							else {
 								bodyDOM.addClass("themeHeaderImage");
-								$("header").append(
+								$("header .inner").append(
 									$("<img>").attr("src", "' . helper::baseUrl(false) . '" + option)
 								);
 							}
@@ -1965,32 +1956,18 @@ class core extends common
 					// Pour les colorPickers
 					$(this).find(".jscolor").each(function() {
 						var jscolorDOM = $(this);
-						var rgb;
-						var color;
-						var colorDark;
-						var colorVeryDark;
-						var textVariant;
 						// Calcul des couleurs
-						if(jscolorDOM.val()) {
-							rgb = hexToRgb(jscolorDOM.val());
-							color = rgb.r + "," + rgb.g + "," + rgb.b + ",1";
-							colorDark = (rgb.r - 20) + "," + (rgb.g - 20) + "," + (rgb.b - 20) + ",1";
-							colorVeryDark = (rgb.r - 25) + "," + (rgb.g - 25) + "," + (rgb.b - 25) + ",1";
-							textVariant = (.213 * rgb.r + .715 * rgb.g + .072 * rgb.b > 127.5) ? "inherit" : "#FFF";
-						}
-						// Transparence
-						else {
-							color = "0,0,0,0";
-							colorDark = "0,0,0,.09";
-							colorVeryDark = "0,0,0,.12";
-							textVariant = "inherit";
-						}
+						var rgb = hexToRgb(jscolorDOM.val());
+						var color = rgb.r + "," + rgb.g + "," + rgb.b;
+						var colorDark = (rgb.r - 20) + "," + (rgb.g - 20) + "," + (rgb.b - 20);
+						var colorVeryDark = (rgb.r - 25) + "," + (rgb.g - 25) + "," + (rgb.b - 25);
+						var textVariant = (.213 * rgb.r + .715 * rgb.g + .072 * rgb.b > 127.5) ? "inherit" : "#FFF";
 						// Couleur du header
 						if(jscolorDOM.attr("id") === "headerColor") {
 							css += "
 								/* Couleur normale */
 								header {
-									background-color: rgba(" + color + ");
+									background-color: rgb(" + color + ");
 								}
 								header h1 {
 									color: " + textVariant + ";
@@ -1999,44 +1976,40 @@ class core extends common
 						}
 						// Couleurs du menu
 						else if(jscolorDOM.attr("id") === "menuColor") {
-							if(!jscolorDOM.val()) {
-								css += "
-									@media (min-width: 768px) {
-										/* Couleur blanche des sous menus */
-										nav li ul {
-											background-color: rgb(255,255,255);
-										}
-										nav li ul a:hover {
-											background-color: rgb(245,245,245);
-										}
-										nav li ul a:active,
-										nav li ul a.current {
-											background-color: rgb(235,235,235);
-										}
-									}
-								";
+							if($("#menuPosition").val() === "themeMenuPositionHeader") {
+								color = "background-color: rgba(" + color + ", .7);";
+								colorDark = "background-color: rgba(" + colorDark + ", .7);";
+								colorVeryDark = "background-color: rgba(" + colorVeryDark + ", .7);";
+							}
+							else {
+								color = "background-color: rgb(" + color + ");";
+								colorDark = "background-color: rgb(" + colorDark + ");";
+								colorDark = "background-color: rgb(" + colorVeryDark + ");";
 							}
 							css += "
 								/* Couleur normale */
-								.toggle,
-								nav,
-								nav ul {
-									background-color: rgba(" + color + ");
+								nav {
+									" + color + "
 								}
-								.toggle span,
+								@media (min-width: 768px) {
+									nav li ul {
+										" + color + "
+									}
+								}
+								nav .toggle span,
 								nav a {
 									color: " + textVariant + ";
 								}
 								/* Couleur foncée */
-								.toggle:hover,
+								nav .toggle:hover,
 								nav a:hover {
-									background-color: rgba(" + colorDark + ");
+									" + colorDark + "
 								}
 								/* Couleur très foncée */
-								.toggle:active,
+								nav .toggle:active,
 								nav a:active,
 								nav a.current {
-									background-color: rgba(" + colorVeryDark + ");
+									" + colorVeryDark + "
 								}
 							";
 						}
@@ -2050,7 +2023,7 @@ class core extends common
 								input[type=\'checkbox\']:checked + label:before,
 								input[type=\'radio\']:checked + label:before,
 								.helpContent {
-									background-color: rgba(" + color + ");
+									background-color: rgb(" + color + ");
 									color: " + textVariant + ";
 								}
 								h2,
@@ -2059,14 +2032,14 @@ class core extends common
 								a,
 								.tabTitle.current,
 								.helpButton span {
-									color: rgba(" + color + ");
+									color: rgb(" + color + ");
 								}
 								input[type=\'text\']:hover,
 								input[type=\'password\']:hover,
 								.inputFile:hover,
 								select:hover,
 								textarea:hover {
-									border: 1px solid rgba(" + color + ");
+									border: 1px solid rgb(" + color + ");
 								}
 								/* Couleur foncée */
 								input[type=\'submit\']:hover,
@@ -2076,16 +2049,16 @@ class core extends common
 								input[type=\'checkbox\']:active + label:before,
 								input[type=\'radio\']:checked:hover + label:before,
 								input[type=\'radio\']:not(:checked):active + label:before {
-									background-color: rgba(" + colorDark + ");
+									background-color: rgb(" + colorDark + ");
 								}
 								.helpButton span:hover {
-									color: rgba(" + colorDark + ");
+									color: rgb(" + colorDark + ");
 								}
 								/* Couleur très foncée */
 								input[type=\'submit\']:active,
 								.button:active,
 								.pagination a:active {
-									background-color: rgba(" + colorVeryDark + ");
+									background-color: rgb(" + colorVeryDark + ");
 								}
 							";
 						}
@@ -2094,7 +2067,7 @@ class core extends common
 							css += "
 								/* Couleur normale */
 								body {
-									background-color: rgba(" + color + ");
+									background-color: rgb(" + color + ");
 								}
 							";
 						}
@@ -3344,7 +3317,7 @@ class template
 			unset($_SESSION['REQUIRED'][$id . '.' . md5($_SERVER['QUERY_STRING'])]);
 		}
 		// Enregistre l'id du champ comme obligatoire
-		if(isset($attributes['required']) AND (empty($_SESSION['REQUIRED']) OR !array_key_exists($id . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED']))) {
+		if(!empty($attributes['required']) AND (empty($_SESSION['REQUIRED']) OR !array_key_exists($id . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED']))) {
 			$_SESSION['REQUIRED'][$id . '.' . md5($_SERVER['QUERY_STRING'])] = true;
 		}
 	}
@@ -3631,7 +3604,6 @@ class template
 			'required' => false,
 			'label' => '',
 			'help' => '',
-			'transparent' => true,
 			'class' => '',
 			'classWrapper' => '',
 			'col' => 12,
@@ -3642,10 +3614,6 @@ class template
 		// Sauvegarde des données en cas d'erreur
 		if(($value = self::getBefore($attributes['id'])) !== null) {
 			$attributes['value'] = $value;
-		}
-		// Message d'aide si la transparence est activée
-		if($attributes['transparent']) {
-			$attributes['help'] = 'Vous pouvez utiliser la transparence en laissant le champ vide.';
 		}
 		// Début col
 		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="col' . $attributes['col'] . ' offset' . $attributes['offset'] . ' ' . $attributes['classWrapper']. '">';
@@ -3662,10 +3630,9 @@ class template
 		}
 		// Texte
 		$html .= sprintf(
-			'<input type="text" class="jscolor {required: %s, shadow: false, borderRadius: false} %s" %s>',
-			$attributes['transparent'] ? 'false' : 'true', // Pour afficher les booleans en string
+			'<input type="text" class="jscolor {required: true, shadow: false, borderRadius: false} %s" %s>',
 			$attributes['class'],
-			self::sprintAttributes($attributes, ['class', 'transparent'])
+			self::sprintAttributes($attributes, ['class'])
 		);
 		// Fin col
 		$html .= '</div>';

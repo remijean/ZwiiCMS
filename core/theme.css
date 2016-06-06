@@ -17,6 +17,7 @@
 body {
 	color: #555;
 	margin: 0 10px;
+	font-size: 16px;
 }
 body.editor {
 	font-size: 15px !important;
@@ -245,8 +246,8 @@ body > header {
 	margin: 0 -10px;
 }
 header {
-	overflow: hidden;
 	padding: 20px;
+	position: relative;
 }
 header h1 {
 	display: inline-block;
@@ -255,19 +256,22 @@ header h1 {
 	font-size: 1.8em;
 	line-height: 1.2;
 }
+header .inner {
+	overflow: hidden;
+	height: 100%;
+}
 
 /* Menu */
-body > .toggle,
 body > nav {
 	margin: 0 -10px;
 }
-.toggle {
+nav .toggle {
 	cursor: pointer;
 	text-align: right;
 	display: none;
 	font-weight: bold;
 }
-nav {
+nav .menu {
 	display: block;
 }
 nav ul {
@@ -299,11 +303,19 @@ nav a {
 nav a:hover {
 	text-decoration: none;
 }
+header nav {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	font-size: 16px !important; /* Pour contrer la suppression du titre du site */
+	line-height: initial;
+}
 @media (max-width: 768px) {
-	.toggle {
+	nav .toggle {
 		display: block;
 	}
-	nav {
+	nav .menu {
 		display: none;
 		text-align: left !important;
 	}
@@ -314,6 +326,7 @@ nav a:hover {
 		display: block;
 		position: static;
 		min-width: inherit;
+		width: auto;
 	}
 	nav a {
 		padding: 15px !important;
@@ -817,13 +830,13 @@ td.col12 {
 }
 
 /* Alignement du contenu du menu */
-.themeMenuTextAlignLeft nav {
+.themeMenuTextAlignLeft nav .menu {
 	text-align: left;
 }
-.themeMenuTextAlignCenter nav {
+.themeMenuTextAlignCenter nav .menu {
 	text-align: center;
 }
-.themeMenuTextAlignRight nav {
+.themeMenuTextAlignRight nav .menu {
 	text-align: right;
 }
 
@@ -846,15 +859,15 @@ td.col12 {
 
 /* Hauteur du menu */
 .themeMenuHeightSmall nav a,
-.themeMenuHeightSmall .toggle {
+.themeMenuHeightSmall nav .toggle {
 	padding: 10px;
 }
 .themeMenuHeightMedium nav a,
-.themeMenuHeightMedium .toggle {
+.themeMenuHeightMedium nav .toggle {
 	padding: 15px 10px;
 }
 .themeMenuHeightLarge nav a,
-.themeMenuHeightLarge .toggle {
+.themeMenuHeightLarge nav .toggle {
 	padding: 20px 15px;
 }
 
@@ -870,12 +883,16 @@ td.col12 {
 }
 
 /* Position du menu */
-.themeMenuPositionTop .container nav,
-.themeMenuPositionTop .container .toggle {
+.themeMenuPositionTop .container > nav,
+.themeMenuPositionTop header nav {
 	display: none !important; /* Important pour contrer le slideDown du JS */
 }
 .themeMenuPositionSite > nav,
-.themeMenuPositionSite > .toggle {
+.themeMenuPositionSite header nav {
+	display: none !important; /* Important pour contrer le slideDown du JS */
+}
+.themeMenuPositionHeader .container > nav,
+.themeMenuPositionHeader > nav {
 	display: none !important; /* Important pour contrer le slideDown du JS */
 }
 
@@ -896,8 +913,7 @@ td.col12 {
 }
 
 /* Marge autour du menu */
-.themeMenuMargin.themeMenuPositionSite .container nav,
-.themeMenuMargin.themeMenuPositionSite .container .toggle {
+.themeMenuMargin.themeMenuPositionSite .container nav {
 	margin: 0 20px
 }
 /* Cas spécial si la bannière n'est pas dans le site */

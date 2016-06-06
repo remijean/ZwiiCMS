@@ -16,15 +16,25 @@
 <?php echo $this->showNotification(); ?>
 <!-- Bannière dans le haut de page -->
 <header>
-	<div class="container">
-		<h1><?php echo $this->getData(['config', 'title']); ?></h1>
+	<!-- Menu dans la bannière -->
+	<nav>
+		<div class="toggle"><?php echo template::ico('menu'); ?></div>
+		<div class="menu container">
+			<ul><?php echo $this->showMenu(); ?></ul>
+		</div>
+	</nav>
+	<div class="inner">
+		<!-- Bannière -->
+		<div class="container">
+			<h1><?php echo $this->getData(['config', 'title']); ?></h1>
+		</div>
+		<?php echo $this->showHeaderImage(); ?>
 	</div>
-	<?php echo $this->showHeaderImage(); ?>
 </header>
 <!-- Menu dans le haut de page -->
-<div class="toggle"><?php echo template::ico('menu'); ?></div>
 <nav>
-	<div class="container">
+	<div class="toggle"><?php echo template::ico('menu'); ?></div>
+	<div class="menu container">
 		<ul><?php echo $this->showMenu(); ?></ul>
 	</div>
 </nav>
@@ -32,12 +42,25 @@
 <div class="container">
 	<!-- Bannière dans le site -->
 	<header>
-		<h1><?php echo $this->getData(['config', 'title']); ?></h1>
-		<?php echo $this->showHeaderImage(); ?>
+		<!-- Menu dans la bannière -->
+		<nav>
+			<div class="toggle"><?php echo template::ico('menu'); ?></div>
+			<div class="menu container">
+				<ul><?php echo $this->showMenu(); ?></ul>
+			</div>
+		</nav>
+		<div class="inner">
+			<h1><?php echo $this->getData(['config', 'title']); ?></h1>
+			<?php echo $this->showHeaderImage(); ?>
+		</div>
 	</header>
 	<!-- Menu dans le site -->
-	<div class="toggle"><?php echo template::ico('menu'); ?></div>
-	<nav><?php echo $this->showMenu(); ?></nav>
+	<nav>
+		<div class="toggle"><?php echo template::ico('menu'); ?></div>
+		<div class="menu">
+			<ul><?php echo $this->showMenu(); ?></ul>
+		</div>
+	</nav>
 	<!-- Corps -->
 	<section><?php echo $this->showContent(); ?></section>
 	<!-- Bas du site -->
