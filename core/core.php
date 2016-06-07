@@ -91,6 +91,7 @@ class common
 		'phpinfo',
 		'rename',
 		'save',
+		'sitemap',
 		'upload'
 	];
 
@@ -930,7 +931,7 @@ class core extends common
 		if(!self::$content) {
 			http_response_code(404);
 			self::$title = helper::translate('Erreur 404');
-			self::$content = '<p>' . helper::translate('Page introuvable !') . '</p>';
+			self::$content = template::p(helper::translate('Page introuvable !'));
 		}
 		// Choix du type de données à afficher
 		switch(self::$layout) {
@@ -1636,6 +1637,31 @@ class core extends common
 					template::closeRow().
 					template::subTitle('Système').
 					template::openRow().
+					template::text('version', [
+						'label' => 'Version de ZwiiCMS',
+						'value' => self::$version,
+						'disabled' => true,
+						'col' => 12
+					]).
+					template::newRow().
+					template::button('clean', [
+						'value' => 'Vider le cache',
+						'href' => helper::baseUrl() . 'clean',
+						'col' => 3,
+					]).
+					template::button('export', [
+						'value' => 'Exporter le contenu',
+						'href' => helper::baseUrl() . 'export',
+						'col' => 3
+					]).
+					template::button('download', [
+						'href' => 'http://zwiicms.com/',
+						'target' => '_blank',
+						'value' => 'Nouvelle version disponible !',
+						'col' => 3,
+						'class' => helper::versionCheck() ? 'displayNone' : ''
+					]).
+					template::newRow().
 					template::checkbox('cookieConsent', true, 'Message de consentement pour l\'utilisation des cookies', [
 						'checked' => $this->getData(['config', 'cookieConsent'])
 					]).
@@ -1644,12 +1670,6 @@ class core extends common
 						'checked' => helper::rewriteCheck(),
 						'help' => 'Supprime le point d\'interrogation de l\'URL (si vous n\'arrivez pas à cocher la case, vérifiez que le module d\'URL rewriting de votre serveur est bien activé).',
 						'disabled' => !helper::modRewriteCheck() // Check que l'URL rewriting fonctionne sur le serveur
-					]).
-					template::newRow().
-					template::text('version', [
-						'label' => 'Version de ZwiiCMS',
-						'value' => self::$version,
-						'disabled' => true
 					]).
 					template::closeRow(),
 				'Personnalisation du thème' =>
@@ -2081,19 +2101,9 @@ class core extends common
 				}).trigger("change");
 			').
 			template::openRow().
-			template::button('clean', [
-				'value' => 'Vider le cache',
-				'href' => helper::baseUrl() . 'clean',
-				'col' => 3,
-			]).
-			template::button('export', [
-				'value' => 'Exporter le contenu',
-				'href' => helper::baseUrl() . 'export',
-				'col' => 3
-			]).
 			template::submit('submit', [
 				'col' => 2,
-				'offset' => 4
+				'offset' => 10
 			]).
 			template::closeRow().
 			template::closeForm();
@@ -2124,7 +2134,7 @@ class core extends common
 			[
 				// Si cette partie est modifiée il faut modifier : la création, l'édition, et l'enregistrement ajax de la page
 				'blank' => false,
-				'content' => '<p>' . helper::translate('Contenu de la page.') . '</p>',
+				'content' => template::p(helper::translate('Contenu de la page.')),
 				'description' => '',
 				'hideTitle' => $this->getPost('hideTitle', helper::BOOLEAN),
 				'metaTitle' => '',
@@ -2755,6 +2765,21 @@ class core extends common
 		self::$content = true;
 	}
 
+	/** Sitemap */
+	public function sitemap()
+	{
+		self::$title = 'Plan du site';
+		$pages = [];
+		foreach($this->getHierarchy() as $parentKey => $childrenKeys) {
+			$parent = template::a(helper::baseUrl() . $parentKey, $this->getData(['page', $parentKey, 'title']));
+			$pages[$parent] = [];
+			foreach($childrenKeys as $childrenKey) {
+				$pages[$parent][] = template::a(helper::baseUrl() . $childrenKey, $this->getData(['page', $childrenKey, 'title']));
+			}
+		}
+		self::$content = template::ul($pages);
+	}
+
 	/**
 	 * Upload d'une image dans TinyMCE
 	 * @return bool
@@ -3264,6 +3289,12 @@ class helper
 		}
 		return $data;
 	}
+
+	/** Vérifie la version de ZwiiCMS */
+	public static function versionCheck()
+	{
+		return (trim(@file_get_contents('http://zwiicms.com/version/') === common::$version));
+	}
 }
 
 class template
@@ -3539,7 +3570,7 @@ class template
 	}
 
 	/**
-	 * Crée case à cocher à sélection multiple
+	 * Crée une case à cocher à sélection multiple
 	 * @param  string $nameId     Nom & id de la case à cocher à sélection multiple
 	 * @param  string $value      Valeur de la case à cocher à sélection multiple
 	 * @param  string $label      Label de la case à cocher à sélection multiple
@@ -3842,6 +3873,27 @@ class template
 	}
 
 	/**
+	 * Crée un paragraphe
+	 * @param  string $text       Texte du paragraphe
+	 * @param  array  $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @return string
+	 */
+	public static function p($text, $attributes = [])
+	{
+		// Attributs possibles
+		$attributes = array_merge([
+			'id' => '',
+			'class' => ''
+		], $attributes);
+		// Retourne le html
+		return sprintf(
+			'<p %s>%s</p>',
+			self::sprintAttributes($attributes),
+			$text
+		);
+	}
+
+	/**
 	 * Crée un champ mot de passe
 	 * @param  string $nameId     Nom & id du champ mot de passe
 	 * @param  array  $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
@@ -4101,8 +4153,6 @@ class template
 		}
 		// Fin contenu
 		$html .= '</tbody>';
-		// Début tableau
-		$html .= '<table class="' . $attributes['class']. '">';
 		// Fin tableau
 		$html .= '</table>';
 		// Fin col
@@ -4328,5 +4378,34 @@ class template
 			self::sprintAttributes($attributes),
 			helper::translate($text)
 		);
+	}
+
+	/**
+	 * Crée une liste
+	 * @param  array  $items      Items de la liste (tableau simple ou multidimensionnel)
+	 * @param  array  $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @return string
+	 */
+	public static function ul(array $items = [], array $attributes = []) {
+		// Attributs possibles
+		$attributes = array_merge([
+			'class' => '',
+			'classWrapper' => ''
+		], $attributes);
+		// Début liste
+		$html = '<ul class="' . $attributes['classWrapper'] . '">';
+		// Items
+		foreach($items as $itemKey => $itemValue) {
+			if(is_array($itemValue)) {
+				$html .= '<li class="' . $attributes['class'] . '">' . $itemKey . self::ul($itemValue, $attributes) . '</li>';
+			}
+			else {
+				$html .= '<li class="' . $attributes['class'] . '">' . $itemValue . '</li>';
+			}
+		}
+		// Fin liste
+		$html .= '</ul>';
+		// Retourne le html
+		return $html;
 	}
 }

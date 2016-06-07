@@ -65,6 +65,9 @@ h6 {
 ul {
 	list-style: square;
 }
+li ul {
+	margin: 0;
+}
 
 /* Séparateur */
 hr {
