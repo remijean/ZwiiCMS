@@ -494,6 +494,7 @@ input[type='submit'] {
 	width: 100%;
 	padding: 10px;
 	border: 0;
+	cursor: pointer;
 }
 textarea {
 	height: 100px;
