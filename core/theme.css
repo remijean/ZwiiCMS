@@ -348,50 +348,55 @@ section {
 footer {
 	text-align: center;
 	font-size: 0.8em;
-	padding-bottom: 20px;
+	padding: 20px;
 }
 footer #text {
 	padding-bottom: 10px;
 }
 footer #socials {
-	font-size: 2em;
-	padding-bottom: 7px;
+	font-size: 1.6em;
+	padding-bottom: 10px;
+}
+footer #socials span {
+	color: #FFF;
+	padding: .1em 0;
+	margin: 0 5px;
 }
 footer #socials .zwiico-facebook {
-	color: #5D82D2;
+	background: #5D82D2;
 }
 footer #socials .zwiico-facebook:hover {
-	color: #3764C5;
+	background: #3764C5;
 }
 footer #socials .zwiico-googleplus {
-	color: #E46049;
+	background: #E46049;
 }
 footer #socials .zwiico-googleplus:hover {
-	color: #DA3C20;
+	background: #DA3C20;
 }
 footer #socials .zwiico-instagram {
-	color: #558BB7;
+	background: #558BB7;
 }
 footer #socials .zwiico-instagram:hover {
-	color: #417198;
+	background: #417198;
 }
 footer #socials .zwiico-pinterest {
-	color: #E23139;
+	background: #E23139;
 }
 footer #socials .zwiico-pinterest:hover {
-	color: #C41C23;
+	background: #C41C23;
 }
 footer #socials .zwiico-twitter {
-	color: #40BFF6;
+	background: #40BFF6;
 }
 footer #socials .zwiico-twitter:hover {
-	color: #0FAFF4;
+	background: #0FAFF4;
 }
 footer #socials .zwiico-youtube {
-	color: #EF4E43;
+	background: #EF4E43;
 }
 footer #socials .zwiico-youtube:hover {
-	color: #EB2214;
+	background: #EB2214;
 }
 
 /* Remonter en haut */
@@ -875,7 +880,7 @@ td.col12 {
 	padding: 20px 15px;
 }
 
-/* Position du header */
+/* Position de la bannière */
 .themeHeaderPositionHide header {
 	display: none;
 }
