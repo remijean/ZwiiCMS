@@ -1,6 +1,18 @@
 ZwiiCMS 7
 =========
 
+## 7.7.0
+* Ajout d'un check du numéro de version
+* Ajout d'un plan du site
+* Ajout d'une fonction pour renommer les fichiers dans le gestionnaire de fichiers
+* Ajout d'un module galerie photos
+* Ajout d'un système permettant l'import de librairies dans les modules
+* Ajout de l'emplacement "En transparence au dessus de la bannière" pour le menu
+* Mise à jour de normalize
+* Amélioration des icônes des réseaux sociaux
+* Correction de plusieurs fautes
+* Correction d'un bug d'alignement du contenu des sous-menus
+
 ## 7.6.3
 * Ajout d'un message de consentement à l'utilisation des cookies
 * Ajout du code Google Analytics même si l'utilisateur est connecté en administrateur
