@@ -79,7 +79,6 @@ class galleryAdm extends common
 				template::closeRow();
 		}
 		// Contenu de la page
-		self::$title = helper::translate('Gestionnaire de fichiers');
 		self::$content =
 			template::title('Envoyer une image').
 			template::openForm('upload', [
@@ -92,7 +91,7 @@ class galleryAdm extends common
 				'col' => '4'
 			]).
 			template::text('legend', [
-				'label' => 'Legende de l\'image',
+				'label' => 'Légende de l\'image',
 				'col' => '6',
 				'required' => true
 			]).

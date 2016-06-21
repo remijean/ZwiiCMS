@@ -24,6 +24,8 @@
 	"Bouton": "Button",
 	"Cache vidé avec succès !": "Cache successfully cleared!",
 	"Ce champ est requis": "This field is required",
+	"Ce fichier est rattaché à un module, vous risquez de détruire ce lien en le renommant !": "This file is attached to a module, you may destroy this link by renaming it!",
+	"Ce fichier est rattaché à un module, vous risquez de détruire ce lien en le supprimant !": "This file is attached to a module, you may destroy this link by removing it!",
 	"Centre": "Center",
 	"Choisissez un fichier": "Choose a file",
 	"Choisissez une page": "Select page",

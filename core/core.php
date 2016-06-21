@@ -219,7 +219,7 @@ class common
 			],
 			'exemple-de-formulaire' => [
 				'blank' => false,
-				'content' => '',
+				'content' => '<p>Cette page contient un exemple de formulaire conçu à partir du module de génération de formulaires, si vous voulez le tester n\'oubliez pas de changer l\'adresse mail depuis la page de paramétrage du module, onglet "Configuration".</p>',
 				'description' => '',
 				'hideTitle' => false,
 				'metaTitle' => '',
