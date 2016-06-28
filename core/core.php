@@ -180,6 +180,7 @@ class common
 				'hideTitle' => false,
 				'metaTitle' => '',
 				'module' => false,
+				'modulePosition' => 'bottom',
 				'parent' => '',
 				'position' => 1,
 				'title' => 'Accueil'
@@ -191,6 +192,7 @@ class common
 				'hideTitle' => false,
 				'metaTitle' => '',
 				'module' => false,
+				'modulePosition' => 'bottom',
 				'parent' => '',
 				'position' => 2,
 				'title' => 'Exemple de page'
@@ -202,6 +204,7 @@ class common
 				'hideTitle' => false,
 				'metaTitle' => '',
 				'module' => 'news',
+				'modulePosition' => 'bottom',
 				'parent' => '',
 				'position' => 3,
 				'title' => 'Exemple de news'
@@ -213,6 +216,7 @@ class common
 				'hideTitle' => false,
 				'metaTitle' => '',
 				'module' => 'redirection',
+				'modulePosition' => 'bottom',
 				'parent' => '',
 				'position' => 5,
 				'title' => 'Exemple de redirection'
@@ -224,6 +228,7 @@ class common
 				'hideTitle' => false,
 				'metaTitle' => '',
 				'module' => 'form',
+				'modulePosition' => 'bottom',
 				'parent' => '',
 				'position' => 4,
 				'title' => 'Exemple de formulaire'
@@ -235,6 +240,7 @@ class common
 				'hideTitle' => false,
 				'metaTitle' => '',
 				'module' => false,
+				'modulePosition' => 'bottom',
 				'parent' => 'exemple-de-page',
 				'position' => 1,
 				'title' => 'Première page enfant'
@@ -246,6 +252,7 @@ class common
 				'hideTitle' => false,
 				'metaTitle' => '',
 				'module' => false,
+				'modulePosition' => 'bottom',
 				'parent' => 'exemple-de-page',
 				'position' => 2,
 				'title' => 'Deuxième page enfant'
@@ -645,7 +652,7 @@ class core extends common
 		// Hérite de la méthode __construct() parente
 		parent::__construct();
 		// Scripts de mise à jour
-		// De 7.5.1 vers 7.6.0 - 7.6.2
+		// Vers 7.6.0 - 7.6.2
 		if(!$this->getData(['config', 'dataVersion'])) {
 			// Déplace les classes vers config > theme > class
 			foreach($this->getData('theme') as $key => $class) {
@@ -687,6 +694,17 @@ class core extends common
 					$this->setData([$key, 'input', $inputs]);
 					$this->removeData([$key, 'inputs']);
 				}
+			}
+			// Met à jour la version des données
+			$this->setData(['config', 'dataVersion', self::$version]);
+			// Enregistre les modifs
+			$this->saveData(true);
+		}
+		// Vers 7.7.1
+		if($this->getData(['config', 'dataVersion']) < '7.7.1') {
+			// Ajoute modulePosition aux pages
+			foreach($this->getData('page') as $pageId => $page) {
+				$this->setData(['page', $pageId, 'modulePosition', 'top']);
 			}
 			// Met à jour la version des données
 			$this->setData(['config', 'dataVersion', self::$version]);
@@ -787,6 +805,7 @@ class core extends common
 				$textVariant = (.213 * $rgb['r'] + .715 * $rgb['g'] + .072 * $rgb['b'] > 127.5) ? 'inherit' : '#FFF';
 				$css .= '
 					/* Couleur normale */
+					.alert,
 					input[type=\'submit\'],
 					.button,
 					.pagination a,
@@ -925,7 +944,17 @@ class core extends common
 			self::$title = $this->getData(['page', $this->getUrl(0, false), 'title']);
 			self::$metaTitle = $this->getData(['page', $this->getUrl(0, false), 'metaTitle']);
 			self::$description = $this->getData(['page', $this->getUrl(0, false), 'description']);
-			self::$content = $this->getData(['page', $this->getUrl(0, false), 'content']) . self::$content;
+			switch($this->getData(['page', $this->getUrl(0, false), 'modulePosition'])) {
+				case 'top':
+					self::$content = self::$content . $this->getData(['page', $this->getUrl(0, false), 'content']);
+					break;
+				case 'bottom':
+					self::$content = $this->getData(['page', $this->getUrl(0, false), 'content']) . self::$content;
+					break;
+				case 'free':
+					self::$content = str_replace('[MODULE]', self::$content, $this->getData(['page', $this->getUrl(0, false), 'content']));
+					break;
+			}
 		}
 		// Erreur 404
 		if(!self::$content) {
@@ -2038,6 +2067,7 @@ class core extends common
 						else if(jscolorDOM.attr("id") === "elementColor") {
 							css += "
 								/* Couleur normale */
+								.alert,
 								input[type=\'submit\'],
 								.button,
 								.pagination a,
@@ -2139,6 +2169,7 @@ class core extends common
 				'hideTitle' => $this->getPost('hideTitle', helper::BOOLEAN),
 				'metaTitle' => '',
 				'module' => '',
+				'modulePosition' => 'bottom',
 				'parent' => '',
 				'position' => 0,
 				'title' => $title
@@ -2298,6 +2329,7 @@ class core extends common
 					'hideTitle' => $this->getPost('hideTitle', helper::BOOLEAN),
 					'metaTitle' => $this->getPost('metaTitle', helper::STRING),
 					'module' => $module,
+					'modulePosition' => $this->getPost('modulePosition', helper::STRING),
 					'parent' => $parent,
 					'position' => $position,
 					'title' => $title
@@ -2476,6 +2508,15 @@ class core extends common
 						'label' => 'Méta description de la page',
 						'help' => 'Si le champ est vide, la description du site est utilisée.',
 						'value' => $this->getData(['page', $this->getUrl(0), 'description'])
+					]).
+					template::select('modulePosition', [
+						'top' => 'Haut',
+						'bottom' => 'Bas',
+						'free' => 'Libre'
+					], [
+						'label' => 'Position du module dans la page',
+						'selected' => $this->getData(['page', $this->getUrl(0), 'modulePosition']),
+						'help' => 'En position libre vous devez ajouter manuellement le module en plaçant la balise [MODULE] dans votre page.'
 					]).
 					template::newRow().
 					template::checkbox('hideTitle', true, 'Ne pas afficher le titre en mode public', [
@@ -2753,6 +2794,7 @@ class core extends common
 				'hideTitle' => $this->getData(['page', $this->getUrl(0), 'hideTitle']),
 				'metaTitle' => $this->getData(['page', $this->getUrl(0), 'metaTitle']),
 				'module' => $this->getPost('module', helper::STRING),
+				'modulePosition' => $this->getData(['page', $this->getUrl(0), 'modulePosition']),
 				'parent' => $this->getData(['page', $this->getUrl(0), 'parent']),
 				'position' => $this->getData(['page', $this->getUrl(0), 'position']),
 				'title' => $this->getData(['page', $this->getUrl(0), 'title'])
@@ -4330,11 +4372,20 @@ class template
 			core::$vendor['tinymce'] = true;
 			$html .= self::script('
 				// Charge tinyMCE
-				var language = navigator.languages ? navigator.languages[0] : (navigator.language || navigator.userLanguage);
 				var body = $("body");
+				var language = "fr";
+				if(navigator.languages !== undefined && navigator.languages.length) {
+					language = navigator.languages[0].split("-")[0];
+				}
+				else if(navigator.language !== undefined) {
+					language = navigator.language;
+				}
+				else if(navigator.userLanguage !== undefined) {
+					language = navigator.userLanguage;
+				}
 				tinymce.init({
 					selector: "#' . $attributes['id'] . '",
-					language: language.split("-")[0],
+					language: language,
 					plugins: "advlist anchor autolink autoresize charmap code colorpicker contextmenu fullscreen hr image imagetools legacyoutput link lists media nonbreaking noneditable paste preview print searchreplace tabfocus table textcolor textpattern visualchars wordcount",
 					toolbar: "insertfile undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media",
 					body_class: "editor",

@@ -650,12 +650,6 @@ input[type='radio']:disabled + label:before {
 	user-select: none;
 }
 
-/* Background */
-.background {
-	background: #EEE;
-	padding: 20px;
-}
-
 /**
  * Grille
  */
