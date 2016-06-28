@@ -1644,6 +1644,13 @@ class core extends common
 						'col' => 12
 					]).
 					template::newRow().
+					template::button('newVersion', [
+						'href' => 'http://zwiicms.com/',
+						'target' => '_blank',
+						'value' => 'Nouvelle version disponible !',
+						'col' => 3,
+						'classWrapper' => helper::versionCheck() ? 'displayNone' : ''
+					]).
 					template::button('clean', [
 						'value' => 'Vider le cache',
 						'href' => helper::baseUrl() . 'clean',
@@ -1653,13 +1660,6 @@ class core extends common
 						'value' => 'Exporter le contenu',
 						'href' => helper::baseUrl() . 'export',
 						'col' => 3
-					]).
-					template::button('download', [
-						'href' => 'http://zwiicms.com/',
-						'target' => '_blank',
-						'value' => 'Nouvelle version disponible !',
-						'col' => 3,
-						'class' => helper::versionCheck() ? 'displayNone' : ''
 					]).
 					template::newRow().
 					template::checkbox('cookieConsent', true, 'Message de consentement pour l\'utilisation des cookies', [
@@ -3293,7 +3293,7 @@ class helper
 	/** Vérifie la version de ZwiiCMS */
 	public static function versionCheck()
 	{
-		return (trim(@file_get_contents('http://zwiicms.com/version/') === common::$version));
+		return (trim(@file_get_contents('http://zwiicms.com/version') === common::$version));
 	}
 }
 

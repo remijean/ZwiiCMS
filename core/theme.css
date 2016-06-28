@@ -541,6 +541,15 @@ label {
 	background: #EEE !important;
 	color: #CCC !important;
 }
+.button#newVersion {
+	background: #F3674A;
+}
+.button#newVersion:hover {
+	background: #F25A3A;
+}
+.button#newVersion:active {
+	background: #F14C2A;
+}
 
 /* Pagination */
 .pagination {
