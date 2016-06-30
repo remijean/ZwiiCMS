@@ -139,7 +139,6 @@ class common
 			],
 			'theme' => [
 				'class' => [
-					'backgroundImage' => '',
 					'backgroundImageRepeat' => 'themeBackgroundImageRepeatNo',
 					'backgroundImagePosition' => 'themeBackgroundImagePositionTopLeft',
 					'backgroundImageAttachment' => 'themeBackgroundImageAttachmentScroll',
