@@ -543,6 +543,7 @@ label {
 }
 .button#newVersion {
 	background: #F3674A;
+	color: #FFF;
 }
 .button#newVersion:hover {
 	background: #F25A3A;

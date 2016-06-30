@@ -52,7 +52,7 @@ class common
 	/** @var array Langue du site */
 	public static $language = [];
 
-	/** @var string Type de layout à afficher (LAYOUT : layout et mise cache - JSON : tableau JSON - BLANK : page vide) */
+	/** @var string Type de layout à afficher (LAYOUT : layout et cache - JSON : tableau JSON - BLANK : page vide) */
 	public static $layout = 'LAYOUT';
 
 	/** @var array Extensions autorisées dans le gestionnaire de fichiers */
