@@ -1,6 +1,12 @@
 ZwiiCMS 7
 =========
 
+## 7.7.1
+* Ajout du changement de position du module dans le contenu de la page
+* Correction de divers bugs mineures
+* Correction d'un bug lors du check de la version
+* Mise à jour de TinyMCE et correction d'un bug avec les vidéos Youtube
+
 ## 7.7.0
 * Ajout d'un check du numéro de version
 * Ajout d'un plan du site

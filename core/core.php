@@ -110,7 +110,7 @@ class common
 	];
 
 	/** Version de ZwiiCMS */
-	public static $version = '7.7.0';
+	public static $version = '7.7.1';
 
 	/** @var array Vues des modules */
 	public static $views = [];
