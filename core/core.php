@@ -1183,7 +1183,7 @@ class core extends common
 			$left .= '</select></li>';
 			// Items de droite
 			$right = '<li><a href="' . helper::baseUrl() . 'create" title="' . helper::translate('Créer une page') . '">' . template::ico('plus') . '</a></li>';
-			$right .= '<li><a href="' . helper::baseUrl() . 'mode/' . $this->getUrl(null, false) . '"' . ($this->getMode() ? ' class="edit"' : '') . ' title="' . helper::translate('Activer/désactiver le mode édition') . '">' . template::ico('pencil') . '</a></li>';
+			$right .= '<li><a href="' . helper::baseUrl() . 'mode/' . $this->getUrl(null, false) . '"' . ($this->getMode() ? ' class="edit"' : '') . ' title="' . helper::translate('Activer/Désactiver le mode édition') . '">' . template::ico('pencil') . '</a></li>';
 			$right .= '<li><a href="' . helper::baseUrl() . 'manager" title="' . helper::translate('Gérer les fichiers') . '">' . template::ico('folder') . '</a></li>';
 			$right .= '<li><a href="' . helper::baseUrl() . 'config" title="' . helper::translate('Configurer le site') . '">' . template::ico('gear') . '</a></li>';
 			$right .= '<li><a href="' . helper::baseUrl() . 'logout" data-remodal-target="modal" title="' . helper::translate('Se déconnecter') . '">' . template::ico('logout') . '</a></li>';
