@@ -893,8 +893,8 @@ class core extends common
 	{
 		// Module système
 		if(in_array($this->getUrl(0, false), self::$system)) {
-			// Si l'utilisateur est connecté le module système est retournée
-			if($this->getData(['config', 'password']) === $this->getCookie('PASSWORD')) {
+			// Si l'utilisateur est connecté le module système est retournée (sauf pour le plan du site)
+			if($this->getUrl(0, false) === 'sitemap' OR $this->getData(['config', 'password']) === $this->getCookie('PASSWORD')) {
 				$method = $this->getUrl(0, false);
 				$this->$method();
 			}
