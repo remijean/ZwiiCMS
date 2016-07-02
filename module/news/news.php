@@ -112,8 +112,7 @@ class newsAdm extends common
 			]);
 	}
 
-	/**
-	 * Édition d'une news */
+	/** Édition d'une news */
 	public function edit()
 	{
 		// Erreur 404

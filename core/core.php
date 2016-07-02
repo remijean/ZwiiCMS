@@ -2958,7 +2958,7 @@ class helper
 	 */
 	public static function increment($key, $array)
 	{
-		// Pas besoin d'incrémenter Si la clef n'existe pas
+		// Pas besoin d'incrémenter si la clef n'existe pas
 		if(empty($array)) {
 			return $key;
 		}
