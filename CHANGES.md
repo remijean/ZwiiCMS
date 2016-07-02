@@ -1,6 +1,10 @@
 ZwiiCMS 7
 =========
 
+## 7.7.2
+* Correction d'un bug majeur bloquant le site avec certains modules
+* Ajout d'un alignement "remplir le fond" pour l'image de fond
+
 ## 7.7.1
 * Ajout du changement de position du module dans le contenu de la page
 * Correction de divers bugs mineures
