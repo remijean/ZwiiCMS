@@ -2633,7 +2633,7 @@ class core extends common
 		// Liste des fichiers rattachés à des modules
 		$modulesFiles = [];
 		foreach($this->getData() as $key => $subKeys) {
-			if(array_key_exists('upload', $subKeys)) {
+			if(isset($subKeys['upload'])) {
 				$modulesFiles = array_merge($modulesFiles, $this->getData([$key, 'upload']));
 			}
 		}
