@@ -140,7 +140,7 @@ class common
 			'theme' => [
 				'class' => [
 					'backgroundImageRepeat' => 'themeBackgroundImageRepeatNo',
-					'backgroundImagePosition' => 'themeBackgroundImagePositionTopLeft',
+					'backgroundImagePosition' => 'themeBackgroundImagePositionCover',
 					'backgroundImageAttachment' => 'themeBackgroundImageAttachmentScroll',
 					'headerHeight' => 'themeHeaderHeightMedium',
 					'headerMargin' => false,
@@ -1773,6 +1773,7 @@ class core extends common
 								'col' => 4
 							]).
 							template::select('backgroundImagePosition', [
+								'themeBackgroundImagePositionCover' => 'Remplir le fond',
 								'themeBackgroundImagePositionTopLeft' => 'En haut à gauche',
 								'themeBackgroundImagePositionTopCenter' => 'En haut au centre',
 								'themeBackgroundImagePositionTopRight' => 'En haut à droite',

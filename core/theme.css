@@ -969,6 +969,9 @@ td.col12 {
 }
 
 /* Allignement de l'image de fond */
+.themeBackgroundImagePositionCover {
+	background-size: cover;
+}
 .themeBackgroundImagePositionTopLeft {
 	background-position: left top;
 }
