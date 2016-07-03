@@ -35,17 +35,18 @@ class galleryAdm extends common
 		if($this->getPost('send')) {
 			// Upload l'image
 			$data = helper::upload(self::$galleryExtensions);
-			if(isset($data['error'])) {
-				// Notification d'échec
-				$this->setNotification($data['error'], true);
-			}
-			elseif(isset($data['success'])) {
+			// En cas de succès
+			if(isset($data['success'])) {
 				// Ajoute l'image à la galerie
 				$this->setData([$this->getUrl(0), 'upload', helper::filter(basename($_FILES['file']['name']), helper::URL), $this->getPost('legend', helper::STRING)]);
 				// Enregistre les données
 				$this->saveData();
 				// Notification d'upload
 				$this->setNotification($data['success']);
+			}
+			// Sinon crée une notice en cas d'erreur
+			else {
+				template::$notices['file'] = $data['error'];
 			}
 		}
 		// Met en forme les images pour les afficher dans un tableau

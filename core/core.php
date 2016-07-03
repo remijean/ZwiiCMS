@@ -2650,17 +2650,17 @@ class core extends common
 		// Traitement du formulaire
 		if($this->getPost('submit')) {
 			// Upload le fichier
-			$upload = helper::upload(self::$managerExtensions);
+			$data = helper::upload(self::$managerExtensions);
 			// En cas de succès
-			if(isset($upload['success'])) {
+			if(isset($data['success'])) {
 				// Notification d'upload
-				$this->setNotification($upload['success']);
+				$this->setNotification($data['success']);
 				// Redirige vers la page courante
 				helper::redirect($this->getUrl(null, false));
 			}
 			// Sinon crée une notice en cas d'erreur
 			else {
-				template::$notices['file'] = $upload['error'];
+				template::$notices['file'] = $data['error'];
 			}
 		}
 		// Liste des fichiers rattachés à des modules
