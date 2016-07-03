@@ -2008,21 +2008,33 @@ class core extends common
 						var jscolorDOM = $(this);
 						// Calcul des couleurs
 						var rgb = hexToRgb(jscolorDOM.val());
-						var color = rgb.r + "," + rgb.g + "," + rgb.b;
-						var colorDark = (rgb.r - 20) + "," + (rgb.g - 20) + "," + (rgb.b - 20);
-						var colorVeryDark = (rgb.r - 25) + "," + (rgb.g - 25) + "," + (rgb.b - 25);
-						var textVariant = (.213 * rgb.r + .715 * rgb.g + .072 * rgb.b > 127.5) ? "inherit" : "#FFF";
+						if(rgb) {
+							var color = rgb.r + "," + rgb.g + "," + rgb.b;
+							var colorDark = (rgb.r - 20) + "," + (rgb.g - 20) + "," + (rgb.b - 20);
+							var colorVeryDark = (rgb.r - 25) + "," + (rgb.g - 25) + "," + (rgb.b - 25);
+							var textVariant = (.213 * rgb.r + .715 * rgb.g + .072 * rgb.b > 127.5) ? "inherit" : "#FFF";
+						}
 						// Couleur du header
 						if(jscolorDOM.attr("id") === "headerColor") {
-							css += "
-								/* Couleur normale */
-								header {
-									background-color: rgb(" + color + ");
-								}
-								header h1 {
-									color: " + textVariant + ";
-								}
-							";
+							if(rgb) { 
+								css += "
+									/* Couleur normale */
+									header {
+										background-color: rgb(" + color + ");
+									}
+									header h1 {
+										color: " + textVariant + ";
+									}
+								";
+							}
+							else {
+								css += "
+									/* Couleur normale */
+									header {
+										background-color: transparent;
+									}
+								";
+							}
 						}
 						// Couleurs du menu
 						else if(jscolorDOM.attr("id") === "menuColor") {
