@@ -23,9 +23,19 @@ class common
 	/** @var string Contenu de la page */
 	public static $content = '';
 
-	/** Version du css */
+	/** @var string Version du css */
 	public static $cssVersion = '';
 
+	/**
+	 * Active ou non le mode de démo
+	 * @var bool
+	 * - ajoute un text à la page de connexion
+	 * - bloque les actions sur les fichiers
+	 * - bloque le changement de mot de passe
+	 * - rechargement de la base toutes après 10 mins sans modification
+	 */
+	public static $demo = false;
+	
 	/** @var string Description de la page */
 	public static $description = '';
 
@@ -178,101 +188,74 @@ class common
 				'description' => '',
 				'hideTitle' => false,
 				'metaTitle' => '',
-				'module' => false,
+				'module' => '',
 				'modulePosition' => 'bottom',
 				'parent' => '',
 				'position' => 1,
 				'title' => 'Accueil'
 			],
-			'exemple-de-page' => [
+			'contact' => [
 				'blank' => false,
-				'content' => "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce porttitor nibh justo. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis condimentum dui metus, ac scelerisque risus varius quis. Nulla elementum urna nec turpis congue, at iaculis nunc blandit. Mauris volutpat metus mauris, vitae dignissim nunc malesuada sed. Duis vel enim elit. Morbi et enim molestie, tincidunt dui eu, sagittis lacus. Pellentesque nec ornare ipsum, nec ultricies nunc. Pellentesque maximus eros blandit, sagittis tortor in, venenatis ligula. Maecenas efficitur tempor risus vehicula sodales. Pellentesque efficitur malesuada lobortis. Ut iaculis neque vehicula rutrum varius. Pellentesque sit amet efficitur velit.</p>\r\n<p>Sed vel tellus et nisl lacinia accumsan non laoreet dui. Sed commodo et mi sed ultricies. Etiam vel ante sit amet nibh posuere interdum ac vel est. Aliquam tristique porttitor lobortis. Donec sed lacinia leo. Nam convallis semper odio, quis mollis lacus euismod eget. Pellentesque quam odio, rhoncus ac dolor eget, vehicula consectetur leo. Duis fermentum facilisis tortor, nec suscipit magna finibus nec. Nam vulputate orci sed arcu varius, auctor viverra magna rutrum. Suspendisse aliquet auctor erat vel sagittis. Cras a vestibulum mi. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>\r\n<p>In ut maximus odio. Etiam quis sem vitae nibh egestas facilisis at non libero. Mauris ac augue sagittis, imperdiet libero id, tempus ligula. Etiam eget arcu nec odio tristique cursus vel et nisi. Praesent quis odio mattis massa faucibus mattis id ut justo. Curabitur ut venenatis massa, semper fringilla quam. Donec placerat ut ligula vel dignissim. Maecenas ullamcorper dapibus libero. Nunc vehicula sem sem, gravida aliquam lorem malesuada sed. Quisque non neque lacinia, gravida risus vitae, sodales magna.</p>",
-				'description' => '',
-				'hideTitle' => false,
-				'metaTitle' => '',
-				'module' => false,
-				'modulePosition' => 'bottom',
-				'parent' => '',
-				'position' => 2,
-				'title' => 'Exemple de page'
-			],
-			'exemple-de-news' => [
-				'blank' => false,
-				'content' => '<p>Cette page contient une instance du module de news, il est possible d\'ouvrir une infinité d\'instances en créant d\'autres pages incluant le même module !</p>',
-				'description' => '',
-				'hideTitle' => false,
-				'metaTitle' => '',
-				'module' => 'news',
-				'modulePosition' => 'bottom',
-				'parent' => '',
-				'position' => 3,
-				'title' => 'Exemple de news'
-			],
-			'exemple-de-redirection' => [
-				'blank' => true,
-				'content' => '',
-				'description' => '',
-				'hideTitle' => false,
-				'metaTitle' => '',
-				'module' => 'redirection',
-				'modulePosition' => 'bottom',
-				'parent' => '',
-				'position' => 5,
-				'title' => 'Exemple de redirection'
-			],
-			'exemple-de-formulaire' => [
-				'blank' => false,
-				'content' => '<p>Cette page contient un exemple de formulaire conçu à partir du module de génération de formulaires, si vous voulez le tester n\'oubliez pas de changer l\'adresse mail depuis la page de paramétrage du module, onglet "Configuration".</p>',
+				'content' => "<p>Cette page contient un exemple de formulaire conçu à partir du module de génération de formulaires, si vous voulez le tester n'oubliez pas de changer l'adresse mail depuis la page de paramétrage du module, onglet \"Configuration\".</p>",
 				'description' => '',
 				'hideTitle' => false,
 				'metaTitle' => '',
 				'module' => 'form',
 				'modulePosition' => 'bottom',
 				'parent' => '',
+				'position' => 5,
+				'title' => 'Contact'
+			],
+			'galerie' => [
+				'blank' => false,
+				'content' => "<p>Cette page contient une instance du module de galerie photo, cliquez sur une photo afin d'ouvrir l'aperçu.</p>",
+				'description' => '',
+				'hideTitle' => false,
+				'metaTitle' => '',
+				'module' => 'gallery',
+				'modulePosition' => 'bottom',
+				'parent' => '',
 				'position' => 4,
-				'title' => 'Exemple de formulaire'
+				'title' => 'Galerie'
 			],
-			'premiere-page-enfant' => [
+			'news' => [
 				'blank' => false,
-				'content' => "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam molestie suscipit consequat. Sed eget augue dignissim, fermentum mauris eu, consectetur mi. Quisque rutrum sodales dapibus. Aliquam tellus ligula, vulputate eu nibh quis, pretium tincidunt ex. Duis tempor nisl at mauris molestie volutpat. Ut sodales leo finibus lectus pharetra porttitor. Sed ullamcorper ligula fermentum varius venenatis. Praesent quis consectetur diam. Vivamus orci ex, ultricies eleifend velit a, tristique cursus tellus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec pulvinar velit vitae ornare sagittis. Donec eget velit hendrerit lorem sagittis congue et et nunc. Pellentesque sit amet interdum enim. Morbi porta sit amet lacus id porttitor.</p>\r\n<p>Morbi ullamcorper, leo quis dapibus finibus, velit sem pharetra risus, sit amet aliquet ex nulla ac velit. Aenean ac faucibus nunc, non aliquam est. Ut at quam condimentum, commodo orci et, efficitur nisl. Morbi leo quam, luctus sed turpis eget, eleifend dapibus mi. Morbi lobortis magna mollis leo ultricies molestie. Mauris quis sagittis nisl, a tempus quam. Vivamus egestas lacinia nulla ac condimentum. Integer quis risus nisi. Nullam sagittis ipsum ut orci eleifend feugiat.</p>\r\n<p>Integer elementum lacus urna, vitae lacinia massa pretium sed. Donec et libero ligula. Integer ac blandit neque. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec pellentesque nibh hendrerit sapien dapibus maximus. Vivamus sed sollicitudin ante, quis blandit lorem. Fusce placerat molestie risus ut pretium. Etiam mollis dictum elit vel iaculis. Maecenas tincidunt dictum fringilla. Nunc libero ipsum, lobortis vel ligula ut, congue commodo diam. Duis ac turpis blandit, sodales metus cursus, hendrerit mauris.</p>\r\n<p>Integer eget augue at metus ultrices lacinia ut imperdiet eros. Suspendisse laoreet lectus at risus porta euismod. Aenean sit amet turpis sed libero egestas pellentesque. Morbi hendrerit massa vel convallis sagittis. Maecenas elit nisl, posuere sit amet metus nec, fringilla fringilla massa. Cras in augue sed leo tempor iaculis non ut massa. Vivamus in dictum erat. Nam sit amet nisi lorem.</p>\r\n<p>Etiam eu aliquam lacus. Mauris pharetra rhoncus massa nec sollicitudin. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis nec lobortis nisi. Ut quis tortor sit amet odio luctus ultrices. Nulla et imperdiet quam, vel fermentum diam. Mauris convallis ullamcorper nibh id convallis. Pellentesque lobortis sem vitae lorem interdum, ac malesuada nisi tempus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sit amet enim tempus, sollicitudin eros sit amet, ultricies dui. Ut luctus elit non nulla rutrum consectetur. Praesent interdum erat risus, a suscipit mi rutrum at. Etiam id ex diam. Suspendisse ut lectus sit amet odio efficitur consectetur at non elit.</p>",
+				'content' => "<p>Cette page contient une instance du module de news, il est possible d'ouvrir une infinité d'instances en créant d'autres pages incluant le même module !</p>",
 				'description' => '',
 				'hideTitle' => false,
 				'metaTitle' => '',
-				'module' => false,
+				'module' => 'news',
 				'modulePosition' => 'bottom',
-				'parent' => 'exemple-de-page',
-				'position' => 1,
-				'title' => 'Première page enfant'
-			],
-			'deuxieme-page-enfant' => [
-				'blank' => false,
-				'content' => "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nibh purus, posuere et pellentesque ut, finibus sed tortor. Vestibulum rutrum diam ut metus ultricies, a dignissim ante fringilla. Vestibulum odio tortor, imperdiet nec blandit et, pellentesque ac nisi. Vestibulum id bibendum odio. In convallis commodo enim non iaculis. Donec tristique mi non nibh semper, et tincidunt mauris gravida. Nullam mollis nisl ex, feugiat tincidunt velit consequat et. Praesent ornare sodales magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vulputate, felis at tristique rhoncus, nulla quam placerat dolor, at mollis diam lectus ac urna. Vivamus et tristique mi, nec congue lorem. Suspendisse efficitur sapien at faucibus rutrum. Fusce orci metus, feugiat sed cursus eu, rutrum eu libero. Mauris sit amet ipsum lorem. In iaculis eros nec tristique ultrices. Nunc laoreet mi orci, euismod eleifend ipsum ultrices vitae.</p>\r\n<p>Sed vel ante sit amet orci auctor scelerisque eu sit amet quam. Quisque lobortis leo ut consectetur fermentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Ut venenatis vulputate elit at feugiat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin volutpat, lacus ac gravida rutrum, nunc justo pulvinar libero, ut tincidunt turpis ligula non tellus. Suspendisse congue consectetur ligula quis tincidunt. Etiam aliquam finibus eleifend. Maecenas lacinia sit amet velit viverra lobortis. Curabitur eget tempor sapien, in placerat lectus. Donec tempor mattis nibh, vel dictum risus dignissim eget. Sed sagittis consectetur diam ac lobortis. In ex nibh, placerat non lacus sit amet, finibus tincidunt dui. Cras semper pellentesque interdum. Nunc semper congue ex. Curabitur tempus lectus vitae vehicula consectetur.</p>\r\n<p>Vivamus eu ornare augue. Aliquam non faucibus sapien. Maecenas rhoncus augue vel ligula congue venenatis. Duis interdum suscipit consectetur. Nulla nec massa erat. Vivamus at ex eu odio finibus efficitur. Quisque sed interdum dolor. Integer imperdiet turpis vel diam gravida, posuere porttitor justo accumsan. Morbi ultricies velit sed elit finibus, a fringilla sapien fermentum. Nunc odio mi, suscipit id commodo sit amet, porta ac dolor.</p>",
-				'description' => '',
-				'hideTitle' => false,
-				'metaTitle' => '',
-				'module' => false,
-				'modulePosition' => 'bottom',
-				'parent' => 'exemple-de-page',
+				'parent' => '',
 				'position' => 2,
-				'title' => 'Deuxième page enfant'
-			]
-		],
-		'exemple-de-news' => [
-			'ma-premiere-news' => [
-				'title' => 'Ma première news',
-				'date' => 1420580231,
-				'content' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut nec mi nec purus efficitur vulputate quis ut nisi. Fusce vel luctus tortor. Curabitur aliquet arcu lacus, sed lobortis dui mattis sit amet. Ut vehicula, magna id commodo lobortis, lectus enim dignissim augue, et lacinia libero mi vitae sapien. Curabitur faucibus nunc sapien, nec lobortis tellus vestibulum ut. Curabitur vitae metus tempor, feugiat nisl id, lacinia metus. Praesent in erat tempus, laoreet nisl vitae, vulputate elit. Cras ornare eleifend libero. Duis vitae lacus et lacus sagittis viverra. </p>'
+				'title' => 'News'
 			],
-			'encore-une-news' => [
-				'title' => 'Encore une news',
-				'date' => 1420580347,
-				'content' => '<p>Duis iaculis gravida felis, at pharetra mi rutrum non. Duis a laoreet est. Sed vitae pretium quam, sed scelerisque lacus. Nulla velit justo, vestibulum nec efficitur eget, consectetur vel augue. Sed tempor faucibus dolor, in tempor nisi. Mauris sit amet eleifend orci. Suspendisse potenti. Etiam porttitor semper ante, quis lacinia leo ultricies sed. Duis et sapien nec turpis mollis molestie vel sit amet mauris. Suspendisse tempus id tortor eget feugiat. Donec tincidunt ac ipsum id tristique. Ut sodales ligula justo, non pharetra massa sollicitudin at. Curabitur odio risus, porta ut semper quis, bibendum nec ipsum.</p>'
+			'page-enfant' => [
+				'blank' => false,
+				'content' => "<p>Vous pouvez attribuer un parent à vos pages afin de mieux organiser votre menu !</p>",
+				'description' => '',
+				'hideTitle' => false,
+				'metaTitle' => '',
+				'module' => '',
+				'modulePosition' => 'bottom',
+				'parent' => 'accueil',
+				'position' => 1,
+				'title' => 'Page enfant'
+			],
+			'site-de-zwiicms' => [
+				'blank' => true,
+				'content' => "",
+				'description' => '',
+				'hideTitle' => false,
+				'metaTitle' => '',
+				'module' => 'redirection',
+				'modulePosition' => 'bottom',
+				'parent' => '',
+				'position' => 6,
+				'title' => 'Site de ZwiiCMS'
 			]
 		],
-		'exemple-de-redirection' => [
-			'url' => 'http://zwiicms.com/'
-		],
-		'exemple-de-formulaire' => [
+		'contact' => [
 			'config' => [
 				'button' => 'Envoyer',
 				'capcha' => true,
@@ -304,6 +287,28 @@ class common
 					'width' => '8'
 				]
 			],
+		],
+		'galerie' => [
+			'upload' => [
+				'desert.jpg' => 'Désert',
+				'iceberg.jpg' => 'Iceberg',
+				'meadow.jpg' => 'Prairie',
+			]
+		],
+		'news' => [
+			'ma-premiere-news' => [
+				'title' => 'Ma première news',
+				'date' => 1420580231,
+				'content' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut nec mi nec purus efficitur vulputate quis ut nisi. Fusce vel luctus tortor. Curabitur aliquet arcu lacus, sed lobortis dui mattis sit amet. Ut vehicula, magna id commodo lobortis, lectus enim dignissim augue, et lacinia libero mi vitae sapien.</p>'
+			],
+			'ma-seconde-news' => [
+				'title' => 'Ma seconde news',
+				'date' => 1420580347,
+				'content' => '<p>Duis iaculis gravida felis, at pharetra mi rutrum non. Duis a laoreet est. Sed vitae pretium quam, sed scelerisque lacus. Nulla velit justo, vestibulum nec efficitur eget, consectetur vel augue. Sed tempor faucibus dolor, in tempor nisi. Mauris sit amet eleifend orci. Suspendisse potenti.</p>'
+			]
+		],
+		'site-de-zwiicms' => [
+			'url' => 'http://zwiicms.com/'
 		]
 	];
 
@@ -316,6 +321,9 @@ class common
 	/** Import les données */
 	public function __construct()
 	{
+		if(self::$demo AND file_exists('data/data.json') AND filemtime('data/data.json') + 600 < time()) {
+			@unlink('data/data.json');
+		}
 		if(empty($this->data)) {
 			if(file_exists('data/data.json')) {
 				$this->setData([json_decode(file_get_contents('data/data.json'), true)]);
@@ -528,11 +536,11 @@ class common
 				if($file->isFile() AND $file->getBasename() !== '.gitkeep') {
 					// Supprime automatiquement le fichier si l'argument $removeAllCache est à true
 					if($removeAllCache === true) {
-						unlink($file->getPathname());
+						@unlink($file->getPathname());
 					}
 					// Supprime le cache de la page si elle vient d'être modifiée
 					elseif($this->getUrl(0) === explode('_', $file->getBasename('.html'))[0]) {
-						unlink($file->getPathname());
+						@unlink($file->getPathname());
 					}
 				}
 			}
@@ -714,7 +722,7 @@ class core extends common
 		$it = new DirectoryIterator('core/tmp/');
 		foreach($it as $file) {
 			if($file->isFile() AND $file->getBasename() !== '.gitkeep' AND $file->getMTime() + 86400 < time()) {
-				unlink($file->getPathname());
+				@unlink($file->getPathname());
 			}
 		}
 		// Définie la version du CSS
@@ -1463,8 +1471,13 @@ class core extends common
 			// Double vérification pour le mot de passe si il a changé
 			if($this->getPost('newPassword')) {
 				$newPassword = $this->getPost('newPassword', helper::PASSWORD);
+				// Bloque le changement de mot de passe en mode démo
+				if(self::$demo) {
+					$newPassword = $this->getData(['config', 'password']);
+					template::$notices['newPassword'] = 'Action impossible en mode démonstration !';
+				}
 				// Ne change pas le mot de passe et crée une notice si la confirmation ne correspond pas au mot de passe
-				if($newPassword !== $this->getPost('confirmPassword', helper::PASSWORD)) {
+				elseif($newPassword !== $this->getPost('confirmPassword', helper::PASSWORD)) {
 					$newPassword = $this->getData(['config', 'password']);
 					template::$notices['confirmPassword'] = 'La confirmation ne correspond pas au mot de passe';
 				}
@@ -2227,14 +2240,20 @@ class core extends common
 		}
 		// Pour les fichiers
 		else {
-			// Tente de supprimer le fichier
-			if(@unlink('data/upload/' . $this->getUrl(0))) {
-				// Notification de suppression
-				$this->setNotification('Fichier supprimé avec succès !');
+			// Bloque la suppression en mode démo
+			if(self::$demo) {
+				$this->setNotification('Action impossible en mode démonstration !', true);
 			}
 			else {
-				// Notification de suppression
-				$this->setNotification('Impossible de supprimer le fichier demandé !', true);
+				// Tente de supprimer le fichier
+				if(@unlink('data/upload/' . $this->getUrl(0))) {
+					// Notification de suppression
+					$this->setNotification('Fichier supprimé avec succès !');
+				}
+				else {
+					// Notification de suppression
+					$this->setNotification('Impossible de supprimer le fichier demandé !', true);
+				}
 			}
 			// Redirige vers le gestionnaire de fichiers
 			helper::redirect('manager');
@@ -2252,8 +2271,6 @@ class core extends common
 		elseif($this->getPost('submit')) {
 			// Modifie la clef de la page si le titre a été modifié
 			$key = $this->getPost('title') ? $this->getPost('title', helper::URL_STRICT) : $this->getUrl(0);
-			// Sauvegarde le module de la page
-			$module = $this->getData(['page', $this->getUrl(0), 'module']);
 			// Si la clef à changée
 			if($key !== $this->getUrl(0)) {
 				// Incrémente la nouvelle clef de la page pour éviter les doublons
@@ -2340,7 +2357,7 @@ class core extends common
 					'description' => $this->getPost('description', helper::STRING),
 					'hideTitle' => $this->getPost('hideTitle', helper::BOOLEAN),
 					'metaTitle' => $this->getPost('metaTitle', helper::STRING),
-					'module' => $module,
+					'module' => $this->getPost('module', helper::STRING),
 					'modulePosition' => $this->getPost('modulePosition', helper::STRING),
 					'parent' => $parent,
 					'position' => $position,
@@ -2603,6 +2620,10 @@ class core extends common
 				'required' => true,
 				'col' => 4
 			]).
+			(self::$demo ? template::div([
+				'text' => 'Le mot de passe est "password". Pour les besoins de la démonstration, les données sont réinitialisées après 10 minutes sans modification.',
+				'col' => 8
+			]) : '').
 			template::newRow().
 			template::checkbox('time', true, 'Me connecter automatiquement à chaque visite').
 			template::newRow().
@@ -2746,14 +2767,20 @@ class core extends common
 		}
 		// Traitement du formulaire
 		elseif($this->getPost('submit')) {
-			/// Tente de supprimer le fichier
-			if(@rename('data/upload/' . $this->getUrl(0), 'data/upload/' . $this->getPost('name', helper::URL) . '.' . pathinfo($this->getUrl(0), PATHINFO_EXTENSION))) {
-				// Notification de suppression
-				$this->setNotification('Fichier renommé avec succès !');
+			// Bloque le renommage en mode démo
+			if(self::$demo) {
+				$this->setNotification('Action impossible en mode démonstration !', true);
 			}
 			else {
-				// Notification de suppression
-				$this->setNotification('Impossible de renommer le fichier !', true);
+				// Tente de renommer le fichier
+				if(@rename('data/upload/' . $this->getUrl(0), 'data/upload/' . $this->getPost('name', helper::URL) . '.' . pathinfo($this->getUrl(0), PATHINFO_EXTENSION))) {
+					// Notification de renommage
+					$this->setNotification('Fichier renommé avec succès !');
+				}
+				else {
+					// Notification de renommage
+					$this->setNotification('Impossible de renommer le fichier !', true);
+				}
 			}
 			// Redirige vers le gestionnaire de fichiers
 			helper::redirect('manager');
@@ -3058,8 +3085,6 @@ class helper
 			if(
 				// Ingore les dossiers
 				$file->isFile()
-				// Ignore le fichier .gitkeep
-				AND $file->getBasename() !== '.gitkeep'
 				AND (
 					// Aucun check si aucune extension n'est précisée
 					empty($extensions)
@@ -3315,6 +3340,10 @@ class helper
 		if(!isset($_FILES['file'])) {
 			$data['error'] = 'Aucun fichier à envoyer !';
 		}
+		// Bloque l'upload en mode démo
+		elseif(common::$demo) {
+			$data['error'] = 'Action impossible en mode démonstration !';
+		}
 		else {
 			$target = 'data/upload/' . helper::filter(basename($_FILES['file']['name']), helper::URL);
 			// Check la taille du fichier (limité à environs 100 mo)
@@ -3326,7 +3355,7 @@ class helper
 				$data['error'] = 'Format du fichier non autorisé !';
 			}
 			// Check les erreurs au chargement du fichier
-			elseif($_FILES['file']['error']) {
+			elseif($_FILES['file']['error'] OR template::$notices) {
 				$data['error'] = 'Erreur au chargement du fichier !';
 			}
 			// Check qu'il n'existe aucune notice

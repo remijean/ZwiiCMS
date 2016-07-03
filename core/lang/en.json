@@ -1,4 +1,5 @@
 {
+	"Action impossible en mode démonstration !": "Impossible action in demo mode!",
 	"Activer la réécriture d'URL": "Enable URL rewriting",
 	"Activer/Désactiver le mode édition": "Enable/Disable editing mode",
 	"Administration": "Administration",
@@ -84,6 +85,7 @@
 	"Large": "Large",
 	"Largeur": "Width",
 	"Largeur du site": "Site width",
+	"Le mot de passe est \"password\". Pour les besoins de la démonstration, les données sont réinitialisées après 10 minutes sans modification.": "The password is \"password\". For the purposes of the demonstration, the data will be reset after 10 minutes without modification.",
 	"Les formats de fichiers autorisés sont :": "Allowed file formats are:",
 	"Liste des fichiers": "Files list",
 	"Me connecter": "Login",

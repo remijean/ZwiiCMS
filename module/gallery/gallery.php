@@ -164,19 +164,25 @@ class galleryAdm extends common
 		}
 		// Suppression de l'image
 		else {
-			// Supprime l'image de la galerie
-			$image = 'data/upload/' . $this->getUrl(2);
-			$this->removeData([$this->getUrl(0), 'upload', $this->getUrl(2)]);
-			// Enregistre les données
-			$this->saveData();
-			// Tente de supprimer l'image du gestionnaire de fichiers
-			if(is_file($image) AND @unlink($image)) {
-				// Notification de suppression
-				$this->setNotification('Fichier supprimé avec succès !');
+			// Bloque la suppresion en mode démo
+			if(self::$demo) {
+				$this->setNotification('Action impossible en mode démonstration !', true);
 			}
 			else {
-				// Notification de suppression
-				$this->setNotification('Fichier supprimé de la galerie mais échec de la suppression du gestionnaire de fichiers !', true);
+				// Supprime l'image de la galerie
+				$image = 'data/upload/' . $this->getUrl(2);
+				$this->removeData([$this->getUrl(0), 'upload', $this->getUrl(2)]);
+				// Enregistre les données
+				$this->saveData();
+				// Tente de supprimer l'image du gestionnaire de fichiers
+				if(is_file($image) AND @unlink($image)) {
+					// Notification de suppression
+					$this->setNotification('Fichier supprimé avec succès !');
+				}
+				else {
+					// Notification de suppression
+					$this->setNotification('Fichier supprimé de la galerie mais échec de la suppression du gestionnaire de fichiers !', true);
+				}
 			}
 			// Redirige vers le module de la page
 			helper::redirect('module/' . $this->getUrl(0));
