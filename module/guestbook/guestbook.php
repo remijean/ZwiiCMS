@@ -103,7 +103,6 @@ class guestbookMod extends common
 				uniqid(),
 				[
 					'comment' => $this->getPost('comment'),
-					'content' => $this->getPost('content'),
 					'date' => time(),
 					'mail' => $this->getPost('mail', helper::EMAIL),
 					'name' => $this->getPost('name', helper::STRING)
@@ -124,11 +123,17 @@ class guestbookMod extends common
 			$commentaires = helper::arrayCollumn($this->getData($this->getUrl(0)), 'date', 'SORT_DESC');
 			// Crée l'affichage des commentaires en fonction de la pagination
 			for($i = $pagination['first']; $i < $pagination['last']; $i++) {
-				self::$content .=
-					template::a(
-						'mailto:' . $this->getData([$this->getUrl(0), $commentaires[$i], 'mail']),
+				if($mail = $this->getData([$this->getUrl(0), $commentaires[$i], 'mail'])) {
+					$name = template::a(
+						'mailto:' . $mail,
 						template::title($this->getData([$this->getUrl(0), $commentaires[$i], 'name']))
-					).
+					);
+				}
+				else {
+					$name = template::title($this->getData([$this->getUrl(0), $commentaires[$i], 'name']));
+				}
+				self::$content .=
+					$name.
 					template::subTitle(date('d/m/Y - H:i', $this->getData([$this->getUrl(0), $commentaires[$i], 'date']))).
 					$this->getData([$this->getUrl(0), $commentaires[$i], 'comment']);
 			}

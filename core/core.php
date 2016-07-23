@@ -203,7 +203,7 @@ class common
 				'module' => 'form',
 				'modulePosition' => 'bottom',
 				'parent' => '',
-				'position' => 5,
+				'position' => 6,
 				'title' => 'Contact'
 			],
 			'galerie' => [
@@ -217,6 +217,18 @@ class common
 				'parent' => '',
 				'position' => 4,
 				'title' => 'Galerie'
+			],
+			'livre-d-or' => [
+				'blank' => false,
+				'content' => "<p>Cette page contient une instance du module de livre d'or. Remplissez le formulaire afin d'ajouter votre commentaire.</p>",
+				'description' => '',
+				'hideTitle' => false,
+				'metaTitle' => '',
+				'module' => 'guestbook',
+				'modulePosition' => 'bottom',
+				'parent' => '',
+				'position' => 5,
+				'title' => 'Livre d\'or'
 			],
 			'news' => [
 				'blank' => false,
@@ -251,7 +263,7 @@ class common
 				'module' => 'redirection',
 				'modulePosition' => 'bottom',
 				'parent' => '',
-				'position' => 6,
+				'position' => 7,
 				'title' => 'Site de ZwiiCMS'
 			]
 		],
@@ -293,6 +305,14 @@ class common
 				'desert.jpg' => 'Désert',
 				'iceberg.jpg' => 'Iceberg',
 				'meadow.jpg' => 'Prairie',
+			]
+		],
+		'livre-d-or' => [
+			'57923e1f9e8ba' => [
+				'comment' => 'Merci pour ce super CMS, il est parfait pour créer mon nouveau site internet !',
+				'date' => 1469201951,
+				'mail' => 'moi@remijean.fr',
+				'name' => 'Rémi Jean'
 			]
 		],
 		'news' => [
