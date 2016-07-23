@@ -1,6 +1,14 @@
 ZwiiCMS 7
 =========
 
+## 7.8.0
+* Ajout du module livre d'or
+* Ajout d'un mode démonstration et refonte du contenu par défaut
+* Correction d'un bug bloquant l'aperçu en direct de la personnalisation
+* Correction d'un bug bloquant l'accès à la site map en mode public
+* Correction de divers bugs
+* Uniformisation de l'upload de fichiers
+
 ## 7.7.2
 * Correction d'un bug majeur bloquant le site avec certains modules
 * Ajout d'un alignement "remplir le fond" pour l'image de fond
