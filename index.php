@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of ZwiiCMS.
+ * This file is part of Zwii.
  *
  * For full copyright and license information, please see the LICENSE
  * file that was distributed with this source code.
@@ -13,16 +13,8 @@
  */
 
 /**
- * Vérification de la version de PHP
+ * Initialisation du cms
  */
-if(version_compare(PHP_VERSION, '5.4.0', '<')) {
-	exit('PHP 5.4+ requis !');
-}
-
-/**
- * Initialisation de ZwiiCMS
- */
-session_start();
 require 'core/core.php';
 $core = new core;
 spl_autoload_register('core::autoload');

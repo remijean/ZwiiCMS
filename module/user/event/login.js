@@ -1,0 +1,2 @@
+$("#loginLink").hide();
+$("#logoutLink").show();
