@@ -1,14 +1,5 @@
-# Fichiers de cache
-core/cache/*
-
-# Fichiers temporaires
-core/tmp/*
-
 # Base de données
 data/data.json
-
-# Fichiers uploadés
-data/upload/*
 
 # Autorise les dossiers vides dans GitHub
 !.gitkeep
