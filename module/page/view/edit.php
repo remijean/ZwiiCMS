@@ -1,13 +1,13 @@
-<?php $form = new form('pageForm'); ?>
-	<?php $form->input('pageName', [
+<form>
+	<?php echo template::input('pageName', [
 		'label' => 'Nom de la page',
 		'value' => $this->getData(['page', $this->getUrl(2), 'name'])
 	]); ?>
-	<?php $form->input('pageContent', [
+	<?php echo template::input('pageContent', [
 		'value' => $this->getData(['page', $this->getUrl(2), 'content'])
 	]); ?>
-	<?php $form->button('pageEdit', [
+	<?php echo template::button('pageEdit', [
 		'type' => 'submit',
 		'value' => 'Modifier'
 	]); ?>
-<?php $form->close(); ?>
+</form>

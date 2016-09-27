@@ -1,10 +1,10 @@
-<?php $form = new form('pageForm'); ?>
-	<?php $form->input('pageName', [
+<form>
+	<?php echo template::input('pageName', [
 		'label' => 'Nom de la page'
 	]); ?>
-	<?php $form->input('pageContent'); ?>
-	<?php $form->button('pageAdd', [
+	<?php echo template::input('pageContent'); ?>
+	<?php echo template::button('pageAdd', [
 		'type' => 'submit',
 		'value' => 'Créer'
 	]); ?>
-<?php $form->close(); ?>
+</form>

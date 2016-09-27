@@ -1,7 +1,10 @@
-# Base de données
+# Fichier de données
 data/data.json
 
-# Autorise les dossiers vides dans GitHub
+# Personnalisation du site
+data/theme.css
+
+# Dossiers vides dans GitHub
 !.gitkeep
 
 # Configuration de PHPStorm

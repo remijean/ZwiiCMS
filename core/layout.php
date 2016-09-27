@@ -3,19 +3,23 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title></title>
+	<title><?php echo $this->getData(['config', 'name']); ?></title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="core/vendor/normalize/normalize.min.css">
-	<link rel="stylesheet" href="core/theme.css">
+	<link rel="stylesheet" href="core/main.css">
+	<link rel="stylesheet" href="data/theme.css">
 </head>
 <body>
-<div id="container">
+<div id="site" class="container">
+	<header><?php echo $this->getData(['config', 'name']); ?></header>
 	<nav>
-		<div class="toggle"><?php //echo template::ico('menu'); ?></div>
+		<div class="toggle"><?php echo helper::ico('menu'); ?></div>
 		<div class="menu"><?php echo $layout->menu(); ?></div>
 	</nav>
 	<section id="content"></section>
 	<footer>
+		Motorisé par <a href="http://zwiicms.com/" target="_blank">ZwiiCMS</a> |
+		<a href="#sitemap">Plan du site</a> |
 		<?php echo $layout->loginLink(); ?>
 		<?php echo $layout->logoutLink(); ?>
 	</footer>
