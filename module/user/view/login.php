@@ -6,7 +6,6 @@
 				'label' => 'Identifiant'
 			]); ?>
 		</div>
-
 	</div>
 	<div class="row">
 		<div class="col4">

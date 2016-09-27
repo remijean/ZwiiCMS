@@ -29,6 +29,7 @@
 	var homePageId = "<?php echo $this->getData(['config', 'homePageId']); ?>";
 </script>
 <script src="core/vendor/jquery/jquery.min.js"></script>
+<script src="core/vendor/tinycolorpicker/tinycolorpicker.min.js"></script>
 <script src="core/core.js"></script>
 </body>
 </html>

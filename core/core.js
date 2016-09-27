@@ -81,9 +81,11 @@ function router(data) {
 				if(output.hash !== null) {
 					window.location.hash = output.hash;
 				}
-				// Mise à jour du lien de connexion
+				// Affiche/Cache les liens d'authentification
 				$("#loginLink").attr("href", "#user/login/" + hash);
 				$("#logoutLink").attr("href", "#user/logout/" + hash);
+				// Active les palettes de couleurs
+				$(".colorPicker").colorPicker();
 			}
 		},
 		error: function(output) {
