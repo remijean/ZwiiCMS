@@ -18,7 +18,7 @@ class user extends common {
 				$this->getData(['user', $this->getInput('userId')])
 				AND $this->getData(['user', $this->getInput('userId'), 'password']) === hash('sha256', $this->getInput('userPassword'))
 			) {
-				$expire = $this->getInput('noExpire') ? strtotime("+1 year") : 0;
+				$expire = $this->getInput('userLongTime') ? strtotime("+1 year") : 0;
 				setcookie('ZWII_USER_ID', $this->getInput('userId'), $expire);
 				setcookie('ZWII_USER_PASSWORD', hash('sha256', $this->getInput('userPassword')), $expire);
 				return [

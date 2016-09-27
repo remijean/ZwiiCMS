@@ -12,10 +12,103 @@
  * @link http://zwiicms.com/
  */
 
-class common {
+abstract class common {
 
 	public $actions = [];
 	private $data = [];
+	private $defaultData = [
+		'config' => [
+			'analyticsId' => '',
+			'cookieConsent' => true,
+			'description' => 'Description',
+			'favicon' => 'data/upload/favicon.ico',
+			'homePageId' => 'accueil',
+			'language' => '',
+			'name' => 'Nom du site',
+			'social' => [
+				'facebook' => 'ZwiiCMS',
+				'googleplus' => '',
+				'instagram' => '',
+				'pinterest' => '',
+				'twitter' => 'ZwiiCMS',
+				'youtube' => ''
+			]
+		],
+		'page' => [
+			'accueil' => [
+				'content' => 'Contenu 1',
+				'hideName' => false,
+				'metaDescription' => '',
+				'metaTitle' => '',
+				'moduleId' => '',
+				'modulePosition' => 'bottom',
+				'parentPageId' => '',
+				'position' => 1,
+				'name' => 'Accueil',
+				'targetBlank' => false
+			],
+			'autre' => [
+				'content' => 'Contenu 2',
+				'hideName' => false,
+				'metaDescription' => '',
+				'metaTitle' => '',
+				'moduleId' => '',
+				'modulePosition' => 'bottom',
+				'parentPageId' => '',
+				'position' => 2,
+				'name' => 'Autre',
+				'targetBlank' => false
+			]
+		],
+		'module' => [
+
+		],
+		'user' => [
+			'admin' => [
+				'password' => '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
+				'rank' => 3
+			]
+		],
+		'theme' => [
+			'background' => [
+				'attachment' => '',
+				'color' => '232,232,232,1',
+				'image' => '',
+				'repeat' => ''
+			],
+			'header' => [
+				'attachment' => '',
+				'color' => '255,255,255,1',
+				'font' => 'Oswald',
+				'image' => '',
+				'position' => '',
+				'repeat' => ''
+			],
+			'input' => [
+				'color' => ''
+			],
+			'menu' => [
+				'align' => '',
+				'color' => '71,123,184,1',
+				'height' => '15px',
+				'position' => ''
+			],
+			'site' => [
+				'width' => '1170px'
+			],
+			'text' => [
+				'font' => 'Open+Sans'
+			],
+			'title' => [
+				'color' => '255,255,255,1',
+				'font' => 'Oswald'
+			]
+		]
+	];
+	public $fonts = [
+		'Open+Sans' => 'Open Sans',
+		'Oswald' => 'Oswald'
+	];
 	private $hierarchy = [];
 	private $input = [
 		'_POST' => [],
@@ -33,6 +126,11 @@ class common {
 	 * Constructeur en commun
 	 */
 	public function __construct() {
+		// Génère le fichier de donnée
+		if(file_exists('data/data.json') === false) {
+			$this->setData([$this->defaultData]);
+			$this->saveData();
+		}
 		// Import des données
 		if(empty($this->data)) {
 			$this->setData([json_decode(file_get_contents('data/data.json'), true)]);
@@ -186,6 +284,13 @@ class common {
 	}
 
 	/**
+	 * Enregistre les données
+	 */
+	public function saveData() {
+		file_put_contents('data/data.json', json_encode($this->getData()));
+	}
+
+	/**
 	 * Insert des données
 	 * @param array $keys Clé(s) des données
 	 */
@@ -213,12 +318,13 @@ class common {
 
 class core extends common {
 
-	private static $coreModules = [
+	private $coreModules = [
+		'config',
 		'page',
 		'user'
 	];
 	public static $language = [];
-	public static $output = [
+	public $output = [
 		'hash' => null,
 		'notification' => '',
 		'event' => false,
@@ -226,6 +332,44 @@ class core extends common {
 		'view' => ''
 	];
 
+	/**
+	 * Constructeur du coeur
+	 */
+	public function __construct() {
+		// Hérite du constructeur parent
+		parent::__construct();
+		// Crée le fichier de personnalisation
+		if(file_exists('data/theme.css') === false) {
+			// Polices de caractères
+			$css = '@import url("https://fonts.googleapis.com/css?family=' . $this->getData(['theme', 'text', 'font']) . '|' . $this->getData(['theme', 'title', 'font']) . '");';
+			// Couleur du background
+			$color = helper::colorVariants($this->getData(['theme', 'background', 'color']));
+			$css .= 'body{background-color:' . $color['normal'] . '}';
+			// Couleurs de la bannière
+			$color = helper::colorVariants($this->getData(['theme', 'header', 'color']));
+			$css .= 'header{background-color:' . $color['normal'] . '}';
+			$css .= 'header h1{color:' . $color['text'] . '}';
+			// Couleurs du menu
+			$color = helper::colorVariants($this->getData(['theme', 'menu', 'color']));
+			$css .= 'nav{background-color:' . $color['normal'] . '}';
+			$css .= 'nav a{color:' . $color['text'] . '}';
+			$css .= 'nav a:hover{background-color:' . $color['darken'] . '}';
+			$css .= 'nav a:target{background-color:' . $color['veryDarken'] . '}';
+			// Polices
+			$css .= 'body{font-family:"' . $this->fonts[$this->getData(['theme', 'text', 'font'])] . '",sans-serif}';
+			$css .= 'h1,h2,h3,h4,h5,h6{font-family:"' . $this->fonts[$this->getData(['theme', 'title', 'font'])] . '",sans-serif}';
+			$css .= 'header{font-family:"' . $this->fonts[$this->getData(['theme', 'header', 'font'])] . '",sans-serif}';
+			// Images
+			$css .= 'body{background-image:url("' . $this->getData(['theme', 'background', 'image']) . '")}';
+			$css .= 'header{background-image:url("' . $this->getData(['theme', 'header', 'image']) . '")}';
+			// Largeur du site
+			$css .= '.container{max-width:' . $this->getData(['theme', 'site', 'width']) . '}';
+			// Hauteur du menu
+			$css .= 'nav a{padding-top:' . $this->getData(['theme', 'menu', 'height']) . ';padding-bottom:' . $this->getData(['theme', 'menu', 'height']) . '}';
+			// Enregistre la personnalisation
+			file_put_contents('data/theme.css', $css);
+		}
+	}
 
 	/**
 	 * Auto-chargement des classes
@@ -277,9 +421,9 @@ class core extends common {
 				)
 			) {
 				// Fusionne les données de sortie du coeur avec celles de l'action demandée
-				self::$output = $module->{$this->getUrl(1)}() + self::$output;
+				$this->output = $module->{$this->getUrl(1)}() + $this->output;
 				// Importe la vue de l'action
-				if(self::$output['view']) {
+				if($this->output['view']) {
 					$viewPath = __DIR__ . '/../module/' . $moduleId . '/view/' . $this->getUrl(1) . '.php';
 					if(file_exists($viewPath)) {
 						ob_start();
@@ -288,24 +432,24 @@ class core extends common {
 					}
 				}
 				// Importe l'événement de l'action
-				if(self::$output['event']) {
-					$viewPath = __DIR__ . '/../module/' . $moduleId . '/event/' . $this->getUrl(1) . '.js';
-					if(file_exists($viewPath)) {
+				if($this->output['event']) {
+					$eventPath = __DIR__ . '/../module/' . $moduleId . '/event/' . $this->getUrl(1) . '.js';
+					if(file_exists($eventPath)) {
 						ob_start();
-						include $viewPath;
+						include $eventPath;
 						$moduleEvent = '<script>' . ob_get_clean() . '</script>';
 					}
 				}
 			}
 			// Si le rang est insuffisant, redirection sur l'interface de connexion
 			else {
-				self::$output['hash'] = '#user/login/' . $this->getUrl();
+				$this->output['hash'] = '#user/login/' . $this->getUrl();
 			}
 		}
 		// Met en forme la vue
-		self::$output['view'] = $pageView . $moduleView . $moduleEvent;
+		$this->output['view'] = $pageView . $moduleView . $moduleEvent;
 		// Encode la sortie en JSON
-		echo json_encode(self::$output);
+		echo json_encode($this->output);
 	}
 
 }
@@ -335,12 +479,37 @@ class helper {
 	}
 
 	/**
+	 * Génère des variations d'une couleur
+	 * @param string $rgba Code rgba de la couleur
+	 * @return array
+	 */
+	public static function colorVariants($rgba) {
+		$rgba = explode(',', $rgba);
+		return [
+			'normal' => 'rgba(' . $rgba[0] . ',' . $rgba[1] . ',' . $rgba[2] . ',' . $rgba[3] . ')',
+			'darken' => 'rgba(' . ($rgba[0] - 20) . ',' . ($rgba[1] - 20) . ',' . ($rgba[2] - 20) . ',' . $rgba[3] . ')',
+			'veryDarken' => 'rgba(' . ($rgba[0] - 25) . ',' . ($rgba[1] - 25) . ',' . ($rgba[2] - 25) . ',' . $rgba[3] . ')',
+			'text' => (.213 * $rgba[1] . .715 * $rgba[2] . .072 * $rgba[3] > 127.5) ? 'inherit' : 'white'
+		];
+	}
+
+	/**
 	 * Supprime un cookie
 	 * @param string $cookieKey Clé du cookie à supprimer
 	 */
 	public static function deleteCookie($cookieKey) {
 		unset($_COOKIE[$cookieKey]);
 		setcookie($cookieKey, '', time() - 3600);
+	}
+
+	/**
+	 * Affiche un icône
+	 * @param string $ico Classe de l'icône
+	 * @param bool $margin Ajoute un margin autour de l'icône
+	 * @return string
+	 */
+	public static function ico($ico, $margin = false) {
+		return '<span class="zwiico-' . $ico . ($margin ? ' zwiico-margin' : '') . '"></span>';
 	}
 
 	/**
@@ -443,9 +612,9 @@ class layout extends common {
 	public function menu() {
 		$items = '';
 		foreach($this->getHierarchy() as $parentId => $childIds) {
-			$items .= '<li><a href="#' . $parentId . '">' . $this->getData(['page', $parentId, 'name']) . '</a><ul>';
+			$items .= '<li><a href="#' . $parentId . '" id="' . $parentId . '">' . $this->getData(['page', $parentId, 'name']) . '</a><ul>';
 			foreach($childIds as $childId) {
-				$items .= '<li><a href="#' . $childId . '">' . $this->getData(['page', $childId, 'name']) . '</a></li>';
+				$items .= '<li><a href="#' . $childId . '" id="' . $childId . '">' . $this->getData(['page', $childId, 'name']) . '</a></li>';
 			}
 			$items .= '</ul></li>';
 		}
@@ -454,47 +623,15 @@ class layout extends common {
 
 }
 
-class form {
-
-	############################################################
-	# INITIALISATION DU FORMULAIRE
-
-	/**
-	 * Ouvre le formulaire
-	 * @param string $nameId Nom et id
-	 * @param array $attributes Définition des attributs ($key => $value)
-	 */
-	public function __construct($nameId, $attributes = []) {
-		// Attributs par défaut
-		$attributes = array_merge([
-			'id' => $nameId,
-			'name' => $nameId,
-			'action' => '',
-			'method' => 'post',
-			'enctype' => '',
-			'class' => ''
-		], $attributes);
-		// Retourne le html
-		echo sprintf('<form %s>', helper::sprintAttributes($attributes));
-	}
-
-	/**
-	 * Ferme le formulaire
-	 * @echo string
-	 */
-	public function close() {
-		echo '</form>';
-	}
-
-	############################################################
-	# CHAMPS DU FORMULAIRE
+class template {
 
 	/**
 	 * Crée un bouton
 	 * @param string $nameId Nom et id
 	 * @param array $attributes Définition des attributs ($key => $value)
+	 * @return string
 	 */
-	public function button($nameId, array $attributes = []) {
+	public static function button($nameId, array $attributes = []) {
 		// Attributs par défaut
 		$attributes = array_merge([
 			'id' => $nameId,
@@ -505,7 +642,7 @@ class form {
 			'type' => 'button'
 		], $attributes);
 		// Retourne le html
-		echo sprintf(
+		return sprintf(
 			'<button %s>%s</button>',
 			helper::sprintAttributes($attributes, ['value']),
 			helper::translate($attributes['value'])
@@ -516,8 +653,9 @@ class form {
 	 * Crée un champ capcha
 	 * @param string $nameId Nom et id
 	 * @param array $attributes Définition des attributs ($key => $value)
+	 * @return string
 	 */
-	public function capcha($nameId, array $attributes = []) {
+	public static function capcha($nameId, array $attributes = []) {
 		// Attributs par défaut
 		$attributes = array_merge([
 			'id' => $nameId,
@@ -540,18 +678,9 @@ class form {
 			helper::sprintAttributes($attributes)
 		);
 		// Champs cachés contenant les nombres
-		$html .= self::input($nameId . 'FirstNumber', [
-			'type' => 'hidden',
-			'value' => $firstNumber,
-			'before' => false
-		]);
-		$html .= self::input($nameId . 'SecondNumber', [
-			'type' => 'hidden',
-			'value' => $secondNumber,
-			'before' => false
-		]);
+		$html .= '<input type="hidden" value="' . $firstNumber . '"><input type="hidden" value="' . $secondNumber . '">';
 		// Retourne le html
-		echo $html;
+		return $html;
 	}
 
 	/**
@@ -560,8 +689,9 @@ class form {
 	 * @param string $value Valeur
 	 * @param string $label Label
 	 * @param array $attributes Définition des attributs ($key => $value)
+	 * @return string
 	 */
-	public function checkbox($nameId, $value, $label, array $attributes = []) {
+	public static function checkbox($nameId, $value, $label, array $attributes = []) {
 		// Attributs par défaut
 		$attributes = array_merge([
 			'id' => $nameId,
@@ -583,15 +713,16 @@ class form {
 			'help' => $attributes['help']
 		]);
 		// Retourne le html
-		echo $html;
+		return $html;
 	}
 
 	/**
 	 * Crée un champ d'upload de fichier
 	 * @param string $nameId Nom et id
 	 * @param array $attributes Définition des attributs ($key => $value)
+	 * @return string
 	 */
-	public function file($nameId, array $attributes = []) {
+	public static function file($nameId, array $attributes = []) {
 		// Attributs par défaut
 		$attributes = array_merge([
 			'id' => $nameId,
@@ -612,29 +743,21 @@ class form {
 		}
 		// Texte
 		$html .= sprintf(
-			'<label class="inputFile %s">' . self::ico('download') . '<span class="inputFileLabel">' . helper::translate('Choisissez un fichier') . '</span><input type="file" %s></label>',
+			'<label class="inputFile %s">' . helper::ico('download') . '<span class="inputFileLabel">' . helper::translate('Choisissez un fichier') . '</span><input type="file" %s></label>',
 			$attributes['class'],
 			helper::sprintAttributes($attributes, ['class'])
 		);
 		// Retourne le html
-		echo $html;
+		return $html;
 	}
 
 	/**
-	 * Crée une aide qui s'affiche au survole
+	 * Crée une aide
 	 * @param string $text Texte de l'aide
+	 * @return string
 	 */
-	public function help($text) {
-		echo '<span class="helpButton">' . self::ico('help') . '<div class="helpContent">' . helper::translate($text) . '</div></span>';
-	}
-
-	/**
-	 * Crée un icône
-	 * @param string $ico Nom de l'icône à ajouter
-	 * @param bool $margin Ajoute un margin à droite de l'icône
-	 */
-	public function ico($ico, $margin = false) {
-		echo '<span class="zwiico-' . $ico . ($margin ? ' zwiico-margin' : '') . '"></span>';
+	public static function help($text) {
+		return '<span class="helpButton">' . helper::ico('help') . '<div class="helpContent">' . helper::translate($text) . '</div></span>';
 	}
 
 	/**
@@ -642,8 +765,9 @@ class form {
 	 * @param string $for For
 	 * @param array $attributes Définition des attributs ($key => $value)
 	 * @param string $text Texte
+	 * @return string
 	 */
-	public function label($for, $text, array $attributes = []) {
+	public static function label($for, $text, array $attributes = []) {
 		// Attributs par défaut
 		$attributes = array_merge([
 			'for' => $for,
@@ -654,10 +778,10 @@ class form {
 		$text = helper::translate($text);
 		// Ajout d'une aide
 		if(empty($attributes['help']) === false) {
-			$text = $text . self::help($attributes['help']);
+			$text = $text . template::help($attributes['help']);
 		}
 		// Retourne le html
-		echo sprintf(
+		return sprintf(
 			'<label %s>%s</label>',
 			helper::sprintAttributes($attributes),
 			$text
@@ -669,8 +793,9 @@ class form {
 	 * @param string $nameId Nom et id
 	 * @param array $options Liste des options ($value => $text)
 	 * @param array $attributes Définition des attributs ($key => $value)
+	 * @return string
 	 */
-	public function select($nameId, array $options, array $attributes = []) {
+	public static function select($nameId, array $options, array $attributes = []) {
 		// Attributs par défaut
 		$attributes = array_merge([
 			'id' => $nameId,
@@ -705,7 +830,7 @@ class form {
 		// Fin sélection
 		$html .= '</select>';
 		// Retourne le html
-		echo $html;
+		return $html;
 	}
 
 	/**
@@ -713,8 +838,9 @@ class form {
 	 * @param array $cols Cols des colonnes (format: [col colonne1, col colonne2, col colonne3, etc])
 	 * @param array $body Contenu des colonnes (format: [[contenu1, contenu2, contenu3, etc], [contenu1, contenu2, contenu3, etc]])
 	 * @param array $attributes Définition des attributs ($key => $value)
+	 * @return string
 	 */
-	public function table(array $cols = [], array $body = [], array $attributes = []) {
+	public static function table(array $cols = [], array $body = [], array $attributes = []) {
 		// Attributs par défaut
 		$attributes = array_merge([
 			'class' => ''
@@ -737,15 +863,16 @@ class form {
 		// Fin tableau
 		$html .= '</table>';
 		// Retourne le html
-		echo $html;
+		return $html;
 	}
 
 	/**
 	 * Crée un input
 	 * @param string $nameId Nom et id
 	 * @param array $attributes Définition des attributs ($key => $value)
+	 * @return string
 	 */
-	public function input($nameId, array $attributes = []) {
+	public static function input($nameId, array $attributes = []) {
 		// Attributs par défaut
 		$attributes = array_merge([
 			'id' => $nameId,
@@ -769,19 +896,20 @@ class form {
 		}
 		// Texte
 		$html .= sprintf(
-			'<input type="text" %s>',
+			'<input %s>',
 			helper::sprintAttributes($attributes)
 		);
 		// Retourne le html
-		echo $html;
+		return $html;
 	}
 
 	/**
 	 * Crée un champ texte long
 	 * @param string $nameId Nom et id
 	 * @param array $attributes Définition des attributs ($key => $value)
+	 * @return string
 	 */
-	public function textarea($nameId, array $attributes = []) {
+	public static function textarea($nameId, array $attributes = []) {
 		// Attributs par défaut
 		$attributes = array_merge([
 			'id' => $nameId,
@@ -809,7 +937,7 @@ class form {
 			$attributes['value']
 		);
 		// Retourne le html
-		echo $html;
+		return $html;
 	}
 
 }

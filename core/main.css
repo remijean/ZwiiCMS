@@ -1,0 +1,540 @@
+/**
+ * This file is part of Zwii.
+ *
+ * For full copyright and license information, please see the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @author Rémi Jean <moi@remijean.fr>
+ * @copyright Copyright (C) 2008-2016, Rémi Jean
+ * @license GNU General Public License, version 3
+ * @link http://zwiicms.com/
+ */
+
+/* Corps */
+body {
+	color: #555;
+	margin: 0 10px;
+	font-size: 16px;
+}
+body.editor {
+	font-size: 15px !important;
+	background: #FFF !important;
+}
+
+/* Liens */
+a {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+
+/* Titres */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-weight: normal;
+}
+h1 {
+	font-size: 1.5em;
+}
+h2 {
+	font-size: 1.2em;
+}
+h3 {
+	font-size: 1em;
+}
+h4 {
+	font-size: .9em;
+}
+h5 {
+	font-size: .8em;
+}
+h6 {
+	font-size: .7em;
+}
+
+/* Listes */
+ul {
+	list-style: square;
+}
+li ul {
+	margin: 0;
+}
+
+/* Égalisation des margins */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+hr,
+ul,
+ol {
+	margin: 15px 0;
+}
+
+/* Image */
+img {
+	max-width: 100%;
+	height: auto;
+}
+img[align='left'] {
+	margin-right: 10px;
+}
+img[align='right'] {
+	margin-left: 10px;
+}
+
+/* Notifications */
+#notifications {
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	max-width: 350px;
+	width: 100%;
+}
+#notifications div {
+	color: #FFF;
+	margin: 10px;
+	padding: 10px;
+	display: none;
+}
+#notifications .success {
+	background: #67C672;
+}
+#notifications .error {
+	background: #F3674A;
+}
+
+/* Container */
+.container {
+	margin: auto;
+}
+
+/* Site */
+#site {
+	margin: 20px auto;
+	background: #FFF;
+	overflow: hidden;
+}
+
+/* Bannière */
+header {
+	font-size: 1.5em;
+}
+
+/* Menu */
+nav .toggle {
+	cursor: pointer;
+	text-align: right;
+	display: none;
+	font-weight: bold;
+}
+nav .menu {
+	display: block;
+}
+nav .menu ul {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+nav .menu ul li {
+	display: inline-block;
+	position: relative;
+}
+nav .menu ul li ul {
+	display: none;
+	position: absolute;
+	width: 250px;
+	z-index: 20;
+}
+nav .menu ul li ul li {
+	display: block;
+	text-align: left;
+}
+nav .menu ul li:hover ul {
+	display: block;
+}
+nav a {
+	display: inherit;
+	padding: 0 10px;
+}
+nav a:hover {
+	text-decoration: none;
+}
+@media (max-width: 768px) {
+	nav .toggle {
+		display: block;
+	}
+	nav .menu {
+		display: none;
+		text-align: left !important;
+	}
+	nav li {
+		display: block;
+	}
+	nav li ul {
+		display: block;
+		position: static;
+		min-width: inherit;
+		width: auto;
+	}
+	nav a {
+		padding: 15px !important;
+	}
+	nav li ul a {
+		padding-left: 40px !important;
+	}
+}
+
+/* Contenu */
+section {
+	margin: 20px;
+}
+
+/* Bas du site */
+footer {
+	text-align: center;
+	font-size: 0.8em;
+	padding: 20px;
+}
+footer #text {
+	padding-bottom: 10px;
+}
+footer #socials {
+	font-size: 1.6em;
+	padding-bottom: 10px;
+}
+footer #socials span {
+	color: #FFF;
+	padding: .1em 0;
+	margin: 0 5px;
+}
+footer #socials .zwiico-facebook {
+	background: #5D82D2;
+}
+footer #socials .zwiico-facebook:hover {
+	background: #3764C5;
+}
+footer #socials .zwiico-googleplus {
+	background: #E46049;
+}
+footer #socials .zwiico-googleplus:hover {
+	background: #DA3C20;
+}
+footer #socials .zwiico-instagram {
+	background: #558BB7;
+}
+footer #socials .zwiico-instagram:hover {
+	background: #417198;
+}
+footer #socials .zwiico-pinterest {
+	background: #E23139;
+}
+footer #socials .zwiico-pinterest:hover {
+	background: #C41C23;
+}
+footer #socials .zwiico-twitter {
+	background: #40BFF6;
+}
+footer #socials .zwiico-twitter:hover {
+	background: #0FAFF4;
+}
+footer #socials .zwiico-youtube {
+	background: #EF4E43;
+}
+footer #socials .zwiico-youtube:hover {
+	background: #EB2214;
+}
+
+/**
+ * Classe rapide
+ */
+.displayNone {
+	display: none;
+}
+.textAlignCenter {
+	text-align: center;
+}
+
+/**
+ * Inputs génériques
+ */
+
+input[type='text'],
+input[type='password'],
+.inputFile,
+select,
+textarea {
+	padding: 9px; /* -1px à cause des bordures */
+	background: #FFF;
+	border: 1px solid #DDD;
+	width: 100%;
+}
+input[type='text'].notice,
+input[type='password'].notice,
+.inputFile.notice,
+select.notice,
+textarea.notice {
+	border: 1px solid #F3674A;
+}
+input:disabled,
+select:disabled,
+textarea:disabled {
+	background: #EEE !important;
+	color: #CCC !important;
+}
+button {
+	width: 100%;
+	padding: 10px;
+	border: 0;
+	cursor: pointer;
+}
+textarea {
+	height: 100px;
+	resize: none;
+}
+label {
+	display: block;
+	margin-bottom: 2px;
+}
+.inputFile {
+	cursor: pointer;
+	margin: 0;
+}
+.inputFile input[type='file'] {
+	display: none;
+}
+
+/**
+ * Inputs spécifiques
+ */
+
+/* Bloc */
+.blockWrapper {
+	vertical-align: top !important;
+}
+.blockWrapper.col0 {
+	margin: 20px 0;
+}
+.block {
+	border: 1px solid #DDD;
+	padding: 20px;
+}
+.block h4 {
+	margin: -20px -20px 10px -20px;
+	padding: 10px;
+	background: #E8E8E8;
+	color: #555;
+}
+
+/* Pagination */
+.pagination {
+	padding: 10px 0;
+}
+.pagination a {
+	display: inline-block;
+	padding: 10px;
+	margin: 5px;
+	text-align: center;
+}
+.pagination a:hover {
+	text-decoration: none;
+}
+.pagination a.disabled {
+	pointer-events: none;
+	cursor: default;
+	background: #EEE !important;
+	color: #CCC !important;
+}
+.pagination a:first-child {
+	margin-left: 0;
+}
+.pagination a:last-child {
+	margin-right: 0;
+}
+
+/* Cases à cocher (pas de display none sinon le hover ne fonctionne pas sous Chrome) */
+input[type='checkbox'],
+input[type='radio'] {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	opacity: 0;
+	height: 0;
+	width: 0;
+}
+input[type='checkbox'] + label,
+input[type='radio'] + label {
+	display: inline-block;
+	margin-right: 10px;
+	cursor: pointer;
+}
+input[type='checkbox'] + label:before,
+input[type='radio'] + label:before {
+	content: '\2713';
+	display: inline-block;
+	text-align: center;
+	color: transparent;
+	margin-right: 5px;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	font-size: 10px;
+	font-weight: bold;
+	background: #DDD;
+	vertical-align: top;
+}
+input[type='checkbox'].notice + label:before,
+input[type='radio'].notice + label:before {
+	background: #F3674A;
+}
+input[type='radio'] + label:before {
+	border-radius: 50%;
+}
+input[type='checkbox']:hover + label:before,
+input[type='checkbox']:checked:active + label:before,
+input[type='radio']:hover + label:before {
+	background: #CCC;
+}
+input[type='checkbox']:disabled + label:before,
+input[type='radio']:disabled + label:before {
+	background: #EEE !important;
+}
+
+/* Aides */
+.helpButton {
+	cursor: help;
+	margin: 0 5px;
+}
+.helpButton:hover .helpContent {
+	display: inline;
+}
+.helpContent {
+	display: none;
+	position: absolute;
+	margin: 30px 0 0 -30px;
+	text-align: left;
+	padding: 10px;
+	z-index: 10;
+	max-width: 600px;
+}
+.helpButton,
+.helpContent {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+/**
+ * Grille
+ */
+
+*,
+*:before,
+*:after {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.row {
+	margin: -15px;
+	font-size: 0; /* Hack whitespace */
+}
+.col1,
+.col2,
+.col3,
+.col4,
+.col5,
+.col6,
+.col7,
+.col8,
+.col9,
+.col10,
+.col11,
+.col12 {
+	margin: 15px;
+	vertical-align: bottom;
+	width: 100%;
+	min-height: 1px;
+	display: inline-block;
+	font-size: 16px; /* Hack whitespace */
+}
+@media (min-width: 992px) {
+	.col1 {
+		width: 8.33333333%;
+	}
+	.col2 {
+		width: 16.66666667%;
+	}
+	.col3 {
+		width: 25%;
+	}
+	.col4 {
+		width: 33.33333333%;
+	}
+	.col5 {
+		width: 41.66666667%;
+	}
+	.col6 {
+		width: 50%;
+	}
+	.col7 {
+		width: 58.33333333%;
+	}
+	.col8 {
+		width: 66.66666667%;
+	}
+	.col9 {
+		width: 75%;
+	}
+	.col10 {
+		width: 83.33333333%;
+	}
+	.col11 {
+		width: 91.66666667%;
+	}
+	.col12 {
+		width: 100%;
+	}
+	.offset1 {
+		margin-left: 8.33333333%;
+	}
+	.offset2 {
+		margin-left: 16.66666667%;
+	}
+	.offset3 {
+		margin-left: 25%;
+	}
+	.offset4 {
+		margin-left: 33.33333333%;
+	}
+	.offset5 {
+		margin-left: 41.66666667%;
+	}
+	.offset6 {
+		margin-left: 50%;
+	}
+	.offset7 {
+		margin-left: 58.33333333%;
+	}
+	.offset8 {
+		margin-left: 66.66666667%;
+	}
+	.offset9 {
+		margin-left: 75%;
+	}
+	.offset10 {
+		margin-left: 83.33333333%;
+	}
+	.offset11 {
+		margin-left: 91.66666667%;
+	}
+}
