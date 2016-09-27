@@ -317,12 +317,6 @@ label {
  */
 
 /* Bloc */
-.blockWrapper {
-	vertical-align: top !important;
-}
-.blockWrapper.col0 {
-	margin: 20px 0;
-}
 .block {
 	border: 1px solid #DDD;
 	padding: 20px;
@@ -460,8 +454,8 @@ input[type='radio']:disabled + label:before {
 .col10,
 .col11,
 .col12 {
-	margin: 15px;
-	vertical-align: bottom;
+	padding: 15px;
+	vertical-align: top;
 	width: 100%;
 	min-height: 1px;
 	display: inline-block;

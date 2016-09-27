@@ -1,69 +1,76 @@
 <form>
-	<h2>Options du site</h2>
+	<h1>Options du site</h1>
 	<div class="row">
-		<div class="col4 block">
-			<h3>Couleurs et image</h3>
-			<div class="row">
-				<div class="col6">
-					<?php echo template::input('themeBackgroundColor', [
-						'label' => 'Couleur du fond',
-						'value' => $this->getData(['theme', 'background', 'color'])
-					]); ?>
-				</div>
-				<div class="col6">
-					<?php echo template::input('themeTitleColor', [
-						'label' => 'Couleur des titres',
-						'value' => $this->getData(['theme', 'title', 'color'])
-					]); ?>
-				</div>
-			</div>
-			<?php echo template::select('themeBackgroundImage', [], [
-				'label' => 'Image du fond',
-				'help' => 'Seule une image de format .png, .gif, .jpg ou .jpeg du gestionnaire de fichiers est acceptée.',
-				'selected' => $this->getData(['theme', 'background', 'image'])
-			]); ?>
-			<div id="backgroundImageOptions">
+		<div class="col4">
+			<div class="block">
+				<h4>Couleurs et image</h4>
 				<div class="row">
 					<div class="col6">
-						<?php echo template::select('themeBackgroundRepeat', $module::$repeats, [
-							'label' => 'Répétition',
-							'selected' => $this->getData(['theme', 'background', 'repeat'])
+						<?php echo template::colorPicker('themeBackgroundColor', [
+							'label' => 'Couleur du fond',
+							'value' => $this->getData(['theme', 'background', 'color'])
 						]); ?>
 					</div>
 					<div class="col6">
-						<?php echo template::select('themeBackgroundPosition', $module::$positions, [
-							'label' => 'Alignement',
-							'selected' => $this->getData(['theme', 'background', 'position'])
+						<?php echo template::colorPicker('themeTitleColor', [
+							'label' => 'Couleur des titres',
+							'value' => $this->getData(['theme', 'title', 'color'])
 						]); ?>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col6">
-						<?php echo template::select('themeBackgroundAttachment', $module::$attachments, [
-							'label' => 'Position',
-							'selected' => $this->getData(['theme', 'background', 'attachment'])
-						]); ?>
+				<?php echo template::select('themeBackgroundImage', [], [
+					'label' => 'Image du fond',
+					'help' => 'Seule une image de format .png, .gif, .jpg ou .jpeg du gestionnaire de fichiers est acceptée.',
+					'selected' => $this->getData(['theme', 'background', 'image'])
+				]); ?>
+				<div id="backgroundImageOptions">
+					<div class="row">
+						<div class="col6">
+							<?php echo template::select('themeBackgroundRepeat', $module::$repeats, [
+								'label' => 'Répétition',
+								'selected' => $this->getData(['theme', 'background', 'repeat'])
+							]); ?>
+						</div>
+						<div class="col6">
+							<?php echo template::select('themeBackgroundPosition', $module::$positions, [
+								'label' => 'Alignement',
+								'selected' => $this->getData(['theme', 'background', 'position'])
+							]); ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col6">
+							<?php echo template::select('themeBackgroundAttachment', $module::$attachments, [
+								'label' => 'Position',
+								'selected' => $this->getData(['theme', 'background', 'attachment'])
+							]); ?>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="col4 block">
-			<h3>Polices</h3>
-			<?php echo template::select('themeTitleFont', $this->fonts, [
-				'label' => 'Police des titres',
-				'selected' => $this->getData(['theme', 'title', 'font'])
-			]); ?>
-			<?php echo template::select('themeTextFont', $this->fonts, [
-				'label' => 'Police du texte',
-				'selected' => $this->getData(['theme', 'text', 'font'])
+		<div class="col4">
+			<div class="block">
+				<h4>Polices</h4>
+				<?php echo template::select('themeTitleFont', $this->fonts, [
+					'label' => 'Police des titres',
+					'selected' => $this->getData(['theme', 'title', 'font'])
+				]); ?>
+				<?php echo template::select('themeTextFont', $this->fonts, [
+					'label' => 'Police du texte',
+					'selected' => $this->getData(['theme', 'text', 'font'])
+				]); ?>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col2">
+			<?php echo template::button('themeSave', [
+				'type' => 'submit',
+				'value' => 'Enregistrer'
 			]); ?>
 		</div>
 	</div>
-	<button type="button" data-form="pageSave">Créer</button>
-	<?php echo template::button('theme', [
-		'type' => 'submit',
-		'value' => 'Se connecter'
-	]); ?>
 </form>
 <script>
 	// Affiche/Cache les options de l'image du fond

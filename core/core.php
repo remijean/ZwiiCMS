@@ -72,13 +72,13 @@ abstract class common {
 		'theme' => [
 			'background' => [
 				'attachment' => '',
-				'color' => '232,232,232,1',
+				'color' => 'rgb(232,232,232)',
 				'image' => '',
 				'repeat' => ''
 			],
 			'header' => [
 				'attachment' => '',
-				'color' => '255,255,255,1',
+				'color' => 'rgb(255,255,255)',
 				'font' => 'Oswald',
 				'image' => '',
 				'position' => '',
@@ -89,7 +89,7 @@ abstract class common {
 			],
 			'menu' => [
 				'align' => '',
-				'color' => '71,123,184,1',
+				'color' => 'rgb(71,123,184)',
 				'height' => '15px',
 				'position' => ''
 			],
@@ -100,7 +100,7 @@ abstract class common {
 				'font' => 'Open+Sans'
 			],
 			'title' => [
-				'color' => '255,255,255,1',
+				'color' => 'rgb(255,255,255)',
 				'font' => 'Oswald'
 			]
 		]
@@ -484,12 +484,13 @@ class helper {
 	 * @return array
 	 */
 	public static function colorVariants($rgba) {
-		$rgba = explode(',', $rgba);
+		$rgba = explode(',', explode('(', $rgba)[1]);
+		$alpha = isset($rgba[3]) ? $rgba[3] : 1;
 		return [
-			'normal' => 'rgba(' . $rgba[0] . ',' . $rgba[1] . ',' . $rgba[2] . ',' . $rgba[3] . ')',
-			'darken' => 'rgba(' . ($rgba[0] - 20) . ',' . ($rgba[1] - 20) . ',' . ($rgba[2] - 20) . ',' . $rgba[3] . ')',
-			'veryDarken' => 'rgba(' . ($rgba[0] - 25) . ',' . ($rgba[1] - 25) . ',' . ($rgba[2] - 25) . ',' . $rgba[3] . ')',
-			'text' => (.213 * $rgba[1] . .715 * $rgba[2] . .072 * $rgba[3] > 127.5) ? 'inherit' : 'white'
+			'normal' => 'rgba(' . $rgba[0] . ',' . $rgba[1] . ',' . $rgba[2] . ',' . $alpha . ')',
+			'darken' => 'rgba(' . ($rgba[0] - 20) . ',' . ($rgba[1] - 20) . ',' . ($rgba[2] - 20) . ',' . $alpha . ')',
+			'veryDarken' => 'rgba(' . ($rgba[0] - 25) . ',' . ($rgba[1] - 25) . ',' . ($rgba[2] - 25) . ',' . $alpha . ')',
+			'text' => (.213 * $rgba[0] . .715 * $rgba[1] . .072 * $rgba[2] > 127.5) ? 'inherit' : 'white'
 		];
 	}
 
@@ -678,7 +679,14 @@ class template {
 			helper::sprintAttributes($attributes)
 		);
 		// Champs cachés contenant les nombres
-		$html .= '<input type="hidden" value="' . $firstNumber . '"><input type="hidden" value="' . $secondNumber . '">';
+		$html .= self::input($nameId . 'FirstNumber', [
+			'type' => 'hidden',
+			'value' => $firstNumber
+		]);
+		$html .= self::input($nameId . 'SecondNumber', [
+			'type' => 'hidden',
+			'value' => $secondNumber
+		]);
 		// Retourne le html
 		return $html;
 	}
@@ -714,6 +722,27 @@ class template {
 		]);
 		// Retourne le html
 		return $html;
+	}
+
+	/**
+	 * Crée une palette de couleur
+	 * @param string $nameId Nom et id
+	 * @param array $attributes Définition des attributs ($key => $value)
+	 * @return string
+	 */
+	public static function colorPicker($nameId, array $attributes = []) {
+		// Attributs par défaut
+		$attributes = array_merge([
+			'label' => '',
+			'value' => ''
+		], $attributes);
+		// Retourne le html
+		return self::input($nameId, [
+			'class' => 'colorPicker',
+			'label' => $attributes['label'],
+			'value' => $attributes['value'],
+			'readonly' => true
+		]);
 	}
 
 	/**
