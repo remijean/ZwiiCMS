@@ -39,6 +39,7 @@ h6 {
 	font-weight: normal;
 }
 h1 {
+	margin-top: 0 !important;
 	font-size: 1.5em;
 }
 h2 {
@@ -110,6 +111,29 @@ img[align='right'] {
 }
 #notifications .error {
 	background: #F3674A;
+}
+
+/* Lightbox */
+.lightboxOverlay {
+	padding: 20px;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background: rgba(0, 0, 0, .7);
+	z-index: 100;
+	text-align: center;
+}
+.lightbox {
+	margin-top: 80px;
+	display: inline-block;
+	text-align: left;
+	padding: 20px;
+	background: #FFF;
+	max-width: 600px;
+	width: 100%;
+	position: relative;
 }
 
 /* Container */
@@ -195,7 +219,7 @@ nav a:hover {
 
 /* Contenu */
 section {
-	margin: 20px;
+	padding: 20px;
 }
 
 /* Bas du site */
