@@ -484,7 +484,8 @@ class helper {
 	 * @return array
 	 */
 	public static function colorVariants($rgba) {
-		$rgba = explode(',', explode('(', $rgba)[1]);
+		preg_match('#\(+(.*)\)+#', $rgba, $matches);
+		$rgba = explode(',', $matches[1]);
 		$alpha = isset($rgba[3]) ? $rgba[3] : 1;
 		return [
 			'normal' => 'rgba(' . $rgba[0] . ',' . $rgba[1] . ',' . $rgba[2] . ',' . $alpha . ')',

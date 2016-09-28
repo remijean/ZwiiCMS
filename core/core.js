@@ -47,6 +47,44 @@ function deleteNotification(notificationId) {
 }
 
 /**
+ * Crée un message de confirmation
+ */
+function confirm(confirmText, confirmCallback) {
+	// Crée le message de confirmation
+	var confirmId = Math.random().toString(36).substr(2, 5);
+	$("<div>")
+		.attr("id", confirmId + "Confirm")
+		.addClass("lightboxOverlay")
+		.css("z-index", 100 + $(".lightbox").length)
+		.append(
+			$("<div>").addClass("lightbox").append(
+				$("<div>").addClass("row").append(
+					$("<div>").addClass("col12").text(confirmText)
+				),
+				$("<div>").addClass("row").append(
+					$("<div>").addClass("col3 offset6").append(
+						$("<button>")
+							.text("Annuler")
+							.on("click", function() {
+								$("#" + confirmId + "Confirm").remove();
+							})
+					),
+					$("<div>").addClass("col3").append(
+						$("<button>")
+							.text("Confirmer")
+							.on("click", function() {
+								$("#" + confirmId + "Confirm").remove();
+								confirmCallback();
+							})
+					)
+				)
+			)
+		)
+		.appendTo("body");
+	return false;
+}
+
+/**
  * Routage des modules
  * @param data
  */
@@ -108,4 +146,14 @@ $(window).on("hashchange", function() {
 $(document).on("click", "button[type=submit]", function() {
 	router($(this).parents("form").serialize());
 	return false;
+});
+
+/**
+ * Confirmation avant déconnexion
+ */
+$(document).on("click", "#logoutLink", function() {
+	var logoutLink = $(this);
+	return confirm("Êtes-vous sûr de vouloir vous déconnecter ?", function() {
+		$(location).attr("href", logoutLink.attr("href"));
+	});
 });
