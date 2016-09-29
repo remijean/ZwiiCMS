@@ -4,7 +4,8 @@ class user extends common {
 
 	public $actions = [
 		'login' => self::RANK_VISITOR,
-		'logout' => self::RANK_MEMBER
+		'logout' => self::RANK_MEMBER,
+		'panel' => self::RANK_VISITOR
 	];
 
 	/**
@@ -24,22 +25,21 @@ class user extends common {
 				return [
 					'event' => true,
 					'hash' => implode('/', array_slice(explode('/', $this->getUrl()), 2)),
-					'notification' => 'Connexion réussie',
-					'state' => true
+					'notification' => 'Connexion réussie'
 				];
 			}
 			// Sinon notification d'échec
 			else {
 				return [
-					'notification' => 'Identifiant ou mot de passe incorrect'
+					'notification' => 'Identifiant ou mot de passe incorrect',
+					'state' => false
 				];
 			}
 		}
 		// Affichage du template
 		else {
 			return [
-				'view' => true,
-				'state' => true
+				'view' => true
 			];
 		}
 	}
@@ -53,9 +53,28 @@ class user extends common {
 		return [
 			'event' => true,
 			'hash' => implode('/', array_slice(explode('/', $this->getUrl()), 2)),
-			'notification' => 'Déconnexion réussie',
-			'state' => true
+			'notification' => 'Déconnexion réussie'
 		];
+	}
+
+	/**
+	 * panneau
+	 */
+	public function panel() {
+		if(
+			$this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE')])
+			AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'password']) === $this->getInput('ZWII_USER_PASSWORD', '_COOKIE')
+		) {
+			return [
+				'callable' => false,
+				'view' => true
+			];
+		}
+		else {
+			return [
+				'callable' => false
+			];
+		}
 	}
 
 }

@@ -36,7 +36,7 @@ abstract class common {
 		],
 		'page' => [
 			'accueil' => [
-				'content' => 'Contenu 1',
+				'content' => '<p>Trois utilisateurs de test (identifiant / mot de passe) :</p><ul><li>administrator / password</li><li>moderator / password</li><li>member / password</li></ul>',
 				'hideName' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
@@ -47,8 +47,8 @@ abstract class common {
 				'name' => 'Accueil',
 				'targetBlank' => false
 			],
-			'autre' => [
-				'content' => 'Contenu 2',
+			'exemple' => [
+				'content' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis scelerisque cursus ipsum vitae posuere. Morbi vel arcu eget massa varius pretium. Aliquam pretium ante quis odio vestibulum, in laoreet ligula tincidunt. In non elementum ante, non vulputate urna. Donec tempor at metus eget pharetra. Aliquam laoreet sapien quis ligula fringilla sodales auctor ut elit. Vestibulum pellentesque magna ut condimentum feugiat. Curabitur mattis molestie nunc nec porta. Nulla et tincidunt leo. In hac habitasse platea dictumst.</p><p>Integer sit amet varius nisl, in euismod est. Suspendisse mollis varius tellus nec fermentum. Nam id risus erat. Nunc rutrum, dui non scelerisque commodo, sapien purus luctus eros, in maximus nunc sem quis urna. Nam vitae ornare arcu, at viverra est. Praesent tincidunt accumsan tristique. In elementum, nibh non convallis semper, mauris eros consequat dui, vel mattis ante quam in leo. Aenean sed turpis ultrices, dignissim ipsum a, maximus dolor. Nunc sodales sollicitudin ex id consectetur. Nam at nulla velit.</p><p>Pellentesque lacus tellus, tristique volutpat scelerisque id, pharetra nec leo. Ut finibus tempor risus, sit amet laoreet turpis maximus a. Morbi tempor, tortor at dictum facilisis, ipsum enim molestie odio, eu congue ex dolor dictum purus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vulputate neque ac lectus lacinia viverra. Donec vulputate cursus purus, sed volutpat nisl ornare cursus. In nec metus aliquam, vehicula nibh eu, volutpat ex. Nullam nisi mauris, iaculis posuere interdum vitae, dignissim ac est. Ut non erat diam. Pellentesque id tempus metus. Praesent sem urna, viverra sit amet elit at, vulputate imperdiet ligula. Duis porttitor quis tellus sit amet aliquet. In venenatis odio enim, vel facilisis mauris tempus vel.</p><p>Nulla et convallis ligula. Etiam ut pharetra arcu. Sed mollis magna consectetur sapien eleifend ullamcorper. Praesent posuere arcu quis tempor dictum. Nullam hendrerit molestie risus et pulvinar. Curabitur in orci ut quam porta dictum. Phasellus orci arcu, accumsan vitae dapibus ut, vestibulum dignissim tellus. Ut iaculis in urna ac vestibulum. Ut euismod blandit nunc, interdum varius ex finibus quis. Vivamus tempor porttitor viverra. Mauris efficitur neque faucibus tellus viverra rhoncus.</p>',
 				'hideName' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
@@ -56,7 +56,7 @@ abstract class common {
 				'modulePosition' => 'bottom',
 				'parentPageId' => '',
 				'position' => 2,
-				'name' => 'Autre',
+				'name' => 'Exemple',
 				'targetBlank' => false
 			]
 		],
@@ -64,34 +64,48 @@ abstract class common {
 
 		],
 		'user' => [
-			'admin' => [
+			'administrator' => [
+				'name' => 'Administrator',
 				'password' => '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
 				'rank' => 3
+			],
+			'moderator' => [
+				'name' => 'Moderator',
+				'password' => '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
+				'rank' => 2
+			],
+			'member' => [
+				'name' => 'Member',
+				'password' => '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
+				'rank' => 1
 			]
 		],
 		'theme' => [
 			'background' => [
-				'attachment' => '',
-				'color' => 'rgb(232,232,232)',
+				'backgroundColor' => 'rgb(232,232,232)',
 				'image' => '',
-				'repeat' => ''
+				'imageAttachment' => '',
+				'imageRepeat' => ''
+			],
+			'button' => [
+				'backgroundColor' => 'rgb(71,123,184)',
 			],
 			'header' => [
-				'attachment' => '',
-				'color' => 'rgb(255,255,255)',
+				'backgroundColor' => 'rgb(255,255,255)',
 				'font' => 'Oswald',
+				'height' => '160px',
 				'image' => '',
-				'position' => '',
-				'repeat' => ''
-			],
-			'input' => [
-				'color' => ''
+				'imageAttachment' => '',
+				'imagePosition' => '',
+				'imageRepeat' => '',
+				'textAlign' => 'center',
+				'textColor' => 'rgb(85,85,85)'
 			],
 			'menu' => [
-				'align' => '',
-				'color' => 'rgb(71,123,184)',
+				'backgroundColor' => 'rgb(71,123,184)',
 				'height' => '15px',
-				'position' => ''
+				'position' => '',
+				'textAlign' => 'left',
 			],
 			'site' => [
 				'width' => '1170px'
@@ -100,8 +114,8 @@ abstract class common {
 				'font' => 'Open+Sans'
 			],
 			'title' => [
-				'color' => 'rgb(255,255,255)',
-				'font' => 'Oswald'
+				'font' => 'Oswald',
+				'textColor' => 'rgb(71,123,184)'
 			]
 		]
 	];
@@ -325,10 +339,11 @@ class core extends common {
 	];
 	public static $language = [];
 	public $output = [
+		'callable' => true,
 		'hash' => null,
 		'notification' => '',
 		'event' => false,
-		'state' => false,
+		'state' => true,
 		'view' => ''
 	];
 
@@ -341,20 +356,29 @@ class core extends common {
 		// Crée le fichier de personnalisation
 		if(file_exists('data/theme.css') === false) {
 			// Polices de caractères
-			$css = '@import url("https://fonts.googleapis.com/css?family=' . $this->getData(['theme', 'text', 'font']) . '|' . $this->getData(['theme', 'title', 'font']) . '");';
+			$css = '@import url("https://fonts.googleapis.com/css?family=' . $this->getData(['theme', 'text', 'font']) . '|' . $this->getData(['theme', 'title', 'font']) . '|' . $this->getData(['theme', 'header', 'font']) . '");';
 			// Couleur du background
-			$color = helper::colorVariants($this->getData(['theme', 'background', 'color']));
+			$color = helper::colorVariants($this->getData(['theme', 'background', 'backgroundColor']));
 			$css .= 'body{background-color:' . $color['normal'] . '}';
 			// Couleurs de la bannière
-			$color = helper::colorVariants($this->getData(['theme', 'header', 'color']));
+			$color = helper::colorVariants($this->getData(['theme', 'header', 'backgroundColor']));
 			$css .= 'header{background-color:' . $color['normal'] . '}';
-			$css .= 'header h1{color:' . $color['text'] . '}';
+			// Couleurs du texte de la bannière
+			$color = helper::colorVariants($this->getData(['theme', 'header', 'textColor']));
+			$css .= 'header h1{color:' . $color['normal'] . '}';
 			// Couleurs du menu
-			$color = helper::colorVariants($this->getData(['theme', 'menu', 'color']));
+			$color = helper::colorVariants($this->getData(['theme', 'menu', 'backgroundColor']));
 			$css .= 'nav{background-color:' . $color['normal'] . '}';
 			$css .= 'nav a{color:' . $color['text'] . '}';
 			$css .= 'nav a:hover{background-color:' . $color['darken'] . '}';
-			$css .= 'nav a:target{background-color:' . $color['veryDarken'] . '}';
+			$css .= 'nav a.target{background-color:' . $color['veryDarken'] . '}';
+			// Couleur des boutons
+			$color = helper::colorVariants($this->getData(['theme', 'button', 'backgroundColor']));
+			$css .= 'button{background-color:' . $color['normal'] . ';color:' . $color['text'] . '}';
+			$css .= 'button:hover{background-color:' . $color['darken'] . '}';
+			// Couleur des titres
+			$color = helper::colorVariants($this->getData(['theme', 'title', 'textColor']));
+			$css .= 'h1,h2,h3,h4,h5,h6{color:' . $color['normal'] . '}';
 			// Polices
 			$css .= 'body{font-family:"' . $this->fonts[$this->getData(['theme', 'text', 'font'])] . '",sans-serif}';
 			$css .= 'h1,h2,h3,h4,h5,h6{font-family:"' . $this->fonts[$this->getData(['theme', 'title', 'font'])] . '",sans-serif}';
@@ -366,6 +390,12 @@ class core extends common {
 			$css .= '.container{max-width:' . $this->getData(['theme', 'site', 'width']) . '}';
 			// Hauteur du menu
 			$css .= 'nav a{padding-top:' . $this->getData(['theme', 'menu', 'height']) . ';padding-bottom:' . $this->getData(['theme', 'menu', 'height']) . '}';
+			// Alignement du contenu du menu
+			$css .= 'nav{text-align:' . $this->getData(['theme', 'menu', 'textAlign']) . '}';
+			// Hauteur du haut de page
+			$css .= 'header{height:' . $this->getData(['theme', 'header', 'height']) . ';line-height:' . $this->getData(['theme', 'header', 'height']) . '}';
+			// Alignement du contenu du haut de page
+			$css .= 'header{text-align:' . $this->getData(['theme', 'header', 'textAlign']) . '}';
 			// Enregistre la personnalisation
 			file_put_contents('data/theme.css', $css);
 		}
@@ -396,9 +426,7 @@ class core extends common {
 		$moduleId = $this->getUrl(0);
 		if(array_key_exists($moduleId, $this->getData(['page']))) {
 			// Contenu de la page
-			$pageView =
-				'<h1>' . $this->getData(['page', $this->getUrl(0), 'name']) . '</h1>' .
-				$this->getData(['page', $this->getUrl(0), 'content']);
+			$pageView = '<h1>' . $this->getData(['page', $this->getUrl(0), 'name']) . '</h1>' . $this->getData(['page', $this->getUrl(0), 'content']);
 			// Module de la page
 			$moduleId = $this->getData(['page', $this->getUrl(0), 'moduleId']);
 		}
@@ -406,44 +434,54 @@ class core extends common {
 		$moduleView = '';
 		$moduleEvent = '';
 		if($moduleId) {
-			$module = $moduleId;
-			$module = new $module;
-			// Éxecute l'action demandée en fonction du rang de l'utilisateur
-			if(
-				array_key_exists($this->getUrl(1), $module->actions)
-				AND (
-					$module->actions[$this->getUrl(1)] === 0
-					OR (
-						$this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE')])
-						AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'password']) === $this->getInput('ZWII_USER_PASSWORD', '_COOKIE')
-						AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'rank']) >= $module->actions[$this->getUrl(1)]
+			// Instancie le module si la classe existe
+			if(class_exists($moduleId)) {
+				$module = new $moduleId;
+				// Action par défaut
+				$action = $this->getUrl(1) ? $this->getUrl(1) : 'index';
+				// Éxecute l'action demandée en fonction du rang de l'utilisateur
+				if(
+					array_key_exists($action, $module->actions)
+					AND (
+						$module->actions[$action] === 0
+						OR (
+							$this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE')])
+							AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'password']) === $this->getInput('ZWII_USER_PASSWORD', '_COOKIE')
+							AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'rank']) >= $module->actions[$action]
+						)
 					)
-				)
-			) {
-				// Fusionne les données de sortie du coeur avec celles de l'action demandée
-				$this->output = $module->{$this->getUrl(1)}() + $this->output;
-				// Importe la vue de l'action
-				if($this->output['view']) {
-					$viewPath = __DIR__ . '/../module/' . $moduleId . '/view/' . $this->getUrl(1) . '.php';
-					if(file_exists($viewPath)) {
-						ob_start();
-						include $viewPath;
-						$moduleView = ob_get_clean();
+				) {
+					// Fusionne les données en sortie du coeur avec celles de l'action demandée
+					$this->output = $module->$action() + $this->output;
+					// Traite les données en sortie si l'action peut être appelée
+					// Importe la vue de l'action
+					if($this->output['view']) {
+						$viewPath = __DIR__ . '/../module/' . $moduleId . '/view/' . $action . '.php';
+						if(file_exists($viewPath)) {
+							ob_start();
+							include $viewPath;
+							$moduleView = ob_get_clean();
+						}
+					}
+					// Importe l'événement de l'action
+					if($this->output['event']) {
+						$eventPath = __DIR__ . '/../module/' . $moduleId . '/event/' . $action . '.js';
+						if(file_exists($eventPath)) {
+							ob_start();
+							include $eventPath;
+							$moduleEvent = '<script>' . ob_get_clean() . '</script>';
+						}
 					}
 				}
-				// Importe l'événement de l'action
-				if($this->output['event']) {
-					$eventPath = __DIR__ . '/../module/' . $moduleId . '/event/' . $this->getUrl(1) . '.js';
-					if(file_exists($eventPath)) {
-						ob_start();
-						include $eventPath;
-						$moduleEvent = '<script>' . ob_get_clean() . '</script>';
-					}
+				// Si le rang est insuffisant, redirection sur l'interface de connexion
+				else {
+					$this->output['hash'] = '#user/login/' . $this->getUrl();
 				}
 			}
-			// Si le rang est insuffisant, redirection sur l'interface de connexion
+			// Sinon page d'erreur
 			else {
-				$this->output['hash'] = '#user/login/' . $this->getUrl();
+				// TODO ajouter le header d'erreur (comment faire en ajax ?)
+				$pageView = '<h1>' . helper::translate('Erreur 404') . '</h1><p>' . helper::translate('La page demandée est introuvable.') . '</p>';
 			}
 		}
 		// Met en forme la vue
@@ -508,10 +546,11 @@ class helper {
 	 * Affiche un icône
 	 * @param string $ico Classe de l'icône
 	 * @param bool $margin Ajoute un margin autour de l'icône
+	 * @param bool $margin Ajoute une animation a l'icône
 	 * @return string
 	 */
-	public static function ico($ico, $margin = false) {
-		return '<span class="zwiico-' . $ico . ($margin ? ' zwiico-margin' : '') . '"></span>';
+	public static function ico($ico, $margin = false, $animate = false) {
+		return '<span class="zwiico-' . $ico . ($margin ? ' zwiico-margin' : '') . ($animate ? ' animate-spin' : '') . '"></span>';
 	}
 
 	/**
@@ -579,33 +618,6 @@ class helper {
 }
 
 class layout extends common {
-	
-	/**
-	 * Génère le lien de connexion
-	 * @return string
-	 */
-	public function loginLink() {
-		$class = '';
-		if(
-			$this->getUrl(1) === 'login'
-			OR $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE')])
-		) {
-			$class = 'displayNone';
-		}
-		return '<a id="loginLink" href="" class="' . $class . '">Connexion</a>';
-	}
-
-	/**
-	 * Génère le lien de déconnexion
-	 * @return string
-	 */
-	public function logoutLink() {
-		$class = '';
-		if($this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE')]) === null) {
-			$class = 'displayNone';
-		}
-		return '<a id="logoutLink" href="" class="' . $class . '">Déconnexion</a>';
-	}
 
 	/**
 	 * Génère le menu
@@ -614,9 +626,9 @@ class layout extends common {
 	public function menu() {
 		$items = '';
 		foreach($this->getHierarchy() as $parentId => $childIds) {
-			$items .= '<li><a href="#' . $parentId . '" id="' . $parentId . '">' . $this->getData(['page', $parentId, 'name']) . '</a><ul>';
+			$items .= '<li><a href="#' . $parentId . '" data-id="' . $parentId . '">' . $this->getData(['page', $parentId, 'name']) . '</a><ul>';
 			foreach($childIds as $childId) {
-				$items .= '<li><a href="#' . $childId . '" id="' . $childId . '">' . $this->getData(['page', $childId, 'name']) . '</a></li>';
+				$items .= '<li><a href="#' . $childId . '" data-id="' . $childId . '">' . $this->getData(['page', $childId, 'name']) . '</a></li>';
 			}
 			$items .= '</ul></li>';
 		}

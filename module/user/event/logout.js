@@ -1,2 +1,2 @@
-$("#loginLink").show();
-$("#logoutLink").hide();
+// Supprime le panneau
+deletePanel();

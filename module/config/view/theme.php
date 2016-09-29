@@ -1,12 +1,14 @@
 <style>
-	#site,
-	header,
-	nav,
-	section,
-	footer {
+	.themeRelative #panel,
+	.themeRelative #site,
+	.themeRelative header,
+	.themeRelative nav,
+	.themeRelative section,
+	.themeRelative footer {
 		position: relative;
 	}
-	#site {
+	.themeRelative #panel,
+	.themeRelative #site {
 		z-index: 20;
 	}
 	.themeOverlay {
@@ -115,15 +117,20 @@
 	$("<div>").addClass("themeOverlay").data("zone", "nav").appendTo("nav");
 	$("<div>").addClass("themeOverlay").data("zone", "section").appendTo("section");
 	$("<div>").addClass("themeOverlay").data("zone", "footer").appendTo("footer");
+	// Ajout des positions relatives pour empêcher les overlays de passer au dessus des éléments
+	$("body").addClass("themeRelative");
 	// Affiche les options d'éditions
 	$(".themeOverlay").on("click", function() {
-		$(".themeOverlay").fadeOut();
+		// Cache les overlays et supprime les positions relatives (sinon les palettes de couleurs ne fonctionnent pas)
+		$(".themeOverlay").fadeOut(function() {
+			$("body").removeClass("themeRelative");
+		});
 		var themeOverlay = $(this);
 		$("#themeHome").fadeOut(function() {
 			$(".themeOptions[data-zone=" + themeOverlay.data("zone") + "]").fadeIn();
 		});
 	});
-//	// Affiche/Cache les options de l'image du fond
+//	// Affiche / Cache les options de l'image du fond
 //	$("#backgroundImage").on("change", function() {
 //		$("#backgroundImageOptions").slideToggle($(this).val() === "");
 //	}).trigger("change");

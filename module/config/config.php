@@ -39,8 +39,7 @@ class config extends common {
 		// Affichage du template
 		else {
 			return [
-				'view' => true,
-				'state' => true
+				'view' => true
 			];
 		}
 	}
