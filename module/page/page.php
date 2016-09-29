@@ -25,15 +25,13 @@ class page extends common {
 			]);
 			return [
 				'hash' => '#' . $pageId,
-				'notification' => 'Page créée avec succès',
-				'state' => true,
+				'notification' => 'Page créée avec succès'
 			];
 		}
 		// Affichage du template
 		else {
 			return [
-				'view' => true,
-				'state' => true
+				'view' => true
 			];
 		}
 	}
@@ -46,13 +44,13 @@ class page extends common {
 			$this->deleteData(['page', $this->getUrl(2)]);
 			return [
 				'hash' => '#',
-				'notification' => 'Page supprimée avec succès',
-				'state' => true
+				'notification' => 'Page supprimée avec succès'
 			];
 		}
 		else {
 			return [
-				'notification' => 'Page introuvable'
+				'notification' => 'Page introuvable',
+				'state' => false
 			];
 		}
 	}
@@ -80,21 +78,20 @@ class page extends common {
 				]);
 				return [
 					'hash' => '#' . $newId,
-					'notification' => 'Page modifiée avec succès',
-					'state' => true
+					'notification' => 'Page modifiée avec succès'
 				];
 			}
 			// Affichage du template
 			else {
 				return [
-					'state' => true,
 					'view' => true
 				];
 			}
 		}
 		else {
 			return [
-				'notification' => 'Page introuvable'
+				'notification' => 'Page introuvable',
+				'state' => false
 			];
 		}
 	}

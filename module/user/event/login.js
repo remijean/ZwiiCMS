@@ -1,2 +1,2 @@
-$("#loginLink").hide();
-$("#logoutLink").show();
+// Ajoute le panneau
+addPanel(true);
