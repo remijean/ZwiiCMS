@@ -7,66 +7,76 @@
 	.themeRelative footer {
 		position: relative;
 	}
-	.themeRelative #panel,
+	.themeRelative #panel {
+		z-index: 11; /* +1 à cause des tooltips */
+	}
 	.themeRelative #site {
-		z-index: 20;
+		z-index: 10;
 	}
 	.themeOverlay {
+		-webkit-transition: background .3s;
+		transition: background .3s;
 		position: absolute;
 		top: 0;
 		right: 0;
 		bottom: 0;
 		left: 0;
-		z-index: 10;
+		z-index: 5;
 		cursor: pointer;
 	}
 	.themeOverlay:hover {
 		background: rgba(103, 198, 114, .7);
 	}
-	.themeOptions {
+	.themeOptions,
+	#themeBodyBackgroundImageOptions {
 		display: none;
 	}
 </style>
 <h1>Personnalisation</h1>
 <p id="themeHome">Déplacez votre curseur au dessus d'une zone, puis cliquez dessus afin de d'accéder à ses options de personnalisation.</p>
-<div class="themeOptions" data-zone="section">
+<div class="themeOptions" data-zone="body">
+	<h2>Options de l'arrière plan</h2>
 	<form>
-		<h2>Options du site</h2>
+		<?php echo template::input('action', [
+			'id' => 'actionBody',
+			'type' => 'hidden',
+			'value' => 'body'
+		]); ?>
 		<div class="row">
-			<div class="col4">
+			<div class="col6">
 				<div class="block">
-					<h4>Couleurs et image</h4>
+					<h4>Couleur</h4>
+					<?php echo template::input('themeBodyBackgroundColor', [
+						'class' => 'colorPicker',
+						'label' => 'Couleur du fond',
+						'readonly' => true,
+						'value' => $this->getData(['theme', 'body', 'backgroundColor'])
+					]); ?>
+				</div>
+			</div>
+			<div class="col6">
+				<div class="block">
+					<h4>Image</h4>
 					<div class="row">
-						<div class="col6">
-							<?php echo template::colorPicker('themeBackgroundColor', [
-								'label' => 'Couleur du fond',
-								'value' => $this->getData(['theme', 'background', 'color'])
-							]); ?>
-						</div>
-						<div class="col6">
-							<?php echo template::colorPicker('themeTitleColor', [
-								'label' => 'Couleur des titres',
-								'value' => $this->getData(['theme', 'title', 'color'])
+						<div class="col12">
+							<?php echo template::file('themeBodyBackgroundImage', [
+								'label' => 'Image du fond',
+								'value' => $this->getData(['theme', 'body', 'backgroundImage'])
 							]); ?>
 						</div>
 					</div>
-					<?php echo template::select('themeBackgroundImage', [], [
-						'label' => 'Image du fond',
-						'help' => 'Seule une image de format .png, .gif, .jpg ou .jpeg du gestionnaire de fichiers est acceptée.',
-						'selected' => $this->getData(['theme', 'background', 'image'])
-					]); ?>
-					<div id="backgroundImageOptions">
+					<div id="themeBodyBackgroundImageOptions">
 						<div class="row">
 							<div class="col6">
 								<?php echo template::select('themeBackgroundRepeat', $module::$repeats, [
 									'label' => 'Répétition',
-									'selected' => $this->getData(['theme', 'background', 'repeat'])
+									'selected' => $this->getData(['theme', 'body', 'repeat'])
 								]); ?>
 							</div>
 							<div class="col6">
 								<?php echo template::select('themeBackgroundPosition', $module::$positions, [
 									'label' => 'Alignement',
-									'selected' => $this->getData(['theme', 'background', 'position'])
+									'selected' => $this->getData(['theme', 'body', 'position'])
 								]); ?>
 							</div>
 						</div>
@@ -74,9 +84,101 @@
 							<div class="col6">
 								<?php echo template::select('themeBackgroundAttachment', $module::$attachments, [
 									'label' => 'Position',
-									'selected' => $this->getData(['theme', 'background', 'attachment'])
+									'selected' => $this->getData(['theme', 'body', 'attachment'])
 								]); ?>
 							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col2 offset8">
+				<?php echo template::button('themeBack', [
+					'id' => 'themeBackBody',
+					'value' => helper::ico('left', 'right') . 'Annuler'
+				]); ?>
+			</div>
+			<div class="col2">
+				<?php echo template::button('themeSave', [
+					'id' => 'themeSaveBody',
+					'type' => 'submit',
+					'value' => helper::ico('check', 'right') . 'Enregistrer'
+				]); ?>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="themeOptions" data-zone="header">
+	<h2>Options de la bannière</h2>
+	<form>
+		<?php echo template::input('action', [
+			'id' => 'actionHeader',
+			'type' => 'hidden',
+			'value' => 'header'
+		]); ?>
+		<div class="row">
+			<div class="col2 offset8">
+				<?php echo template::button('themeBack', [
+					'id' => 'themeBackHeader',
+					'value' => helper::ico('left', 'right') . 'Annuler'
+				]); ?>
+			</div>
+			<div class="col2">
+				<?php echo template::button('themeSave', [
+					'id' => 'themeSaveHeader',
+					'type' => 'submit',
+					'value' => helper::ico('check', 'right') . 'Enregistrer'
+				]); ?>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="themeOptions" data-zone="menu">
+	<h2>Options du menu</h2>
+	<form>
+		<?php echo template::input('action', [
+			'id' => 'actionMenu',
+			'type' => 'hidden',
+			'value' => 'menu'
+		]); ?>
+		<div class="row">
+			<div class="col2 offset8">
+				<?php echo template::button('themeBack', [
+					'id' => 'themeBackFooter',
+					'value' => helper::ico('left', 'right') . 'Annuler'
+				]); ?>
+			</div>
+			<div class="col2">
+				<?php echo template::button('themeSave', [
+					'id' => 'themeSaveFooter',
+					'type' => 'submit',
+					'value' => helper::ico('check', 'right') . 'Enregistrer'
+				]); ?>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="themeOptions" data-zone="site">
+	<form>
+		<?php echo template::input('action', [
+			'id' => 'actionSite',
+			'type' => 'hidden',
+			'value' => 'site'
+		]); ?>
+		<h2>Options du site</h2>
+		<div class="row">
+			<div class="col4">
+				<div class="block">
+					<h4>Couleurs et image</h4>
+					<div class="row">
+						<div class="col6">
+							<?php echo template::input('themeTitleColor', [
+								'class' => 'colorPicker',
+								'label' => 'Couleur des titres',
+								'readonly' => true,
+								'value' => $this->getData(['theme', 'title', 'color'])
+							]); ?>
 						</div>
 					</div>
 				</div>
@@ -98,42 +200,88 @@
 		<div class="row">
 			<div class="col2 offset8">
 				<?php echo template::button('themeBack', [
-					'value' => 'Annuler'
+					'id' => 'themeBackFooter',
+					'value' => helper::ico('left', 'right') . 'Annuler'
 				]); ?>
 			</div>
 			<div class="col2">
 				<?php echo template::button('themeSave', [
+					'id' => 'themeSaveFooter',
 					'type' => 'submit',
-					'value' => 'Enregistrer'
+					'value' => helper::ico('check', 'right') . 'Enregistrer'
+				]); ?>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="themeOptions" data-zone="footer">
+	<h2>Options du bas de page</h2>
+	<form>
+		<?php echo template::input('action', [
+			'id' => 'actionFooter',
+			'type' => 'hidden',
+			'value' => 'footer'
+		]); ?>
+		<div class="row">
+			<div class="col2 offset8">
+				<?php echo template::button('themeBack', [
+					'id' => 'themeBackFooter',
+					'value' => helper::ico('left', 'right') . 'Annuler'
+				]); ?>
+			</div>
+			<div class="col2">
+				<?php echo template::button('themeSave', [
+					'id' => 'themeSaveFooter',
+					'type' => 'submit',
+					'value' => helper::ico('check', 'right') . 'Enregistrer'
 				]); ?>
 			</div>
 		</div>
 	</form>
 </div>
 <script>
+	// Active les palettes de couleurs
+	$(function() {
+		$(".colorPicker").colorPicker();
+	});
 	// Ajout des overlays
 	$("<div>").addClass("themeOverlay").data("zone", "body").appendTo("body");
 	$("<div>").addClass("themeOverlay").data("zone", "header").appendTo("header");
-	$("<div>").addClass("themeOverlay").data("zone", "nav").appendTo("nav");
-	$("<div>").addClass("themeOverlay").data("zone", "section").appendTo("section");
+	$("<div>").addClass("themeOverlay").data("zone", "menu").appendTo("nav");
+	$("<div>").addClass("themeOverlay").data("zone", "site").appendTo("section");
 	$("<div>").addClass("themeOverlay").data("zone", "footer").appendTo("footer");
-	// Ajout des positions relatives pour empêcher les overlays de passer au dessus des éléments
+	// Ajout d'une position relative aux éléments pour empêcher l'overlay du body de recouvrir le reste du site
 	$("body").addClass("themeRelative");
+	// Affiche le choix de la zone
+	$("button[name=themeBack]").on("click", function() {
+		$(".themeOptions:visible").fadeOut(function() {
+			$("#themeHome").fadeIn(function() {
+				$(".themeOverlay").show();
+				$("body").addClass("themeRelative");
+			});
+		});
+	});
 	// Affiche les options d'éditions
 	$(".themeOverlay").on("click", function() {
-		// Cache les overlays et supprime les positions relatives (sinon les palettes de couleurs ne fonctionnent pas)
-		$(".themeOverlay").fadeOut(function() {
-			$("body").removeClass("themeRelative");
+		$(".themeOverlay:visible").fadeOut(function() {
+			$("body").removeClass("themeRelative"); // Supprime la position relative sinon le colorPicker ne fonctionne pas
 		});
 		var themeOverlay = $(this);
 		$("#themeHome").fadeOut(function() {
+			console.log(3);
 			$(".themeOptions[data-zone=" + themeOverlay.data("zone") + "]").fadeIn();
 		});
 	});
-//	// Affiche / Cache les options de l'image du fond
-//	$("#backgroundImage").on("change", function() {
-//		$("#backgroundImageOptions").slideToggle($(this).val() === "");
-//	}).trigger("change");
+	// Affiche / Cache les options de l'image du fond
+	$("#themeBodyBackgroundImage").on("change", function() {
+		if($(this).val()) {
+			$("#themeBodyBackgroundImageOptions").fadeIn();
+		}
+		else {
+			$("#themeBodyBackgroundImageOptions").fadeOut();
+		}
+	}).trigger("change");
+
 //	// Aperçu en direct
 //	$("themeForm").on("change", function() {
 //		// Supprime l'ancien css
