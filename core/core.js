@@ -53,34 +53,47 @@ function deleteNotification(id) {
 /**
  * Ajoute un message de confirmation
  */
-function addConfirm(test, callback) {
-	// Crée le message de confirmation
+function confirm(text, callback) {
 	var id = Math.random().toString(36).substr(2, 5);
+	addLightbox(id, function() {
+		return $("<div>").append(
+			$("<div>").addClass("row").append(
+				$("<div>").addClass("col12").text(text)
+			),
+			$("<div>").addClass("row").append(
+				$("<div>").addClass("col3 offset6").append(
+					$("<button>")
+						.text("Annuler")
+						.on("click", function() {
+							deleteLightbox(id);
+						})
+				),
+				$("<div>").addClass("col3").append(
+					$("<button>")
+						.text("Confirmer")
+						.on("click", function() {
+							deleteLightbox(id);
+							callback();
+						})
+				)
+			)
+		)
+	});
+	return false;
+}
+
+/**
+ * Ajoute une lightbox
+ */
+function addLightbox(id, content) {
 	$("<div>")
-		.attr("id", id + "Confirm")
+		.attr("id", id + "Lightbox")
 		.addClass("lightboxOverlay")
 		.css("z-index", 100 + $(".lightbox").length)
 		.append(
 			$("<div>").addClass("lightbox").append(
 				$("<div>").addClass("row").append(
-					$("<div>").addClass("col12").text(test)
-				),
-				$("<div>").addClass("row").append(
-					$("<div>").addClass("col3 offset6").append(
-						$("<button>")
-							.text("Annuler")
-							.on("click", function() {
-								deleteConfirm(id);
-							})
-					),
-					$("<div>").addClass("col3").append(
-						$("<button>")
-							.text("Confirmer")
-							.on("click", function() {
-								deleteConfirm(id);
-								callback();
-							})
-					)
+					$("<div>").addClass("col12").append(content)
 				)
 			)
 		)
@@ -90,11 +103,11 @@ function addConfirm(test, callback) {
 }
 
 /**
- * Supprime un message de confirmation
+ * Supprime une lightbox
  * @param id
  */
-function deleteConfirm(id) {
-	$("#" + id + "Confirm").fadeOut(function() {
+function deleteLightbox(id) {
+	$("#" + id + "Lightbox").fadeOut(function() {
 		$(this).remove();
 	});
 }
@@ -110,7 +123,7 @@ function addPanel(effect) {
 		success: function(output) {
 			if(output.view) {
 				var panel = $("<div>").attr("id", "panel").html(output.view).prependTo("body");
-				effect ? panel.slideDown() : panel.show();
+				effect ? panel.fadeIn() : panel.show();
 				$("#loginLink").hide();
 			}
 		},
@@ -126,7 +139,7 @@ addPanel();
  * Supprime le panneau
  */
 function deletePanel() {
-	$("#panel").slideUp(function() {
+	$("#panel").fadeOut(function() {
 		$(this).remove();
 		$("#loginLink").show();
 	});
@@ -166,11 +179,17 @@ function router(data) {
 				if(output.hash !== null) {
 					window.location.hash = output.hash;
 				}
+				// Ajoute / Supprime les librairies
+				$(".moduleVendor").remove();
+				var vendorLength = output.vendor.length;
+				if(vendorLength) {
+					for(var i = 0; i < vendorLength; i++) {
+						$("<script>").addClass("moduleVendor").attr("src", output.vendor[i]).prependTo("body");
+					}
+				}
 				// Surbrillance de la page dans le menu
 				$("nav a.target").removeClass("target");
 				$("nav a[data-id='" + hash + "']").addClass("target");
-				// Active les palettes de couleurs
-				$(".colorPicker").colorPicker();
 			}
 			else {
 				addNotification("Données en sortie bloquées", false);

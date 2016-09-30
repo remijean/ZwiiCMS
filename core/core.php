@@ -81,7 +81,7 @@ abstract class common {
 			]
 		],
 		'theme' => [
-			'background' => [
+			'body' => [
 				'backgroundColor' => 'rgb(232,232,232)',
 				'image' => '',
 				'imageAttachment' => '',
@@ -344,6 +344,7 @@ class core extends common {
 		'notification' => '',
 		'event' => false,
 		'state' => true,
+		'vendor' => [],
 		'view' => ''
 	];
 
@@ -358,7 +359,7 @@ class core extends common {
 			// Polices de caractères
 			$css = '@import url("https://fonts.googleapis.com/css?family=' . $this->getData(['theme', 'text', 'font']) . '|' . $this->getData(['theme', 'title', 'font']) . '|' . $this->getData(['theme', 'header', 'font']) . '");';
 			// Couleur du background
-			$color = helper::colorVariants($this->getData(['theme', 'background', 'backgroundColor']));
+			$color = helper::colorVariants($this->getData(['theme', 'body', 'backgroundColor']));
 			$css .= 'body{background-color:' . $color['normal'] . '}';
 			// Couleurs de la bannière
 			$color = helper::colorVariants($this->getData(['theme', 'header', 'backgroundColor']));
@@ -384,7 +385,7 @@ class core extends common {
 			$css .= 'h1,h2,h3,h4,h5,h6{font-family:"' . $this->fonts[$this->getData(['theme', 'title', 'font'])] . '",sans-serif}';
 			$css .= 'header{font-family:"' . $this->fonts[$this->getData(['theme', 'header', 'font'])] . '",sans-serif}';
 			// Images
-			$css .= 'body{background-image:url("' . $this->getData(['theme', 'background', 'image']) . '")}';
+			$css .= 'body{background-image:url("' . $this->getData(['theme', 'body', 'image']) . '")}';
 			$css .= 'header{background-image:url("' . $this->getData(['theme', 'header', 'image']) . '")}';
 			// Largeur du site
 			$css .= '.container{max-width:' . $this->getData(['theme', 'site', 'width']) . '}';
@@ -453,7 +454,6 @@ class core extends common {
 				) {
 					// Fusionne les données en sortie du coeur avec celles de l'action demandée
 					$this->output = $module->$action() + $this->output;
-					// Traite les données en sortie si l'action peut être appelée
 					// Importe la vue de l'action
 					if($this->output['view']) {
 						$viewPath = __DIR__ . '/../module/' . $moduleId . '/view/' . $action . '.php';
@@ -470,6 +470,12 @@ class core extends common {
 							ob_start();
 							include $eventPath;
 							$moduleEvent = '<script>' . ob_get_clean() . '</script>';
+						}
+					}
+					// Traite le lien vers les librairies
+					if($this->output['vendor']) {
+						foreach($this->output['vendor'] as &$vendor) {
+							$vendor = 'module/' . $moduleId . '/vendor/' . $vendor;
 						}
 					}
 				}
@@ -545,12 +551,12 @@ class helper {
 	/**
 	 * Affiche un icône
 	 * @param string $ico Classe de l'icône
-	 * @param bool $margin Ajoute un margin autour de l'icône
-	 * @param bool $margin Ajoute une animation a l'icône
+	 * @param string $margin Ajoute un margin autour de l'icône (choix : left, right, all)
+	 * @param bool $animate Ajoute une animation a l'icône
 	 * @return string
 	 */
-	public static function ico($ico, $margin = false, $animate = false) {
-		return '<span class="zwiico-' . $ico . ($margin ? ' zwiico-margin' : '') . ($animate ? ' animate-spin' : '') . '"></span>';
+	public static function ico($ico, $margin = '', $animate = false) {
+		return '<span class="zwiico-' . $ico . ($margin ? ' zwiico-margin-' . $margin : '') . ($animate ? ' animate-spin' : '') . '"></span>';
 	}
 
 	/**
@@ -738,27 +744,6 @@ class template {
 	}
 
 	/**
-	 * Crée une palette de couleur
-	 * @param string $nameId Nom et id
-	 * @param array $attributes Définition des attributs ($key => $value)
-	 * @return string
-	 */
-	public static function colorPicker($nameId, array $attributes = []) {
-		// Attributs par défaut
-		$attributes = array_merge([
-			'label' => '',
-			'value' => ''
-		], $attributes);
-		// Retourne le html
-		return self::input($nameId, [
-			'class' => 'colorPicker',
-			'label' => $attributes['label'],
-			'value' => $attributes['value'],
-			'readonly' => true
-		]);
-	}
-
-	/**
 	 * Crée un champ d'upload de fichier
 	 * @param string $nameId Nom et id
 	 * @param array $attributes Définition des attributs ($key => $value)
@@ -785,7 +770,7 @@ class template {
 		}
 		// Texte
 		$html .= sprintf(
-			'<label class="inputFile %s">' . helper::ico('download') . '<span class="inputFileLabel">' . helper::translate('Choisissez un fichier') . '</span><input type="file" %s></label>',
+			'<label class="inputFile %s">' . helper::ico('download', 'right') . '<span class="inputFileLabel">' . helper::translate('Choisissez un fichier') . '</span><input type="file" %s></label>',
 			$attributes['class'],
 			helper::sprintAttributes($attributes, ['class'])
 		);

@@ -39,7 +39,10 @@ class config extends common {
 		// Affichage du template
 		else {
 			return [
-				'view' => true
+				'view' => true,
+				'vendor' => [
+					'tinycolorpicker/tinycolorpicker.min.js'
+				]
 			];
 		}
 	}
