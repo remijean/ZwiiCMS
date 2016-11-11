@@ -13,8 +13,16 @@
  */
 
 /**
- * Initialisation du cms
+ * Vérification de la version de PHP
  */
+if(version_compare(PHP_VERSION, '5.4.0', '<')) {
+	exit('PHP 5.4+ requis !');
+}
+
+/**
+ * Initialisation de Zwii
+ */
+session_start();
 require 'core/core.php';
 $core = new core;
 spl_autoload_register('core::autoload');

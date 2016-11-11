@@ -1,10 +1,16 @@
-# Fichier de données
+# Fichiers temporaires
+core/tmp/*
+
+# Données
 data/data.json
 
-# Personnalisation du site
+# Thème
 data/theme.css
 
-# Dossiers vides dans GitHub
+# Fichiers uploadés
+data/upload/*
+
+# Autorise les dossiers vides dans GitHub
 !.gitkeep
 
 # Configuration de PHPStorm

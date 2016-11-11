@@ -3,46 +3,69 @@
 class config extends common {
 
 	public $actions = [
-		'theme' => self::RANK_ADMIN
-	];
-	public static $repeats = [
-		'none' => 'Ne pas répéter',
-		'x' => 'Sur l\'axe horizontal',
-		'y' => 'Sur l\'axe vertical',
-		'all' => 'Sur les deux axes'
-	];
-	public static $positions = [
-		'cover' => 'Remplir le fond',
-		'topLeft' => 'En haut à gauche',
-		'topCenter' => 'En haut au centre',
-		'topRight' => 'En haut à droite',
-		'centerLeft' => 'Au milieu à gauche',
-		'centerCenter' => 'Au milieu au centre',
-		'centerRight' => 'Au milieu à droite',
-		'bottomLeft' => 'En bas à gauche',
-		'bottomCenter' => 'En bas au centre',
-		'bottomRight' => 'En bas à droite'
-	];
-	public static $attachments = [
-		'scroll' => 'Normale',
-		'fixed' => 'Fixe'
+		'index' => self::RANK_ADMIN
 	];
 
 	/**
-	 * Personnalisation
+	 * Connexion
 	 */
-	public function theme() {
+	public function index() {
 		// Soumission du formulaire
 		if($this->isPost()) {
-
+			// Données de configuration
+			$this->setData([
+				'config',
+				[
+					'analyticsId' => $this->getInput('configAnalyticsId'),
+					'cookieConsent' => $this->getInput('configCookieConsent', helper::FILTER_BOOLEAN),
+					'favicon' => $this->getInput('configFavicon'),
+					'homePageId' => $this->getInput('configHomePageId', helper::FILTER_URL),
+					'language' => $this->getInput('configLanguage'),
+					'metaDescription' => $this->getInput('configMetaDescription'),
+					'social' => [
+						'facebookId' => $this->getInput('configSocialFacebookId'),
+						'googleplusId' => $this->getInput('configSocialGoogleplusId'),
+						'instagramId' => $this->getInput('configSocialInstagramId'),
+						'pinterestId' => $this->getInput('configSocialPinterestId'),
+						'twitterId' => $this->getInput('configSocialTwitterId'),
+						'youtubeId' => $this->getInput('configSocialYoutubeId')
+					],
+					'title' => $this->getInput('configTitle')
+				]
+			]);
+			$this->saveData();
+			// URL rewriting
+			if(empty(template::$notices)) {
+				// Active l'URL rewriting
+				$htaccess = file_get_contents('.htaccess');
+				$rewriteRule = explode('# URL rewriting', $htaccess);
+				if($this->getInput('rewrite', helper::FILTER_BOOLEAN)) {
+					if(empty($rewriteRule[1])) {
+						file_put_contents('.htaccess',
+							$htaccess . PHP_EOL .
+							'RewriteEngine on' . PHP_EOL .
+							'RewriteBase ' . helper::baseUrl(false, false) . PHP_EOL .
+							'RewriteCond %{REQUEST_FILENAME} !-f' . PHP_EOL .
+							'RewriteRule ^(.*)$ index.php?$1 [L]'
+						);
+					}
+				}
+				// Désactive l'URL rewriting
+				else if(empty($rewriteRule[1]) === false) {
+					file_put_contents('.htaccess', $rewriteRule[0] . '# URL rewriting');
+				}
+			}
+			return [
+				'redirect' => $this->getUrl(),
+				'notification' => 'Configuration enregistrée',
+				'state' => true
+			];
 		}
 		// Affichage du template
 		else {
 			return [
-				'view' => true,
-				'vendor' => [
-					'tinycolorpicker/tinycolorpicker.min.js'
-				]
+				'title' => 'Configuration',
+				'view' => true
 			];
 		}
 	}

@@ -1,2 +1,0 @@
-// Supprime le panneau
-deletePanel();
