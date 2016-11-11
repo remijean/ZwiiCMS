@@ -12,6 +12,7 @@ class sitemap extends common {
 	public function index() {
 		// Affichage du template
 		return [
+			'title' => 'Plan du site',
 			'view' => true
 		];
 	}

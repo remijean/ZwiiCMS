@@ -1,0 +1,2 @@
+<p class="textAlignCenter"><?php echo template::ico('mimi', '', false, '7em'); ?></p>
+<p class="textAlignCenter">Déplacez votre curseur au dessus d'une zone, puis cliquez dessus afin d'accéder à ses options de personnalisation.</p>
