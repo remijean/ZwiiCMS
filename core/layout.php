@@ -9,7 +9,7 @@
 	<?php $layout->showFavicon(); ?>
 	<?php $layout->showVendor(); ?>
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/main.css">
-	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>data/theme.css">
+	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>private/data/<?php echo md5(json_encode($this->getData(['theme']))); ?>.css">
 </head>
 <body>
 <?php $layout->showStyle(); ?>

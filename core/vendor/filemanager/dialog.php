@@ -214,7 +214,9 @@ if($_GET['type']==1 || $_GET['type']==3){
 
 $extensions=null;
 if (isset($_GET['extensions'])){
-	$extensions = json_decode(urldecode($_GET['extensions']));
+	// TODO : modif Zwii
+	//$extensions = json_decode(urldecode($_GET['extensions']));
+	$extensions = explode(',', urldecode($_GET['extensions']));
 	if($extensions){
 		$ext = $extensions;
 		$show_filter_buttons = false;
@@ -265,7 +267,9 @@ $get_params = array(
 	'lang'      => $lang,
 	'popup'     => $popup,
 	'crossdomain' => $crossdomain,
-	'extensions' => ($extensions) ? urlencode(json_encode($extensions)) : null ,
+	// TODO : Modif Zwii
+	'extensions' => ($extensions) ? implode(',', $extensions) : null ,
+	//'extensions' => ($extensions) ? urlencode(json_encode($extensions)) : null ,
 	'field_id'  => $field_id,
 	'relative_url' => $return_relative_url,
 	'akey' 		=> (isset($_GET['akey']) && $_GET['akey'] != '' ? $_GET['akey'] : 'key')

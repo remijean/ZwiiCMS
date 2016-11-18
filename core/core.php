@@ -15,24 +15,6 @@
 class common {
 
 	public static $demo = false;
-	public static $fonts = [
-		'Abril+Fatface' => 'Abril Fatface',
-		'Arvo' => 'Arvo',
-		'Berkshire+Swash' => 'Berkshire Swash',
-		'Dancing+Script' => 'Dancing Script',
-		'Inconsolata' => 'Inconsolata',
-		'Indie+Flower' => 'Indie Flower',
-		'Josefin+Slab' => 'Josefin Slab',
-		'Lato' => 'Lato',
-		'Lobster' => 'Lobster',
-		'Marvel' => 'Marvel',
-		'Old+Standard+TT' => 'Old Standard TT',
-		'Open+Sans' => 'Open Sans',
-		'Oswald' => 'Oswald',
-		'Raleway' => 'Raleway',
-		'Rancho' => 'Rancho',
-		'Ubuntu' => 'Ubuntu'
-	];
 	public static $language = [];
 	public static $coreModule = [
 		'config',
@@ -45,8 +27,9 @@ class common {
 	private $defaultData = [
 		'config' => [
 			'analyticsId' => '',
+			'autoBackup' => false,
 			'cookieConsent' => true,
-			'favicon' => 'data/upload/favicon.ico',
+			'favicon' => 'favicon.ico',
 			'homePageId' => 'accueil',
 			'language' => '',
 			'metaDescription' => 'Description',
@@ -108,19 +91,19 @@ class common {
 		],
 		'theme' => [
 			'body' => [
-				'backgroundColor' => 'rgb(232,232,232)',
+				'backgroundColor' => 'rgba(232, 232, 232, 1)',
 				'image' => '',
 				'imageAttachment' => '',
 				'imageRepeat' => ''
 			],
 			'button' => [
-				'backgroundColor' => 'rgb(71,123,184)',
+				'backgroundColor' => 'rgba(71, 123, 184, 1)',
 			],
 			'footer' => [
 				'position' => 'site'
 			],
 			'header' => [
-				'backgroundColor' => 'rgb(255,255,255)',
+				'backgroundColor' => 'rgba(255, 255, 255, 1)',
 				'font' => 'Oswald',
 				'height' => '160px',
 				'image' => '',
@@ -129,10 +112,13 @@ class common {
 				'imageRepeat' => '',
 				'position' => 'site',
 				'textAlign' => 'center',
-				'textColor' => 'rgb(85,85,85)'
+				'textColor' => 'rgba(85, 85, 85, 1)'
+			],
+			'link' => [
+				'textColor' => 'rgba(71, 123, 184, 1)',
 			],
 			'menu' => [
-				'backgroundColor' => 'rgb(71,123,184)',
+				'backgroundColor' => 'rgba(71, 123, 184, 1)',
 				'height' => '15px',
 				'position' => 'site',
 				'textAlign' => 'left',
@@ -145,7 +131,7 @@ class common {
 			],
 			'title' => [
 				'font' => 'Oswald',
-				'textColor' => 'rgb(71,123,184)'
+				'textColor' => 'rgba(71, 123, 184, 1)'
 			]
 		]
 	];
@@ -187,17 +173,17 @@ class common {
 	 */
 	public function __construct() {
 		// Supprime les données en mode démo
-		if(self::$demo AND file_exists('data/data.json') AND filemtime('data/data.json') + 600 < time()) {
-			@unlink('data/data.json');
+		if(self::$demo AND file_exists('private/data/data.json') AND filemtime('private/data/data.json') + 600 < time()) {
+			@unlink('private/data/data.json');
 		}
 		// Génère le fichier de donnée
-		if(file_exists('data/data.json') === false) {
+		if(file_exists('private/data/data.json') === false) {
 			$this->setData([$this->defaultData]);
 			$this->saveData();
 		}
 		// Import des données
 		if(empty($this->data)) {
-			$this->setData([json_decode(file_get_contents('data/data.json'), true)]);
+			$this->setData([json_decode(file_get_contents('private/data/data.json'), true)]);
 		}
 		// Construit la liste des pages parentes/enfants
 		if(empty($this->hierarchy)) {
@@ -230,7 +216,7 @@ class common {
 		if(isset($_COOKIE)) {
 			$this->input['_COOKIE'] = $_COOKIE;
 		}
-		$this->setData([json_decode(file_get_contents('data/data.json'), true)]);
+		$this->setData([json_decode(file_get_contents('private/data/data.json'), true)]);
 	}
 
 	/**
@@ -353,7 +339,7 @@ class common {
 	 */
 	public function saveData() {
 		if(empty(template::$notices)) {
-			file_put_contents('data/data.json', json_encode($this->getData()));
+			file_put_contents('private/data/data.json', json_encode($this->getData()));
 		}
 	}
 
@@ -399,40 +385,53 @@ class core extends common {
 			}
 		}
 		// Crée le fichier de personnalisation
-		if(file_exists('data/theme.css') === false) {
-			// Polices de caractères
+		if(file_exists('private/data/' . md5(json_encode($this->getData(['theme']))) . '.css') === false) {
+			// Import des polices de caractères
 			$css = '@import url("https://fonts.googleapis.com/css?family=' . $this->getData(['theme', 'text', 'font']) . '|' . $this->getData(['theme', 'title', 'font']) . '|' . $this->getData(['theme', 'header', 'font']) . '");';
-			// Couleur du background
-			$color = helper::colorVariants($this->getData(['theme', 'body', 'backgroundColor']));
-			$css .= 'body{background-color:' . $color['normal'] . '}';
+			// Couleur du fond
+			$colors = helper::colorVariants($this->getData(['theme', 'body', 'backgroundColor']));
+			$css .= 'body{background-color:' . $colors['normal'] . '}';
 			// Couleurs de la bannière
-			$color = helper::colorVariants($this->getData(['theme', 'header', 'backgroundColor']));
-			$css .= 'header{background-color:' . $color['normal'] . '}';
+			$colors = helper::colorVariants($this->getData(['theme', 'header', 'backgroundColor']));
+			$css .= 'header{background-color:' . $colors['normal'] . '}';
 			// Couleurs du texte de la bannière
-			$color = helper::colorVariants($this->getData(['theme', 'header', 'textColor']));
-			$css .= 'header h1{color:' . $color['normal'] . '}';
+			$colors = helper::colorVariants($this->getData(['theme', 'header', 'textColor']));
+			$css .= 'header h1{color:' . $colors['normal'] . '}';
 			// Couleurs du menu
-			$color = helper::colorVariants($this->getData(['theme', 'menu', 'backgroundColor']));
-			$css .= 'nav{background-color:' . $color['normal'] . '}';
-			$css .= 'nav a{color:' . $color['text'] . '}';
-			$css .= 'nav a:hover{background-color:' . $color['darken'] . '}';
-			$css .= 'nav a.target{background-color:' . $color['veryDarken'] . '}';
+			$colors = helper::colorVariants($this->getData(['theme', 'menu', 'backgroundColor']));
+			$css .= 'nav{background-color:' . $colors['normal'] . '}';
+			$css .= 'nav a{color:' . $colors['text'] . '}';
+			$css .= 'nav a:hover{background-color:' . $colors['darken'] . '}';
+			$css .= 'nav a.target{background-color:' . $colors['veryDarken'] . '}';
 			// Couleur des boutons
-			$color = helper::colorVariants($this->getData(['theme', 'button', 'backgroundColor']));
-			$css .= 'button{background-color:' . $color['normal'] . ';color:' . $color['text'] . '}';
-			$css .= 'button:hover{background-color:' . $color['darken'] . '}';
+			$colors = helper::colorVariants($this->getData(['theme', 'button', 'backgroundColor']));
+			$css .= '.button,input[type=\'submit\'],pagination a,input[type=\'checkbox\']:checked + label:before,input[type=\'radio\']:checked + label:before,.helpContent{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '}';
+			$css .= '.tabTitle.current,.helpButton span{color:' . $colors['normal'] . '}';
+			$css .= 'input[type=\'text\']:hover,input[type=\'password\']:hover,.inputFile:hover,select:hover,textarea:hover{border: 1px solid ' . $colors['normal'] . '}';
+			$css .= '.button:hover,input[type=\'submit\']:hover,.pagination a:hover,input[type=\'checkbox\']:not(:active):checked:hover + label:before,input[type=\'checkbox\']:active + label:before,input[type=\'radio\']:checked:hover + label:before,input[type=\'radio\']:not(:checked):active + label:before{background-color:' . $colors['darken'] . '}';
+			$css .= '.helpButton span:hover{color:' . $colors['darken'] . '}';
+			$css .= '.button:active,input[type=\'submit\']:active,.pagination a:active{background-color:' . $colors['veryDarken'] . '}';
+			// Couleur des liens
+			$colors = helper::colorVariants($this->getData(['theme', 'link', 'textColor']));
+			$css .= 'a{color:' . $colors['normal'] . '}';
+			$css .= 'a:hover{color:' . $colors['darken'] . '}';
+			$css .= 'a:active{color:' . $colors['veryDarken'] . '}';
 			// Couleur des titres
-			$color = helper::colorVariants($this->getData(['theme', 'title', 'textColor']));
-			$css .= 'h1,h2,h3,h4,h5,h6{color:' . $color['normal'] . '}';
-			// Polices
-			$css .= 'body{font-family:"' . self::$fonts[$this->getData(['theme', 'text', 'font'])] . '",sans-serif}';
-			$css .= 'h1,h2,h3,h4,h5,h6{font-family:"' . self::$fonts[$this->getData(['theme', 'title', 'font'])] . '",sans-serif}';
-			$css .= 'header{font-family:"' . self::$fonts[$this->getData(['theme', 'header', 'font'])] . '",sans-serif}';
+			$colors = helper::colorVariants($this->getData(['theme', 'title', 'textColor']));
+			$css .= 'h1,h2,h3,h4,h5,h6{color:' . $colors['normal'] . '}';
+			// Polices de caractères
+			$css .= 'body{font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'text', 'font'])) . '",sans-serif}';
+			$css .= 'h1,h2,h3,h4,h5,h6{font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'title', 'font'])) . '",sans-serif}';
+			$css .= 'header{font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'header', 'font'])) . '",sans-serif}';
 			// Images
 			$css .= 'body{background-image:url("' . $this->getData(['theme', 'body', 'image']) . '")}';
 			$css .= 'header{background-image:url("' . $this->getData(['theme', 'header', 'image']) . '")}';
 			// Largeur du site
 			$css .= '.container{max-width:' . $this->getData(['theme', 'site', 'width']) . '}';
+			// Arrondi sur les coins du site
+			$css .= '#site{border-radius:' . $this->getData(['theme', 'site', 'radius']) . '}';
+			// Ombre'sur les bords du site
+			$css .= '#site{box-shadow:' . $this->getData(['theme', 'site', 'shadow']) . ' #3C3C3C}';
 			// Hauteur du menu
 			$css .= 'nav a{padding-top:' . $this->getData(['theme', 'menu', 'height']) . ';padding-bottom:' . $this->getData(['theme', 'menu', 'height']) . '}';
 			// Alignement du contenu du menu
@@ -442,7 +441,7 @@ class core extends common {
 			// Alignement du contenu du haut de page
 			$css .= 'header{text-align:' . $this->getData(['theme', 'header', 'textAlign']) . '}';
 			// Enregistre la personnalisation
-			file_put_contents('data/theme.css', $css);
+			file_put_contents('private/data/' . md5(json_encode($this->getData(['theme']))) . '.css', $css);
 		}
 		// Importe les fichiers de langue
 		$language = 'core/lang/' . $this->getData(['config', 'language']);
@@ -486,14 +485,14 @@ class core extends common {
 				$module = new $moduleId;
 				$action = $this->getUrl(1) ? $this->getUrl(1) : 'index';
 				// Check l'existence de l'action
-				if(array_key_exists($action, $module->actions)) {
+				if(array_key_exists($action, $module::$actions)) {
 					// Check le rang de l'utilisateur
 					if(
-						$module->actions[$action] === 0
+						$module::$actions[$action] === 0
 						OR (
 							$this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE')])
 							AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'password']) === $this->getInput('ZWII_USER_PASSWORD', '_COOKIE')
-							AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'rank']) >= $module->actions[$action]
+							AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'rank']) >= $module::$actions[$action]
 						)
 					) {
 						$output = $module->$action();
@@ -679,14 +678,22 @@ class helper {
 	 */
 	public static function colorVariants($rgba) {
 		preg_match('#\(+(.*)\)+#', $rgba, $matches);
-		$rgba = explode(',', $matches[1]);
-		$alpha = isset($rgba[3]) ? $rgba[3] : 1;
+		$rgba = explode(', ', $matches[1]);
 		return [
-			'normal' => 'rgba(' . $rgba[0] . ',' . $rgba[1] . ',' . $rgba[2] . ',' . $alpha . ')',
-			'darken' => 'rgba(' . ($rgba[0] - 20) . ',' . ($rgba[1] - 20) . ',' . ($rgba[2] - 20) . ',' . $alpha . ')',
-			'veryDarken' => 'rgba(' . ($rgba[0] - 25) . ',' . ($rgba[1] - 25) . ',' . ($rgba[2] - 25) . ',' . $alpha . ')',
-			'text' => (.213 * $rgba[0] . .715 * $rgba[1] . .072 * $rgba[2] > 127.5) ? 'inherit' : 'white'
+			'normal' => 'rgba(' . $rgba[0] . ',' . $rgba[1] . ',' . $rgba[2] . ',' . $rgba[3] . ')',
+			'darken' => 'rgba(' . max(0, $rgba[0] - 20) . ',' . max(0, $rgba[1] - 20) . ',' . max(0, $rgba[2] - 20) . ',' . $rgba[3] . ')',
+			'veryDarken' => 'rgba(' . max(0, $rgba[0] - 25) . ',' . max(0, $rgba[1] - 25) . ',' . max(0, $rgba[2] - 25) . ',' . $rgba[3] . ')',
+			'text' => self::relativeLuminanceW3C($rgba) > .22 ? "inherit" : "white"
 		];
+	}
+
+	/**
+	 * Supprime un cookie
+	 * @param string $cookieKey Clé du cookie à supprimer
+	 */
+	public static function deleteCookie($cookieKey) {
+		unset($_COOKIE[$cookieKey]);
+		setcookie($cookieKey, '', time() - 3600);
 	}
 
 	/**
@@ -876,12 +883,22 @@ class helper {
 	}
 
 	/**
-	 * Supprime un cookie
-	 * @param string $cookieKey Clé du cookie à supprimer
+	 * Calcul de la luminance relative d'une couleur
 	 */
-	public static function deleteCookie($cookieKey) {
-		unset($_COOKIE[$cookieKey]);
-		setcookie($cookieKey, '', time() - 3600);
+	public static function relativeLuminanceW3C($rgba) {
+		// Conversion en sRGB
+		$RsRGB = $rgba[0] / 255;
+		$GsRGB = $rgba[1] / 255;
+		$BsRGB = $rgba[2] / 255;
+		// Ajout de la transparence
+		$RsRGBA = $rgba[3] * $RsRGB + (1 - $rgba[3]);
+		$GsRGBA = $rgba[3] * $GsRGB + (1 - $rgba[3]);
+		$BsRGBA = $rgba[3] * $BsRGB + (1 - $rgba[3]);
+		// Calcul de la luminance
+		$R = ($RsRGBA <= .03928) ? $RsRGBA / 12.92 : pow(($RsRGBA + .055) / 1.055, 2.4);
+		$G = ($GsRGBA <= .03928) ? $GsRGBA / 12.92 : pow(($GsRGBA + .055) / 1.055, 2.4);
+		$B = ($BsRGBA <= .03928) ? $BsRGBA / 12.92 : pow(($BsRGBA + .055) / 1.055, 2.4);
+		return .2126 * $R + .7152 * $G + .0722 * $B;
 	}
 
 	/**
@@ -1353,6 +1370,8 @@ class template {
 			'label' => '',
 			'help' => '',
 			'class' => '',
+			'extensions' => '',
+			'type' => '',
 			'classContainer' => ''
 		], $attributes);
 		// Champ requis
@@ -1374,12 +1393,38 @@ class template {
 			$html .= self::getNotice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
-		// Texte
+		// Champ caché contenant l'url de la page
+		$html .= self::hidden($nameId, [
+			'value' => $attributes['value'],
+			'disabled' => $attributes['disabled'],
+			'class' => 'inputFileHidden'
+		]);
+		// Champ d'upload
 		$html .= sprintf(
-			'<a class="inputFile" href="' . helper::baseUrl(false) . 'core/vendor/filemanager/dialog.php?type=0" data-lity>' . self::ico('download', 'right') . '<span class="inputFileLabel">' . helper::translate('Choisissez un fichier') . '</a>',
+			'<a
+				href="' .
+					helper::baseUrl(false) . 'core/vendor/filemanager/dialog.php' .
+					'?relative_url=1' .
+					($attributes['type'] ? '&type=' . $attributes['type'] : '') .
+					($attributes['extensions'] ? '&extensions=' . $attributes['extensions'] : '') .
+					'&field_id=' . $nameId
+				. '"
+				class="inputFile %s %s"!
+				%s
+				data-lity
+			>
+				' . self::ico('download', 'right') . '
+				<span class="inputFileLabel"></span>
+			</a>',
 			$attributes['class'],
-			self::sprintAttributes($attributes, ['class'])
+			$attributes['disabled'] ? 'disabled' : '',
+			self::sprintAttributes($attributes, ['class', 'extensions', 'type'])
 		);
+		// Bouton de suppression
+		$html .= self::button($nameId . 'Delete', [
+			'class' => 'inputFileDelete',
+			'value' => self::ico('cancel')
+		]);
 		// Fin du container
 		$html .= '</div>';
 		// Retourne le html

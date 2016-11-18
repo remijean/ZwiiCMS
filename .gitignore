@@ -1,17 +1,15 @@
 # Fichiers temporaires
 core/tmp/*
 
-# Données
-data/data.json
-
-# Thème
-data/theme.css
+# Fichiers de données
+private/data/*
 
 # Fichiers uploadés
-data/upload/*
+private/source/*
+private/thumb/*
 
-# Autorise les dossiers vides dans GitHub
+# Dossiers vides dans GitHub
 !.gitkeep
 
-# Configuration de PHPStorm
+# PHPStorm
 .idea/
