@@ -2,7 +2,7 @@
 
 class page extends common {
 
-	public $actions = [
+	public static $actions = [
 		'index' => self::RANK_MODERATOR
 	];
 

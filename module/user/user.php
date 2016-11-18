@@ -2,7 +2,7 @@
 
 class user extends common {
 
-	public $actions = [
+	public static $actions = [
 		'login' => self::RANK_VISITOR,
 		'logout' => self::RANK_MEMBER
 	];

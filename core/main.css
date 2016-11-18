@@ -40,7 +40,6 @@ h4,
 h5,
 h6 {
 	font-weight: normal;
-	text-transform: uppercase;
 }
 h1 {
 	font-size: 2em;
@@ -521,16 +520,6 @@ label {
 	padding: 10px 0;
 }
 
-/* Upload de fichiers */
-.inputFile {
-	margin: 0;
-	display: block;
-	color: #555;
-}
-.inputFile:hover {
-	text-decoration: none;
-}
-
 /* Bouton */
 .button {
 	width: 100%;
@@ -560,6 +549,25 @@ label {
 }
 .button#newVersion:active {
 	background: #F14C2A;
+}
+
+/* Upload de fichiers */
+.inputFile {
+	margin: 0;
+	display: inline-block;
+	color: #555;
+	width: 88%;
+}
+.inputFileDelete {
+	display: inline-block;
+	width: 10%;
+	padding: 10px 0;
+	background: #EEE;
+	text-align: center;
+	float: right;
+}
+.inputFile:hover {
+	text-decoration: none;
 }
 
 /* Pagination */

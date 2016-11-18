@@ -1,8 +1,0 @@
-À faire :
-- Terminer script de génération de theme.css
-- Créer l'input de d'upload des fichiers
-- Ajouter ID dans containers de la classs template
-
-Bugs :
-- Filter bool retourne "1" au lieu de true, checker les filtres
-- getInput return null si un champ est vide

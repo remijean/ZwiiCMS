@@ -2,7 +2,7 @@
 
 class config extends common {
 
-	public $actions = [
+	public static $actions = [
 		'index' => self::RANK_ADMIN
 	];
 
@@ -12,11 +12,12 @@ class config extends common {
 	public function index() {
 		// Soumission du formulaire
 		if($this->isPost()) {
-			// Données de configuration
+			@unlink(md5(json_encode($this->getData(['theme']))));
 			$this->setData([
 				'config',
 				[
 					'analyticsId' => $this->getInput('configAnalyticsId'),
+					'AutoBackup' => $this->getInput('configAutoBackup', helper::FILTER_BOOLEAN),
 					'cookieConsent' => $this->getInput('configCookieConsent', helper::FILTER_BOOLEAN),
 					'favicon' => $this->getInput('configFavicon'),
 					'homePageId' => $this->getInput('configHomePageId', helper::FILTER_URL),
@@ -34,7 +35,6 @@ class config extends common {
 				]
 			]);
 			$this->saveData();
-			// URL rewriting
 			if(empty(template::$notices)) {
 				// Active l'URL rewriting
 				$htaccess = file_get_contents('.htaccess');

@@ -22,8 +22,10 @@
 			<div class="block">
 				<h4>Options avancés</h4>
 				<?php echo template::file('configFavicon', [
+					'extensions' => 'ico',
+					'help' => 'Seule une image de format .ico est acceptée. Attention pensez à supprimer le cache de votre navigateur si le favicon ne change pas.',
 					'label' => 'Favicon',
-					'selected' => $this->getData(['config', 'favicon'])
+					'value' => $this->getData(['config', 'favicon'])
 				]); ?>
 				<?php echo template::text('configAnalyticsId', [
 					'label' => 'Google Analytics',
@@ -31,7 +33,7 @@
 					'help' => 'Saisissez l\'ID de suivi de votre propriété Google Analytics.',
 					'placeholder' => 'UA-XXXXXXXX-X'
 				]); ?>
-				<?php echo template::checkbox('configCookieConsent', true, 'Message de consentement pour l\'utilisation des cookies', [
+				<?php echo template::checkbox('configCookieConsent', true, 'Afficher le message de consentement pour l\'utilisation des cookies', [
 					'checked' => $this->getData(['config', 'cookieConsent'])
 				]); ?>
 				<?php echo template::checkbox('rewrite', true, 'Activer la réécriture d\'URL', [
@@ -100,16 +102,26 @@
 					'value' => self::ZWII_VERSION,
 					'disabled' => true
 				]); ?>
-				<?php if(helper::checkZwiiVersion()): ?>
-					<?php echo template::button('configNewVersion', [
-						'href' => 'http://zwiicms.com/',
-						'value' => 'Nouvelle version disponible !'
-					]); ?>
-				<?php endif; ?>
-				<?php echo template::button('configExport', [
-					'value' => 'Exporter le contenu',
-					'href' => helper::baseUrl() . 'export'
+				<?php echo template::checkbox('configAutoBackup', true, 'Activer la sauvegarder automatique des données', [
+					'checked' => $this->getData(['config', 'autoBackup']),
+					'help' => 'Effectue la sauvegarde une fois par jour dans le dossier private/source/backup/.'
 				]); ?>
+				<div class="row">
+					<div class="col6">
+						<?php echo template::button('configExport', [
+							'value' => 'Exporter les données',
+							'href' => helper::baseUrl() . 'export'
+						]); ?>
+					</div>
+					<?php if(helper::checkZwiiVersion()): ?>
+						<div class="col6">
+							<?php echo template::button('configNewVersion', [
+								'href' => 'http://zwiicms.com/',
+								'value' => 'Nouvelle version disponible !'
+							]); ?>
+						</div>
+					<?php endif; ?>
+				</div>
 			</div>
 		</div>
 	</div>
