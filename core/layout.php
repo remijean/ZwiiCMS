@@ -9,27 +9,34 @@
 	<?php $layout->showFavicon(); ?>
 	<?php $layout->showVendor(); ?>
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/main.css">
-	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>private/data/<?php echo md5(json_encode($this->getData(['theme']))); ?>.css">
+	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>site/data/<?php echo md5(json_encode($this->getData(['theme']))); ?>.css">
 </head>
 <body>
 <?php $layout->showStyle(); ?>
 <?php $layout->showPanel(); ?>
 <?php $layout->showNotification(); ?>
+<!-- Menu dans le fond du site en première position -->
+<?php if($this->getData(['theme', 'menu', 'position']) === 'body-first'): ?>
+	<nav>
+		<div id="toggle"><?php echo template::ico('menu'); ?></div>
+		<div id="menu" class="container">
+			<ul><?php $layout->showMenu(); ?></ul>
+		</div>
+	</nav>
+<?php endif; ?>
 <!-- Bannière dans le fond du site -->
 <?php if($this->getData(['theme', 'header', 'position']) === 'body'): ?>
 	<header>
-		<div class="inner">
-			<div class="container">
-				<h1><?php echo $this->getData(['config', 'title']); ?></h1>
-			</div>
+		<div class="container">
+			<h1><?php echo $this->getData(['config', 'title']); ?></h1>
 		</div>
 	</header>
 <?php endif; ?>
-<!-- Menu dans le fond du site -->
-<?php if($this->getData(['theme', 'menu', 'position']) === 'body'): ?>
+<!-- Menu dans le fond du site en seconde position -->
+<?php if($this->getData(['theme', 'menu', 'position']) === 'body-second'): ?>
 	<nav>
-		<div class="toggle"><?php echo template::ico('menu'); ?></div>
-		<div class="menu container">
+		<div id="toggle"><?php echo template::ico('menu'); ?></div>
+		<div id="menu" class="container">
 			<ul><?php $layout->showMenu(); ?></ul>
 		</div>
 	</nav>
@@ -39,7 +46,7 @@
 	<!-- Bannière dans le site -->
 	<?php if($this->getData(['theme', 'header', 'position']) === 'site'): ?>
 		<header>
-			<div class="inner">
+			<div class="container">
 				<h1><?php echo $this->getData(['config', 'title']); ?></h1>
 			</div>
 		</header>
@@ -47,8 +54,8 @@
 	<!-- Menu dans le site -->
 	<?php if($this->getData(['theme', 'menu', 'position']) === 'site'): ?>
 		<nav>
-			<div class="toggle"><?php echo template::ico('menu'); ?></div>
-			<div class="menu">
+			<div id="toggle"><?php echo template::ico('menu'); ?></div>
+			<div id="menu" class="container">
 				<ul><?php $layout->showMenu(); ?></ul>
 			</div>
 		</nav>
@@ -59,7 +66,8 @@
 	<?php if($this->getData(['theme', 'footer', 'position']) === 'site'): ?>
 		<footer>
 			<?php $layout->showSocials(); ?>
-			<?php echo helper::translate('Motorisé par'); ?> <a href="http://zwiicms.com/" target="_blank">Zwii</a> | <a href="<?php echo helper::baseUrl(); ?>sitemap"><?php echo helper::translate('Plan du site'); ?></a> | <a href="<?php echo helper::baseUrl(); ?>config"><?php echo helper::translate('Connexion'); ?></a>
+			<?php $layout->showFooterText(); ?>
+			<?php $layout->showCopyright(); ?>
 		</footer>
 	<?php endif; ?>
 </div>
@@ -67,7 +75,8 @@
 <?php if($this->getData(['theme', 'footer', 'position']) === 'body'): ?>
 	<footer>
 		<?php $layout->showSocials(); ?>
-		<?php echo helper::translate('Motorisé par'); ?> <a href="http://zwiicms.com/" target="_blank">Zwii</a> | <a href="<?php echo helper::baseUrl(); ?>sitemap"><?php echo helper::translate('Plan du site'); ?></a> | <a href="<?php echo helper::baseUrl(); ?>config"><?php echo helper::translate('Connexion'); ?></a>
+		<?php $layout->showFooterText(); ?>
+		<?php $layout->showCopyright(); ?>
 	</footer>
 <?php endif; ?>
 <!-- Lien remonter en haut -->

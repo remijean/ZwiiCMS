@@ -2,11 +2,11 @@
 core/tmp/*
 
 # Fichiers de données
-private/data/*
+site/data/*
 
 # Fichiers uploadés
-private/source/*
-private/thumb/*
+site/file/*
+site/thumb/*
 
 # Dossiers vides dans GitHub
 !.gitkeep

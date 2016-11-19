@@ -12,14 +12,14 @@ class config extends common {
 	public function index() {
 		// Soumission du formulaire
 		if($this->isPost()) {
-			@unlink(md5(json_encode($this->getData(['theme']))));
 			$this->setData([
 				'config',
 				[
 					'analyticsId' => $this->getInput('configAnalyticsId'),
-					'AutoBackup' => $this->getInput('configAutoBackup', helper::FILTER_BOOLEAN),
+					'autoBackup' => $this->getInput('configAutoBackup', helper::FILTER_BOOLEAN),
 					'cookieConsent' => $this->getInput('configCookieConsent', helper::FILTER_BOOLEAN),
 					'favicon' => $this->getInput('configFavicon'),
+					'footerText' => $this->getInput('configFooterText'),
 					'homePageId' => $this->getInput('configHomePageId', helper::FILTER_URL),
 					'language' => $this->getInput('configLanguage'),
 					'metaDescription' => $this->getInput('configMetaDescription'),

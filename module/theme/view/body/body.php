@@ -1,48 +1,49 @@
-<h3>Options de l'arrière plan</h3>
-<form>
+<h3><?php echo helper::translate('Options de l\'arrière plan'); ?></h3>
+<form method="post">
 	<div class="row">
 		<div class="col6">
 			<div class="block">
-				<h4>Couleur</h4>
+				<h4><?php echo helper::translate('Couleur'); ?></h4>
 				<?php echo template::text('themeBodyBackgroundColor', [
 					'class' => 'colorPicker',
-					'label' => 'Couleur du fond',
-					'readonly' => true,
+					'label' => 'Couleur de fond',
 					'value' => $this->getData(['theme', 'body', 'backgroundColor'])
 				]); ?>
 			</div>
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4>Image</h4>
-				<div class="row">
-					<div class="col12">
-						<?php echo template::file('themeBodyBackgroundImage', [
-							'label' => 'Image du fond',
-							'value' => $this->getData(['theme', 'body', 'backgroundImage'])
-						]); ?>
-					</div>
-				</div>
-				<div id="themeBodyBackgroundImageOptions" class="displayNone">
+				<h4><?php echo helper::translate('Image'); ?></h4>
+				<?php echo template::file('themeBodyImage', [
+					'label' => 'Image de fond',
+					'value' => $this->getData(['theme', 'body', 'image'])
+				]); ?>
+				<div id="themeBodyImageOptions" class="displayNone">
 					<div class="row">
 						<div class="col6">
-							<?php echo template::select('themeBackgroundRepeat', $module::$repeats, [
+							<?php echo template::select('themeBodyImageRepeat', $module::$repeats, [
 								'label' => 'Répétition',
-								'selected' => $this->getData(['theme', 'body', 'repeat'])
+								'selected' => $this->getData(['theme', 'body', 'imageRepeat'])
 							]); ?>
 						</div>
 						<div class="col6">
-							<?php echo template::select('themeBackgroundPosition', $module::$positions, [
-								'label' => 'Alignement',
-								'selected' => $this->getData(['theme', 'body', 'position'])
+							<?php echo template::select('themeBodyImagePosition', $module::$imagePositions, [
+								'label' => 'Position',
+								'selected' => $this->getData(['theme', 'body', 'imagePosition'])
 							]); ?>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col6">
-							<?php echo template::select('themeBackgroundAttachment', $module::$attachments, [
-								'label' => 'Position',
-								'selected' => $this->getData(['theme', 'body', 'attachment'])
+							<?php echo template::select('themeBodyImageAttachment', $module::$attachments, [
+								'label' => 'Fixation',
+								'selected' => $this->getData(['theme', 'body', 'imageAttachment'])
+							]); ?>
+						</div>
+						<div class="col6">
+							<?php echo template::select('themeBodyImageSize', $module::$sizes, [
+								'label' => 'Taille',
+								'selected' => $this->getData(['theme', 'body', 'imageSize'])
 							]); ?>
 						</div>
 					</div>

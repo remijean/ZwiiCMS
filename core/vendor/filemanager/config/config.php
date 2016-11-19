@@ -68,7 +68,7 @@ $config = array(
 	| with start and final /
 	|
 	*/
-	'upload_dir' => '/private/source/',
+	'upload_dir' => '/site/file/',
 	/*
 	|--------------------------------------------------------------------------
 	| relative path from filemanager folder to upload folder
@@ -77,7 +77,7 @@ $config = array(
 	| with final /
 	|
 	*/
-	'current_path' => '../../../private/source/',
+	'current_path' => '../../../site/file/',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -88,7 +88,7 @@ $config = array(
 	| DO NOT put inside upload folder
 	|
 	*/
-	'thumbs_base_path' => '../../../private/thumb/',
+	'thumbs_base_path' => '../../../site/thumb/',
 
 
 	/*

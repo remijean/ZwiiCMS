@@ -4,9 +4,9 @@
 - Terminer module de personnalisation :
 	- OK : body
 	- footer
-	- header
-	- index
-	- menu
+	- OK : header
+	- OK : index
+	- OK : menu
 	- OK : site
 - Terminer script de génération de theme.css
 - Intéger le gestionnaire de fichier dans le panneau d'administration
@@ -15,6 +15,9 @@
 - Déterminer prendre elFinder ou garde responsiveFM
 - Ajouter ID dans containers de la classs template
 - Créer une méthode pour remplacer md5(json_encode($this->getData(['theme']))
+- Minimiser le css et le js des vues
+- Replacer le lien de connexion interactif
+- Ajouter le script de backup auto
 
 Bugs
 ====
