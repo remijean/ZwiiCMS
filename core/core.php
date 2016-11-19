@@ -113,7 +113,7 @@ class common {
 			'header' => [
 				'backgroundColor' => 'rgba(71, 123, 184, 1)',
 				'font' => 'Oswald',
-				'height' => '200px',
+				'height' => '300px',
 				'image' => '',
 				'imagePosition' => 'center center',
 				'imageRepeat' => 'no-repeat',
@@ -126,7 +126,7 @@ class common {
 			],
 			'menu' => [
 				'backgroundColor' => 'rgba(255, 255, 255, 1)',
-				'height' => '20px 10px',
+				'height' => '15px 10px',
 				'position' => 'body-first',
 				'textAlign' => 'left',
 			],
