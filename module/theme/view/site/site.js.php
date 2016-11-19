@@ -6,12 +6,12 @@ $("input, select").on("change", function() {
 	var css = "@import url('https://fonts.googleapis.com/css?family=" + titleFont + "|" + textFont + "');";
 	// Couleurs des boutons
 	var colors = colorVariants($("#themeButtonBackgroundColor").val());
-	css += ".button,input[type='submit'],pagination a,input[type='checkbox']:checked + label:before,input[type='radio']:checked + label:before,.helpContent{background-color:" + colors.normal + ";color:" + colors.text + "}";
+	css += ".button,input[type='submit'],pagination a,input[type='checkbox']:checked + label:before,input[type='radio']:checked + label:before,.helpContent{background-color:" + colors.normal + ";color:" + colors.text + "!important}";
 	css += ".tabTitle.current,.helpButton span{color:" + colors.normal + "}";
 	css += "input[type='text']:hover,input[type='password']:hover,.inputFile:hover,select:hover,textarea:hover{border: 1px solid " + colors.normal + "}";
-	css += ".button:hover,input[type='submit']:hover,.pagination a:hover,input[type='checkbox']:not(:active):checked:hover + label:before,input[type='checkbox']:active + label:before,input[type='radio']:checked:hover + label:before,input[type='radio']:not(:checked):active + label:before{background-color:" + colors.darken + ";color:" + colors.text + "}";
+	css += ".button:hover,input[type='submit']:hover,.pagination a:hover,input[type='checkbox']:not(:active):checked:hover + label:before,input[type='checkbox']:active + label:before,input[type='radio']:checked:hover + label:before,input[type='radio']:not(:checked):active + label:before{background-color:" + colors.darken + "}";
 	css += ".helpButton span:hover{color:" + colors.darken + "}";
-	css += ".button:active,input[type='submit']:active,.pagination a:active{background-color:" + colors.veryDarken + ";color:" + colors.text + "}";
+	css += ".button:active,input[type='submit']:active,.pagination a:active{background-color:" + colors.veryDarken + "}";
 	// Couleurs des liens
 	colors = colorVariants($("#themeLinkTextColor").val());
 	css += "a{color:" + colors.normal + "}";

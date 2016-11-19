@@ -65,18 +65,22 @@
 	<!-- Bas du site dans le site -->
 	<?php if($this->getData(['theme', 'footer', 'position']) === 'site'): ?>
 		<footer>
-			<?php $layout->showSocials(); ?>
-			<?php $layout->showFooterText(); ?>
-			<?php $layout->showCopyright(); ?>
+			<div class="container">
+				<?php $layout->showSocials(); ?>
+				<?php $layout->showFooterText(); ?>
+				<?php $layout->showCopyright(); ?>
+			</div>
 		</footer>
 	<?php endif; ?>
 </div>
 <!-- Bas du site dans le fond du site -->
 <?php if($this->getData(['theme', 'footer', 'position']) === 'body'): ?>
 	<footer>
-		<?php $layout->showSocials(); ?>
-		<?php $layout->showFooterText(); ?>
-		<?php $layout->showCopyright(); ?>
+		<div class="container">
+			<?php $layout->showSocials(); ?>
+			<?php $layout->showFooterText(); ?>
+			<?php $layout->showCopyright(); ?>
+		</div>
 	</footer>
 <?php endif; ?>
 <!-- Lien remonter en haut -->
