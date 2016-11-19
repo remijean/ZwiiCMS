@@ -5,6 +5,7 @@ nav,
 section,
 footer {
 	position: relative;
+	z-index: 10; /* Empêche l'overlay de body de passer au dessus des autres éléments */
 }
 .themeOverlay {
 	-webkit-transition: background .3s;
@@ -21,9 +22,4 @@ footer {
 }
 .themeOverlay:hover {
 	background: rgba(103, 198, 114, .7);
-}
-/* Empêche l'overlay de body de passer au dessus du site et du panneau */
-#site,
-#panel {
-	z-index: 10;
 }

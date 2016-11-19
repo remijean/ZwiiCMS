@@ -3,7 +3,10 @@ $("input, select").on("change", function() {
 	// Couleur du fond
 	var css = "body{background-color:" + $("#themeBodyBackgroundColor").val() + "}";
 	// Image du fond
-	css += "body{background-image:url('private/source/" + $("#themeBodyBackgroundImage").val() + "')}";
+	var themeBodyImage = $("#themeBodyImage").val();
+	if(themeBodyImage) {
+		css += "body{background-image:url('site/file/" + themeBodyImage + "');background-repeat:" + $("#themeBodyImageRepeat").val() + ";background-position:" + $("#themeBodyImagePosition").val() + ";background-attachment:" + $("#themeBodyImageAttachment").val() + ";background-size:" + $("#themeBodyImageSize").val() + "]";
+	}
 	// Ajout du css au DOM
 	$("#themePreview").remove();
 	$("<style>")
@@ -13,11 +16,11 @@ $("input, select").on("change", function() {
 		.appendTo("head");
 });
 // Affiche / Cache les options de l'image du fond
-$("#themeBodyBackgroundImage").on("change", function() {
+$("#themeBodyImage").on("change", function() {
 	if($(this).val()) {
-		$("#themeBodyBackgroundImageOptions").slideDown();
+		$("#themeBodyImageOptions").slideDown();
 	}
 	else {
-		$("#themeBodyBackgroundImageOptions").slideUp();
+		$("#themeBodyImageOptions").slideUp();
 	}
 }).trigger("change");

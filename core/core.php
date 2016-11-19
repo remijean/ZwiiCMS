@@ -30,6 +30,7 @@ class common {
 			'autoBackup' => false,
 			'cookieConsent' => true,
 			'favicon' => 'favicon.ico',
+			'footerText' => '',
 			'homePageId' => 'accueil',
 			'language' => '',
 			'metaDescription' => 'Description',
@@ -93,23 +94,29 @@ class common {
 			'body' => [
 				'backgroundColor' => 'rgba(232, 232, 232, 1)',
 				'image' => '',
-				'imageAttachment' => '',
-				'imageRepeat' => ''
+				'imageAttachment' => 'scroll',
+				'imageRepeat' => 'no-repeat',
+				'imagePosition' => 'top center',
+				'imageSize' => 'auto'
 			],
 			'button' => [
 				'backgroundColor' => 'rgba(71, 123, 184, 1)',
 			],
 			'footer' => [
-				'position' => 'site'
+				'backgroundColor' => 'rgba(255, 255, 255, 1)',
+				'copyrightAlign' => 'right',
+				'height' => '10px',
+				'position' => 'site',
+				'socialsAlign' => 'left',
+				'textAlign' => 'right'
 			],
 			'header' => [
 				'backgroundColor' => 'rgba(255, 255, 255, 1)',
 				'font' => 'Oswald',
-				'height' => '160px',
+				'height' => '150px',
 				'image' => '',
-				'imageAttachment' => '',
-				'imagePosition' => '',
-				'imageRepeat' => '',
+				'imagePosition' => 'center center',
+				'imageRepeat' => 'no-repeat',
 				'position' => 'site',
 				'textAlign' => 'center',
 				'textColor' => 'rgba(85, 85, 85, 1)'
@@ -119,7 +126,7 @@ class common {
 			],
 			'menu' => [
 				'backgroundColor' => 'rgba(71, 123, 184, 1)',
-				'height' => '15px',
+				'height' => '15px 10px',
 				'position' => 'site',
 				'textAlign' => 'left',
 			],
@@ -173,17 +180,17 @@ class common {
 	 */
 	public function __construct() {
 		// Supprime les données en mode démo
-		if(self::$demo AND file_exists('private/data/data.json') AND filemtime('private/data/data.json') + 600 < time()) {
-			@unlink('private/data/data.json');
+		if(self::$demo AND file_exists('site/data/data.json') AND filemtime('site/data/data.json') + 600 < time()) {
+			@unlink('site/data/data.json');
 		}
 		// Génère le fichier de donnée
-		if(file_exists('private/data/data.json') === false) {
+		if(file_exists('site/data/data.json') === false) {
 			$this->setData([$this->defaultData]);
 			$this->saveData();
 		}
 		// Import des données
 		if(empty($this->data)) {
-			$this->setData([json_decode(file_get_contents('private/data/data.json'), true)]);
+			$this->setData([json_decode(file_get_contents('site/data/data.json'), true)]);
 		}
 		// Construit la liste des pages parentes/enfants
 		if(empty($this->hierarchy)) {
@@ -216,7 +223,7 @@ class common {
 		if(isset($_COOKIE)) {
 			$this->input['_COOKIE'] = $_COOKIE;
 		}
-		$this->setData([json_decode(file_get_contents('private/data/data.json'), true)]);
+		$this->setData([json_decode(file_get_contents('site/data/data.json'), true)]);
 	}
 
 	/**
@@ -339,7 +346,7 @@ class common {
 	 */
 	public function saveData() {
 		if(empty(template::$notices)) {
-			file_put_contents('private/data/data.json', json_encode($this->getData()));
+			file_put_contents('site/data/data.json', json_encode($this->getData()));
 		}
 	}
 
@@ -385,63 +392,56 @@ class core extends common {
 			}
 		}
 		// Crée le fichier de personnalisation
-		if(file_exists('private/data/' . md5(json_encode($this->getData(['theme']))) . '.css') === false) {
+		if(file_exists('site/data/' . md5(json_encode($this->getData(['theme']))) . '.css') === false) {
 			// Import des polices de caractères
 			$css = '@import url("https://fonts.googleapis.com/css?family=' . $this->getData(['theme', 'text', 'font']) . '|' . $this->getData(['theme', 'title', 'font']) . '|' . $this->getData(['theme', 'header', 'font']) . '");';
-			// Couleur du fond
+			// Fond du site
 			$colors = helper::colorVariants($this->getData(['theme', 'body', 'backgroundColor']));
-			$css .= 'body{background-color:' . $colors['normal'] . '}';
-			// Couleurs de la bannière
-			$colors = helper::colorVariants($this->getData(['theme', 'header', 'backgroundColor']));
-			$css .= 'header{background-color:' . $colors['normal'] . '}';
-			// Couleurs du texte de la bannière
-			$colors = helper::colorVariants($this->getData(['theme', 'header', 'textColor']));
-			$css .= 'header h1{color:' . $colors['normal'] . '}';
-			// Couleurs du menu
-			$colors = helper::colorVariants($this->getData(['theme', 'menu', 'backgroundColor']));
-			$css .= 'nav{background-color:' . $colors['normal'] . '}';
-			$css .= 'nav a{color:' . $colors['text'] . '}';
-			$css .= 'nav a:hover{background-color:' . $colors['darken'] . '}';
-			$css .= 'nav a.target{background-color:' . $colors['veryDarken'] . '}';
-			// Couleur des boutons
+			$css .= 'body{background-color:' . $colors['normal'] . ';font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'text', 'font'])) . '",sans-serif}';
+			if($themeBodyImage = $this->getData(['theme', 'body', 'image'])) {
+				$css .= 'body{background-image:url("../file/' . $themeBodyImage . '");background-position:' . $this->getData(['theme', 'body', 'imagePosition']) . ';background-attachment:' . $this->getData(['theme', 'body', 'imageAttachment']) . ';background-size:' . $this->getData(['theme', 'body', 'imageSize']) . ';background-repeat:' . $this->getData(['theme', 'body', 'imageRepeat']) . '}';
+			}
+			// Site
+			$css .= '.container{max-width:' . $this->getData(['theme', 'site', 'width']) . '}';
+			$css .= '#site{border-radius:' . $this->getData(['theme', 'site', 'radius']) . ';box-shadow:' . $this->getData(['theme', 'site', 'shadow']) . ' #3C3C3C}';
 			$colors = helper::colorVariants($this->getData(['theme', 'button', 'backgroundColor']));
 			$css .= '.button,input[type=\'submit\'],pagination a,input[type=\'checkbox\']:checked + label:before,input[type=\'radio\']:checked + label:before,.helpContent{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '}';
 			$css .= '.tabTitle.current,.helpButton span{color:' . $colors['normal'] . '}';
 			$css .= 'input[type=\'text\']:hover,input[type=\'password\']:hover,.inputFile:hover,select:hover,textarea:hover{border: 1px solid ' . $colors['normal'] . '}';
-			$css .= '.button:hover,input[type=\'submit\']:hover,.pagination a:hover,input[type=\'checkbox\']:not(:active):checked:hover + label:before,input[type=\'checkbox\']:active + label:before,input[type=\'radio\']:checked:hover + label:before,input[type=\'radio\']:not(:checked):active + label:before{background-color:' . $colors['darken'] . '}';
+			$css .= '.button:hover,input[type=\'submit\']:hover,.pagination a:hover,input[type=\'checkbox\']:not(:active):checked:hover + label:before,input[type=\'checkbox\']:active + label:before,input[type=\'radio\']:checked:hover + label:before,input[type=\'radio\']:not(:checked):active + label:before{background-color:' . $colors['darken'] . ';color:' . $colors['text'] . '}';
 			$css .= '.helpButton span:hover{color:' . $colors['darken'] . '}';
-			$css .= '.button:active,input[type=\'submit\']:active,.pagination a:active{background-color:' . $colors['veryDarken'] . '}';
-			// Couleur des liens
+			$css .= '.button:active,input[type=\'submit\']:active,.pagination a:active{background-color:' . $colors['veryDarken'] . ';color:' . $colors['text'] . '}';
 			$colors = helper::colorVariants($this->getData(['theme', 'link', 'textColor']));
 			$css .= 'a{color:' . $colors['normal'] . '}';
 			$css .= 'a:hover{color:' . $colors['darken'] . '}';
 			$css .= 'a:active{color:' . $colors['veryDarken'] . '}';
-			// Couleur des titres
 			$colors = helper::colorVariants($this->getData(['theme', 'title', 'textColor']));
-			$css .= 'h1,h2,h3,h4,h5,h6{color:' . $colors['normal'] . '}';
-			// Polices de caractères
-			$css .= 'body{font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'text', 'font'])) . '",sans-serif}';
-			$css .= 'h1,h2,h3,h4,h5,h6{font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'title', 'font'])) . '",sans-serif}';
-			$css .= 'header{font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'header', 'font'])) . '",sans-serif}';
-			// Images
-			$css .= 'body{background-image:url("' . $this->getData(['theme', 'body', 'image']) . '")}';
-			$css .= 'header{background-image:url("' . $this->getData(['theme', 'header', 'image']) . '")}';
-			// Largeur du site
-			$css .= '.container{max-width:' . $this->getData(['theme', 'site', 'width']) . '}';
-			// Arrondi sur les coins du site
-			$css .= '#site{border-radius:' . $this->getData(['theme', 'site', 'radius']) . '}';
-			// Ombre'sur les bords du site
-			$css .= '#site{box-shadow:' . $this->getData(['theme', 'site', 'shadow']) . ' #3C3C3C}';
-			// Hauteur du menu
-			$css .= 'nav a{padding-top:' . $this->getData(['theme', 'menu', 'height']) . ';padding-bottom:' . $this->getData(['theme', 'menu', 'height']) . '}';
-			// Alignement du contenu du menu
-			$css .= 'nav{text-align:' . $this->getData(['theme', 'menu', 'textAlign']) . '}';
-			// Hauteur du haut de page
-			$css .= 'header{height:' . $this->getData(['theme', 'header', 'height']) . ';line-height:' . $this->getData(['theme', 'header', 'height']) . '}';
-			// Alignement du contenu du haut de page
-			$css .= 'header{text-align:' . $this->getData(['theme', 'header', 'textAlign']) . '}';
+			$css .= 'h1,h2,h3,h4,h5,h6{color:' . $colors['normal'] . ';font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'title', 'font'])) . '",sans-serif}';
+			// Bannière
+			$colors = helper::colorVariants($this->getData(['theme', 'header', 'backgroundColor']));
+			$css .= 'header{background-color:' . $colors['normal'] . ';height:' . $this->getData(['theme', 'header', 'height']) . ';line-height:' . $this->getData(['theme', 'header', 'height']) . ';text-align:' . $this->getData(['theme', 'header', 'textAlign']) . '}';
+			if($themeHeaderImage = $this->getData(['theme', 'header', 'image'])) {
+				$css .= 'header{background-image:url("../file/' . $themeHeaderImage . '");background-position:' . $this->getData(['theme', 'header', 'imagePosition']) . ';background-repeat:' . $this->getData(['theme', 'header', 'imageRepeat']) . '}';
+			}
+			$colors = helper::colorVariants($this->getData(['theme', 'header', 'textColor']));
+			$css .= 'header h1{color:' . $colors['normal'] . ';font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'header', 'font'])) . '",sans-serif}';
+			// Menu
+			$colors = helper::colorVariants($this->getData(['theme', 'menu', 'backgroundColor']));
+			$css .= 'nav{background-color:' . $colors['normal'] . '}';
+			$css .= 'nav a{color:' . $colors['text'] . '}';
+			$css .= 'nav a:hover{color:' . $colors['text'] . ';background-color:' . $colors['darken'] . '}';
+			$css .= 'nav a.target,nav a:active{color:' . $colors['text'] . ';background-color:' . $colors['veryDarken'] . '}';
+			$css .= '#menu{text-align:' . $this->getData(['theme', 'menu', 'textAlign']) . '}';
+			$css .= '#menu a{padding:' . $this->getData(['theme', 'menu', 'height']) . '}';
+			// Bas de page
+			$colors = helper::colorVariants($this->getData(['theme', 'footer', 'backgroundColor']));
+			$css .= 'footer{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '}';
+			$css .= 'footer > div{margin:' . $this->getData(['theme', 'footer', 'height']) . ' 0}';
+			$css .= '#socials{text-align:' . $this->getData(['theme', 'footer', 'socialsAlign']) . '}';
+			$css .= '#footerText{text-align:' . $this->getData(['theme', 'footer', 'textAlign']) . '}';
+			$css .= '#copyright{text-align:' . $this->getData(['theme', 'footer', 'copyrightAlign']) . '}';
 			// Enregistre la personnalisation
-			file_put_contents('private/data/' . md5(json_encode($this->getData(['theme']))) . '.css', $css);
+			file_put_contents('site/data/' . md5(json_encode($this->getData(['theme']))) . '.css', $css);
 		}
 		// Importe les fichiers de langue
 		$language = 'core/lang/' . $this->getData(['config', 'language']);
@@ -953,11 +953,27 @@ class layout extends common {
 	}
 
 	/**
+	 * Affiche le coyright
+	 */
+	public function showCopyright() {
+		echo '<div id="copyright">' . helper::translate('Motorisé par') . ' <a href="http://zwiicms.com/" target="_blank">Zwii</a> | <a href="' . helper::baseUrl() . 'sitemap">' . helper::translate('Plan du site') . '</a> | <a href="' . helper::baseUrl() . 'config">' . helper::translate('Connexion') . '</a></div>';
+	}
+
+	/**
 	 * Affiche le favicon
 	 */
 	public function showFavicon() {
 		if($favicon = $this->getData(['config', 'favicon'])) {
 			echo '<link rel="shortcut icon" href="' . helper::baseUrl(false) . $favicon . '">';
+		}
+	}
+
+	/**
+	 * Affiche le texte du footer
+	 */
+	public function showFooterText() {
+		if($footerText = $this->getData(['config', 'footerText'])) {
+			echo '<div id="text">' . nl2br($footerText) . '</div>';
 		}
 	}
 
@@ -1069,29 +1085,29 @@ class layout extends common {
 		$socials = '';
 		foreach($this->getData(['config', 'social']) as $socialName => $socialId) {
 			switch($socialName) {
-				case 'facebook':
+				case 'facebookId':
 					$socialUrl = 'https://www.facebook.com/';
 					break;
-				case 'googleplus':
+				case 'googleplusId':
 					$socialUrl = 'https://plus.google.com/';
 					break;
-				case 'instagram':
+				case 'instagramId':
 					$socialUrl = 'https://www.instagram.com/';
 					break;
-				case 'pinterest':
+				case 'pinterestId':
 					$socialUrl = 'https://pinterest.com/';
 					break;
-				case 'twitter':
+				case 'twitterId':
 					$socialUrl = 'https://twitter.com/';
 					break;
-				case 'youtube':
+				case 'youtubeId':
 					$socialUrl = 'https://www.youtube.com/channel/';
 					break;
 				default:
 					$socialUrl = '';
 			}
 			if(empty($socialId) === false) {
-				$socials .= '<a href="' . $socialUrl . $socialId . '" target="_blank">' . template::ico($socialName) . '</a>';
+				$socials .= '<a href="' . $socialUrl . $socialId . '" target="_blank">' . template::ico(substr($socialName, 0, -2)) . '</a>';
 			}
 		}
 		if(empty($socials) === false) {

@@ -2,7 +2,7 @@
 	<div class="row">
 		<div class="col6">
 			<div class="block">
-				<h4>Informations principales</h4>
+				<h4><?php echo helper::translate('Informations principales'); ?></h4>
 				<?php echo template::text('configTitle', [
 					'label' => 'Titre du site',
 					'required' => true,
@@ -20,7 +20,7 @@
 				]); ?>
 			</div>
 			<div class="block">
-				<h4>Options avancés</h4>
+				<h4><?php echo helper::translate('Options avancés'); ?></h4>
 				<?php echo template::file('configFavicon', [
 					'extensions' => 'ico',
 					'help' => 'Seule une image de format .ico est acceptée. Attention pensez à supprimer le cache de votre navigateur si le favicon ne change pas.',
@@ -32,6 +32,10 @@
 					'value' => $this->getData(['config', 'analyticsId']),
 					'help' => 'Saisissez l\'ID de suivi de votre propriété Google Analytics.',
 					'placeholder' => 'UA-XXXXXXXX-X'
+				]); ?>
+				<?php echo template::textarea('configFooterText', [
+					'label' => 'Texte du bas de page',
+					'value' => $this->getData(['config', 'footerText'])
 				]); ?>
 				<?php echo template::checkbox('configCookieConsent', true, 'Afficher le message de consentement pour l\'utilisation des cookies', [
 					'checked' => $this->getData(['config', 'cookieConsent'])
@@ -45,7 +49,7 @@
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4>Réseaux sociaux</h4>
+				<h4><?php echo helper::translate('Réseaux sociaux'); ?></h4>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::text('configSocialFacebookId', [
@@ -96,7 +100,7 @@
 				</div>
 			</div>
 			<div class="block">
-				<h4>Système</h4>
+				<h4><?php echo helper::translate('Système'); ?></h4>
 				<?php echo template::text('configVersion', [
 					'label' => 'Version de Zwii',
 					'value' => self::ZWII_VERSION,
@@ -104,7 +108,7 @@
 				]); ?>
 				<?php echo template::checkbox('configAutoBackup', true, 'Activer la sauvegarder automatique des données', [
 					'checked' => $this->getData(['config', 'autoBackup']),
-					'help' => 'Effectue la sauvegarde une fois par jour dans le dossier private/source/backup/.'
+					'help' => 'Effectue une sauvegarde une fois par jour dans le dossier site/file/backup/.'
 				]); ?>
 				<div class="row">
 					<div class="col6">

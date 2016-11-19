@@ -93,6 +93,10 @@ $(".inputFileHidden").on("change", function() {
 	var fileName = inputFileHiddenDOM.val();
 	if(fileName === "") {
 		fileName = "<?php echo helper::translate('Choisissez un fichier'); ?>";
+		$(".inputFileDelete").addClass("disabled");
+	}
+	else {
+		$(".inputFileDelete").removeClass("disabled");
 	}
 	inputFileHiddenDOM.parent().find(".inputFileLabel").text(fileName);
 }).trigger("change");

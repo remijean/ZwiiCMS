@@ -1,9 +1,9 @@
-<h3>Options du site</h3>
+<h3><?php echo helper::translate('Options du site'); ?></h3>
 <form method="post">
 	<div class="row">
 		<div class="col6">
 			<div class="block">
-				<h4>Couleurs</h4>
+				<h4><?php echo helper::translate('Couleurs'); ?></h4>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::text('themeTitleTextColor', [
@@ -33,7 +33,7 @@
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4>Polices</h4>
+				<h4><?php echo helper::translate('Polices'); ?></h4>
 				<?php echo template::select('themeTitleFont', $module::$fonts, [
 					'label' => 'Police des titres',
 					'selected' => $this->getData(['theme', 'title', 'font'])
@@ -48,7 +48,7 @@
 	<div class="row">
 		<div class="col12">
 			<div class="block">
-				<h4>Divers</h4>
+				<h4><?php echo helper::translate('Divers'); ?></h4>
 				<div class="row">
 					<div class="col4">
 						<?php echo template::select('themeSiteWidth', $module::$widths, [
