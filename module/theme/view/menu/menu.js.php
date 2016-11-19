@@ -3,9 +3,9 @@ $("input, select").on("change", function() {
 	// Couleurs du menu
 	var colors = colorVariants($("#themeMenuBackgroundColor").val());
 	var css = "nav{background-color:" + colors.normal + "}";
-	css += "nav a{color:" + colors.text + "}";
-	css += "nav a:hover{color:" + colors.text + ";background-color:" + colors.darken + "}";
-	css += "nav a.target, nav a:active{color:" + colors.text + ";background-color:" + colors.veryDarken + "}";
+	css += "nav a{color:" + colors.text + "!important}";
+	css += "nav a:hover{color:" + colors.text + "}";
+	css += "nav a.target, nav a:active{background-color:" + colors.veryDarken + "}";
 	// Hauteur du menu
 	css += "#toggle,#menu a{padding:" + $("#themeMenuHeight").val() + "}";
 	// Alignement du menu

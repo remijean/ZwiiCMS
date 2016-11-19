@@ -83,7 +83,7 @@ class theme extends common {
 		'hide' => 'Caché',
 		'site' => 'Dans le site',
 		'body-first' => 'Au dessus du site en première position',
-		'body-second' => 'En dehors du site en seconde position'
+		'body-second' => 'Au dessus du site en seconde position'
 	];
 	public static $radius = [
 		'0' => 'Aucun',

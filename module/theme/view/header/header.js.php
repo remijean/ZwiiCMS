@@ -9,6 +9,9 @@ $("input, select").on("change", function() {
 	if(themeHeaderImage) {
 		css += "header{background-image:url('site/file/" + themeHeaderImage + "');background-repeat:" + $("#themeHeaderImageRepeat").val() + ";background-position:" + $("#themeHeaderImagePosition").val() + "}";
 	}
+	else {
+		css += "header{background-image:none}";
+	}
 	// Couleur du titre de la bannière
 	css += "header h1{color:" + $("#themeHeaderTextColor").val() + ";font-family:'" + headerFont.replace("+", " ") + "',sans-serif}";
 	// Ajout du css au DOM

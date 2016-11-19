@@ -3,8 +3,9 @@ $("input, select").on("change", function() {
 	// Couleurs du bas de page
 	var colors = colorVariants($("#themeFooterBackgroundColor").val());
 	var css = "footer{background-color:" + colors.normal + ";color:" + colors.text + "}";
+	var css = "footer a{color:" + colors.text + "!important}";
 	// Hauteur du bas de page
-	css += "footer > div{margin:" + $("#themeFooterHeight").val() + " 0}";
+	css += "footer .container > div{margin:" + $("#themeFooterHeight").val() + " 0}";
 	// Alignement du contenu
 	css += "#socials{text-align:" + $("#themeFooterSocialsAlign").val() + "}";
 	css += "#text{text-align:" + $("#themeFooterTextAlign").val() + "}";

@@ -7,6 +7,9 @@ $("input, select").on("change", function() {
 	if(themeBodyImage) {
 		css += "body{background-image:url('site/file/" + themeBodyImage + "');background-repeat:" + $("#themeBodyImageRepeat").val() + ";background-position:" + $("#themeBodyImagePosition").val() + ";background-attachment:" + $("#themeBodyImageAttachment").val() + ";background-size:" + $("#themeBodyImageSize").val() + "]";
 	}
+	else {
+		css += "body{background-image:none}";
+	}
 	// Ajout du css au DOM
 	$("#themePreview").remove();
 	$("<style>")

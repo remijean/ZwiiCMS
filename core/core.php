@@ -92,7 +92,7 @@ class common {
 		],
 		'theme' => [
 			'body' => [
-				'backgroundColor' => 'rgba(232, 232, 232, 1)',
+				'backgroundColor' => 'rgba(255, 255, 255, 1)',
 				'image' => '',
 				'imageAttachment' => 'scroll',
 				'imageRepeat' => 'no-repeat',
@@ -103,35 +103,35 @@ class common {
 				'backgroundColor' => 'rgba(71, 123, 184, 1)',
 			],
 			'footer' => [
-				'backgroundColor' => 'rgba(255, 255, 255, 1)',
+				'backgroundColor' => 'rgba(60, 60, 60, 1)',
 				'copyrightAlign' => 'right',
-				'height' => '10px',
-				'position' => 'site',
+				'height' => '30px',
+				'position' => 'body',
 				'socialsAlign' => 'left',
 				'textAlign' => 'right'
 			],
 			'header' => [
-				'backgroundColor' => 'rgba(255, 255, 255, 1)',
+				'backgroundColor' => 'rgba(71, 123, 184, 1)',
 				'font' => 'Oswald',
-				'height' => '150px',
+				'height' => '200px',
 				'image' => '',
 				'imagePosition' => 'center center',
 				'imageRepeat' => 'no-repeat',
-				'position' => 'site',
+				'position' => 'body',
 				'textAlign' => 'center',
-				'textColor' => 'rgba(85, 85, 85, 1)'
+				'textColor' => 'rgba(255, 255, 255, 1)'
 			],
 			'link' => [
 				'textColor' => 'rgba(71, 123, 184, 1)',
 			],
 			'menu' => [
-				'backgroundColor' => 'rgba(71, 123, 184, 1)',
-				'height' => '15px 10px',
-				'position' => 'site',
+				'backgroundColor' => 'rgba(255, 255, 255, 1)',
+				'height' => '20px 10px',
+				'position' => 'body-first',
 				'textAlign' => 'left',
 			],
 			'site' => [
-				'width' => '1170px'
+				'width' => '960px'
 			],
 			'text' => [
 				'font' => 'Open+Sans'
@@ -405,12 +405,12 @@ class core extends common {
 			$css .= '.container{max-width:' . $this->getData(['theme', 'site', 'width']) . '}';
 			$css .= '#site{border-radius:' . $this->getData(['theme', 'site', 'radius']) . ';box-shadow:' . $this->getData(['theme', 'site', 'shadow']) . ' #3C3C3C}';
 			$colors = helper::colorVariants($this->getData(['theme', 'button', 'backgroundColor']));
-			$css .= '.button,input[type=\'submit\'],pagination a,input[type=\'checkbox\']:checked + label:before,input[type=\'radio\']:checked + label:before,.helpContent{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '}';
+			$css .= '.button,input[type=\'submit\'],pagination a,input[type=\'checkbox\']:checked + label:before,input[type=\'radio\']:checked + label:before,.helpContent{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '!important}';
 			$css .= '.tabTitle.current,.helpButton span{color:' . $colors['normal'] . '}';
 			$css .= 'input[type=\'text\']:hover,input[type=\'password\']:hover,.inputFile:hover,select:hover,textarea:hover{border: 1px solid ' . $colors['normal'] . '}';
-			$css .= '.button:hover,input[type=\'submit\']:hover,.pagination a:hover,input[type=\'checkbox\']:not(:active):checked:hover + label:before,input[type=\'checkbox\']:active + label:before,input[type=\'radio\']:checked:hover + label:before,input[type=\'radio\']:not(:checked):active + label:before{background-color:' . $colors['darken'] . ';color:' . $colors['text'] . '}';
+			$css .= '.button:hover,input[type=\'submit\']:hover,.pagination a:hover,input[type=\'checkbox\']:not(:active):checked:hover + label:before,input[type=\'checkbox\']:active + label:before,input[type=\'radio\']:checked:hover + label:before,input[type=\'radio\']:not(:checked):active + label:before{background-color:' . $colors['darken'] . '}';
 			$css .= '.helpButton span:hover{color:' . $colors['darken'] . '}';
-			$css .= '.button:active,input[type=\'submit\']:active,.pagination a:active{background-color:' . $colors['veryDarken'] . ';color:' . $colors['text'] . '}';
+			$css .= '.button:active,input[type=\'submit\']:active,.pagination a:active{background-color:' . $colors['veryDarken'] . '}';
 			$colors = helper::colorVariants($this->getData(['theme', 'link', 'textColor']));
 			$css .= 'a{color:' . $colors['normal'] . '}';
 			$css .= 'a:hover{color:' . $colors['darken'] . '}';
@@ -428,15 +428,16 @@ class core extends common {
 			// Menu
 			$colors = helper::colorVariants($this->getData(['theme', 'menu', 'backgroundColor']));
 			$css .= 'nav{background-color:' . $colors['normal'] . '}';
-			$css .= 'nav a{color:' . $colors['text'] . '}';
-			$css .= 'nav a:hover{color:' . $colors['text'] . ';background-color:' . $colors['darken'] . '}';
-			$css .= 'nav a.target,nav a:active{color:' . $colors['text'] . ';background-color:' . $colors['veryDarken'] . '}';
+			$css .= 'nav a{color:' . $colors['text'] . '!important}';
+			$css .= 'nav a:hover{background-color:' . $colors['darken'] . '}';
+			$css .= 'nav a.target,nav a:active{background-color:' . $colors['veryDarken'] . '}';
 			$css .= '#menu{text-align:' . $this->getData(['theme', 'menu', 'textAlign']) . '}';
 			$css .= '#menu a{padding:' . $this->getData(['theme', 'menu', 'height']) . '}';
 			// Bas de page
 			$colors = helper::colorVariants($this->getData(['theme', 'footer', 'backgroundColor']));
 			$css .= 'footer{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '}';
-			$css .= 'footer > div{margin:' . $this->getData(['theme', 'footer', 'height']) . ' 0}';
+			$css .= 'footer a{color:' . $colors['text'] . '!important}';
+			$css .= 'footer .container > div{margin:' . $this->getData(['theme', 'footer', 'height']) . ' 0}';
 			$css .= '#socials{text-align:' . $this->getData(['theme', 'footer', 'socialsAlign']) . '}';
 			$css .= '#footerText{text-align:' . $this->getData(['theme', 'footer', 'textAlign']) . '}';
 			$css .= '#copyright{text-align:' . $this->getData(['theme', 'footer', 'copyrightAlign']) . '}';
@@ -588,6 +589,7 @@ class helper {
 	const FILTER_PASSWORD = 'FILTER_SANITIZE_PASSWORD';
 	const FILTER_BOOLEAN = 'FILTER_SANITIZE_BOOLEAN';
 	const FILTER_URL = 'FILTER_SANITIZE_URL'; // N'utilise pas FILTER_SANITIZE_URL de PHP qui est trop efficace
+	const FILTER_URL_CASE = 'FILTER_SANITIZE_CASE'; // Conserve la casse
 	const FILTER_URL_STRICT = 'FILTER_SANITIZE_URL_STRICT'; // Supprime les "&", "?" et "/" (utile pour filtrer une partie d'URL, ne pas utiliser pour filtrer une URL complète)
 	const FILTER_STRING = FILTER_SANITIZE_STRING;
 	const FILTER_EMAIL = FILTER_SANITIZE_EMAIL;
@@ -714,6 +716,9 @@ class helper {
 				break;
 			case self::FILTER_URL:
 				$text = str_replace(explode(',', $search), explode(',', $replace), mb_strtolower($text, 'UTF-8'));
+				break;
+			case self::FILTER_URL:
+				$text = str_replace(explode(',', $search), explode(',', $replace), $text);
 				break;
 			case self::FILTER_URL_STRICT:
 				$text = str_replace(explode(',', $search . ',?,&,/'), explode(',', $replace . ',-,-,-'), mb_strtolower($text, 'UTF-8'));
