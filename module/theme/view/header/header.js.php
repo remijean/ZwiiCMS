@@ -12,8 +12,8 @@ $("input, select").on("change", function() {
 	else {
 		css += "header{background-image:none}";
 	}
-	// Couleur du titre de la bannière
-	css += "header h1{color:" + $("#themeHeaderTextColor").val() + ";font-family:'" + headerFont.replace("+", " ") + "',sans-serif}";
+	// Couleur, épaisseur et capitalisation du titre de la bannière
+	css += "header h1{color:" + $("#themeHeaderTextColor").val() + ";font-family:'" + headerFont.replace("+", " ") + "',sans-serif;font-weight:" + $("#themeHeaderFontWeight").val() + ";text-transform:" + $("#themeHeaderTextTransform").val() + "}";
 	// Ajout du css au DOM
 	$("#themePreview").remove();
 	$("<style>")

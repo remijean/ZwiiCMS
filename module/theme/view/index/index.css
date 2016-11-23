@@ -23,3 +23,6 @@ footer {
 .themeOverlay:hover {
 	background: rgba(103, 198, 114, .7);
 }
+#themeOverlayBody {
+	position: fixed; /* Sinon l'overlay s'arrête à la hauteur de la fenêtre et non de la page*/
+}

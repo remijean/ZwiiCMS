@@ -5,6 +5,7 @@
 - OK : Terminer script de génération de theme.css
 - OK : Utiliser la méthode de calcul de la luminance relative d'une couleur du W3C
 - OK : Créer l'input de d'upload des fichiers
+- Mettre à jour TinyMCE et configurer les urls relatives
 - Intéger le gestionnaire de fichier dans le panneau d'administration
 - Déterminer prendre elFinder ou garde responsiveFM
 - Ajouter ID dans containers de la classs template

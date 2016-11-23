@@ -6,8 +6,8 @@ $("input, select").on("change", function() {
 	css += "nav a{color:" + colors.text + "!important}";
 	css += "nav a:hover{color:" + colors.text + "}";
 	css += "nav a.target, nav a:active{background-color:" + colors.veryDarken + "}";
-	// Hauteur du menu
-	css += "#toggle,#menu a{padding:" + $("#themeMenuHeight").val() + "}";
+	// Hauteur, épaisseur et capitalisation de caractères du menu
+	css += "#toggle span,#menu a{padding:" + $("#themeMenuHeight").val() + ";font-weight:" + $("#themeMenuFontWeight").val() + ";text-transform:" + $("#themeMenuTextTransform").val() + "}";
 	// Alignement du menu
 	css += "#menu{text-align:" + $("#themeMenuTextAlign").val() + "}";
 	// Ajout du css au DOM
@@ -27,7 +27,7 @@ $("input, select").on("change", function() {
 				$("nav").show().insertAfter("header");
 			}
 			else {
-				$("nav").show().appendTo("#site");
+				$("nav").show().prependTo("#site");
 			}
 			break;
 		case 'body-first':

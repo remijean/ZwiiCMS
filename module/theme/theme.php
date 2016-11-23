@@ -37,6 +37,10 @@ class theme extends common {
 		'Rancho' => 'Rancho',
 		'Ubuntu' => 'Ubuntu'
 	];
+	public static $fontWeights = [
+		'normal' => 'Normal',
+		'bold' => 'Gras'
+	];
 	public static $footerHeights = [
 		'5px' => 'Très petit',
 		'10px' => 'Petit',
@@ -110,6 +114,10 @@ class theme extends common {
 	public static $sizes = [
 		'auto' => 'Automatique',
 		'cover' => 'Largeur adaptée au fond'
+	];
+	public static $textTransforms = [
+		'none' => 'Normal',
+		'uppercase' => 'Majuscule'
 	];
 	public static $widths = [
 		'750px' => 'Petit (750px)',
@@ -196,13 +204,15 @@ class theme extends common {
 			$this->setData(['theme', 'header', [
 				'backgroundColor' => $this->getInput('themeHeaderBackgroundColor'),
 				'font' => $this->getInput('themeHeaderFont'),
+				'fontWeight' => $this->getInput('themeHeaderFontWeight'),
 				'height' => $this->getInput('themeHeaderHeight'),
 				'image' => $this->getInput('themeHeaderImage'),
 				'imagePosition' => $this->getInput('themeHeaderImagePosition'),
 				'imageRepeat' => $this->getInput('themeHeaderImageRepeat'),
 				'position' => $this->getInput('themeHeaderPosition'),
 				'textAlign' => $this->getInput('themeHeaderTextAlign'),
-				'textColor' => $this->getInput('themeHeaderTextColor')
+				'textColor' => $this->getInput('themeHeaderTextColor'),
+				'textTransform' => $this->getInput('themeHeaderTextTransform')
 			]]);
 			$this->saveData();
 			return [
@@ -242,9 +252,11 @@ class theme extends common {
 			@unlink('site/data/' . md5(json_encode($this->getData(['theme']))) . '.css');
 			$this->setData(['theme', 'menu', [
 				'backgroundColor' => $this->getInput('themeMenuBackgroundColor'),
+				'fontWeight' => $this->getInput('themeMenuFontWeight'),
 				'height' => $this->getInput('themeMenuHeight'),
 				'position' => $this->getInput('themeMenuPosition'),
-				'textAlign' => $this->getInput('themeMenuTextAlign')
+				'textAlign' => $this->getInput('themeMenuTextAlign'),
+				'textTransform' => $this->getInput('themeMenuTextTransform')
 			]]);
 			$this->saveData();
 			return [
@@ -274,7 +286,9 @@ class theme extends common {
 			@unlink('site/data/' . md5(json_encode($this->getData(['theme']))) . '.css');
 			$this->setData(['theme', 'title', [
 				'font' => $this->getInput('themeTitleFont'),
-				'textColor' => $this->getInput('themeTitleTextColor')
+				'textColor' => $this->getInput('themeTitleTextColor'),
+				'fontWeight' => $this->getInput('themeTitleFontWeight'),
+				'textTransform' => $this->getInput('themeTitleTextTransform')
 			]]);
 			$this->setData(['theme', 'button', 'backgroundColor', $this->getInput('themeButtonBackgroundColor')]);
 			$this->setData(['theme', 'link', 'textColor', $this->getInput('themeLinkTextColor')]);
