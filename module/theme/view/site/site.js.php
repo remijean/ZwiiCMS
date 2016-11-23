@@ -6,9 +6,10 @@ $("input, select").on("change", function() {
 	var css = "@import url('https://fonts.googleapis.com/css?family=" + titleFont + "|" + textFont + "');";
 	// Couleurs des boutons
 	var colors = colorVariants($("#themeButtonBackgroundColor").val());
-	css += ".button,input[type='submit'],pagination a,input[type='checkbox']:checked + label:before,input[type='radio']:checked + label:before,.helpContent{background-color:" + colors.normal + ";color:" + colors.text + "!important}";
+	css += ".speechBubble,.button,input[type='submit'],pagination a,input[type='checkbox']:checked + label:before,input[type='radio']:checked + label:before,.helpContent{background-color:" + colors.normal + ";color:" + colors.text + "!important}";
 	css += ".tabTitle.current,.helpButton span{color:" + colors.normal + "}";
-	css += "input[type='text']:hover,input[type='password']:hover,.inputFile:hover,select:hover,textarea:hover{border: 1px solid " + colors.normal + "}";
+	css += "input[type='text']:hover,input[type='password']:hover,.inputFile:hover,select:hover,textarea:hover{border-color:" + colors.normal + "}";
+	css += ".speechBubble:before{border-color:" + colors.normal + " transparent transparent transparent}";
 	css += ".button:hover,input[type='submit']:hover,.pagination a:hover,input[type='checkbox']:not(:active):checked:hover + label:before,input[type='checkbox']:active + label:before,input[type='radio']:checked:hover + label:before,input[type='radio']:not(:checked):active + label:before{background-color:" + colors.darken + "}";
 	css += ".helpButton span:hover{color:" + colors.darken + "}";
 	css += ".button:active,input[type='submit']:active,.pagination a:active{background-color:" + colors.veryDarken + "}";
@@ -17,8 +18,8 @@ $("input, select").on("change", function() {
 	css += "a{color:" + colors.normal + "}";
 	css += "a:hover{color:" + colors.darken + "}";
 	css += "a:active{color:" + colors.veryDarken + "}";
-	// Couleur et polices de caractères des titres
-	css += "h1,h2,h3,h4,h5,h6{color:" + $("#themeTitleTextColor").val() + ";font-family:'" + titleFont.replace("+", " ") + "',sans-serif}";
+	// Couleur, polices, épaisseur et capitalisation de caractères des titres
+	css += "h1,h2,h3,h4,h5,h6{color:" + $("#themeTitleTextColor").val() + ";font-family:'" + titleFont.replace("+", " ") + "',sans-serif;font-weight:" + $("#themeTitleFontWeight").val() + ";text-transform:" + $("#themeTitleTextTransform").val() + "}";
 	// Police de caractères du texte
 	css += "body{font-family:'" + textFont.replace("+", " ") + "',sans-serif}";
 	// Largeur du site

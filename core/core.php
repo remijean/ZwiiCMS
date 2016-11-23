@@ -100,7 +100,7 @@ class common {
 				'imageSize' => 'auto'
 			],
 			'button' => [
-				'backgroundColor' => 'rgba(71, 123, 184, 1)',
+				'backgroundColor' => 'rgba(71, 123, 184, 1)'
 			],
 			'footer' => [
 				'backgroundColor' => 'rgba(60, 60, 60, 1)',
@@ -113,22 +113,26 @@ class common {
 			'header' => [
 				'backgroundColor' => 'rgba(71, 123, 184, 1)',
 				'font' => 'Oswald',
+				'fontWeight' => 'normal',
 				'height' => '300px',
 				'image' => '',
 				'imagePosition' => 'center center',
 				'imageRepeat' => 'no-repeat',
 				'position' => 'body',
 				'textAlign' => 'center',
-				'textColor' => 'rgba(255, 255, 255, 1)'
+				'textColor' => 'rgba(255, 255, 255, 1)',
+				'textTransform' => 'uppercase'
 			],
 			'link' => [
-				'textColor' => 'rgba(71, 123, 184, 1)',
+				'textColor' => 'rgba(71, 123, 184, 1)'
 			],
 			'menu' => [
 				'backgroundColor' => 'rgba(255, 255, 255, 1)',
+				'fontWeight' => 'normal',
 				'height' => '15px 10px',
 				'position' => 'body-first',
 				'textAlign' => 'left',
+				'textTransform' => 'uppercase'
 			],
 			'site' => [
 				'width' => '960px'
@@ -138,7 +142,9 @@ class common {
 			],
 			'title' => [
 				'font' => 'Oswald',
-				'textColor' => 'rgba(71, 123, 184, 1)'
+				'fontWeight' => 'normal',
+				'textColor' => 'rgba(71, 123, 184, 1)',
+				'textTransform' => 'uppercase'
 			]
 		]
 	];
@@ -149,19 +155,18 @@ class common {
 		'_COOKIE' => []
 	];
 	public static $outputContent = '';
-	public static $outputDisplay = self::DISPLAY_LAYOUT;
+	public static $outputDisplay = self::DISPLAY_SITE;
 	public static $outputMetaDescription = '';
 	public static $outputMetaTitle = '';
 	public static $outputScript = '';
 	public static $outputStyle = '';
 	public static $outputTitle = '';
+	// Librairies classées par odre d'exécution
 	public static $outputVendor = [
 		'jquery',
 		// 'jquery-ui', Désactivé par défaut mais disponible
 		'normalize',
-		// Ne pas déplacer les librairies ou placer de nouvelles librairies avant les librairies ci-dessus
 		'lity',
-		// 'responsive-filemanager', Désactivé par défaut mais disponible
 		// 'tinymce', Désactivé par défaut mais disponible
 		'zwiico'
 	];
@@ -171,9 +176,14 @@ class common {
 	const RANK_MEMBER = 1;
 	const RANK_MODERATOR = 2;
 	const RANK_ADMIN = 3;
+
 	const ZWII_VERSION = '8.0.0';
-	const DISPLAY_LAYOUT = 0;
+
+	const DISPLAY_BLANK = 0;
 	const DISPLAY_JSON = 1;
+	const DISPLAY_SITE = 2;
+	const DISPLAY_POPUP = 3;
+
 
 	/**
 	 * Constructeur commun
@@ -405,9 +415,10 @@ class core extends common {
 			$css .= '.container{max-width:' . $this->getData(['theme', 'site', 'width']) . '}';
 			$css .= '#site{border-radius:' . $this->getData(['theme', 'site', 'radius']) . ';box-shadow:' . $this->getData(['theme', 'site', 'shadow']) . ' #3C3C3C}';
 			$colors = helper::colorVariants($this->getData(['theme', 'button', 'backgroundColor']));
-			$css .= '.button,input[type=\'submit\'],pagination a,input[type=\'checkbox\']:checked + label:before,input[type=\'radio\']:checked + label:before,.helpContent{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '!important}';
+			$css .= '.speechBubble,.button,input[type=\'submit\'],pagination a,input[type=\'checkbox\']:checked + label:before,input[type=\'radio\']:checked + label:before,.helpContent{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '!important}';
 			$css .= '.tabTitle.current,.helpButton span{color:' . $colors['normal'] . '}';
-			$css .= 'input[type=\'text\']:hover,input[type=\'password\']:hover,.inputFile:hover,select:hover,textarea:hover{border: 1px solid ' . $colors['normal'] . '}';
+			$css .= 'input[type=\'text\']:hover,input[type=\'password\']:hover,.inputFile:hover,select:hover,textarea:hover{border-color:' . $colors['normal'] . '}';
+			$css .= '.speechBubble:before{border-color:' . $colors['normal'] . ' transparent transparent transparent}';
 			$css .= '.button:hover,input[type=\'submit\']:hover,.pagination a:hover,input[type=\'checkbox\']:not(:active):checked:hover + label:before,input[type=\'checkbox\']:active + label:before,input[type=\'radio\']:checked:hover + label:before,input[type=\'radio\']:not(:checked):active + label:before{background-color:' . $colors['darken'] . '}';
 			$css .= '.helpButton span:hover{color:' . $colors['darken'] . '}';
 			$css .= '.button:active,input[type=\'submit\']:active,.pagination a:active{background-color:' . $colors['veryDarken'] . '}';
@@ -416,7 +427,7 @@ class core extends common {
 			$css .= 'a:hover{color:' . $colors['darken'] . '}';
 			$css .= 'a:active{color:' . $colors['veryDarken'] . '}';
 			$colors = helper::colorVariants($this->getData(['theme', 'title', 'textColor']));
-			$css .= 'h1,h2,h3,h4,h5,h6{color:' . $colors['normal'] . ';font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'title', 'font'])) . '",sans-serif}';
+			$css .= 'h1,h2,h3,h4,h5,h6{color:' . $colors['normal'] . ';font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'title', 'font'])) . '",sans-serif;font-weight:' . $this->getData(['theme', 'title', 'fontWeight']) . ';text-transform:' . $this->getData(['theme', 'title', 'textTransform']) . '}';
 			// Bannière
 			$colors = helper::colorVariants($this->getData(['theme', 'header', 'backgroundColor']));
 			$css .= 'header{background-color:' . $colors['normal'] . ';height:' . $this->getData(['theme', 'header', 'height']) . ';line-height:' . $this->getData(['theme', 'header', 'height']) . ';text-align:' . $this->getData(['theme', 'header', 'textAlign']) . '}';
@@ -424,7 +435,7 @@ class core extends common {
 				$css .= 'header{background-image:url("../file/' . $themeHeaderImage . '");background-position:' . $this->getData(['theme', 'header', 'imagePosition']) . ';background-repeat:' . $this->getData(['theme', 'header', 'imageRepeat']) . '}';
 			}
 			$colors = helper::colorVariants($this->getData(['theme', 'header', 'textColor']));
-			$css .= 'header h1{color:' . $colors['normal'] . ';font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'header', 'font'])) . '",sans-serif}';
+			$css .= 'header h1{color:' . $colors['normal'] . ';font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'header', 'font'])) . '",sans-serif;font-weight:' . $this->getData(['theme', 'header', 'fontWeight']) . ';text-transform:' . $this->getData(['theme', 'header', 'textTransform']) . '}';
 			// Menu
 			$colors = helper::colorVariants($this->getData(['theme', 'menu', 'backgroundColor']));
 			$css .= 'nav{background-color:' . $colors['normal'] . '}';
@@ -432,7 +443,7 @@ class core extends common {
 			$css .= 'nav a:hover{background-color:' . $colors['darken'] . '}';
 			$css .= 'nav a.target,nav a:active{background-color:' . $colors['veryDarken'] . '}';
 			$css .= '#menu{text-align:' . $this->getData(['theme', 'menu', 'textAlign']) . '}';
-			$css .= '#menu a{padding:' . $this->getData(['theme', 'menu', 'height']) . '}';
+			$css .= '#toggle span,#menu a{padding:' . $this->getData(['theme', 'menu', 'height']) . ';font-weight:' . $this->getData(['theme', 'menu', 'fontWeight']) . ';text-transform:' . $this->getData(['theme', 'menu', 'textTransform']) . '}';
 			// Bas de page
 			$colors = helper::colorVariants($this->getData(['theme', 'footer', 'backgroundColor']));
 			$css .= 'footer{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '}';
@@ -484,72 +495,79 @@ class core extends common {
 			// Check l'existence du module
 			if(class_exists($moduleId)) {
 				$module = new $moduleId;
-				$action = $this->getUrl(1) ? $this->getUrl(1) : 'index';
 				// Check l'existence de l'action
-				if(array_key_exists($action, $module::$actions)) {
-					// Check le rang de l'utilisateur
-					if(
-						$module::$actions[$action] === 0
-						OR (
-							$this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE')])
-							AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'password']) === $this->getInput('ZWII_USER_PASSWORD', '_COOKIE')
-							AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'rank']) >= $module::$actions[$action]
-						)
-					) {
-						$output = $module->$action();
-						if(is_array($output)) {
-							// Contenu du module
-							if(array_key_exists('view', $output)) {
-								// CSS
-								$stylePath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.css';
-								if(file_exists($stylePath)) {
-									self::$outputStyle = file_get_contents($stylePath);
-								}
-								// JS
-								$scriptPath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.js.php';
-								if(file_exists($scriptPath)) {
-									ob_start();
-									include $scriptPath;
-									self::$outputScript .= ob_get_clean();
-								}
-								// Vue
-								$viewPath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.php';
-								if(file_exists($viewPath)) {
-									ob_start();
-									include $viewPath;
-									self::$outputContent .= ob_get_clean();
-								}
+				if($this->getUrl(1) AND array_key_exists($this->getUrl(1), $module::$actions)) {
+					$action = $this->getUrl(1);
+				}
+				else {
+					$action = 'index';
+				}
+				// Check le rang de l'utilisateur
+				if(
+					$module::$actions[$action] === 0
+					OR (
+						$this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE')])
+						AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'password']) === $this->getInput('ZWII_USER_PASSWORD', '_COOKIE')
+						AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'rank']) >= $module::$actions[$action]
+					)
+				) {
+					$output = $module->$action();
+					if(is_array($output)) {
+						// Contenu du module
+						if(array_key_exists('view', $output)) {
+							// CSS
+							$stylePath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.css';
+							if(file_exists($stylePath)) {
+								self::$outputStyle = file_get_contents($stylePath);
 							}
-							// Librairies
-							if(array_key_exists('vendor', $output)) {
-								self::$outputVendor = array_merge(self::$outputVendor, $output['vendor']);
+							// JS
+							$scriptPath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.js.php';
+							if(file_exists($scriptPath)) {
+								ob_start();
+								include $scriptPath;
+								self::$outputScript .= ob_get_clean();
 							}
-							// Titre
-							if(array_key_exists('title', $output)) {
-								self::$outputTitle = helper::translate($output['title']);
+							// Vue
+							$viewPath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.php';
+							if(file_exists($viewPath)) {
+								ob_start();
+								include $viewPath;
+								self::$outputContent .= ob_get_clean();
 							}
-							// En l'absence de notice
-							if(empty(template::$notices)) {
-								// Notification
-								if(array_key_exists('notification', $output)) {
-									$state = array_key_exists('state', $output) ? (bool) $output['state'] : false;
-									$_SESSION[$state ? 'ZWII_NOTIFICATION_SUCCESS' : 'ZWII_NOTIFICATION_ERROR'] = $output['notification'];
-								}
-								// Redirection
-								if(array_key_exists('redirect', $output)) {
-									http_response_code(301);
-									header('Location:' . helper::baseUrl() . $output['redirect']);
-									exit();
-								}
+							// Affichage
+							if(array_key_exists('display', $output)) {
+								self::$outputDisplay = $output['display'];
+							}
+						}
+						// Librairies
+						if(array_key_exists('vendor', $output)) {
+							self::$outputVendor = array_merge(self::$outputVendor, $output['vendor']);
+						}
+						// Titre
+						if(array_key_exists('title', $output)) {
+							self::$outputTitle = helper::translate($output['title']);
+						}
+						// En l'absence de notice
+						if(empty(template::$notices)) {
+							// Notification
+							if(array_key_exists('notification', $output)) {
+								$state = array_key_exists('state', $output) ? (bool) $output['state'] : false;
+								$_SESSION[$state ? 'ZWII_NOTIFICATION_SUCCESS' : 'ZWII_NOTIFICATION_ERROR'] = $output['notification'];
+							}
+							// Redirection
+							if(array_key_exists('redirect', $output)) {
+								http_response_code(301);
+								header('Location:' . helper::baseUrl() . $output['redirect']);
+								exit();
 							}
 						}
 					}
-					// Connexion
-					else {
-						http_response_code(301);
-						header('Location:' . helper::baseUrl() . 'user/login');
-						exit();
-					}
+				}
+				// Connexion
+				else {
+					http_response_code(301);
+					header('Location:' . helper::baseUrl() . 'user/login');
+					exit();
 				}
 			}
 		}
@@ -557,23 +575,32 @@ class core extends common {
 		if(empty(self::$outputContent)) {
 			http_response_code(404);
 			self::$outputTitle = helper::translate('Erreur 404');
-			self::$outputContent = '<p>' . helper::translate('Page introuvable !') . '</p>';
+			self::$outputContent = template::speech('Oups ! La page demandée est introuvable...');
+		}
+		// Mise en forme des métas
+		if(empty(self::$outputMetaTitle)) {
+			self::$outputMetaTitle = self::$outputTitle . ' - ' . $this->getData(['config', 'title']);
+		}
+		if(empty(self::$outputMetaDescription)) {
+			self::$outputMetaDescription = $this->getData(['config', 'metaDescription']);
 		}
 		// Choix du type d'affichage
 		switch(self::$outputDisplay) {
-			// Layout
-			case self::DISPLAY_LAYOUT:
-				if(empty(self::$outputMetaTitle)) {
-					self::$outputMetaTitle = self::$outputTitle . ' - ' . $this->getData(['config', 'title']);
-				}
-				if(empty(self::$outputMetaDescription)) {
-					self::$outputMetaDescription = $this->getData(['config', 'metaDescription']);
-				}
-				require 'core/layout.php';
+			// Layout main
+			case self::DISPLAY_SITE:
+				require 'core/layout/site.php';
+				break;
+			// Layout popup
+			case self::DISPLAY_POPUP:
+				require 'core/layout/popup.php';
 				break;
 			// JSON
 			case self::DISPLAY_JSON:
 				echo json_encode(self::$outputContent);
+				break;
+			// BLANK
+			case self::DISPLAY_BLANK:
+				echo self::$outputContent;
 				break;
 		}
 	}
@@ -945,10 +972,8 @@ class layout extends common {
 	public function showContent() {
 		if(
 			self::$outputTitle
-			AND (
-				$this->getData(['page', $this->getUrl(0)]) === null
-				OR $this->getData(['page', $this->getUrl(0), 'hideTitle']) === false
-			)
+			OR $this->getData(['page', $this->getUrl(0)]) === null // TODO : à quoi ça sert ?
+			OR $this->getData(['page', $this->getUrl(0), 'hideTitle']) === false
 		) {
 			echo '<h2 id="pageTitle">' . self::$outputTitle . '</h2>' . self::$outputContent;
 		}
@@ -969,7 +994,7 @@ class layout extends common {
 	 */
 	public function showFavicon() {
 		if($favicon = $this->getData(['config', 'favicon'])) {
-			echo '<link rel="shortcut icon" href="' . helper::baseUrl(false) . $favicon . '">';
+			echo '<link rel="shortcut icon" href="' . helper::baseUrl(false) . 'site/file/' . $favicon . '">';
 		}
 	}
 
@@ -1053,7 +1078,9 @@ class layout extends common {
 			AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'password']) === $this->getInput('ZWII_USER_PASSWORD', '_COOKIE')
 		) {
 			$items = '<li><a href="' . helper::baseUrl() . 'create" title="' . helper::translate('Créer une page') . '">' . template::ico('plus') . '</a></li>';
-			$items .= '<li><a href="' . helper::baseUrl() . 'page/edit/' . $this->getUrl(0) . '" title="' . helper::translate('Modifier la page') . '">' . template::ico('pencil') . '</a></li>';
+			if($this->getData(['page', $this->getUrl(0)])) {
+				$items .= '<li><a href="' . helper::baseUrl() . 'page/edit/' . $this->getUrl(0) . '" title="' . helper::translate('Modifier la page') . '">' . template::ico('pencil') . '</a></li>';
+			}
 			$items .= '<li><a href="' . helper::baseUrl() . 'page" title="' . helper::translate('Gérer les pages') . '">' . template::ico('page') . '</a></li>';
 			$items .= '<li><a href="' . helper::baseUrl() . 'config" title="' . helper::translate('Configurer le site') . '">' . template::ico('gear') . '</a></li>';
 			$items .= '<li><a href="' . helper::baseUrl() . 'theme" title="' . helper::translate('Personnaliser le site') . '">' . template::ico('brush') . '</a></li>';
@@ -1068,7 +1095,7 @@ class layout extends common {
 	public function showScript() {
 		echo '<script>';
 		// Script du coeur
-		require 'core/script.js.php';
+		require 'core/core.js.php';
 		// Script du module
 		echo self::$outputScript;
 		echo '</script>';
@@ -1424,13 +1451,13 @@ class template {
 		$html .= sprintf(
 			'<a
 				href="' .
-					helper::baseUrl(false) . 'core/vendor/filemanager/dialog.php' .
-					'?relative_url=1' .
-					($attributes['type'] ? '&type=' . $attributes['type'] : '') .
-					($attributes['extensions'] ? '&extensions=' . $attributes['extensions'] : '') .
-					'&field_id=' . $nameId
+					helper::baseUrl() . 'file' .
+					'/1' .
+					($attributes['type'] ? '/' . $attributes['type'] : '') .
+					($attributes['extensions'] ? '/' . $attributes['extensions'] : '') .
+					'/' . $nameId
 				. '"
-				class="inputFile %s %s"!
+				class="inputFile %s %s"
 				%s
 				data-lity
 			>
@@ -1634,6 +1661,15 @@ class template {
 	}
 
 	/**
+	 * Affiche une bulle de dialogue
+	 * @param string $text Texte de la bulle
+	 * @return string
+	 */
+	public static function speech($text) {
+		return '<div class="speech"><div class="speechBubble">' . helper::translate($text) . '</div>' . template::ico('mimi speechMimi', '', false, '7em') . '</div>';
+	}
+
+	/**
 	 * Crée un bouton validation
 	 * @param string $nameId Nom & id du bouton validation
 	 * @param array $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
@@ -1757,7 +1793,6 @@ class template {
 			'required' => false,
 			'label' => '',
 			'help' => '',
-			'editor' => false,
 			'class' => '',
 			'classContainer' => ''
 		], $attributes);
@@ -1783,7 +1818,7 @@ class template {
 		// Texte long
 		$html .= sprintf(
 			'<textarea %s>%s</textarea>',
-			self::sprintAttributes($attributes, ['value', 'editor']),
+			self::sprintAttributes($attributes, ['value']),
 			$attributes['value']
 		);
 		// Fin du container

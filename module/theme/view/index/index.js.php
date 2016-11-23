@@ -1,21 +1,36 @@
 // Ajout des overlays
 $("<a>")
 	.addClass("themeOverlay displayNone")
-	.attr("href", "<?php echo helper::baseUrl(); ?>theme/body")
+	.attr({
+		"id": "themeOverlayBody",
+		"href": "<?php echo helper::baseUrl(); ?>theme/body"
+	})
 	.appendTo("body");
 $("<a>")
 	.addClass("themeOverlay displayNone")
-	.attr("href", "<?php echo helper::baseUrl(); ?>theme/header")
+	.attr({
+		"id": "themeOverlayHeader",
+		"href": "<?php echo helper::baseUrl(); ?>theme/header"
+	})
 	.appendTo("header");
 $("<a>")
 	.addClass("themeOverlay displayNone")
-	.attr("href", "<?php echo helper::baseUrl(); ?>theme/menu")
+	.attr({
+		"id": "themeOverlayMenu",
+		"href": "<?php echo helper::baseUrl(); ?>theme/menu"
+	})
 	.appendTo("nav");
 $("<a>")
 	.addClass("themeOverlay displayNone")
-	.attr("href", "<?php echo helper::baseUrl(); ?>theme/site")
+	.attr({
+		"id": "themeOverlaySite",
+		"href": "<?php echo helper::baseUrl(); ?>theme/site"
+	})
 	.appendTo("section");
 $("<a>")
 	.addClass("themeOverlay displayNone")
-	.attr("href", "<?php echo helper::baseUrl(); ?>theme/footer")
+	.attr({
+		"id": "themeOverlayFooter",
+		"href": "<?php echo helper::baseUrl(); ?>theme/footer"
+	})
 	.appendTo("footer");

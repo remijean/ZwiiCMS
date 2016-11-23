@@ -22,22 +22,18 @@
 				</div>
 			</div>
 			<div class="block">
-				<h4><?php echo helper::translate('Disposition'); ?></h4>
-				<?php echo template::select('themeHeaderPosition', $module::$headerPositions, [
-					'label' => 'Position',
-					'selected' => $this->getData(['theme', 'header', 'position'])
-				]); ?>
+				<h4><?php echo helper::translate('Mise en forme'); ?></h4>
 				<div class="row">
 					<div class="col6">
-						<?php echo template::select('themeHeaderHeight', $module::$headerHeights, [
-							'label' => 'Hauteur',
-							'selected' => $this->getData(['theme', 'header', 'height'])
+						<?php echo template::select('themeHeaderTextTransform', $module::$textTransforms, [
+							'label' => 'Capitalisation du texte',
+							'selected' => $this->getData(['theme', 'header', 'textTransform'])
 						]); ?>
 					</div>
 					<div class="col6">
-						<?php echo template::select('themeHeaderTextAlign', $module::$aligns, [
-							'label' => 'Alignement du contenu',
-							'selected' => $this->getData(['theme', 'header', 'textAlign'])
+						<?php echo template::select('themeHeaderFontWeight', $module::$fontWeights, [
+							'label' => 'Épaisseur du texte',
+							'selected' => $this->getData(['theme', 'header', 'fontWeight'])
 						]); ?>
 					</div>
 				</div>
@@ -76,6 +72,32 @@
 			</div>
 		</div>
 	</div>
+	<div class="row">
+		<div class="col12">
+			<div class="block">
+				<h4><?php echo helper::translate('Disposition'); ?></h4>
+				<div class="row">
+					<div class="col4">
+						<?php echo template::select('themeHeaderPosition', $module::$headerPositions, [
+							'label' => 'Position',
+							'selected' => $this->getData(['theme', 'header', 'position'])
+						]); ?>
+					</div>
+					<div class="col4">
+						<?php echo template::select('themeHeaderHeight', $module::$headerHeights, [
+							'label' => 'Hauteur',
+							'selected' => $this->getData(['theme', 'header', 'height'])
+						]); ?>
+					</div>
+					<div class="col4">
+						<?php echo template::select('themeHeaderTextAlign', $module::$aligns, [
+							'label' => 'Alignement du contenu',
+							'selected' => $this->getData(['theme', 'header', 'textAlign'])
+						]); ?>
+					</div>
+				</div>
+			</div>
+		</div>
 	<div class="row">
 		<div class="col2 offset8">
 			<?php echo template::button('themeHeaderBack', [
