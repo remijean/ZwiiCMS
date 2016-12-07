@@ -80,6 +80,17 @@ if(<?php echo json_encode($this->getData(['config', 'cookieConsent'])); ?>) {
 }
 
 /**
+ * Choix de page dans le panneau d'administration
+ */
+$("#panelSelectPage").on("change", function() {
+	var pageUrl = $(this).val();
+	if(pageUrl) {
+		$(location).attr("href", pageUrl);
+
+	}
+});
+
+/**
  * Champs d'upload de fichiers
  */
 // Mise à jour de l'affichage ds champs d'upload

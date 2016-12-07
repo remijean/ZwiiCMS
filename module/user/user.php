@@ -3,9 +3,57 @@
 class user extends common {
 
 	public static $actions = [
+		'all' => self::RANK_ADMIN,
+		'edit' => self::RANK_ADMIN,
 		'login' => self::RANK_VISITOR,
 		'logout' => self::RANK_MEMBER
 	];
+	public static $ranks = [
+		self::RANK_MEMBER => 'Membre',
+		self::RANK_MODERATOR => 'Modérateur',
+		self::RANK_ADMIN => 'Admin'
+	];
+	public static $users = [];
+
+	/**
+	 * Tout les utilisateurs
+	 */
+	public function all() {
+		foreach($this->getData(['user']) as $userId => $user) {
+			self::$users[] = [
+				$user['name'],
+				template::button('edit[]', [
+					'value' => template::ico('pencil'),
+					'href' => helper::baseUrl() . 'user/edit/' . $userId
+				]),
+				template::button('delete[]', [
+					'value' => template::ico('cancel'),
+					'href' => helper::baseUrl() . 'user/delete/' . $userId
+				])
+			];
+		}
+		return [
+			'title' => 'Utilisateurs',
+			'view' => true
+		];
+	}
+
+	/**
+	 * Édition
+	 */
+	public function edit() {
+		// Soumission du formulaire
+		if($this->isPost()) {
+
+		}
+		// Affichage du template
+		else {
+			return [
+				'title' => $this->getData(['user', $this->getUrl(2), 'name']),
+				'view' => true
+			];
+		}
+	}
 
 	/**
 	 * Connexion
@@ -30,7 +78,6 @@ class user extends common {
 			// Sinon notification d'échec
 			else {
 				return [
-					'display' => self::DISPLAY_POPUP,
 					'notification' => 'Identifiant ou mot de passe incorrect',
 					'title' => 'Connexion',
 					'view' => true
@@ -40,7 +87,6 @@ class user extends common {
 		// Affichage du template
 		else {
 			return [
-				'display' => self::DISPLAY_POPUP,
 				'title' => 'Connexion',
 				'view' => true
 			];

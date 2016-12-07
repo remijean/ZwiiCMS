@@ -97,6 +97,9 @@ img[align='right'] {
 }
 
 /* Tableau */
+.tableContainer {
+	margin: 10px 0;
+}
 table {
 	width: 100%;
 	border-spacing: 0;
@@ -166,12 +169,23 @@ td > .col12 {
 	margin: 0 -10px;
 	text-align: right;
 }
+#panel:after {
+	content: " ";
+	clear: both;
+	display: block;
+}
 #panel ul {
 	padding: 0;
 	margin: 0;
 	list-style: none;
 	height: 45px;
 	line-height: 45px;
+}
+#panel #panelLeft {
+	float: left;
+}
+#panel #panelRight {
+	float: right;
 }
 #panel li {
 	display: inline;
@@ -185,20 +199,25 @@ td > .col12 {
 	background: #343434;
 	text-decoration: none;
 }
-@media (max-width: 768px)
-{
+#panel select {
+	width: 250px;
+	border: 0;
+	padding: 5px;
+}
+@media (max-width: 768px) {
 	#panel {
 		text-align: center;
 		padding: 0;
 	}
-	#panel ul.left {
-		height: auto;
-		line-height: normal;
+	#panel #panelLeft {
 		padding: 5px;
 	}
 	#panel ul {
-		height: 40px;
-		line-height: 40px;
+		float: none !important;
+	}
+	#panel select {
+		width: 100%;
+		display: block;
 	}
 }
 
@@ -441,26 +460,6 @@ footer #socials .zwiico-youtube:hover {
 	background: #EEE;
 }
 
-/* Onglet */
-.tabTitles {
-	margin: 15px 0;
-	text-transform: uppercase;
-	font-size: 1.2em;
-	color: #555;
-}
-.tabTitle {
-	display: inline-block;
-	margin-right: 20px;
-	cursor: pointer;
-}
-.tabTitle:hover {
-	text-decoration: underline;
-}
-.tabTitle.current {
-	cursor: auto;
-	text-decoration: none;
-}
-
 /* Message sur les cookies */
 #cookieConsent {
 	opacity: .7;
@@ -545,8 +544,8 @@ input[type='submit'] {
 	cursor: pointer;
 }
 textarea {
-	height: 150px;
-	resize: none;
+	height: 100px;
+	resize: vertical;
 }
 label {
 	display: block;
@@ -858,7 +857,7 @@ td.col8 {
 }
 td.col9 {
 	width: 75%;
-}verticalAlignTop
+}
 td.col10 {
 	width: 83.33333333%;
 }

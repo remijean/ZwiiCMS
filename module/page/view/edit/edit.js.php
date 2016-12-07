@@ -30,3 +30,57 @@ $("#pageModuleId").on("change", function() {
 		});
 	}
 });
+
+// Affiche les pages en fonction de la page parent dans le choix de la position
+var hierarchy = <?php echo json_encode($this->getHierarchy()); ?>;
+var pages = <?php echo json_encode($this->getData(['page'])); ?>;
+$("#pageEditParentPageId").on("change", function() {
+	var positionDOM = $("#pageEditPosition");
+	positionDOM.empty().append(
+		$("<option>").val(0).text("<?php echo helper::translate('Ne pas afficher'); ?>"),
+		$("<option>").val(1).text("<?php echo helper::translate('Au début'); ?>")
+	);
+	var parentSelected = $(this).find("option:selected").val();
+	var positionSelected = 0;
+	var positionPrevious = 1;
+	// Aucune page parent selectionnée
+	if(parentSelected === "") {
+		// Liste des pages sans parents
+		for(var key in hierarchy) {
+			// Pour page courante sélectionne la page précédente (pas de - 1 à positionSelected à cause des options par défaut)
+			if(key === "<?php echo $this->getUrl(2); ?>") {
+				positionSelected = positionPrevious;
+			}
+			// Sinon ajoute la page à la liste
+			else {
+				// Enregistre la position de cette page afin de la sélectionner si la prochaine page de la liste est la page courante
+				positionPrevious++;
+				// Ajout à la liste
+				positionDOM.append(
+					$("<option>").val(positionPrevious).text("<?php echo helper::translate('Après'); ?> \"" + pages[key].title + "\"")
+				);
+			}
+		}
+	}
+	// Un page parent est selectionnée
+	else {
+		// Liste des pages enfants de la page parent
+		for(var i = 0; i < hierarchy[parentSelected].length; i++) {
+			// Pour page courante sélectionne la page précédente (pas de - 1 à positionSelected à cause des options par défaut)
+			if(hierarchy[parentSelected][i] === "<?php echo $this->getUrl(0); ?>") {
+				positionSelected = positionPrevious;
+			}
+			// Sinon ajoute la page à la liste
+			else {
+				// Enregistre la position de cette page afin de la sélectionner si la prochaine page de la liste est la page courante
+				positionPrevious++;
+				// Ajout à la liste
+				positionDOM.append(
+					$("<option>").val(positionPrevious).text("<?php echo helper::translate('Après'); ?> \"" + pages[hierarchy[parentSelected][i]].title + "\"")
+				);
+			}
+		}
+	}
+	// Sélectionne la bonne position
+	positionDOM.val(positionSelected);
+}).trigger("change");
