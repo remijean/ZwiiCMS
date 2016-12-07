@@ -2,7 +2,7 @@
 	<div class="row">
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Informations principales'); ?></h4>
+				<h4><?php echo helper::translate('Informations générales'); ?></h4>
 				<?php echo template::text('configTitle', [
 					'label' => 'Titre du site',
 					'required' => true,

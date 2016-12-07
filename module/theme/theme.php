@@ -132,7 +132,6 @@ class theme extends common {
 	public function body() {
 		// Soumission du formulaire
 		if($this->isPost()) {
-			@unlink('site/data/' . md5(json_encode($this->getData(['theme']))) . '.css');
 			$this->setData(['theme', 'body', [
 				'backgroundColor' => $this->getInput('themeBodyBackgroundColor'),
 				'image' => $this->getInput('themeBodyImage'),
@@ -166,7 +165,6 @@ class theme extends common {
 	public function footer() {
 		// Soumission du formulaire
 		if($this->isPost()) {
-			@unlink('site/data/' . md5(json_encode($this->getData(['theme']))) . '.css');
 			$this->setData(['theme', 'footer', [
 				'backgroundColor' => $this->getInput('themeFooterBackgroundColor'),
 				'copyrightAlign' => $this->getInput('themeFooterCopyrightAlign'),
@@ -200,7 +198,6 @@ class theme extends common {
 	public function header() {
 		// Soumission du formulaire
 		if($this->isPost()) {
-			@unlink('site/data/' . md5(json_encode($this->getData(['theme']))) . '.css');
 			$this->setData(['theme', 'header', [
 				'backgroundColor' => $this->getInput('themeHeaderBackgroundColor'),
 				'font' => $this->getInput('themeHeaderFont'),
@@ -249,7 +246,6 @@ class theme extends common {
 	public function menu() {
 		// Soumission du formulaire
 		if($this->isPost()) {
-			@unlink('site/data/' . md5(json_encode($this->getData(['theme']))) . '.css');
 			$this->setData(['theme', 'menu', [
 				'backgroundColor' => $this->getInput('themeMenuBackgroundColor'),
 				'fontWeight' => $this->getInput('themeMenuFontWeight'),
@@ -283,7 +279,6 @@ class theme extends common {
 	public function site() {
 		// Soumission du formulaire
 		if($this->isPost()) {
-			@unlink('site/data/' . md5(json_encode($this->getData(['theme']))) . '.css');
 			$this->setData(['theme', 'title', [
 				'font' => $this->getInput('themeTitleFont'),
 				'textColor' => $this->getInput('themeTitleTextColor'),

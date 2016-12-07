@@ -47,7 +47,7 @@ class common {
 		'page' => [
 			'accueil' => [
 				'content' => '<p>Trois utilisateurs de test (identifiant / mot de passe) :</p><ul><li>administrator / password</li><li>moderator / password</li><li>member / password</li></ul>',
-				'hideName' => false,
+				'hideTitle' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => '',
@@ -59,7 +59,7 @@ class common {
 			],
 			'exemple' => [
 				'content' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis scelerisque cursus ipsum vitae posuere. Morbi vel arcu eget massa varius pretium. Aliquam pretium ante quis odio vestibulum, in laoreet ligula tincidunt. In non elementum ante, non vulputate urna. Donec tempor at metus eget pharetra. Aliquam laoreet sapien quis ligula fringilla sodales auctor ut elit. Vestibulum pellentesque magna ut condimentum feugiat. Curabitur mattis molestie nunc nec porta. Nulla et tincidunt leo. In hac habitasse platea dictumst.</p><p>Integer sit amet varius nisl, in euismod est. Suspendisse mollis varius tellus nec fermentum. Nam id risus erat. Nunc rutrum, dui non scelerisque commodo, sapien purus luctus eros, in maximus nunc sem quis urna. Nam vitae ornare arcu, at viverra est. Praesent tincidunt accumsan tristique. In elementum, nibh non convallis semper, mauris eros consequat dui, vel mattis ante quam in leo. Aenean sed turpis ultrices, dignissim ipsum a, maximus dolor. Nunc sodales sollicitudin ex id consectetur. Nam at nulla velit.</p><p>Pellentesque lacus tellus, tristique volutpat scelerisque id, pharetra nec leo. Ut finibus tempor risus, sit amet laoreet turpis maximus a. Morbi tempor, tortor at dictum facilisis, ipsum enim molestie odio, eu congue ex dolor dictum purus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vulputate neque ac lectus lacinia viverra. Donec vulputate cursus purus, sed volutpat nisl ornare cursus. In nec metus aliquam, vehicula nibh eu, volutpat ex. Nullam nisi mauris, iaculis posuere interdum vitae, dignissim ac est. Ut non erat diam. Pellentesque id tempus metus. Praesent sem urna, viverra sit amet elit at, vulputate imperdiet ligula. Duis porttitor quis tellus sit amet aliquet. In venenatis odio enim, vel facilisis mauris tempus vel.</p><p>Nulla et convallis ligula. Etiam ut pharetra arcu. Sed mollis magna consectetur sapien eleifend ullamcorper. Praesent posuere arcu quis tempor dictum. Nullam hendrerit molestie risus et pulvinar. Curabitur in orci ut quam porta dictum. Phasellus orci arcu, accumsan vitae dapibus ut, vestibulum dignissim tellus. Ut iaculis in urna ac vestibulum. Ut euismod blandit nunc, interdum varius ex finibus quis. Vivamus tempor porttitor viverra. Mauris efficitur neque faucibus tellus viverra rhoncus.</p>',
-				'hideName' => false,
+				'hideTitle' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => '',
@@ -155,7 +155,7 @@ class common {
 		'_COOKIE' => []
 	];
 	public static $outputContent = '';
-	public static $outputDisplay = self::DISPLAY_SITE;
+	public static $outputDisplay = self::DISPLAY_LAYOUT;
 	public static $outputMetaDescription = '';
 	public static $outputMetaTitle = '';
 	public static $outputScript = '';
@@ -181,9 +181,7 @@ class common {
 
 	const DISPLAY_BLANK = 0;
 	const DISPLAY_JSON = 1;
-	const DISPLAY_SITE = 2;
-	const DISPLAY_POPUP = 3;
-
+	const DISPLAY_LAYOUT = 2;
 
 	/**
 	 * Constructeur commun
@@ -202,7 +200,7 @@ class common {
 		if(empty($this->data)) {
 			$this->setData([json_decode(file_get_contents('site/data/data.json'), true)]);
 		}
-		// Construit la liste des pages parentes/enfants
+		// Construit la liste des pages parents/enfants
 		if(empty($this->hierarchy)) {
 			$pages = helper::arrayCollumn($this->getData(['page']), 'position', 'SORT_ASC');
 			foreach($pages as $pageId => $pagePosition) {
@@ -213,7 +211,7 @@ class common {
 					}
 					$this->hierarchy[$parentId][] = $pageId;
 				}
-				// Page parente (si pas déjà déclarée par une page enfant)
+				// page parent (si pas déjà déclarée par une page enfant)
 				elseif(array_key_exists($pageId, $this->hierarchy) === false){
 					$this->hierarchy[$pageId] = [];
 				}
@@ -284,8 +282,8 @@ class common {
 	}
 
 	/**
-	 * Accède à la liste des pages parentes et de leurs enfants ou aux enfants d'une page parente
-	 * @param int $parentId Id de la page parente
+	 * Accède à la liste des pages parents et de leurs enfants ou aux enfants d'une page parent
+	 * @param int $parentId Id de la page parent
 	 * @return array
 	 */
 	public function getHierarchy($parentId = null) {
@@ -402,9 +400,16 @@ class core extends common {
 			}
 		}
 		// Crée le fichier de personnalisation
-		if(file_exists('site/data/' . md5(json_encode($this->getData(['theme']))) . '.css') === false) {
+		if(file_exists('site/data/theme.css') === false) {
+			file_put_contents('site/data/theme.css', '');
+		}
+		// Check la version
+		$cssVersion = preg_split('/\*+/', file_get_contents('site/data/theme.css'));
+		if(isset($cssVersion[1]) === false OR $cssVersion[1] !== md5(json_encode($this->getData(['theme'])))) {
+			// Version
+			$css = '/*' . md5(json_encode($this->getData(['theme']))) . '*/';
 			// Import des polices de caractères
-			$css = '@import url("https://fonts.googleapis.com/css?family=' . $this->getData(['theme', 'text', 'font']) . '|' . $this->getData(['theme', 'title', 'font']) . '|' . $this->getData(['theme', 'header', 'font']) . '");';
+			$css .= '@import url("https://fonts.googleapis.com/css?family=' . $this->getData(['theme', 'text', 'font']) . '|' . $this->getData(['theme', 'title', 'font']) . '|' . $this->getData(['theme', 'header', 'font']) . '");';
 			// Fond du site
 			$colors = helper::colorVariants($this->getData(['theme', 'body', 'backgroundColor']));
 			$css .= 'body{background-color:' . $colors['normal'] . ';font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'text', 'font'])) . '",sans-serif}';
@@ -453,7 +458,7 @@ class core extends common {
 			$css .= '#footerText{text-align:' . $this->getData(['theme', 'footer', 'textAlign']) . '}';
 			$css .= '#copyright{text-align:' . $this->getData(['theme', 'footer', 'copyrightAlign']) . '}';
 			// Enregistre la personnalisation
-			file_put_contents('site/data/' . md5(json_encode($this->getData(['theme']))) . '.css', $css);
+			file_put_contents('site/data/theme.css', $css);
 		}
 		// Importe les fichiers de langue
 		$language = 'core/lang/' . $this->getData(['config', 'language']);
@@ -496,78 +501,75 @@ class core extends common {
 			if(class_exists($moduleId)) {
 				$module = new $moduleId;
 				// Check l'existence de l'action
-				if($this->getUrl(1) AND array_key_exists($this->getUrl(1), $module::$actions)) {
-					$action = $this->getUrl(1);
-				}
-				else {
-					$action = 'index';
-				}
-				// Check le rang de l'utilisateur
-				if(
-					$module::$actions[$action] === 0
-					OR (
-						$this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE')])
-						AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'password']) === $this->getInput('ZWII_USER_PASSWORD', '_COOKIE')
-						AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'rank']) >= $module::$actions[$action]
-					)
-				) {
-					$output = $module->$action();
-					if(is_array($output)) {
-						// Contenu du module
-						if(array_key_exists('view', $output)) {
-							// CSS
-							$stylePath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.css';
-							if(file_exists($stylePath)) {
-								self::$outputStyle = file_get_contents($stylePath);
+				$action = array_key_exists($this->getUrl(1), $module::$actions) ?  $this->getUrl(1) : 'index';
+				if(array_key_exists($action, $module::$actions)) {
+					// Check le rang de l'utilisateur
+					if(
+						$module::$actions[$action] === 0
+						OR (
+							$this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE')])
+							AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'password']) === $this->getInput('ZWII_USER_PASSWORD', '_COOKIE')
+							AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'rank']) >= $module::$actions[$action]
+						)
+					) {
+						$output = $module->$action();
+						if(is_array($output)) {
+							// Contenu du module
+							if(array_key_exists('view', $output)) {
+								// CSS
+								$stylePath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.css';
+								if(file_exists($stylePath)) {
+									self::$outputStyle = file_get_contents($stylePath);
+								}
+								// JS
+								$scriptPath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.js.php';
+								if(file_exists($scriptPath)) {
+									ob_start();
+									include $scriptPath;
+									self::$outputScript .= ob_get_clean();
+								}
+								// Vue
+								$viewPath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.php';
+								if(file_exists($viewPath)) {
+									ob_start();
+									include $viewPath;
+									self::$outputContent .= ob_get_clean();
+								}
+								// Affichage
+								if(array_key_exists('display', $output)) {
+									self::$outputDisplay = $output['display'];
+								}
 							}
-							// JS
-							$scriptPath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.js.php';
-							if(file_exists($scriptPath)) {
-								ob_start();
-								include $scriptPath;
-								self::$outputScript .= ob_get_clean();
+							// Librairies
+							if(array_key_exists('vendor', $output)) {
+								self::$outputVendor = array_merge(self::$outputVendor, $output['vendor']);
 							}
-							// Vue
-							$viewPath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.php';
-							if(file_exists($viewPath)) {
-								ob_start();
-								include $viewPath;
-								self::$outputContent .= ob_get_clean();
+							// Titre
+							if(array_key_exists('title', $output)) {
+								self::$outputTitle = helper::translate($output['title']);
 							}
-							// Affichage
-							if(array_key_exists('display', $output)) {
-								self::$outputDisplay = $output['display'];
-							}
-						}
-						// Librairies
-						if(array_key_exists('vendor', $output)) {
-							self::$outputVendor = array_merge(self::$outputVendor, $output['vendor']);
-						}
-						// Titre
-						if(array_key_exists('title', $output)) {
-							self::$outputTitle = helper::translate($output['title']);
-						}
-						// En l'absence de notice
-						if(empty(template::$notices)) {
-							// Notification
-							if(array_key_exists('notification', $output)) {
-								$state = array_key_exists('state', $output) ? (bool) $output['state'] : false;
-								$_SESSION[$state ? 'ZWII_NOTIFICATION_SUCCESS' : 'ZWII_NOTIFICATION_ERROR'] = $output['notification'];
-							}
-							// Redirection
-							if(array_key_exists('redirect', $output)) {
-								http_response_code(301);
-								header('Location:' . helper::baseUrl() . $output['redirect']);
-								exit();
+							// En l'absence de notice
+							if(empty(template::$notices)) {
+								// Notification
+								if(array_key_exists('notification', $output)) {
+									$state = array_key_exists('state', $output) ? (bool) $output['state'] : false;
+									$_SESSION[$state ? 'ZWII_NOTIFICATION_SUCCESS' : 'ZWII_NOTIFICATION_ERROR'] = $output['notification'];
+								}
+								// Redirection
+								if(array_key_exists('redirect', $output)) {
+									http_response_code(301);
+									header('Location:' . helper::baseUrl() . $output['redirect']);
+									exit();
+								}
 							}
 						}
 					}
-				}
-				// Connexion
-				else {
-					http_response_code(301);
-					header('Location:' . helper::baseUrl() . 'user/login');
-					exit();
+					// Connexion
+					else {
+						http_response_code(301);
+						header('Location:' . helper::baseUrl() . 'user/login');
+						exit();
+					}
 				}
 			}
 		}
@@ -586,13 +588,9 @@ class core extends common {
 		}
 		// Choix du type d'affichage
 		switch(self::$outputDisplay) {
-			// Layout main
-			case self::DISPLAY_SITE:
-				require 'core/layout/site.php';
-				break;
-			// Layout popup
-			case self::DISPLAY_POPUP:
-				require 'core/layout/popup.php';
+			// Layout
+			case self::DISPLAY_LAYOUT:
+				require 'core/layout.php';
 				break;
 			// JSON
 			case self::DISPLAY_JSON:
@@ -1077,15 +1075,26 @@ class layout extends common {
 			$this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE')])
 			AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'password']) === $this->getInput('ZWII_USER_PASSWORD', '_COOKIE')
 		) {
-			$items = '<li><a href="' . helper::baseUrl() . 'create" title="' . helper::translate('Créer une page') . '">' . template::ico('plus') . '</a></li>';
-			if($this->getData(['page', $this->getUrl(0)])) {
-				$items .= '<li><a href="' . helper::baseUrl() . 'page/edit/' . $this->getUrl(0) . '" title="' . helper::translate('Modifier la page') . '">' . template::ico('pencil') . '</a></li>';
+			// Items de gauche
+			$leftItems = '<li><select id="panelSelectPage">';
+			$leftItems .= '<option value="">' . helper::translate('Choisissez une page') . '</option>';
+			$currentPageId = $this->getData(['page', $this->getUrl(0)]) ? $this->getUrl(0) : $this->getUrl(2);
+			foreach(helper::arrayCollumn($this->getData(['page']), 'title', 'SORT_ASC') as $pageKey => $pageTitle) {
+				$leftItems .= '<option value="' . helper::baseUrl() . $pageKey . '"' . ($pageKey === $currentPageId ? ' selected' : false) . '>' . $pageTitle . '</option>';
 			}
-			$items .= '<li><a href="' . helper::baseUrl() . 'page" title="' . helper::translate('Gérer les pages') . '">' . template::ico('page') . '</a></li>';
-			$items .= '<li><a href="' . helper::baseUrl() . 'config" title="' . helper::translate('Configurer le site') . '">' . template::ico('gear') . '</a></li>';
-			$items .= '<li><a href="' . helper::baseUrl() . 'theme" title="' . helper::translate('Personnaliser le site') . '">' . template::ico('brush') . '</a></li>';
-			$items .= '<li><a href="' . helper::baseUrl() . 'user/logout" title="' . helper::translate('Se déconnecter') . '">' . template::ico('logout') . '</a></li>';
-			echo '<div id="panel"><div class="container"><ul>' . $items . '</ul></div></div>';
+			$leftItems .= '</select></li>';
+			// Items de droite
+			$rightItems = '';
+			if($this->getData(['page', $this->getUrl(0)])) {
+				$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/edit/' . $this->getUrl(0) . '" title="' . helper::translate('Modifier la page') . '">' . template::ico('pencil') . '</a></li>';
+			}
+			$rightItems .= '<li><a href="' . helper::baseUrl() . 'create" title="' . helper::translate('Créer une page') . '">' . template::ico('plus') . '</a></li>';
+			$rightItems .= '<li><a href="' . helper::baseUrl() . 'theme" title="' . helper::translate('Personnaliser le site') . '">' . template::ico('brush') . '</a></li>';
+			$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/all" title="' . helper::translate('Configurer les utilisateurs') . '">' . template::ico('users') . '</a></li>';
+			$rightItems .= '<li><a href="' . helper::baseUrl() . 'config" title="' . helper::translate('Configurer le site') . '">' . template::ico('gear') . '</a></li>';
+			$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/logout" title="' . helper::translate('Se déconnecter') . '">' . template::ico('logout') . '</a></li>';
+			// Panneau
+			echo '<div id="panel"><div class="container"><ul id="panelLeft">' . $leftItems . '</ul><ul id="panelRight">' . $rightItems . '</ul></div></div>';
 		}
 	}
 
@@ -1325,7 +1334,7 @@ class template {
 		// Génère deux nombres pour le capcha
 		$firstNumber = mt_rand(1, 15);
 		$secondNumber = mt_rand(1, 15);
-		// Début du container
+		// Début container
 		$html = '<div class="inputContainer ' . $attributes['classContainer'] . '">';
 		// Label
 		$html .= self::label($attributes['id'], helper::translate('Quelle est la somme de') . ' ' . $firstNumber . ' + ' . $secondNumber . ' ?', [
@@ -1378,7 +1387,7 @@ class template {
 		], $attributes);
 		// Champ requis
 		self::setRequired($attributes['id'], $attributes);
-		// Début du container
+		// Début container
 		$html = '<div class="inputContainer ' . $attributes['classContainer'] . '">';
 		// Notice
 		if(empty(self::$notices[$attributes['id']]) === false) {
@@ -1428,7 +1437,7 @@ class template {
 		if(($value = self::getBefore($attributes['id'])) !== null) {
 			$attributes['value'] = $value;
 		}
-		// Début du container
+		// Début container
 		$html = '<div class="inputContainer ' . $attributes['classContainer'] . '">';
 		// Label
 		if($attributes['label']) {
@@ -1451,11 +1460,9 @@ class template {
 		$html .= sprintf(
 			'<a
 				href="' .
-					helper::baseUrl() . 'file' .
-					'/1' .
-					($attributes['type'] ? '/' . $attributes['type'] : '') .
-					($attributes['extensions'] ? '/' . $attributes['extensions'] : '') .
-					'/' . $nameId
+					helper::baseUrl(false) . 'core/vendor/filemanager/dialog.php?type=0' .
+					($attributes['type'] ? '&' . $attributes['type'] : '') .
+					($attributes['extensions'] ? '&' . $attributes['extensions'] : '')
 				. '"
 				class="inputFile %s %s"
 				%s
@@ -1576,7 +1583,7 @@ class template {
 		], $attributes);
 		// Champ requis
 		self::setRequired($attributes['id'], $attributes);
-		// Début du container
+		// Début container
 		$html = '<div class="inputContainer ' . $attributes['classContainer'] . '">';
 		// Label
 		if($attributes['label']) {
@@ -1626,7 +1633,7 @@ class template {
 		if($selected = self::getBefore($attributes['id'])) {
 			$attributes['selected'] = $selected;
 		}
-		// Début du container
+		// Début container
 		$html = '<div class="inputContainer ' . $attributes['classContainer'] . '">';
 		// Label
 		if($attributes['label']) {
@@ -1702,10 +1709,13 @@ class template {
 	public static function table(array $cols = [], array $body = [], array $attributes = []) {
 		// Attributs possibles
 		$attributes = array_merge([
-			'class' => ''
+			'class' => '',
+			'classContainer' => ''
 		], $attributes);
+		// Début container
+		$html = '<div class="tableContainer ' . $attributes['classContainer']. '">';
 		// Début tableau
-		$html = '<table class="' . $attributes['class']. '">';
+		$html .= '<table class="' . $attributes['class']. '">';
 		// Début contenu
 		$html .= '<tbody>';
 		foreach($body as $tr) {
@@ -1721,6 +1731,8 @@ class template {
 		$html .= '</tbody>';
 		// Fin tableau
 		$html .= '</table>';
+		// Fin container
+		$html .= '</div>';
 		// Retourne le html
 		return $html;
 	}
@@ -1752,7 +1764,7 @@ class template {
 		if(($value = self::getBefore($attributes['id'])) !== null) {
 			$attributes['value'] = $value;
 		}
-		// Début du container
+		// Début container
 		$html = '<div class="inputContainer ' . $attributes['classContainer'] . '">';
 		// Label
 		if($attributes['label']) {
@@ -1802,7 +1814,7 @@ class template {
 		if(($value = self::getBefore($attributes['id'])) !== null) {
 			$attributes['value'] = $value;
 		}
-		// Début du container
+		// Début container
 		$html = '<div class="inputContainer ' . $attributes['classContainer'] . '">';
 		// Label
 		if($attributes['label']) {

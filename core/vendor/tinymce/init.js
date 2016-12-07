@@ -1,4 +1,4 @@
-// Langue de TinyMCE
+// Initialisation de TinyMCE
 var language = "fr";
 if(navigator.languages !== undefined && navigator.languages.length) {
 	language = navigator.languages[0].split("-")[0];
@@ -9,7 +9,6 @@ else if(navigator.language !== undefined) {
 else if(navigator.userLanguage !== undefined) {
 	language = navigator.userLanguage;
 }
-// Initialisation de TinyMCE
 tinymce.init({
 	selector: ".editor",
 	language: language,
@@ -18,8 +17,8 @@ tinymce.init({
 	body_class: "editor",
 	extended_valid_elements: "script[language|type|src]",
 	content_css: [
-		"core/core.css"
-		//, "core/cache/' . core::$cssVersion . '.css",
-	],
-	relative_urls: true
+		"core/main.css",
+		"site/data/theme.css"
+	]
+	//, file_picker_callback: elFinderBrowser
 });
