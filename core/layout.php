@@ -7,6 +7,9 @@
 	<?php $layout->showMetaTitle(); ?>
 	<?php $layout->showMetaDescription(); ?>
 	<?php $layout->showFavicon(); ?>
+	<script>
+		var baseUrl = <?php echo json_encode(helper::baseUrl()); ?>;
+	</script>
 	<?php $layout->showVendor(); ?>
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/main.css">
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>site/data/theme.css">
@@ -20,7 +23,7 @@
 	<nav>
 		<div id="toggle"><?php echo template::ico('menu'); ?></div>
 		<div id="menu" class="container">
-			<ul><?php $layout->showMenu(); ?></ul>
+			<?php $layout->showMenu(); ?>
 		</div>
 	</nav>
 <?php endif; ?>
@@ -37,7 +40,7 @@
 	<nav>
 		<div id="toggle"><?php echo template::ico('menu'); ?></div>
 		<div id="menu" class="container">
-			<ul><?php $layout->showMenu(); ?></ul>
+			<?php $layout->showMenu(); ?>
 		</div>
 	</nav>
 <?php endif; ?>

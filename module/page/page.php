@@ -100,8 +100,6 @@ class page extends common {
 			if($pageId !== $this->getUrl(0)) {
 				$this->deleteData(['page', $this->getUrl(0)]);
 			}
-			// Enregistre les données
-			$this->saveData();
 			return [
 				'redirect' => $pageId,
 				'notification' => 'Page modifiée',

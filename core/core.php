@@ -14,6 +14,7 @@
 
 class common {
 
+	public static $actions = [];
 	public static $demo = false;
 	public static $language = [];
 	public static $coreModule = [
@@ -130,6 +131,7 @@ class common {
 				'backgroundColor' => 'rgba(255, 255, 255, 1)',
 				'fontWeight' => 'normal',
 				'height' => '15px 10px',
+				'loginLink' => true,
 				'position' => 'body-first',
 				'textAlign' => 'left',
 				'textTransform' => 'uppercase'
@@ -171,7 +173,9 @@ class common {
 		'zwiico'
 	];
 	private $url;
+	private $user = [];
 
+	const RANK_BANNED = -1;
 	const RANK_VISITOR = 0;
 	const RANK_MEMBER = 1;
 	const RANK_MODERATOR = 2;
@@ -231,7 +235,10 @@ class common {
 		if(isset($_COOKIE)) {
 			$this->input['_COOKIE'] = $_COOKIE;
 		}
-		$this->setData([json_decode(file_get_contents('site/data/data.json'), true)]);
+		// Utilisateur connecté
+		if(empty($this->user)) {
+			$this->user = $this->getData(['user', $this->getInput('ZWII_USER_ID', helper::FILTER_STRING, '_COOKIE')]);
+		}
 	}
 
 	/**
@@ -305,11 +312,11 @@ class common {
 	/**
 	 * Accède à une valeur des variables http (ordre de recherche en l'absence de type : POST, GET, COOKIE)
 	 * @param mixed $key Clé de la valeur
-	 * @param mixed $type Type de la valeur
 	 * @param mixed $filter Filtre à appliquer à la valeur
+	 * @param mixed $type Type de la valeur
 	 * @return mixed
 	 */
-	public function getInput($key, $type = null, $filter = helper::FILTER_STRING) {
+	public function getInput($key, $filter = helper::FILTER_STRING, $type = null) {
 		// Cherche et retourne la valeur demandée dans un type précis
 		if($type AND isset($this->input[$type][$key])) {
 			return helper::filter($this->input[$type][$key], $filter);
@@ -338,6 +345,26 @@ class common {
 		else {
 			$url = explode('/', $this->url);
 			return isset($url[$key]) ? $url[$key] : null;
+		}
+	}
+
+	/**
+	 * Accède à l'utilisateur connecté
+	 * @param int $key Clé de la valeur
+	 * @return string|null
+	 */
+	public function getUser($key) {
+		if(is_array($this->user) === false) {
+			return false;
+		}
+		elseif($key === 'id') {
+			return $this->getData(['user', $this->getInput('ZWII_USER_ID', helper::FILTER_STRING, '_COOKIE')]);
+		}
+		elseif(array_key_exists($key, $this->user)) {
+			return $this->user[$key];
+		}
+		else {
+			return false;
 		}
 	}
 
@@ -499,76 +526,83 @@ class core extends common {
 		if($moduleId) {
 			// Check l'existence du module
 			if(class_exists($moduleId)) {
+				/** @var common $module */
 				$module = new $moduleId;
 				// Check l'existence de l'action
 				$action = array_key_exists($this->getUrl(1), $module::$actions) ?  $this->getUrl(1) : 'index';
 				if(array_key_exists($action, $module::$actions)) {
+					$output = $module->$action();
 					// Check le rang de l'utilisateur
 					if(
 						$module::$actions[$action] === 0
 						OR (
-							$this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE')])
-							AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'password']) === $this->getInput('ZWII_USER_PASSWORD', '_COOKIE')
-							AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'rank']) >= $module::$actions[$action]
+							$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')
+							AND $this->getUser('rank') >= $module::$actions[$action]
+						)
+						AND (
+							array_key_exists('access', $output) === false
+							OR $output['access'] === true
 						)
 					) {
-						$output = $module->$action();
-						if(is_array($output)) {
-							// Contenu du module
-							if(array_key_exists('view', $output)) {
-								// CSS
-								$stylePath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.css';
-								if(file_exists($stylePath)) {
-									self::$outputStyle = file_get_contents($stylePath);
-								}
-								// JS
-								$scriptPath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.js.php';
-								if(file_exists($scriptPath)) {
-									ob_start();
-									include $scriptPath;
-									self::$outputScript .= ob_get_clean();
-								}
-								// Vue
-								$viewPath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.php';
-								if(file_exists($viewPath)) {
-									ob_start();
-									include $viewPath;
-									self::$outputContent .= ob_get_clean();
-								}
-								// Affichage
-								if(array_key_exists('display', $output)) {
-									self::$outputDisplay = $output['display'];
-								}
+						// Enregistrement des données
+						if(array_key_exists('state', $output) AND $output['state'] === true) {
+							$this->setData([$module->getData()]);
+							$this->saveData();
+						}
+						// Contenu du module
+						if(array_key_exists('view', $output) OR template::$notices) {
+							// CSS
+							$stylePath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.css';
+							if(file_exists($stylePath)) {
+								self::$outputStyle = file_get_contents($stylePath);
 							}
-							// Librairies
-							if(array_key_exists('vendor', $output)) {
-								self::$outputVendor = array_merge(self::$outputVendor, $output['vendor']);
+							// JS
+							$scriptPath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.js.php';
+							if(file_exists($scriptPath)) {
+								ob_start();
+								include $scriptPath;
+								self::$outputScript .= ob_get_clean();
 							}
-							// Titre
-							if(array_key_exists('title', $output)) {
-								self::$outputTitle = helper::translate($output['title']);
+							// Vue
+							$viewPath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.php';
+							if(file_exists($viewPath)) {
+								ob_start();
+								include $viewPath;
+								self::$outputContent .= ob_get_clean();
 							}
-							// En l'absence de notice
-							if(empty(template::$notices)) {
-								// Notification
-								if(array_key_exists('notification', $output)) {
-									$state = array_key_exists('state', $output) ? (bool) $output['state'] : false;
-									$_SESSION[$state ? 'ZWII_NOTIFICATION_SUCCESS' : 'ZWII_NOTIFICATION_ERROR'] = $output['notification'];
-								}
-								// Redirection
-								if(array_key_exists('redirect', $output)) {
-									http_response_code(301);
-									header('Location:' . helper::baseUrl() . $output['redirect']);
-									exit();
-								}
+							// Affichage
+							if(array_key_exists('display', $output)) {
+								self::$outputDisplay = $output['display'];
+							}
+						}
+						// Librairies
+						if(array_key_exists('vendor', $output)) {
+							self::$outputVendor = array_merge(self::$outputVendor, $output['vendor']);
+						}
+						// Titre
+						if(array_key_exists('title', $output)) {
+							self::$outputTitle = helper::translate($output['title']);
+						}
+						// En l'absence de notice
+						if(empty(template::$notices)) {
+							// Notification
+							if(array_key_exists('notification', $output)) {
+								$state = array_key_exists('state', $output) ? (bool) $output['state'] : false;
+								$_SESSION[$state ? 'ZWII_NOTIFICATION_SUCCESS' : 'ZWII_NOTIFICATION_ERROR'] = $output['notification'];
+							}
+							// Redirection
+							if(array_key_exists('redirect', $output)) {
+								http_response_code(301);
+								header('Location:' . helper::baseUrl() . $output['redirect']);
+								exit();
 							}
 						}
 					}
-					// Connexion
+					// Erreur
 					else {
-						http_response_code(301);
-						header('Location:' . helper::baseUrl() . 'user/login');
-						exit();
+						http_response_code(403);
+						self::$outputTitle = helper::translate('Erreur');
+						self::$outputContent = template::speech('vous n\'êtes pas autorisé à accéder à cette page...');
 					}
 				}
 			}
@@ -576,7 +610,7 @@ class core extends common {
 		// Erreur 404
 		if(empty(self::$outputContent)) {
 			http_response_code(404);
-			self::$outputTitle = helper::translate('Erreur 404');
+			self::$outputTitle = helper::translate('Erreur');
 			self::$outputContent = template::speech('Oups ! La page demandée est introuvable...');
 		}
 		// Mise en forme des métas
@@ -734,7 +768,7 @@ class helper {
 		$replace = 'e,s,l,a,a,a,a,a,a,c,e,e,e,e,i,i,i,i,n,o,o,o,o,o,u,u,u,u,y,y,-,-,-,-,-,-';
 		switch($filter) {
 			case self::FILTER_PASSWORD:
-				$text = sha1($text);
+				$text = hash('sha256', $text);
 				break;
 			case self::FILTER_BOOLEAN:
 				$text = (bool)$text;
@@ -742,7 +776,7 @@ class helper {
 			case self::FILTER_URL:
 				$text = str_replace(explode(',', $search), explode(',', $replace), mb_strtolower($text, 'UTF-8'));
 				break;
-			case self::FILTER_URL:
+			case self::FILTER_URL_CASE:
 				$text = str_replace(explode(',', $search), explode(',', $replace), $text);
 				break;
 			case self::FILTER_URL_STRICT:
@@ -984,7 +1018,7 @@ class layout extends common {
 	 * Affiche le coyright
 	 */
 	public function showCopyright() {
-		echo '<div id="copyright">' . helper::translate('Motorisé par') . ' <a href="http://zwiicms.com/" target="_blank">Zwii</a> | <a href="' . helper::baseUrl() . 'sitemap">' . helper::translate('Plan du site') . '</a> | <a href="' . helper::baseUrl() . 'config">' . helper::translate('Connexion') . '</a></div>';
+		echo '<div id="copyright">' . helper::translate('Motorisé par') . ' <a href="http://zwiicms.com/" target="_blank">Zwii</a> | <a href="' . helper::baseUrl() . 'sitemap">' . helper::translate('Plan du site') . '</a></div>';
 	}
 
 	/**
@@ -1032,6 +1066,10 @@ class layout extends common {
 			$items .= '</ul>';
 			$items .= '</li>';
 		}
+		// Lien de connexion
+		if($this->getData(['theme', 'menu', 'loginLink']) AND $this->getUser('id') === false) {
+			$items .= '<li><a id="menuLoginLink" href="' . helper::baseUrl() . 'user/login">' . helper::translate('Connexion') . '</a>';
+		}
 		// Retourne les items du menu
 		echo '<ul>' . $items . '</ul>';
 	}
@@ -1071,28 +1109,35 @@ class layout extends common {
 	 * Affiche le panneau d'administration
 	 */
 	public function showPanel() {
-		if(
-			$this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE')])
-			AND $this->getData(['user', $this->getInput('ZWII_USER_ID', '_COOKIE'), 'password']) === $this->getInput('ZWII_USER_PASSWORD', '_COOKIE')
-		) {
+		if($this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')) {
 			// Items de gauche
-			$leftItems = '<li><select id="panelSelectPage">';
-			$leftItems .= '<option value="">' . helper::translate('Choisissez une page') . '</option>';
-			$currentPageId = $this->getData(['page', $this->getUrl(0)]) ? $this->getUrl(0) : $this->getUrl(2);
-			foreach(helper::arrayCollumn($this->getData(['page']), 'title', 'SORT_ASC') as $pageKey => $pageTitle) {
-				$leftItems .= '<option value="' . helper::baseUrl() . $pageKey . '"' . ($pageKey === $currentPageId ? ' selected' : false) . '>' . $pageTitle . '</option>';
+			$leftItems = '';
+			if($this->getUser('rank') >= self::RANK_MODERATOR) {
+				$leftItems .= '<li><select id="panelSelectPage">';
+				$leftItems .= '<option value="">' . helper::translate('Choisissez une page') . '</option>';
+				$currentPageId = $this->getData(['page', $this->getUrl(0)]) ? $this->getUrl(0) : $this->getUrl(2);
+				foreach(helper::arrayCollumn($this->getData(['page']), 'title', 'SORT_ASC') as $pageKey => $pageTitle) {
+					$leftItems .= '<option value="' . helper::baseUrl() . $pageKey . '"' . ($pageKey === $currentPageId ? ' selected' : false) . '>' . $pageTitle . '</option>';
+				}
+				$leftItems .= '</select></li>';
 			}
-			$leftItems .= '</select></li>';
 			// Items de droite
 			$rightItems = '';
-			if($this->getData(['page', $this->getUrl(0)])) {
-				$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/edit/' . $this->getUrl(0) . '" title="' . helper::translate('Modifier la page') . '">' . template::ico('pencil') . '</a></li>';
+			if($this->getUser('rank') >= self::RANK_MODERATOR) {
+				if(
+					$this->getData(['page', $this->getUrl(0)])
+					OR $this->getUrl(0) === "" // Lorsqu'un utilisateur arrive sur la racine du site
+				) {
+					$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/edit/' . $this->getUrl(0) . '" title="' . helper::translate('Modifier la page') . '">' . template::ico('pencil') . '</a></li>';
+				}
+				$rightItems .= '<li><a href="' . helper::baseUrl() . 'create" title="' . helper::translate('Créer une page') . '">' . template::ico('plus') . '</a></li>';
 			}
-			$rightItems .= '<li><a href="' . helper::baseUrl() . 'create" title="' . helper::translate('Créer une page') . '">' . template::ico('plus') . '</a></li>';
-			$rightItems .= '<li><a href="' . helper::baseUrl() . 'theme" title="' . helper::translate('Personnaliser le site') . '">' . template::ico('brush') . '</a></li>';
-			$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/all" title="' . helper::translate('Configurer les utilisateurs') . '">' . template::ico('users') . '</a></li>';
-			$rightItems .= '<li><a href="' . helper::baseUrl() . 'config" title="' . helper::translate('Configurer le site') . '">' . template::ico('gear') . '</a></li>';
-			$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/logout" title="' . helper::translate('Se déconnecter') . '">' . template::ico('logout') . '</a></li>';
+			if($this->getUser('rank') >= self::RANK_ADMIN) {
+				$rightItems .= '<li><a href="' . helper::baseUrl() . 'theme" title="' . helper::translate('Personnaliser le site') . '">' . template::ico('brush') . '</a></li>';
+				$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/all" title="' . helper::translate('Configurer les utilisateurs') . '">' . template::ico('users') . '</a></li>';
+				$rightItems .= '<li><a href="' . helper::baseUrl() . 'config" title="' . helper::translate('Configurer le site') . '">' . template::ico('gear') . '</a></li>';
+			}
+			$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/logout" title="' . helper::translate('Se déconnecter') . '">' . template::ico('logout', 'right') . $this->getUser('name') . '</a></li>';
 			// Panneau
 			echo '<div id="panel"><div class="container"><ul id="panelLeft">' . $leftItems . '</ul><ul id="panelRight">' . $rightItems . '</ul></div></div>';
 		}
@@ -1460,9 +1505,9 @@ class template {
 		$html .= sprintf(
 			'<a
 				href="' .
-					helper::baseUrl(false) . 'core/vendor/filemanager/dialog.php?type=0' .
-					($attributes['type'] ? '&' . $attributes['type'] : '') .
-					($attributes['extensions'] ? '&' . $attributes['extensions'] : '')
+					helper::baseUrl() . 'file'
+					//($attributes['type'] ? '&' . $attributes['type'] : '') .
+					//($attributes['extensions'] ? '&' . $attributes['extensions'] : '')
 				. '"
 				class="inputFile %s %s"
 				%s

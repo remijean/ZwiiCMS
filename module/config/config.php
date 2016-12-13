@@ -34,7 +34,6 @@ class config extends common {
 					'title' => $this->getInput('configTitle')
 				]
 			]);
-			$this->saveData();
 			if(empty(template::$notices)) {
 				// Active l'URL rewriting
 				$htaccess = file_get_contents('.htaccess');

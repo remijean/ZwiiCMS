@@ -116,8 +116,8 @@ class theme extends common {
 		'cover' => 'Largeur adaptée au fond'
 	];
 	public static $textTransforms = [
-		'none' => 'Normal',
-		'uppercase' => 'Majuscule'
+		'none' => 'Normaux',
+		'uppercase' => 'Majuscules'
 	];
 	public static $widths = [
 		'750px' => 'Petit (750px)',
@@ -140,7 +140,6 @@ class theme extends common {
 				'imageRepeat' => $this->getInput('themeBodyImageRepeat'),
 				'imageSize' => $this->getInput('themeBodyImageSize')
 			]]);
-			$this->saveData();
 			return [
 				'notification' => 'Options de l\'arrière plan enregistrés',
 				'redirect' => 'theme',
@@ -173,7 +172,6 @@ class theme extends common {
 				'socialsAlign' => $this->getInput('themeFooterSocialsAlign'),
 				'textAlign' => $this->getInput('themeFooterTextAlign')
 			]]);
-			$this->saveData();
 			return [
 				'notification' => 'Options du bas de page enregistrés',
 				'redirect' => 'theme',
@@ -211,7 +209,6 @@ class theme extends common {
 				'textColor' => $this->getInput('themeHeaderTextColor'),
 				'textTransform' => $this->getInput('themeHeaderTextTransform')
 			]]);
-			$this->saveData();
 			return [
 				'notification' => 'Options de la bannière enregistrés',
 				'redirect' => 'theme',
@@ -254,7 +251,6 @@ class theme extends common {
 				'textAlign' => $this->getInput('themeMenuTextAlign'),
 				'textTransform' => $this->getInput('themeMenuTextTransform')
 			]]);
-			$this->saveData();
 			return [
 				'notification' => 'Options du menu enregistrés',
 				'redirect' => 'theme',
@@ -293,7 +289,6 @@ class theme extends common {
 				'shadow' => $this->getInput('themeSiteShadow'),
 				'width' => $this->getInput('themeSiteWidth')
 			]]);
-			$this->saveData();
 			return [
 				'notification' => 'Options du site enregistrés',
 				'redirect' => 'theme',
