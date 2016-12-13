@@ -43,3 +43,19 @@ $("input, select").on("change", function() {
 			break;
 	}
 });
+// Lien de connexion
+$("#themeMenuLoginLink").on("click", function() {
+	if($(this).is(":checked")) {
+		$("<li>").append(
+			$("<a>")
+				.attr({
+					"id": "menuLoginLink",
+					"href": "<?php echo helper::baseUrl(true); ?>config"
+				})
+				.text("<?php echo helper::translate("Connexion"); ?>")
+		).appendTo("#menu > ul")
+	}
+	else {
+		$("#menuLoginLink").remove();
+	}
+});

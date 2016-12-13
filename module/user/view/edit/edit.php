@@ -7,19 +7,21 @@
 					'label' => 'Nom',
 					'value' => $this->getData(['user', $this->getUrl(2), 'name'])
 				]); ?>
-				<?php echo template::select('userEditRank', $module::$ranks, [
-					'label' => 'Rang',
-					'selected' => $this->getData(['user', $this->getUrl(2), 'rank'])
-				]); ?>
+				<?php if($this->getUser('rank') === self::RANK_ADMIN): ?>
+					<?php echo template::select('userEditRank', $module::$ranks, [
+						'label' => 'Rang',
+						'selected' => $this->getData(['user', $this->getUrl(2), 'rank'])
+					]); ?>
+				<?php endif; ?>
 			</div>
 		</div>
 		<div class="col6">
 			<div class="block">
 				<h4><?php echo helper::translate('Sécurité'); ?></h4>
-				<?php echo template::password('userEditName', [
+				<?php echo template::password('userEditNewPassword', [
 					'label' => 'Nouveau mot de passe'
 				]); ?>
-				<?php echo template::password('userEditName', [
+				<?php echo template::password('userEditConfirmPassword', [
 					'label' => 'Confirmation'
 				]); ?>
 			</div>

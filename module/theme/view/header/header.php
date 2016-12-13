@@ -8,31 +8,31 @@
 					<div class="col6">
 						<?php echo template::text('themeHeaderBackgroundColor', [
 							'class' => 'colorPicker',
-							'label' => 'Couleur de fond',
+							'label' => 'Fond',
 							'value' => $this->getData(['theme', 'header', 'backgroundColor'])
 						]); ?>
 					</div>
 					<div class="col6">
 						<?php echo template::text('themeHeaderTextColor', [
 							'class' => 'colorPicker',
-							'label' => 'Couleur du texte',
+							'label' => 'Texte',
 							'value' => $this->getData(['theme', 'header', 'textColor'])
 						]); ?>
 					</div>
 				</div>
 			</div>
 			<div class="block">
-				<h4><?php echo helper::translate('Mise en forme'); ?></h4>
+				<h4><?php echo helper::translate('Mise en forme du texte'); ?></h4>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::select('themeHeaderTextTransform', $module::$textTransforms, [
-							'label' => 'Capitalisation du texte',
+							'label' => 'Capitalisation',
 							'selected' => $this->getData(['theme', 'header', 'textTransform'])
 						]); ?>
 					</div>
 					<div class="col6">
 						<?php echo template::select('themeHeaderFontWeight', $module::$fontWeights, [
-							'label' => 'Épaisseur du texte',
+							'label' => 'Épaisseur',
 							'selected' => $this->getData(['theme', 'header', 'fontWeight'])
 						]); ?>
 					</div>
@@ -43,7 +43,7 @@
 			<div class="block">
 				<h4><?php echo helper::translate('Image'); ?></h4>
 				<?php echo template::file('themeHeaderImage', [
-					'label' => 'Image',
+					'label' => 'Fond',
 					'value' => $this->getData(['theme', 'header', 'image'])
 				]); ?>
 				<div id="themeHeaderImageOptions" class="displayNone">
@@ -64,9 +64,9 @@
 				</div>
 			</div>
 			<div class="block">
-				<h4><?php echo helper::translate('Police'); ?></h4>
+				<h4><?php echo helper::translate('Police de caractères'); ?></h4>
 				<?php echo template::select('themeHeaderFont', $module::$fonts, [
-					'label' => 'Police du titre',
+					'label' => 'Titre',
 					'selected' => $this->getData(['theme', 'header', 'font'])
 				]); ?>
 			</div>

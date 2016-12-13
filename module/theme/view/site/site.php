@@ -52,17 +52,17 @@
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Mise en forme'); ?></h4>
+				<h4><?php echo helper::translate('Mise en forme des titres'); ?></h4>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::select('themeTitleTextTransform', $module::$textTransforms, [
-							'label' => 'Capitalisation des titres',
+							'label' => 'Caractères',
 							'selected' => $this->getData(['theme', 'title', 'textTransform'])
 						]); ?>
 					</div>
 					<div class="col6">
 						<?php echo template::select('themeTitleFontWeight', $module::$fontWeights, [
-							'label' => 'Épaisseur des titres',
+							'label' => 'Style',
 							'selected' => $this->getData(['theme', 'title', 'fontWeight'])
 						]); ?>
 					</div>
@@ -83,7 +83,7 @@
 					</div>
 					<div class="col4">
 						<?php echo template::select('themeSiteRadius', $module::$radius, [
-							'label' => 'Arrondi sur les coins du site',
+							'label' => 'Arrondi des coins',
 							'selected' => $this->getData(['theme', 'site', 'radius'])
 						]); ?>
 					</div>

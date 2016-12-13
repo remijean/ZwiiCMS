@@ -6,7 +6,7 @@
 				<h4><?php echo helper::translate('Couleur'); ?></h4>
 				<?php echo template::text('themeBodyBackgroundColor', [
 					'class' => 'colorPicker',
-					'label' => 'Couleur de fond',
+					'label' => 'Fond',
 					'value' => $this->getData(['theme', 'body', 'backgroundColor'])
 				]); ?>
 			</div>
@@ -15,7 +15,7 @@
 			<div class="block">
 				<h4><?php echo helper::translate('Image'); ?></h4>
 				<?php echo template::file('themeBodyImage', [
-					'label' => 'Image de fond',
+					'label' => 'Fond',
 					'value' => $this->getData(['theme', 'body', 'image'])
 				]); ?>
 				<div id="themeBodyImageOptions" class="displayNone">

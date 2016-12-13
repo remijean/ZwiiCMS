@@ -6,24 +6,24 @@
 				<h4><?php echo helper::translate('Couleur'); ?></h4>
 				<?php echo template::text('themeMenuBackgroundColor', [
 					'class' => 'colorPicker',
-					'label' => 'Couleur de fond',
+					'label' => 'Fond',
 					'value' => $this->getData(['theme', 'menu', 'backgroundColor'])
 				]); ?>
 			</div>
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Mise en forme'); ?></h4>
+				<h4><?php echo helper::translate('Mise en forme du texte'); ?></h4>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::select('themeMenuTextTransform', $module::$textTransforms, [
-							'label' => 'Capitalisation du texte',
+							'label' => 'Caractères',
 							'selected' => $this->getData(['theme', 'menu', 'textTransform'])
 						]); ?>
 					</div>
 					<div class="col6">
 						<?php echo template::select('themeMenuFontWeight', $module::$fontWeights, [
-							'label' => 'Épaisseur du texte',
+							'label' => 'Style',
 							'selected' => $this->getData(['theme', 'menu', 'fontWeight'])
 						]); ?>
 					</div>
@@ -55,6 +55,9 @@
 						]); ?>
 					</div>
 				</div>
+				<?php echo template::checkbox('themeMenuLoginLink', true, 'Lien de connexion', [
+					'checked' => $this->getData(['theme', 'menu', 'loginLink'])
+				]); ?>
 			</div>
 		</div>
 	</div>

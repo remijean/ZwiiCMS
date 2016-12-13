@@ -20,7 +20,7 @@
 				]); ?>
 			</div>
 			<div class="block">
-				<h4><?php echo helper::translate('Options avancés'); ?></h4>
+				<h4><?php echo helper::translate('Options avancées'); ?></h4>
 				<?php echo template::file('configFavicon', [
 					'extensions' => 'ico',
 					'help' => 'Seule une image de format .ico est acceptée. Attention pensez à supprimer le cache de votre navigateur si le favicon ne change pas.',
@@ -37,10 +37,10 @@
 					'label' => 'Texte du bas de page',
 					'value' => $this->getData(['config', 'footerText'])
 				]); ?>
-				<?php echo template::checkbox('configCookieConsent', true, 'Afficher le message de consentement pour l\'utilisation des cookies', [
+				<?php echo template::checkbox('configCookieConsent', true, 'Message de consentement pour l\'utilisation des cookies', [
 					'checked' => $this->getData(['config', 'cookieConsent'])
 				]); ?>
-				<?php echo template::checkbox('rewrite', true, 'Activer la réécriture d\'URL', [
+				<?php echo template::checkbox('rewrite', true, 'Réécriture d\'URL', [
 					'checked' => helper::checkRewrite(),
 					'help' => 'Supprime le point d\'interrogation de l\'URL (si vous n\'arrivez pas à cocher la case, vérifiez que le module d\'URL rewriting de votre serveur est bien activé).',
 					'disabled' => helper::checkServerModRewrite() === false
@@ -106,7 +106,7 @@
 					'value' => self::ZWII_VERSION,
 					'disabled' => true
 				]); ?>
-				<?php echo template::checkbox('configAutoBackup', true, 'Activer la sauvegarder automatique des données', [
+				<?php echo template::checkbox('configAutoBackup', true, 'Sauvegarder automatique des données', [
 					'checked' => $this->getData(['config', 'autoBackup']),
 					'help' => 'Effectue une sauvegarde une fois par jour dans le dossier site/file/backup/.'
 				]); ?>

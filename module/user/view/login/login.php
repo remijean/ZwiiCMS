@@ -21,7 +21,7 @@
 	<div class="row">
 		<div class="col2">
 			<?php echo template::submit('userLogin', [
-				'value' => 'Me connecter'
+				'value' => 'Valider'
 			]); ?>
 		</div>
 	</div>

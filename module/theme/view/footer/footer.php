@@ -6,7 +6,7 @@
 				<h4><?php echo helper::translate('Couleur'); ?></h4>
 				<?php echo template::text('themeFooterBackgroundColor', [
 					'class' => 'colorPicker',
-					'label' => 'Couleur de fond',
+					'label' => 'Fond',
 					'value' => $this->getData(['theme', 'footer', 'backgroundColor'])
 				]); ?>
 			</div>
