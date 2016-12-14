@@ -1,4 +1,4 @@
-<h3><?php echo helper::translate('Options du bas de page'); ?></h3>
+<h3><?php echo helper::translate('Options du pied de page'); ?></h3>
 <form method="post">
 	<div class="row">
 		<div class="col6">
@@ -34,27 +34,38 @@
 	<div class="row">
 		<div class="col12">
 			<div class="block">
-				<h4><?php echo helper::translate('Disposition du contenu'); ?></h4>
+				<h4><?php echo helper::translate('Alignement du contenu'); ?></h4>
 				<div class="row">
 					<div class="col4">
 						<?php echo template::select('themeFooterSocialsAlign', $module::$aligns, [
-							'label' => 'Alignement des réseaux sociaux',
+							'label' => 'Réseaux sociaux',
 							'selected' => $this->getData(['theme', 'footer', 'socialsAlign'])
 						]); ?>
 					</div>
 					<div class="col4">
 						<?php echo template::select('themeFooterTextAlign', $module::$aligns, [
-							'label' => 'Alignement du texte',
+							'label' => 'Texte',
 							'selected' => $this->getData(['theme', 'footer', 'textAlign'])
 						]); ?>
 					</div>
 					<div class="col4">
 						<?php echo template::select('themeFooterCopyrightAlign', $module::$aligns, [
-							'label' => 'Alignement du copyright',
+							'label' => 'Copyright',
 							'selected' => $this->getData(['theme', 'footer', 'copyrightAlign'])
 						]); ?>
 					</div>
 				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col6">
+			<div class="block">
+				<h4><?php echo helper::translate('Contenu'); ?></h4>
+				<?php echo template::checkbox('themeFooterLoginLink', true, 'Lien de connexion', [
+					'checked' => $this->getData(['theme', 'footer', 'loginLink']),
+					'help' => 'Visible seulement sur cette page et lorsque vous n\'êtes pas connecté.'
+				]); ?>
 			</div>
 		</div>
 	</div>

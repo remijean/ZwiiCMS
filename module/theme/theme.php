@@ -11,9 +11,9 @@ class theme extends common {
 		'site' => self::RANK_ADMIN
 	];
 	public static $aligns = [
-		'left' => 'Gauche',
-		'center' => 'Centrer',
-		'right' => 'Droite'
+		'left' => 'À gauche',
+		'center' => 'Au centre',
+		'right' => 'À droite'
 	];
 	public static $attachments = [
 		'scroll' => 'Normale',
@@ -42,11 +42,11 @@ class theme extends common {
 		'bold' => 'Gras'
 	];
 	public static $footerHeights = [
-		'5px' => 'Très petit',
-		'10px' => 'Petit',
-		'20px' => 'Moyen',
-		'30px' => 'Grand',
-		'40px' => 'Très grand'
+		'5px' => 'Très petite',
+		'10px' => 'Petite',
+		'20px' => 'Moyenne',
+		'30px' => 'Grande',
+		'40px' => 'Très grande'
 	];
 	public static $footerPositions = [
 		'hide' => 'Cachée',
@@ -77,11 +77,11 @@ class theme extends common {
 		'bottom right' => 'En bas à droite'
 	];
 	public static $menuHeights = [
-		'5px 10px' => 'Très petit',
-		'10px' => 'Petit',
-		'15px 10px' => 'Moyen',
-		'20px 15px' => 'Grand',
-		'25px 15px' => 'Très grand'
+		'5px 10px' => 'Très petite',
+		'10px' => 'Petite',
+		'15px 10px' => 'Moyenne',
+		'20px 15px' => 'Grande',
+		'25px 15px' => 'Très grande'
 	];
 	public static $menuPositions = [
 		'hide' => 'Caché',
@@ -120,9 +120,9 @@ class theme extends common {
 		'uppercase' => 'Majuscules'
 	];
 	public static $widths = [
-		'750px' => 'Petit (750px)',
-		'960px' => 'Moyen (960px)',
-		'1170px' => 'Grand (1170px)',
+		'750px' => 'Petite (750px)',
+		'960px' => 'Moyenne (960px)',
+		'1170px' => 'Grande (1170px)',
 		'100%' => 'Fluide (100%)'
 	];
 
@@ -159,7 +159,7 @@ class theme extends common {
 	}
 
 	/**
-	 * Options du bas de page
+	 * Options du pied de page
 	 */
 	public function footer() {
 		// Soumission du formulaire
@@ -168,12 +168,13 @@ class theme extends common {
 				'backgroundColor' => $this->getInput('themeFooterBackgroundColor'),
 				'copyrightAlign' => $this->getInput('themeFooterCopyrightAlign'),
 				'height' => $this->getInput('themeFooterHeight'),
+				'loginLink' => $this->getInput('themeFooterLoginLink'),
 				'position' => $this->getInput('themeFooterPosition'),
 				'socialsAlign' => $this->getInput('themeFooterSocialsAlign'),
 				'textAlign' => $this->getInput('themeFooterTextAlign')
 			]]);
 			return [
-				'notification' => 'Options du bas de page enregistrés',
+				'notification' => 'Options du pied de page enregistrés',
 				'redirect' => 'theme',
 				'state' => true
 			];
@@ -247,6 +248,7 @@ class theme extends common {
 				'backgroundColor' => $this->getInput('themeMenuBackgroundColor'),
 				'fontWeight' => $this->getInput('themeMenuFontWeight'),
 				'height' => $this->getInput('themeMenuHeight'),
+				'loginLink' => $this->getInput('themeMenuLoginLink'),
 				'position' => $this->getInput('themeMenuPosition'),
 				'textAlign' => $this->getInput('themeMenuTextAlign'),
 				'textTransform' => $this->getInput('themeMenuTextTransform')

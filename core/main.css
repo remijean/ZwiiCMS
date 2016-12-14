@@ -186,6 +186,7 @@ td > .col12 {
 }
 #panel #panelRight {
 	float: right;
+	font-size: .9em;
 }
 #panel li {
 	display: inline;
@@ -214,6 +215,7 @@ td > .col12 {
 	}
 	#panel ul {
 		float: none !important;
+		height: auto;
 	}
 	#panel select {
 		width: 100%;
@@ -403,13 +405,13 @@ footer #socials .zwiico-youtube:hover {
 	margin: 0;
 }
 .zwiico-margin-left:before {
-	margin-left: .3em;
+	margin-left: .4em;
 }
 .zwiico-margin-right:before {
-	margin-right: .3em;
+	margin-right: .4em;
 }
 .zwiico-margin-all:before {
-	margin: 0 .3em;
+	margin: 0 .4em;
 }
 
 /* Bulle de dialogue */

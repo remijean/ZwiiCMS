@@ -55,8 +55,16 @@
 						]); ?>
 					</div>
 				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col6">
+			<div class="block">
+				<h4><?php echo helper::translate('Contenu'); ?></h4>
 				<?php echo template::checkbox('themeMenuLoginLink', true, 'Lien de connexion', [
-					'checked' => $this->getData(['theme', 'menu', 'loginLink'])
+					'checked' => $this->getData(['theme', 'menu', 'loginLink']),
+					'help' => 'Visible seulement sur cette page et lorsque vous n\'êtes pas connecté.'
 				]); ?>
 			</div>
 		</div>

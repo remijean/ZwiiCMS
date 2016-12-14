@@ -36,11 +36,11 @@ class common {
 			'language' => '',
 			'metaDescription' => 'Description',
 			'social' => [
-				'facebookId' => 'Zwii',
+				'facebookId' => 'ZwiiCMS',
 				'googleplusId' => '',
 				'instagramId' => '',
 				'pinterestId' => '',
-				'twitterId' => 'Zwii',
+				'twitterId' => 'ZwiiCMS',
 				'youtubeId' => ''
 			],
 			'title' => 'Nom du site'
@@ -107,6 +107,7 @@ class common {
 				'backgroundColor' => 'rgba(60, 60, 60, 1)',
 				'copyrightAlign' => 'right',
 				'height' => '30px',
+				'loginLink' => true,
 				'position' => 'body',
 				'socialsAlign' => 'left',
 				'textAlign' => 'right'
@@ -310,7 +311,7 @@ class common {
 	}
 
 	/**
-	 * Accède à une valeur des variables http (ordre de recherche en l'absence de type : POST, GET, COOKIE)
+	 * Accède à une valeur des variables http (ordre de recherche en l'absence de type : _POST, _GET, _COOKIE)
 	 * @param mixed $key Clé de la valeur
 	 * @param mixed $filter Filtre à appliquer à la valeur
 	 * @param mixed $type Type de la valeur
@@ -319,11 +320,21 @@ class common {
 	public function getInput($key, $filter = helper::FILTER_STRING, $type = null) {
 		// Cherche et retourne la valeur demandée dans un type précis
 		if($type AND isset($this->input[$type][$key])) {
+			// Champ obligatoire
+			if($type === '_POST' AND empty($this->input[$type][$key])) {
+				template::getRequired($key);
+			}
+			// Retourne la valeur filtrée
 			return helper::filter($this->input[$type][$key], $filter);
 		}
 		// Cherche et retourne la valeur demandée
 		foreach($this->input as $type => $values) {
 			if(array_key_exists($key, $values)) {
+				// Champ obligatoire
+				if($type === '_POST' AND empty($this->input[$type][$key])) {
+					template::getRequired($key);
+				}
+				// Retourne la valeur filtrée
 				return helper::filter($this->input[$type][$key], $filter);
 			}
 		}
@@ -358,7 +369,7 @@ class common {
 			return false;
 		}
 		elseif($key === 'id') {
-			return $this->getData(['user', $this->getInput('ZWII_USER_ID', helper::FILTER_STRING, '_COOKIE')]);
+			return $this->getInput('ZWII_USER_ID', helper::FILTER_STRING, '_COOKIE');
 		}
 		elseif(array_key_exists($key, $this->user)) {
 			return $this->user[$key];
@@ -476,7 +487,7 @@ class core extends common {
 			$css .= 'nav a.target,nav a:active{background-color:' . $colors['veryDarken'] . '}';
 			$css .= '#menu{text-align:' . $this->getData(['theme', 'menu', 'textAlign']) . '}';
 			$css .= '#toggle span,#menu a{padding:' . $this->getData(['theme', 'menu', 'height']) . ';font-weight:' . $this->getData(['theme', 'menu', 'fontWeight']) . ';text-transform:' . $this->getData(['theme', 'menu', 'textTransform']) . '}';
-			// Bas de page
+			// Pied de page
 			$colors = helper::colorVariants($this->getData(['theme', 'footer', 'backgroundColor']));
 			$css .= 'footer{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '}';
 			$css .= 'footer a{color:' . $colors['text'] . '!important}';
@@ -1018,7 +1029,14 @@ class layout extends common {
 	 * Affiche le coyright
 	 */
 	public function showCopyright() {
-		echo '<div id="copyright">' . helper::translate('Motorisé par') . ' <a href="http://zwiicms.com/" target="_blank">Zwii</a> | <a href="' . helper::baseUrl() . 'sitemap">' . helper::translate('Plan du site') . '</a></div>';
+		$items = '<div id="copyright">';
+		$items .= helper::translate('Motorisé par') . '<a href="http://zwiicms.com/" target="_blank">Zwii</a>';
+		$items .= ' | <a href="' . helper::baseUrl() . 'sitemap">' . helper::translate('Plan du site') . '</a>';
+		if($this->getData(['theme', 'footer', 'loginLink']) AND $this->getUser('id') === false) {
+			$items .= '<span id="footerLoginLink"> | <a href="' . helper::baseUrl() . 'user/login">' . helper::translate('Connexion') . '</a></span>';
+		}
+		$items .= '</div>';
+		echo $items;
 	}
 
 	/**
@@ -1134,10 +1152,11 @@ class layout extends common {
 			}
 			if($this->getUser('rank') >= self::RANK_ADMIN) {
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'theme" title="' . helper::translate('Personnaliser le site') . '">' . template::ico('brush') . '</a></li>';
-				$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/all" title="' . helper::translate('Configurer les utilisateurs') . '">' . template::ico('users') . '</a></li>';
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'config" title="' . helper::translate('Configurer le site') . '">' . template::ico('gear') . '</a></li>';
+				$rightItems .= '<li><a href="' . helper::baseUrl() . 'user" title="' . helper::translate('Configurer les utilisateurs') . '">' . template::ico('users') . '</a></li>';
 			}
-			$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/logout" title="' . helper::translate('Se déconnecter') . '">' . template::ico('logout', 'right') . $this->getUser('name') . '</a></li>';
+			$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/edit/' . $this->getUser('id') . '" title="' . helper::translate('Configurer mon compte') . '">' . template::ico('user', 'right') . $this->getUser('name') . '</a></li>';
+			$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/logout" title="' . helper::translate('Se déconnecter') . '">' . template::ico('logout') . '</a></li>';
 			// Panneau
 			echo '<div id="panel"><div class="container"><ul id="panelLeft">' . $leftItems . '</ul><ul id="panelRight">' . $rightItems . '</ul></div></div>';
 		}
@@ -1245,7 +1264,7 @@ class template {
 
 	/**
 	 * Valeur du champ avant validation et erreur dans le formulaire
-	 * @param string $id Dd du champ
+	 * @param string $id Id du champ
 	 * @return mixed
 	 */
 	private static function getBefore($id) {
@@ -1263,38 +1282,30 @@ class template {
 
 	/**
 	 * Retourne une notice pour les champs obligatoires
-	 * @param string $name Nom du champ
+	 * @param string $id Id du champ
 	 */
-	public static function getRequired($name) {
+	public static function getRequired($id) {
 		if(
-			empty($_SESSION['REQUIRED']) === false
-			AND array_key_exists($name . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED'])
+			empty($_SESSION['ZWII_REQUIRED']) === false
+			AND array_key_exists($id, $_SESSION['ZWII_REQUIRED'])
 		) {
-			self::$notices[$name] = 'Ce champ est requis';
+			self::$notices[$id] = 'Ce champ est requis';
 		}
 	}
 
 	/**
 	 * Enregistre un champ comme obligatoire
-	 * @param string $id Id du champ
-	 * @param array $attributes Transmet l'attribut "required" à la méthode
+	 * @param array $attributes Transmet les attributs à la méthode
 	 */
-	private static function setRequired($id, $attributes) {
-		// Supprime l'id du champs si il existe déjà (au cas ou un champ devient non obligatoire)
+	private static function setRequired($attributes) {
 		if(
-			empty($_SESSION['REQUIRED']) === false
-			AND array_key_exists($id . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED'])
-		) {
-			unset($_SESSION['REQUIRED'][$id . '.' . md5($_SERVER['QUERY_STRING'])]);
-		}
-		// Enregistre l'id du champ comme obligatoire
-		if(
-			empty($attributes['required']) === false
+			$attributes['required']
 			AND (
-				empty($_SESSION['REQUIRED'])
-				OR array_key_exists($id . '.' . md5($_SERVER['QUERY_STRING']), $_SESSION['REQUIRED'])) === false
+				empty($_SESSION['ZWII_REQUIRED'])
+				OR array_key_exists($attributes['id'], $_SESSION['ZWII_REQUIRED']) === false
+			)
 		) {
-			$_SESSION['REQUIRED'][$id . '.' . md5($_SERVER['QUERY_STRING'])] = true;
+			$_SESSION['ZWII_REQUIRED'][$attributes['id']] = true;
 		}
 	}
 
@@ -1375,7 +1386,7 @@ class template {
 			'classContainer' => ''
 		], $attributes);
 		// Champ requis
-		self::setRequired($attributes['id'], $attributes);
+		self::setRequired($attributes);
 		// Génère deux nombres pour le capcha
 		$firstNumber = mt_rand(1, 15);
 		$secondNumber = mt_rand(1, 15);
@@ -1431,7 +1442,7 @@ class template {
 			'classContainer' => ''
 		], $attributes);
 		// Champ requis
-		self::setRequired($attributes['id'], $attributes);
+		self::setRequired($attributes);
 		// Début container
 		$html = '<div class="inputContainer ' . $attributes['classContainer'] . '">';
 		// Notice
@@ -1477,7 +1488,7 @@ class template {
 			'classContainer' => ''
 		], $attributes);
 		// Champ requis
-		self::setRequired($attributes['id'], $attributes);
+		self::setRequired($attributes);
 		// Sauvegarde des données en cas d'erreur
 		if(($value = self::getBefore($attributes['id'])) !== null) {
 			$attributes['value'] = $value;
@@ -1627,7 +1638,7 @@ class template {
 			'classContainer' => ''
 		], $attributes);
 		// Champ requis
-		self::setRequired($attributes['id'], $attributes);
+		self::setRequired($attributes);
 		// Début container
 		$html = '<div class="inputContainer ' . $attributes['classContainer'] . '">';
 		// Label
@@ -1673,7 +1684,7 @@ class template {
 			'classContainer' => ''
 		], $attributes);
 		// Champ requis
-		self::setRequired($attributes['id'], $attributes);
+		self::setRequired($attributes);
 		// Sauvegarde des données en cas d'erreur
 		if($selected = self::getBefore($attributes['id'])) {
 			$attributes['selected'] = $selected;
@@ -1804,7 +1815,7 @@ class template {
 			'classContainer' => ''
 		], $attributes);
 		// Champ requis
-		self::setRequired($attributes['id'], $attributes);
+		self::setRequired($attributes);
 		// Sauvegarde des données en cas d'erreur
 		if(($value = self::getBefore($attributes['id'])) !== null) {
 			$attributes['value'] = $value;
@@ -1854,7 +1865,7 @@ class template {
 			'classContainer' => ''
 		], $attributes);
 		// Champ requis
-		self::setRequired($attributes['id'], $attributes);
+		self::setRequired($attributes);
 		// Sauvegarde des données en cas d'erreur
 		if(($value = self::getBefore($attributes['id'])) !== null) {
 			$attributes['value'] = $value;

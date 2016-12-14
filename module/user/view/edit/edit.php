@@ -5,11 +5,13 @@
 				<h4><?php echo helper::translate('Informations générales'); ?></h4>
 				<?php echo template::text('userEditName', [
 					'label' => 'Nom',
+					'required' => true,
 					'value' => $this->getData(['user', $this->getUrl(2), 'name'])
 				]); ?>
 				<?php if($this->getUser('rank') === self::RANK_ADMIN): ?>
 					<?php echo template::select('userEditRank', $module::$ranks, [
 						'label' => 'Rang',
+						'required' => true,
 						'selected' => $this->getData(['user', $this->getUrl(2), 'rank'])
 					]); ?>
 				<?php endif; ?>
@@ -28,13 +30,17 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col2 offset8">
-			<?php echo template::button('userEditBack', [
-				'value' => 'Annuler',
-				'href' => helper::baseUrl() . 'user/all'
-			]); ?>
-		</div>
-		<div class="col2">
+		<?php if($this->getUser('rank') === self::RANK_ADMIN): ?>
+			<div class="col2 offset8">
+				<?php echo template::button('userEditBack', [
+					'value' => 'Annuler',
+					'href' => helper::baseUrl() . 'user'
+				]); ?>
+			</div>
+			<div class="col2">
+		<?php else: ?>
+			<div class="col2 offset10">
+		<?php endif; ?>
 			<?php echo template::submit('userEditSave'); ?>
 		</div>
 	</div>

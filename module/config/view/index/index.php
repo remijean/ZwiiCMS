@@ -23,7 +23,7 @@
 				<h4><?php echo helper::translate('Options avancées'); ?></h4>
 				<?php echo template::file('configFavicon', [
 					'extensions' => 'ico',
-					'help' => 'Seule une image de format .ico est acceptée. Attention pensez à supprimer le cache de votre navigateur si le favicon ne change pas.',
+					'help' => 'Seule une image de format .ico est acceptée. Pensez à supprimer le cache de votre navigateur si la favicon ne change pas.',
 					'label' => 'Favicon',
 					'value' => $this->getData(['config', 'favicon'])
 				]); ?>
@@ -34,15 +34,15 @@
 					'placeholder' => 'UA-XXXXXXXX-X'
 				]); ?>
 				<?php echo template::textarea('configFooterText', [
-					'label' => 'Texte du bas de page',
+					'label' => 'Texte du pied de page',
 					'value' => $this->getData(['config', 'footerText'])
 				]); ?>
 				<?php echo template::checkbox('configCookieConsent', true, 'Message de consentement pour l\'utilisation des cookies', [
 					'checked' => $this->getData(['config', 'cookieConsent'])
 				]); ?>
-				<?php echo template::checkbox('rewrite', true, 'Réécriture d\'URL', [
+				<?php echo template::checkbox('rewrite', true, 'Réécriture des URLs', [
 					'checked' => helper::checkRewrite(),
-					'help' => 'Supprime le point d\'interrogation de l\'URL (si vous n\'arrivez pas à cocher la case, vérifiez que le module d\'URL rewriting de votre serveur est bien activé).',
+					'help' => 'Supprime le point d\'interrogation des URLs (vérifiez que le module d\'URL rewriting de votre serveur est bien activé avant de cocher cette case).',
 					'disabled' => helper::checkServerModRewrite() === false
 				]); ?>
 			</div>

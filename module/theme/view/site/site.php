@@ -8,21 +8,21 @@
 					<div class="col4">
 						<?php echo template::text('themeTitleTextColor', [
 							'class' => 'colorPicker',
-							'label' => 'Couleur des titres',
+							'label' => 'Titres',
 							'value' => $this->getData(['theme', 'title', 'textColor'])
 						]); ?>
 					</div>
 					<div class="col4">
 						<?php echo template::text('themeButtonBackgroundColor', [
 							'class' => 'colorPicker',
-							'label' => 'Couleur des boutons',
+							'label' => 'Boutons',
 							'value' => $this->getData(['theme', 'button', 'backgroundColor'])
 						]); ?>
 					</div>
 					<div class="col4">
 						<?php echo template::text('themeLinkTextColor', [
 							'class' => 'colorPicker',
-							'label' => 'Couleur des liens',
+							'label' => 'Liens',
 							'value' => $this->getData(['theme', 'link', 'textColor'])
 						]); ?>
 					</div>
@@ -37,13 +37,13 @@
 				<div class="row">
 					<div class="col6">
 						<?php echo template::select('themeTitleFont', $module::$fonts, [
-							'label' => 'Police des titres',
+							'label' => 'Titres',
 							'selected' => $this->getData(['theme', 'title', 'font'])
 						]); ?>
 					</div>
 					<div class="col6">
 						<?php echo template::select('themeTextFont', $module::$fonts, [
-							'label' => 'Police du texte',
+							'label' => 'Texte',
 							'selected' => $this->getData(['theme', 'text', 'font'])
 						]); ?>
 					</div>
