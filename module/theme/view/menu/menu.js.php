@@ -44,13 +44,13 @@ $("input, select").on("change", function() {
 	}
 });
 // Lien de connexion
-$("#themeMenuLoginLink").on("click", function() {
+$("#themeMenuLoginLink").on("change", function() {
 	if($(this).is(":checked")) {
 		$("<li>").append(
 			$("<a>")
 				.attr({
 					"id": "menuLoginLink",
-					"href": "<?php echo helper::baseUrl(true); ?>config"
+					"href": "<?php echo helper::baseUrl(true); ?>user/login"
 				})
 				.text("<?php echo helper::translate("Connexion"); ?>")
 		).appendTo("#menu > ul")
@@ -58,4 +58,4 @@ $("#themeMenuLoginLink").on("click", function() {
 	else {
 		$("#menuLoginLink").remove();
 	}
-});
+}).trigger("change");

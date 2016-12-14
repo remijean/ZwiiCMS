@@ -1,10 +1,10 @@
 // Aperçu en direct
 $("input, select").on("change", function() {
-	// Couleurs du bas de page
+	// Couleurs du pied de page
 	var colors = colorVariants($("#themeFooterBackgroundColor").val());
 	var css = "footer{background-color:" + colors.normal + ";color:" + colors.text + "}";
 	var css = "footer a{color:" + colors.text + "!important}";
-	// Hauteur du bas de page
+	// Hauteur du pied de page
 	css += "footer .container > div{margin:" + $("#themeFooterHeight").val() + " 0}";
 	// Alignement du contenu
 	css += "#socials{text-align:" + $("#themeFooterSocialsAlign").val() + "}";
@@ -17,7 +17,7 @@ $("input, select").on("change", function() {
 		.attr("id", "themePreview")
 		.text(css)
 		.appendTo("head");
-	// Position du bas de page
+	// Position du pied de page
 	switch($("#themeFooterPosition").val()) {
 		case 'hide':
 			$("footer").hide();
@@ -30,3 +30,19 @@ $("input, select").on("change", function() {
 			break;
 	}
 });
+// Lien de connexion
+$("#themeFooterLoginLink").on("change", function() {
+	if($(this).is(":checked")) {
+		$("<span>")
+			.attr("id", "footerLoginLink")
+			.append(
+				$("<span>").text(" | "),
+				$("<a>")
+					.attr("href", "<?php echo helper::baseUrl(true); ?>user/login")
+					.text("<?php echo helper::translate("Connexion"); ?>")
+			).appendTo("#copyright")
+	}
+	else {
+		$("#footerLoginLink").remove();
+	}
+}).trigger("change");
