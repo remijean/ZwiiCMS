@@ -10,12 +10,6 @@ class user extends common {
 		'login' => self::RANK_VISITOR,
 		'logout' => self::RANK_MEMBER
 	];
-	public static $ranks = [
-		self::RANK_BANNED => 'Banni',
-		self::RANK_MEMBER => 'Membre',
-		self::RANK_MODERATOR => 'Modérateur',
-		self::RANK_ADMIN => 'Administrateur'
-	];
 	public static $users = [];
 
 	/**
@@ -33,7 +27,7 @@ class user extends common {
 			// Crée l'utilisateur
 			$this->setData([
 				'user',
-				helper::increment($this->getInput('userAddName', helper::FILTER_URL), $this->getData(['user'])),
+				$this->getInput('userAddName', helper::FILTER_ID),
 				[
 					'name' => $this->getInput('userAddName'),
 					'rank' => $this->getInput('userAddRank', helper::FILTER_INT),
@@ -71,7 +65,7 @@ class user extends common {
 			];
 		}
 		// Bloque la suppression de son propre compte
-		if($this->getUser('id') === $this->getUrl(2)) {
+		elseif($this->getUser('id') === $this->getUrl(2)) {
 			return [
 				'redirect' => 'user',
 				'notification' => 'Impossible de supprimer votre propre compte'
@@ -171,10 +165,12 @@ class user extends common {
 		asort($userIdsNames);
 		foreach($userIdsNames as $userId => $userName) {
 			self::$users[] = [
+				$userId,
+				self::$ranks[$this->getData(['user', $userId, 'rank'])],
 				$userName,
 				template::button('userEdit' . $userId, [
 					'value' => template::ico('pencil'),
-					'href' => helper::baseUrl() . 'user/edit/' . $userId
+					'href' => helper::baseUrl() . 'user/edit/' . $userId . '/back'
 				]),
 				template::button('userDelete' . $userId, [
 					'value' => template::ico('cancel'),
@@ -197,12 +193,12 @@ class user extends common {
 		if($this->isPost()) {
 			// Connexion si les informations sont correctes
 			if(
-				$this->getData(['user', $this->getInput('userId')])
-				AND $this->getData(['user', $this->getInput('userId'), 'password']) === hash('sha256', $this->getInput('userPassword'))
+				$this->getData(['user', $this->getInput('userLoginId'), 'password']) === hash('sha256', $this->getInput('userLoginPassword'))
+				AND $this->getData(['user', $this->getInput('userLoginId'), 'rank']) >= self::RANK_MEMBER
 			) {
-				$expire = $this->getInput('userLongTime') ? strtotime("+1 year") : 0;
-				setcookie('ZWII_USER_ID', $this->getInput('userId'), $expire);
-				setcookie('ZWII_USER_PASSWORD', hash('sha256', $this->getInput('userPassword')), $expire);
+				$expire = $this->getInput('userLoginLongTime') ? strtotime("+1 year") : 0;
+				setcookie('ZWII_USER_ID', $this->getInput('userLoginId'), $expire, helper::baseUrl(false, false));
+				setcookie('ZWII_USER_PASSWORD', hash('sha256', $this->getInput('userLoginPassword')), $expire, helper::baseUrl(false, false));
 				return [
 					'notification' => 'Connexion réussie',
 					'redirect' => implode('/', array_slice(explode('/', $this->getUrl()), 2)),
@@ -235,7 +231,7 @@ class user extends common {
 		helper::deleteCookie('ZWII_USER_PASSWORD');
 		return [
 			'notification' => 'Déconnexion réussie',
-			'redirect' => implode('/', array_slice(explode('/', $this->getUrl()), 2)),
+			'redirect' => '',
 			'state' => true
 		];
 	}

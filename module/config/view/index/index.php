@@ -33,16 +33,12 @@
 					'help' => 'Saisissez l\'ID de suivi de votre propriété Google Analytics.',
 					'placeholder' => 'UA-XXXXXXXX-X'
 				]); ?>
-				<?php echo template::textarea('configFooterText', [
-					'label' => 'Texte du pied de page',
-					'value' => $this->getData(['config', 'footerText'])
-				]); ?>
 				<?php echo template::checkbox('configCookieConsent', true, 'Message de consentement pour l\'utilisation des cookies', [
 					'checked' => $this->getData(['config', 'cookieConsent'])
 				]); ?>
 				<?php echo template::checkbox('rewrite', true, 'Réécriture des URLs', [
 					'checked' => helper::checkRewrite(),
-					'help' => 'Supprime le point d\'interrogation des URLs (vérifiez que le module d\'URL rewriting de votre serveur est bien activé avant de cocher cette case).',
+					'help' => 'Si vous n\'arrivez pas cocher cette case, vérifiez sur votre serveur que le module d\'URL rewriting est bien activé.',
 					'disabled' => helper::checkServerModRewrite() === false
 				]); ?>
 			</div>
@@ -108,7 +104,7 @@
 				]); ?>
 				<?php echo template::checkbox('configAutoBackup', true, 'Sauvegarder automatique des données', [
 					'checked' => $this->getData(['config', 'autoBackup']),
-					'help' => 'Effectue une sauvegarde une fois par jour dans le dossier site/file/backup/.'
+					'help' => 'Effectue une sauvegarde une fois par jour dans le dossier site/backup/.'
 				]); ?>
 				<div class="row">
 					<div class="col6">

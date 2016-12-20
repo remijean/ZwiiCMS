@@ -59,7 +59,7 @@
 			]); ?>
 		</div>
 		<div class="col2">
-			<?php echo template::submit('themeBodySave'); ?>
+			<?php echo template::submit('themeBodySubmit'); ?>
 		</div>
 	</div>
 </form>

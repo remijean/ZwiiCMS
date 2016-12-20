@@ -34,3 +34,10 @@ $("<a>")
 		"href": "<?php echo helper::baseUrl(); ?>theme/footer"
 	})
 	.appendTo("footer");
+// Affiche les zones cachées
+$("#themeShowAll").on("click", function() {
+	$("header.displayNone, nav.displayNone, footer.displayNone").slideDown();
+	$(this)
+		.addClass("disabled")
+		.css("z-index", 0);
+});

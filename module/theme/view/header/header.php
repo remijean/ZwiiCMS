@@ -106,7 +106,7 @@
 			]); ?>
 		</div>
 		<div class="col2">
-			<?php echo template::submit('themeHeaderSave'); ?>
+			<?php echo template::submit('themeHeaderSubmit'); ?>
 		</div>
 	</div>
 </form>

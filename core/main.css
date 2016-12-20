@@ -21,10 +21,10 @@ body {
 body {
 	color: #555;
 	margin: 0 10px;
-	font-size: 16px;
+	font-size: 14px;
 }
 body.editor {
-	font-size: 15px !important;
+	font-size: 14px !important;
 	background: #FFF !important;
 }
 
@@ -105,14 +105,20 @@ table {
 	border-spacing: 0;
 	border-collapse: collapse;
 }
-tr {
+thead tr {
+	background: #3C3C3C;
+	color: #FFF;
+	text-align: left;
+}
+tbody tr {
 	background: #F5F5F5;
 }
-tr:nth-child(2n + 2) {
+tbody tr:nth-child(2n + 2) {
 	background: #E9E9E9;
 }
-td {
-	padding: 10px;
+th {
+	font-weight: normal;
+	padding: 15px 10px !important;
 }
 /* Supprime le padding des cols dans les cellules des tableaux */
 td > .col1,
@@ -139,10 +145,11 @@ td > .col12 {
 	padding: 14px;
 	color: #FFF;
 	position: fixed;
-	bottom: 20px;
-	left: 20px;
+	top: 30px;
+	left: 30px;
 	width: 400px;
 	z-index: 20;
+	opacity: .9;
 }
 #notification.notificationSuccess {
 	background: #67C672;
@@ -186,7 +193,7 @@ td > .col12 {
 }
 #panel #panelRight {
 	float: right;
-	font-size: .9em;
+	font-size: .8em;
 }
 #panel li {
 	display: inline;
@@ -304,7 +311,7 @@ header nav {
 	left: 0;
 	top: 0;
 	right: 0;
-	font-size: 16px !important; /* Pour contrer la suppression du titre du site */
+	font-size: 14px !important; /* Pour contrer la suppression du titre du site */
 	line-height: initial;
 }
 @media (max-width: 768px) {
@@ -340,7 +347,7 @@ section #pageTitle {
 	margin-top: 0;
 }
 
-/* Bas du site */
+/* Pied de page */
 body > footer {
 	margin: 0 -10px;
 }
@@ -349,49 +356,49 @@ footer {
 	font-size: 0.8em;
 	padding: 10px 20px;
 }
-footer #socials {
+footer #footerSocials {
 	font-size: 1.6em;
 }
-footer #socials span {
+footer #footerSocials span {
 	color: #FFF;
 	padding: 6px;
 	margin: 0 4px;
 	display: inline-block;
 }
-footer #socials .zwiico-facebook {
+footer #footerSocials .zwiico-facebook {
 	background: #5D82D2;
 }
-footer #socials .zwiico-facebook:hover {
+footer #footerSocials .zwiico-facebook:hover {
 	background: #3764C5;
 }
-footer #socials .zwiico-googleplus {
+footer #footerSocials .zwiico-googleplus {
 	background: #E46049;
 }
-footer #socials .zwiico-googleplus:hover {
+footer #footerSocials .zwiico-googleplus:hover {
 	background: #DA3C20;
 }
-footer #socials .zwiico-instagram {
+footer #footerSocials .zwiico-instagram {
 	background: #558BB7;
 }
-footer #socials .zwiico-instagram:hover {
+footer #footerSocials .zwiico-instagram:hover {
 	background: #417198;
 }
-footer #socials .zwiico-pinterest {
+footer #footerSocials .zwiico-pinterest {
 	background: #E23139;
 }
-footer #socials .zwiico-pinterest:hover {
+footer #footerSocials .zwiico-pinterest:hover {
 	background: #C41C23;
 }
-footer #socials .zwiico-twitter {
+footer #footerSocials .zwiico-twitter {
 	background: #40BFF6;
 }
-footer #socials .zwiico-twitter:hover {
+footer #footerSocials .zwiico-twitter:hover {
 	background: #0FAFF4;
 }
-footer #socials .zwiico-youtube {
+footer #footerSocials .zwiico-youtube {
 	background: #EF4E43;
 }
-footer #socials .zwiico-youtube:hover {
+footer #footerSocials .zwiico-youtube:hover {
 	background: #EB2214;
 }
 
@@ -442,37 +449,34 @@ footer #socials .zwiico-youtube:hover {
 
 /* Remonter en haut */
 #backToTop {
-	opacity: .7;
+	opacity: .8;
 	position: fixed;
 	z-index: 30;
-	right: 20px;
-	bottom: 20px;
-	padding: 15px;
+	right: 30px;
+	bottom: 50px;
+	padding: 10px 12px;
 	background: #3C3C3C;
 	color: #FFF;
 	cursor: pointer;
 	display: none;
 }
 #backToTop:hover {
-	opacity: .8;
-}
-
-/* Zone de remplacement */
-.placeholder {
-	background: #EEE;
+	opacity: .9;
 }
 
 /* Message sur les cookies */
 #cookieConsent {
-	opacity: .7;
+	opacity: .9;
 	background: #3C3C3C;
 	position: fixed;
-	right: 20px;
-	bottom: 20px;
-	width: 400px;
+	right: 0;
+	bottom: 0;
+	left: 0;
 	color: #FFF;
-	padding: 14px;
-	z-index: 10;
+	padding: 8px;
+	z-index: 20;
+	text-align: center;
+	font-size: .9em;
 }
 #cookieConsentConfirm {
 	cursor: pointer;
@@ -738,7 +742,7 @@ input[type='radio']:disabled + label:before {
 	width: 100%;
 	min-height: 1px;
 	display: inline-block;
-	font-size: 16px; /* Hack whitespace */
+	font-size: 14px; /* Hack whitespace */
 }
 @media (min-width: 992px) {
 	.col1 {
@@ -817,56 +821,80 @@ input[type='radio']:disabled + label:before {
  */
 
 td.col1,
+th.col1,
 td.col2,
+th.col2,
 td.col3,
+th.col3,
 td.col4,
+th.col4,
 td.col5,
+th.col5,
 td.col6,
+th.col6,
 td.col7,
+th.col7,
 td.col8,
+th.col8,
 td.col9,
+th.col9,
 td.col10,
+th.col10,
 td.col11,
-td.col12 {
+th.col11,
+td.col12,
+th.col12 {
 	vertical-align: inherit;
 	width: 100%;
 	min-height: 1px;
 	display: table-cell;
 }
-td.col1 {
+td.col1,
+th.col1 {
 	width: 8.33333333%;
 }
-td.col2 {
+td.col2,
+th.col2 {
 	width: 16.66666667%;
 }
-td.col3 {
+td.col3,
+th.col3 {
 	width: 25%;
 }
-td.col4 {
+td.col4,
+th.col4 {
 	width: 33.33333333%;
 }
-td.col5 {
+td.col5,
+th.col5 {
 	width: 41.66666667%;
 }
-td.col6 {
+td.col6,
+th.col6 {
 	width: 50%;
 }
-td.col7 {
+td.col7,
+th.col7 {
 	width: 58.33333333%;
 }
-td.col8 {
+td.col8,
+th.col8 {
 	width: 66.66666667%;
 }
-td.col9 {
+td.col9,
+th.col9 {
 	width: 75%;
 }
-td.col10 {
+td.col10,
+th.col10 {
 	width: 83.33333333%;
 }
-td.col11 {
+td.col11,
+th.col11 {
 	width: 91.66666667%;
 }
-td.col12 {
+td.col12,
+th.col12 {
 	width: 100%;
 }
 

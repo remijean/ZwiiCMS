@@ -7,9 +7,9 @@ $("input, select").on("change", function() {
 	// Hauteur du pied de page
 	css += "footer .container > div{margin:" + $("#themeFooterHeight").val() + " 0}";
 	// Alignement du contenu
-	css += "#socials{text-align:" + $("#themeFooterSocialsAlign").val() + "}";
-	css += "#text{text-align:" + $("#themeFooterTextAlign").val() + "}";
-	css += "#copyright{text-align:" + $("#themeFooterCopyrightAlign").val() + "}";
+	css += "#footerSocials{text-align:" + $("#themeFooterSocialsAlign").val() + "}";
+	css += "#footerText{text-align:" + $("#themeFooterTextAlign").val() + "}";
+	css += "#footerCopyright{text-align:" + $("#themeFooterCopyrightAlign").val() + "}";
 	// Ajout du css au DOM
 	$("#themePreview").remove();
 	$("<style>")
@@ -40,9 +40,13 @@ $("#themeFooterLoginLink").on("change", function() {
 				$("<a>")
 					.attr("href", "<?php echo helper::baseUrl(true); ?>user/login")
 					.text("<?php echo helper::translate("Connexion"); ?>")
-			).appendTo("#copyright")
+			).appendTo("#footerCopyright")
 	}
 	else {
 		$("#footerLoginLink").remove();
 	}
 }).trigger("change");
+// Aperçu du texte
+$("#themeFooterText").on("keyup keydown change", function() {
+	$("#footerText").text($(this).val());
+});
