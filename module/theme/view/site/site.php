@@ -105,7 +105,7 @@
 			]); ?>
 		</div>
 		<div class="col2">
-			<?php echo template::submit('themeSiteSave'); ?>
+			<?php echo template::submit('themeSiteSubmit'); ?>
 		</div>
 	</div>
 </form>

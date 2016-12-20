@@ -3,15 +3,30 @@
 		<div class="col6">
 			<div class="block">
 				<h4><?php echo helper::translate('Informations générales'); ?></h4>
-				<?php echo template::text('userAddName', [
-					'label' => 'Nom',
-					'required' => true,
-					'value' => $this->getData(['user', $this->getUrl(2), 'name'])
-				]); ?>
-				<?php echo template::select('userAddRank', $module::$ranks, [
+				<div class="row">
+					<div class="col6">
+						<?php echo template::text('userAddName', [
+							'label' => 'Nom',
+							'required' => true,
+							'value' => $this->getData(['user', $this->getUrl(2), 'name'])
+						]); ?>
+					</div>
+					<div class="col6">
+						<?php echo template::text('userAddId', [
+							'help' => 'L\'identifiant est généré automatiquement en fonction du nom de l\'utilisateur et ne peut pas être modifié par la suite.',
+							'label' => 'Identifiant',
+							'readonly' => true
+						]); ?>
+					</div>
+				</div>
+				<?php echo template::select('userAddRank', self::$rankVisibles, [
 					'label' => 'Rang',
 					'required' => true,
-					'selected' => $this->getData(['user', $this->getUrl(2), 'rank'])
+					'selected' => self::RANK_MEMBER
+				]); ?>
+				<?php echo template::text('userAddMail', [
+					'label' => 'Adresse mail',
+					'required' => true
 				]); ?>
 			</div>
 		</div>
@@ -37,7 +52,7 @@
 			]); ?>
 		</div>
 		<div class="col2">
-			<?php echo template::submit('userAddSave'); ?>
+			<?php echo template::submit('userAddSubmit'); ?>
 		</div>
 	</div>
 </form>

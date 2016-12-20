@@ -1,15 +1,17 @@
 /**
  * Modifications non enregistrées du formulaire
  */
-var formDOM = $("form");
-formDOM.data("serialize", formDOM.serialize());
-$(window).on("beforeunload", function() {
-	if(formDOM.length && formDOM.serialize() !== formDOM.data("serialize")) {
-		return "Attention, si vous continuez, vous allez perdre les modifications non enregistrées !";
-	}
-});
-formDOM.submit(function() {
-	$(window).off("beforeunload");
+$(function() {
+	var formDOM = $("form");
+	formDOM.data("serialize", formDOM.serialize());
+	$(window).on("beforeunload", function() {
+		if(formDOM.length && formDOM.serialize() !== formDOM.data("serialize")) {
+			return "<?php echo helper::translate('Les modifications que vous avez apportées ne seront peut-être pas enregistrées.'); ?>";
+		}
+	});
+	formDOM.submit(function() {
+		$(window).off("beforeunload");
+	});
 });
 
 /**

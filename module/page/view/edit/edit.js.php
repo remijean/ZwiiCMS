@@ -1,8 +1,12 @@
+// Confirmation de suppression
+$("#pageEditDelete").on("click", function() {
+	return confirm("<?php echo helper::translate('Êtes-vous sûr de vouloir supprimer cette page ?'); ?>");
+});
 // Enregistrement du module de la page en AJAX
 $("#pageModuleId").on("change", function() {
 	var moduleId = $(this).val();
-	var moduleIdOldDOM = $("#pageModuleIdOld");
-	var moduleConfigDOM = $("#pageModuleConfig");
+	var moduleIdOldDOM = $("#pageEditModuleIdOld");
+	var moduleConfigDOM = $("#pageEditModuleConfig");
 	var confirm = true;
 	if(moduleIdOldDOM.val() !== "") {
 		confirm = confirm("<?php echo helper::translate('Si vous confirmez, les données du module précédent seront supprimées !'); ?>");
@@ -47,18 +51,20 @@ $("#pageEditParentPageId").on("change", function() {
 	if(parentSelected === "") {
 		// Liste des pages sans parents
 		for(var key in hierarchy) {
-			// Pour page courante sélectionne la page précédente (pas de - 1 à positionSelected à cause des options par défaut)
-			if(key === "<?php echo $this->getUrl(2); ?>") {
-				positionSelected = positionPrevious;
-			}
-			// Sinon ajoute la page à la liste
-			else {
-				// Enregistre la position de cette page afin de la sélectionner si la prochaine page de la liste est la page courante
-				positionPrevious++;
-				// Ajout à la liste
-				positionDOM.append(
-					$("<option>").val(positionPrevious).text("<?php echo helper::translate('Après'); ?> \"" + pages[key].title + "\"")
-				);
+			if(hierarchy.hasOwnProperty(key)) {
+				// Pour page courante sélectionne la page précédente (pas de - 1 à positionSelected à cause des options par défaut)
+				if(key === "<?php echo $this->getUrl(2); ?>") {
+					positionSelected = positionPrevious;
+				}
+				// Sinon ajoute la page à la liste
+				else {
+					// Enregistre la position de cette page afin de la sélectionner si la prochaine page de la liste est la page courante
+					positionPrevious++;
+					// Ajout à la liste
+					positionDOM.append(
+						$("<option>").val(positionPrevious).text("<?php echo helper::translate('Après'); ?> \"" + pages[key].title + "\"")
+					);
+				}
 			}
 		}
 	}
@@ -67,7 +73,7 @@ $("#pageEditParentPageId").on("change", function() {
 		// Liste des pages enfants de la page parent
 		for(var i = 0; i < hierarchy[parentSelected].length; i++) {
 			// Pour page courante sélectionne la page précédente (pas de - 1 à positionSelected à cause des options par défaut)
-			if(hierarchy[parentSelected][i] === "<?php echo $this->getUrl(0); ?>") {
+			if(hierarchy[parentSelected][i] === "<?php echo $this->getUrl(2); ?>") {
 				positionSelected = positionPrevious;
 			}
 			// Sinon ajoute la page à la liste

@@ -77,7 +77,7 @@
 			]); ?>
 		</div>
 		<div class="col2">
-			<?php echo template::submit('themeMenuSave'); ?>
+			<?php echo template::submit('themeMenuSubmit'); ?>
 		</div>
 	</div>
 </form>

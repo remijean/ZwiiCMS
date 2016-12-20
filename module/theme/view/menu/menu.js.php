@@ -2,7 +2,7 @@
 $("input, select").on("change", function() {
 	// Couleurs du menu
 	var colors = colorVariants($("#themeMenuBackgroundColor").val());
-	var css = "nav{background-color:" + colors.normal + "}";
+	var css = "nav, nav li > a{background-color:" + colors.normal + "}";
 	css += "nav a{color:" + colors.text + "!important}";
 	css += "nav a:hover{color:" + colors.text + "}";
 	css += "nav a.target, nav a:active{background-color:" + colors.veryDarken + "}";

@@ -62,6 +62,10 @@
 		<div class="col6">
 			<div class="block">
 				<h4><?php echo helper::translate('Contenu'); ?></h4>
+				<?php echo template::textarea('themeFooterText', [
+					'label' => 'Texte du pied de page',
+					'value' => $this->getData(['theme', 'footer', 'text'])
+				]); ?>
 				<?php echo template::checkbox('themeFooterLoginLink', true, 'Lien de connexion', [
 					'checked' => $this->getData(['theme', 'footer', 'loginLink']),
 					'help' => 'Visible seulement sur cette page et lorsque vous n\'êtes pas connecté.'
@@ -77,7 +81,7 @@
 			]); ?>
 		</div>
 		<div class="col2">
-			<?php echo template::submit('themeFooterSave'); ?>
+			<?php echo template::submit('themeFooterSubmit'); ?>
 		</div>
 	</div>
 </form>

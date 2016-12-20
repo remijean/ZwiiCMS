@@ -15,16 +15,16 @@ tinymce.init({
 	body_class: "editor",
 	extended_valid_elements: "script[language|type|src]",
 	content_css: [
-		"core/main.css",
-		"site/data/theme.css"
+		baseUrl + "core/main.css",
+		baseUrl + "site/data/theme.css"
 	],
 	file_picker_callback : elFinderBrowser
 });
 
 function elFinderBrowser (callback, value, meta) {
 	tinymce.activeEditor.windowManager.open({
-		file: baseUrl + "file",
-		title: "File",
+		file: baseUrlQs + "file",
+		title: "elFinder",
 		width: 900,
 		height: 544,
 		resizable: "yes"

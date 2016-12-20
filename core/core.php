@@ -14,6 +14,16 @@
 
 class common {
 
+	const DISPLAY_BLANK = 0;
+	const DISPLAY_JSON = 1;
+	const DISPLAY_LAYOUT = 2;
+	const RANK_BANNED = -1;
+	const RANK_VISITOR = 0;
+	const RANK_MEMBER = 1;
+	const RANK_MODERATOR = 2;
+	const RANK_ADMIN = 3;
+	const ZWII_VERSION = '8.0.0';
+
 	public static $actions = [];
 	public static $demo = false;
 	public static $language = [];
@@ -28,10 +38,9 @@ class common {
 	private $defaultData = [
 		'config' => [
 			'analyticsId' => '',
-			'autoBackup' => false,
+			'autoBackup' => true,
 			'cookieConsent' => true,
 			'favicon' => 'favicon.ico',
-			'footerText' => '',
 			'homePageId' => 'accueil',
 			'language' => '',
 			'metaDescription' => 'Description',
@@ -45,9 +54,12 @@ class common {
 			],
 			'title' => 'Nom du site'
 		],
+		'core' => [
+			'lastBackup' => 0
+		],
 		'page' => [
 			'accueil' => [
-				'content' => '<p>Trois utilisateurs de test (identifiant / mot de passe) :</p><ul><li>administrator / password</li><li>moderator / password</li><li>member / password</li></ul>',
+				'content' => "<h3>Félicitations Zwii est 100% opérationnel !</h3>\r\n<p>Pour vous dans authentifier vous pouvez utiliser les comptes suivants :</p>\r\n<ul><li>Identifiant : <strong>administrator</strong> ; Mot de passe : <strong>password</strong></li><li>Identifiant : <strong>moderator</strong> ; Mot de passe : <strong>password</strong></li><li>Identifiant : <strong>member</strong> ; Mot de passe : <strong>password</strong></li></ul>\r\n<p>Si vous rencontrez un problème ou si vous avez besoin d'aide, n'hésitez pas à jeter un œil au <a title='site' href='http://zwiicms.com/'>site</a> ou au <a title='forum' href='http://forum.zwiicms.com/'>forum</a> de ZwiiCMS.</p>\r\n<h4>Suivez-nous sur <a href='https://twitter.com/ZwiiCMS/'>Twitter</a> et <a href='https://www.facebook.com/ZwiiCMS/'>Facebook</a> pour ne manquer aucune nouveauté !</h4>",
 				'hideTitle' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
@@ -59,7 +71,7 @@ class common {
 				'title' => 'Accueil'
 			],
 			'exemple' => [
-				'content' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis scelerisque cursus ipsum vitae posuere. Morbi vel arcu eget massa varius pretium. Aliquam pretium ante quis odio vestibulum, in laoreet ligula tincidunt. In non elementum ante, non vulputate urna. Donec tempor at metus eget pharetra. Aliquam laoreet sapien quis ligula fringilla sodales auctor ut elit. Vestibulum pellentesque magna ut condimentum feugiat. Curabitur mattis molestie nunc nec porta. Nulla et tincidunt leo. In hac habitasse platea dictumst.</p><p>Integer sit amet varius nisl, in euismod est. Suspendisse mollis varius tellus nec fermentum. Nam id risus erat. Nunc rutrum, dui non scelerisque commodo, sapien purus luctus eros, in maximus nunc sem quis urna. Nam vitae ornare arcu, at viverra est. Praesent tincidunt accumsan tristique. In elementum, nibh non convallis semper, mauris eros consequat dui, vel mattis ante quam in leo. Aenean sed turpis ultrices, dignissim ipsum a, maximus dolor. Nunc sodales sollicitudin ex id consectetur. Nam at nulla velit.</p><p>Pellentesque lacus tellus, tristique volutpat scelerisque id, pharetra nec leo. Ut finibus tempor risus, sit amet laoreet turpis maximus a. Morbi tempor, tortor at dictum facilisis, ipsum enim molestie odio, eu congue ex dolor dictum purus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vulputate neque ac lectus lacinia viverra. Donec vulputate cursus purus, sed volutpat nisl ornare cursus. In nec metus aliquam, vehicula nibh eu, volutpat ex. Nullam nisi mauris, iaculis posuere interdum vitae, dignissim ac est. Ut non erat diam. Pellentesque id tempus metus. Praesent sem urna, viverra sit amet elit at, vulputate imperdiet ligula. Duis porttitor quis tellus sit amet aliquet. In venenatis odio enim, vel facilisis mauris tempus vel.</p><p>Nulla et convallis ligula. Etiam ut pharetra arcu. Sed mollis magna consectetur sapien eleifend ullamcorper. Praesent posuere arcu quis tempor dictum. Nullam hendrerit molestie risus et pulvinar. Curabitur in orci ut quam porta dictum. Phasellus orci arcu, accumsan vitae dapibus ut, vestibulum dignissim tellus. Ut iaculis in urna ac vestibulum. Ut euismod blandit nunc, interdum varius ex finibus quis. Vivamus tempor porttitor viverra. Mauris efficitur neque faucibus tellus viverra rhoncus.</p>',
+				'content' => "<p>Cette page contient un exemple de formulaire conçu à partir du module de génération de formulaires, si vous voulez le tester n'oubliez pas de changer l'adresse mail depuis la page de paramétrage du module.</p>",
 				'hideTitle' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
@@ -76,17 +88,17 @@ class common {
 		],
 		'user' => [
 			'administrator' => [
-				'name' => 'Administrator',
+				'name' => 'Administrateur',
 				'password' => '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
 				'rank' => 3
 			],
 			'moderator' => [
-				'name' => 'Moderator',
+				'name' => 'Modérateur',
 				'password' => '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
 				'rank' => 2
 			],
 			'member' => [
-				'name' => 'Member',
+				'name' => 'Membre',
 				'password' => '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
 				'rank' => 1
 			]
@@ -110,7 +122,8 @@ class common {
 				'loginLink' => true,
 				'position' => 'body',
 				'socialsAlign' => 'left',
-				'textAlign' => 'right'
+				'text' => '',
+				'textAlign' => 'left'
 			],
 			'header' => [
 				'backgroundColor' => 'rgba(71, 123, 184, 1)',
@@ -173,20 +186,21 @@ class common {
 		// 'tinymce', Désactivé par défaut mais disponible
 		'zwiico'
 	];
+	public static $ranks = [
+		self::RANK_BANNED => 'Banni',
+		self::RANK_VISITOR => 'Visiteur',
+		self::RANK_MEMBER => 'Membre',
+		self::RANK_MODERATOR => 'Modérateur',
+		self::RANK_ADMIN => 'Administrateur'
+	];
+	public static $rankVisibles = [
+		self::RANK_BANNED => 'Banni',
+		self::RANK_MEMBER => 'Membre',
+		self::RANK_MODERATOR => 'Modérateur',
+		self::RANK_ADMIN => 'Administrateur'
+	];
 	private $url;
 	private $user = [];
-
-	const RANK_BANNED = -1;
-	const RANK_VISITOR = 0;
-	const RANK_MEMBER = 1;
-	const RANK_MODERATOR = 2;
-	const RANK_ADMIN = 3;
-
-	const ZWII_VERSION = '8.0.0';
-
-	const DISPLAY_BLANK = 0;
-	const DISPLAY_JSON = 1;
-	const DISPLAY_LAYOUT = 2;
 
 	/**
 	 * Constructeur commun
@@ -211,8 +225,8 @@ class common {
 			foreach($pages as $pageId => $pagePosition) {
 				// Page enfant
 				if($parentId = $this->getData(['page', $pageId, 'parentPageId'])) {
-					if(array_key_exists($pageId, $this->hierarchy) === false) {
-						$this->hierarchy[$pageId] = [];
+					if(array_key_exists($parentId, $this->hierarchy) === false) {
+						$this->hierarchy[$parentId] = [];
 					}
 					$this->hierarchy[$parentId][] = $pageId;
 				}
@@ -224,7 +238,12 @@ class common {
 		}
 		// Construit l'url
 		if(empty($this->url)) {
-			$this->url = $_SERVER['QUERY_STRING'];
+			if($url = $_SERVER['QUERY_STRING']) {
+				$this->url = $url;
+			}
+			else {
+				$this->url = $this->getData(['config', 'homePageId']);
+			}
 		}
 		// Extraction des données http
 		if(isset($_POST)) {
@@ -397,6 +416,29 @@ class common {
 	}
 
 	/**
+	 * Scan le contenu d'un dossier et de ses sous-dossiers
+	 * @param string $dir Dossier à scanner
+	 * @param array $ignore Élément à ignorer
+	 * @return array
+	 */
+	public static function scanDir($dir, $ignore = ['.', '..']) {
+		$dirContent = [];
+		$iterator = new DirectoryIterator($dir);
+		foreach($iterator as $fileInfos) {
+			if(in_array($fileInfos->getFilename(), $ignore)) {
+				continue;
+			}
+			elseif($fileInfos->isDir()) {
+				$dirContent = array_merge($dirContent, self::scanDir($fileInfos->getPathname()));
+			}
+			else {
+				$dirContent[] = $fileInfos->getPathname();
+			}
+		}
+		return $dirContent;
+	}
+
+	/**
 	 * Insert des données
 	 * @param array $keys Clé(s) des données
 	 */
@@ -431,11 +473,23 @@ class core extends common {
 		// Hérite de la méthode __construct() parente
 		parent::__construct();
 		// Supprime les fichiers temporaires
-		$it = new DirectoryIterator('core/tmp/');
-		foreach($it as $file) {
-			if($file->isFile() AND $file->getBasename() !== '.gitkeep' AND $file->getMTime() + 86400 < time()) {
-				@unlink($file->getPathname());
+		$iterator = new DirectoryIterator('core/tmp/');
+		foreach($iterator as $fileInfos) {
+			if($fileInfos->isFile() AND $fileInfos->getBasename() !== '.gitkeep' AND $fileInfos->getMTime() + 86400 < time()) {
+				@unlink($fileInfos->getPathname());
 			}
+		}
+		// Backup automatique des données
+		if($this->getData(['config', 'autoBackup']) AND time() > $this->getData(['core', 'lastBackup']) + 86400) {
+			// Creation du ZIP
+			$fileName = date('Y-m-d', time()) . '.zip';
+			$zip = new ZipArchive();
+			if($zip->open('site/backup/' . $fileName, ZipArchive::CREATE) === TRUE){
+				foreach(self::scanDir('site/', ['.', '..', 'backup']) as $file) {
+					$zip->addFile($file);
+				}
+			}
+			$zip->close();
 		}
 		// Crée le fichier de personnalisation
 		if(file_exists('site/data/theme.css') === false) {
@@ -481,7 +535,7 @@ class core extends common {
 			$css .= 'header h1{color:' . $colors['normal'] . ';font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'header', 'font'])) . '",sans-serif;font-weight:' . $this->getData(['theme', 'header', 'fontWeight']) . ';text-transform:' . $this->getData(['theme', 'header', 'textTransform']) . '}';
 			// Menu
 			$colors = helper::colorVariants($this->getData(['theme', 'menu', 'backgroundColor']));
-			$css .= 'nav{background-color:' . $colors['normal'] . '}';
+			$css .= 'nav, nav li > a{background-color:' . $colors['normal'] . '}';
 			$css .= 'nav a{color:' . $colors['text'] . '!important}';
 			$css .= 'nav a:hover{background-color:' . $colors['darken'] . '}';
 			$css .= 'nav a.target,nav a:active{background-color:' . $colors['veryDarken'] . '}';
@@ -492,9 +546,9 @@ class core extends common {
 			$css .= 'footer{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '}';
 			$css .= 'footer a{color:' . $colors['text'] . '!important}';
 			$css .= 'footer .container > div{margin:' . $this->getData(['theme', 'footer', 'height']) . ' 0}';
-			$css .= '#socials{text-align:' . $this->getData(['theme', 'footer', 'socialsAlign']) . '}';
+			$css .= '#footerSocials{text-align:' . $this->getData(['theme', 'footer', 'socialsAlign']) . '}';
 			$css .= '#footerText{text-align:' . $this->getData(['theme', 'footer', 'textAlign']) . '}';
-			$css .= '#copyright{text-align:' . $this->getData(['theme', 'footer', 'copyrightAlign']) . '}';
+			$css .= '#footerCopyright{text-align:' . $this->getData(['theme', 'footer', 'copyrightAlign']) . '}';
 			// Enregistre la personnalisation
 			file_put_contents('site/data/theme.css', $css);
 		}
@@ -525,7 +579,7 @@ class core extends common {
 	 */
 	public function router() {
 		// Importe la page
-		$moduleId = $this->getUrl(0) ? $this->getUrl(0) : $this->getData(['config', 'homePageId']);
+		$moduleId = $this->getUrl(0);
 		if($this->getData(['page', $moduleId]) !== null) {
 			self::$outputTitle = $this->getData(['page', $moduleId, 'title']);
 			self::$outputContent = $this->getData(['page', $moduleId, 'content']);
@@ -560,6 +614,26 @@ class core extends common {
 							$this->setData([$module->getData()]);
 							$this->saveData();
 						}
+						// Sauvegarde des données en méthode POST si une notice existe
+						if(template::$notices) {
+							foreach($_POST as $postId => $postValue) {
+								template::$before[$postId] = $postValue;
+							}
+						}
+						// Sinon traitement des données de sorties
+						else {
+							// Notification
+							if(array_key_exists('notification', $output)) {
+								$state = array_key_exists('state', $output) ? (bool) $output['state'] : false;
+								$_SESSION[$state ? 'ZWII_NOTIFICATION_SUCCESS' : 'ZWII_NOTIFICATION_ERROR'] = $output['notification'];
+							}
+							// Redirection
+							if(array_key_exists('redirect', $output)) {
+								http_response_code(301);
+								header('Location:' . helper::baseUrl() . $output['redirect']);
+								exit();
+							}
+						}
 						// Contenu du module
 						if(array_key_exists('view', $output) OR template::$notices) {
 							// CSS
@@ -593,20 +667,6 @@ class core extends common {
 						// Titre
 						if(array_key_exists('title', $output)) {
 							self::$outputTitle = helper::translate($output['title']);
-						}
-						// En l'absence de notice
-						if(empty(template::$notices)) {
-							// Notification
-							if(array_key_exists('notification', $output)) {
-								$state = array_key_exists('state', $output) ? (bool) $output['state'] : false;
-								$_SESSION[$state ? 'ZWII_NOTIFICATION_SUCCESS' : 'ZWII_NOTIFICATION_ERROR'] = $output['notification'];
-							}
-							// Redirection
-							if(array_key_exists('redirect', $output)) {
-								http_response_code(301);
-								header('Location:' . helper::baseUrl() . $output['redirect']);
-								exit();
-							}
 						}
 					}
 					// Erreur
@@ -656,15 +716,14 @@ class helper {
 	private static $rewriteStatus = null;
 
 	/** Filtres personnalisés */
-	const FILTER_PASSWORD = 'FILTER_SANITIZE_PASSWORD';
-	const FILTER_BOOLEAN = 'FILTER_SANITIZE_BOOLEAN';
-	const FILTER_URL = 'FILTER_SANITIZE_URL'; // N'utilise pas FILTER_SANITIZE_URL de PHP qui est trop efficace
-	const FILTER_URL_CASE = 'FILTER_SANITIZE_CASE'; // Conserve la casse
-	const FILTER_URL_STRICT = 'FILTER_SANITIZE_URL_STRICT'; // Supprime les "&", "?" et "/" (utile pour filtrer une partie d'URL, ne pas utiliser pour filtrer une URL complète)
-	const FILTER_STRING = FILTER_SANITIZE_STRING;
-	const FILTER_EMAIL = FILTER_SANITIZE_EMAIL;
-	const FILTER_FLOAT = FILTER_SANITIZE_NUMBER_FLOAT;
-	const FILTER_INT = FILTER_SANITIZE_NUMBER_INT;
+	const FILTER_BOOLEAN = 1;
+	const FILTER_EMAIL = 2;
+	const FILTER_FLOAT = 3;
+	const FILTER_ID = 4;
+	const FILTER_INT = 5;
+	const FILTER_PASSWORD = 6;
+	const FILTER_STRING = 7;
+	const FILTER_URL = 8;
 
 	/**
 	 * Retourne les valeurs d'une colonne du tableau de données
@@ -765,44 +824,47 @@ class helper {
 	 */
 	public static function deleteCookie($cookieKey) {
 		unset($_COOKIE[$cookieKey]);
-		setcookie($cookieKey, '', time() - 3600);
+		setcookie($cookieKey, '', time() - 3600, helper::baseUrl(false, false));
 	}
 
 	/**
 	 * Filtre une chaîne en fonction d'un tableau de données
 	 * @param string $text Chaîne à filtrer
-	 * @param int|string $filter Type de filtre à appliquer
+	 * @param int $filter Type de filtre à appliquer
 	 * @return string
 	 */
 	public static function filter($text, $filter) {
-		$search = '€,$,£,á,à,â,ä,ã,å,ç,é,è,ê,ë,í,ì,î,ï,ñ,ó,ò,ô,ö,õ,ú,ù,û,ü,ý,ÿ, ,¨,\',",’,;';
-		$replace = 'e,s,l,a,a,a,a,a,a,c,e,e,e,e,i,i,i,i,n,o,o,o,o,o,u,u,u,u,y,y,-,-,-,-,-,-';
+		$search = 'á,à,â,ä,ã,å,ç,é,è,ê,ë,í,ì,î,ï,ñ,ó,ò,ô,ö,õ,ú,ù,û,ü,ý,ÿ,\',", ';
+		$replace = 'a,a,a,a,a,a,c,e,e,e,e,i,i,i,i,n,o,o,o,o,o,u,u,u,u,y,y,-,-,-';
 		switch($filter) {
-			case self::FILTER_PASSWORD:
-				$text = hash('sha256', $text);
-				break;
 			case self::FILTER_BOOLEAN:
 				$text = (bool)$text;
 				break;
-			case self::FILTER_URL:
-				$text = str_replace(explode(',', $search), explode(',', $replace), mb_strtolower($text, 'UTF-8'));
-				break;
-			case self::FILTER_URL_CASE:
-				$text = str_replace(explode(',', $search), explode(',', $replace), $text);
-				break;
-			case self::FILTER_URL_STRICT:
-				$text = str_replace(explode(',', $search . ',?,&,/'), explode(',', $replace . ',-,-,-'), mb_strtolower($text, 'UTF-8'));
-				break;
-			case self::FILTER_INT:
-				$text = filter_var($text, $filter);
-				$text = (int)$text;
-				break;
-			case self::FILTER_FLOAT:
-				$text = filter_var($text, $filter);
+			case self::FILTER_EMAIL:
+				$text = filter_var($text, FILTER_SANITIZE_EMAIL);
 				$text = (float)$text;
 				break;
-			default:
-				$text = filter_var($text, $filter);
+			case self::FILTER_FLOAT:
+				$text = filter_var($text, FILTER_SANITIZE_NUMBER_FLOAT);
+				$text = (float)$text;
+				break;
+			case self::FILTER_ID:
+				$text = preg_replace('/([^a-z0-9!#$%&\'*+-=?^_`{|}~@.\[\]])/', '', str_replace(explode(',', $search), explode(',', $replace), mb_strtolower($text, 'UTF-8')));
+				break;
+			case self::FILTER_INT:
+				$text = filter_var($text, FILTER_SANITIZE_NUMBER_INT);
+				$text = (int)$text;
+				break;
+			case self::FILTER_PASSWORD:
+				$text = hash('sha256', $text);
+				break;
+			case self::FILTER_STRING:
+				$text = filter_var($text, FILTER_SANITIZE_STRING);
+				$text = (string)$text;
+				break;
+			case self::FILTER_URL:
+				$text = filter_var(str_replace(explode(',', $search), explode(',', $replace), $text), FILTER_SANITIZE_URL);
+				break;
 		}
 		return get_magic_quotes_gpc() ? stripslashes($text) : $text;
 	}
@@ -1015,7 +1077,6 @@ class layout extends common {
 	public function showContent() {
 		if(
 			self::$outputTitle
-			OR $this->getData(['page', $this->getUrl(0)]) === null // TODO : à quoi ça sert ?
 			OR $this->getData(['page', $this->getUrl(0), 'hideTitle']) === false
 		) {
 			echo '<h2 id="pageTitle">' . self::$outputTitle . '</h2>' . self::$outputContent;
@@ -1029,8 +1090,8 @@ class layout extends common {
 	 * Affiche le coyright
 	 */
 	public function showCopyright() {
-		$items = '<div id="copyright">';
-		$items .= helper::translate('Motorisé par') . '<a href="http://zwiicms.com/" target="_blank">Zwii</a>';
+		$items = '<div id="footerCopyright">';
+		$items .= helper::translate('Motorisé par') . ' <a href="http://zwiicms.com/" target="_blank">Zwii</a>';
 		$items .= ' | <a href="' . helper::baseUrl() . 'sitemap">' . helper::translate('Plan du site') . '</a>';
 		if($this->getData(['theme', 'footer', 'loginLink']) AND $this->getUser('id') === false) {
 			$items .= '<span id="footerLoginLink"> | <a href="' . helper::baseUrl() . 'user/login">' . helper::translate('Connexion') . '</a></span>';
@@ -1052,8 +1113,8 @@ class layout extends common {
 	 * Affiche le texte du footer
 	 */
 	public function showFooterText() {
-		if($footerText = $this->getData(['config', 'footerText'])) {
-			echo '<div id="text">' . nl2br($footerText) . '</div>';
+		if($footerText = $this->getData(['theme', 'footer', 'text']) OR $this->getUrl(0) === 'theme') {
+			echo '<div id="footerText">' . nl2br($footerText) . '</div>';
 		}
 	}
 
@@ -1148,7 +1209,7 @@ class layout extends common {
 				) {
 					$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/edit/' . $this->getUrl(0) . '" title="' . helper::translate('Modifier la page') . '">' . template::ico('pencil') . '</a></li>';
 				}
-				$rightItems .= '<li><a href="' . helper::baseUrl() . 'create" title="' . helper::translate('Créer une page') . '">' . template::ico('plus') . '</a></li>';
+				$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/add" title="' . helper::translate('Créer une page') . '">' . template::ico('plus') . '</a></li>';
 			}
 			if($this->getUser('rank') >= self::RANK_ADMIN) {
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'theme" title="' . helper::translate('Personnaliser le site') . '">' . template::ico('brush') . '</a></li>';
@@ -1216,7 +1277,7 @@ class layout extends common {
 			}
 		}
 		if(empty($socials) === false) {
-			echo '<div id="socials">' . $socials . '</div>';
+			echo '<div id="footerSocials">' . $socials . '</div>';
 		}
 	}
 
@@ -1354,7 +1415,6 @@ class template {
 			'value' => 'Bouton',
 			'href' => 'javascript:void(0);',
 			'target' => '',
-			'onclick' => '',
 			'disabled' => false,
 			'class' => ''
 		], $attributes);
@@ -1757,12 +1817,13 @@ class template {
 
 	/**
 	 * Crée un tableau
-	 * @param array $cols Cols des colonnes du tableau (format: [col colonne1, col colonne2, col colonne3, etc])
-	 * @param array $body Contenu du tableau (format: [[contenu1, contenu2, contenu3, etc], [contenu1, contenu2, contenu3, etc]])
+	 * @param array $cols Cols des colonnes (format: [col colonne1, col colonne2, etc])
+	 * @param array $body Contenu (format: [[contenu1, contenu2, etc], [contenu1, contenu2, etc]])
+	 * @param array $head Entêtes (format : [[titre colonne1, titre colonne2, etc])
 	 * @param array $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
 	 * @return string
 	 */
-	public static function table(array $cols = [], array $body = [], array $attributes = []) {
+	public static function table(array $cols = [], array $body = [], array $head = [], array $attributes = []) {
 		// Attributs possibles
 		$attributes = array_merge([
 			'class' => '',
@@ -1772,14 +1833,26 @@ class template {
 		$html = '<div class="tableContainer ' . $attributes['classContainer']. '">';
 		// Début tableau
 		$html .= '<table class="' . $attributes['class']. '">';
+		// Entêtes
+		if($head) {
+			// Début des entêtes
+			$html .= '<thead>';
+			$html .= '<tr>';
+			$i = 0;
+			foreach($head as $th) {
+				$html .= '<th class="col' . $cols[$i++] . '">' . helper::translate($th) . '</th>';
+			}
+			// Fin des entêtes
+			$html .= '</tr>';
+			$html .= '</thead>';
+		}
 		// Début contenu
 		$html .= '<tbody>';
 		foreach($body as $tr) {
 			$html .= '<tr>';
 			$i = 0;
 			foreach($tr as $td) {
-				$html .= '<td class="col' . $cols[$i] . '">' . $td . '</td>';
-				$i++;
+				$html .= '<td class="col' . $cols[$i++] . '">' . $td . '</td>';
 			}
 			$html .= '</tr>';
 		}

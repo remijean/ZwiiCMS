@@ -86,8 +86,8 @@ class theme extends common {
 	public static $menuPositions = [
 		'hide' => 'Caché',
 		'site' => 'Dans le site',
-		'body-first' => 'Au dessus du site en première position',
-		'body-second' => 'Au dessus du site en seconde position'
+		'body-first' => 'Au dessus du site avant la bannière',
+		'body-second' => 'Au dessus du site après la bannière'
 	];
 	public static $radius = [
 		'0' => 'Aucun',
@@ -171,6 +171,7 @@ class theme extends common {
 				'loginLink' => $this->getInput('themeFooterLoginLink'),
 				'position' => $this->getInput('themeFooterPosition'),
 				'socialsAlign' => $this->getInput('themeFooterSocialsAlign'),
+				'text' => $this->getInput('themeFooterText'),
 				'textAlign' => $this->getInput('themeFooterTextAlign')
 			]]);
 			return [
