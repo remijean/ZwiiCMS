@@ -29,9 +29,10 @@ class user extends common {
 				'user',
 				$this->getInput('userAddName', helper::FILTER_ID),
 				[
+					'mail' => $this->getInput('userAddMail', helper::FILTER_EMAIL),
 					'name' => $this->getInput('userAddName'),
-					'rank' => $this->getInput('userAddRank', helper::FILTER_INT),
-					'password' => $password
+					'password' => $password,
+					'rank' => $this->getInput('userAddRank', helper::FILTER_INT)
 				]
 			]);
 			return [
@@ -137,16 +138,29 @@ class user extends common {
 				'user',
 				$this->getUrl(2),
 				[
+					'mail' => $this->getInput('userEditMail', helper::FILTER_EMAIL),
 					'name' => $this->getInput('userEditName'),
-					'rank' => $newRank,
-					'password' => $newPassword
+					'password' => $newPassword,
+					'rank' => $newRank
 				]
 			]);
-			return [
-				'redirect' => $this->getUrl(),
-				'notification' => 'Utilisateur modifié',
-				'state' => true
-			];
+			// Redirection spécifique si l'utilisateur change son mot de passe
+			if($this->getUser('id') === $this->getUrl(2) AND $this->getInput('userEditNewPassword')) {
+				helper::deleteCookie('ZWII_USER_ID');
+				helper::deleteCookie('ZWII_USER_PASSWORD');
+				return [
+					'redirect' => 'user/login',
+					'notification' => 'Utilisateur modifié',
+					'state' => true
+				];
+			}
+			else {
+				return [
+					'redirect' => $this->getUrl(),
+					'notification' => 'Utilisateur modifié',
+					'state' => true
+				];
+			}
 		}
 		// Affichage du template
 		else {

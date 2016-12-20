@@ -88,16 +88,19 @@ class common {
 		],
 		'user' => [
 			'administrator' => [
+				'mail' => 'administrator@zwiicms.com',
 				'name' => 'Administrateur',
 				'password' => '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
 				'rank' => 3
 			],
 			'moderator' => [
+				'mail' => 'member@zwiicms.com',
 				'name' => 'Modérateur',
 				'password' => '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
 				'rank' => 2
 			],
 			'member' => [
+				'mail' => 'member@zwiicms.com',
 				'name' => 'Membre',
 				'password' => '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
 				'rank' => 1
@@ -480,7 +483,8 @@ class core extends common {
 			}
 		}
 		// Backup automatique des données
-		if($this->getData(['config', 'autoBackup']) AND time() > $this->getData(['core', 'lastBackup']) + 86400) {
+		$lastBackup = time();
+		if($this->getData(['config', 'autoBackup']) AND $lastBackup > $this->getData(['core', 'lastBackup']) + 86400) {
 			// Creation du ZIP
 			$fileName = date('Y-m-d', time()) . '.zip';
 			$zip = new ZipArchive();
@@ -490,6 +494,9 @@ class core extends common {
 				}
 			}
 			$zip->close();
+			// Date du dernier backup
+			$this->setData(['core', 'lastBackup', $lastBackup]);
+			$this->saveData();
 		}
 		// Crée le fichier de personnalisation
 		if(file_exists('site/data/theme.css') === false) {
@@ -1093,7 +1100,7 @@ class layout extends common {
 		$items = '<div id="footerCopyright">';
 		$items .= helper::translate('Motorisé par') . ' <a href="http://zwiicms.com/" target="_blank">Zwii</a>';
 		$items .= ' | <a href="' . helper::baseUrl() . 'sitemap">' . helper::translate('Plan du site') . '</a>';
-		if($this->getData(['theme', 'footer', 'loginLink']) AND $this->getUser('id') === false) {
+		if($this->getData(['theme', 'footer', 'loginLink']) AND $this->getUser('password') !== $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')) {
 			$items .= '<span id="footerLoginLink"> | <a href="' . helper::baseUrl() . 'user/login">' . helper::translate('Connexion') . '</a></span>';
 		}
 		$items .= '</div>';
@@ -1146,7 +1153,7 @@ class layout extends common {
 			$items .= '</li>';
 		}
 		// Lien de connexion
-		if($this->getData(['theme', 'menu', 'loginLink']) AND $this->getUser('id') === false) {
+		if($this->getData(['theme', 'menu', 'loginLink']) AND $this->getUser('password') !== $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')) {
 			$items .= '<li><a id="menuLoginLink" href="' . helper::baseUrl() . 'user/login">' . helper::translate('Connexion') . '</a>';
 		}
 		// Retourne les items du menu
