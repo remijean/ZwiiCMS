@@ -483,10 +483,10 @@ class core extends common {
 			}
 		}
 		// Backup automatique des données
-		$lastBackup = time();
+		$lastBackup = mktime(0, 0, 0);
 		if($this->getData(['config', 'autoBackup']) AND $lastBackup > $this->getData(['core', 'lastBackup']) + 86400) {
 			// Creation du ZIP
-			$fileName = date('Y-m-d', time()) . '.zip';
+			$fileName = date('Y-m-d', $lastBackup) . '.zip';
 			$zip = new ZipArchive();
 			if($zip->open('site/backup/' . $fileName, ZipArchive::CREATE) === TRUE){
 				foreach(self::scanDir('site/', ['.', '..', 'backup']) as $file) {
