@@ -38,8 +38,7 @@
 				]); ?>
 				<?php echo template::checkbox('rewrite', true, 'Réécriture des URLs', [
 					'checked' => helper::checkRewrite(),
-					'help' => 'Si vous n\'arrivez pas cocher cette case, vérifiez sur votre serveur que le module d\'URL rewriting est bien activé.',
-					'disabled' => helper::checkServerModRewrite() === false
+					'help' => 'Afin d\'éviter de bloquer votre site pensez à vérifier que le module de réécriture d\'URL est bien actif sur votre serveur avant d\'activer cette fonctionnalité.'
 				]); ?>
 			</div>
 		</div>
@@ -110,7 +109,7 @@
 					<div class="col6">
 						<?php echo template::button('configExport', [
 							'value' => 'Exporter les données',
-							'href' => helper::baseUrl() . 'export'
+							'href' => helper::baseUrl() . 'config/backup'
 						]); ?>
 					</div>
 					<?php if(helper::checkZwiiVersion()): ?>

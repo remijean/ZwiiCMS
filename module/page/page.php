@@ -40,7 +40,7 @@ class page extends common {
 		]);
 		return [
 			'redirect' => $pageId,
-			'notification' => 'Nouvelle page créée',
+			'notification' => 'Page créée',
 			'state' => true
 		];
 	}
@@ -169,7 +169,7 @@ class page extends common {
 			}
 			return [
 				'redirect' => $pageId,
-				'notification' => 'Page modifiée',
+				'notification' => 'Modifications enregistrées',
 				'state' => true
 			];
 		}

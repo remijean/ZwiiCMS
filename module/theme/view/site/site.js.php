@@ -5,7 +5,7 @@ $("input, select").on("change", function() {
 	var textFont = $("#themeTextFont").val();
 	var css = "@import url('https://fonts.googleapis.com/css?family=" + titleFont + "|" + textFont + "');";
 	// Couleurs des boutons
-	var colors = colorVariants($("#themeButtonBackgroundColor").val());
+	var colors = core.colorVariants($("#themeButtonBackgroundColor").val());
 	css += ".speechBubble,.button,input[type='submit'],pagination a,input[type='checkbox']:checked + label:before,input[type='radio']:checked + label:before,.helpContent{background-color:" + colors.normal + ";color:" + colors.text + "!important}";
 	css += ".tabTitle.current,.helpButton span{color:" + colors.normal + "}";
 	css += "input[type='text']:hover,input[type='password']:hover,.inputFile:hover,select:hover,textarea:hover{border-color:" + colors.normal + "}";
@@ -14,7 +14,7 @@ $("input, select").on("change", function() {
 	css += ".helpButton span:hover{color:" + colors.darken + "}";
 	css += ".button:active,input[type='submit']:active,.pagination a:active{background-color:" + colors.veryDarken + "}";
 	// Couleurs des liens
-	colors = colorVariants($("#themeLinkTextColor").val());
+	colors = core.colorVariants($("#themeLinkTextColor").val());
 	css += "a{color:" + colors.normal + "}";
 	css += "a:hover{color:" + colors.darken + "}";
 	css += "a:active{color:" + colors.veryDarken + "}";

@@ -58,7 +58,7 @@ class config extends common {
 					'title' => $this->getInput('configTitle')
 				]
 			]);
-			if(empty(template::$notices)) {
+			if(empty(self::$inputNotices)) {
 				// Active l'URL rewriting
 				$htaccess = file_get_contents('.htaccess');
 				$rewriteRule = explode('# URL rewriting', $htaccess);
@@ -66,11 +66,13 @@ class config extends common {
 					if(empty($rewriteRule[1])) {
 						file_put_contents('.htaccess',
 							$htaccess . PHP_EOL .
+							'<ifModule mod_rewrite.c>' . PHP_EOL .
 							'RewriteEngine on' . PHP_EOL .
 							'RewriteBase ' . helper::baseUrl(false, false) . PHP_EOL .
 							'RewriteCond %{REQUEST_FILENAME} !-f' . PHP_EOL .
 							'RewriteCond %{REQUEST_FILENAME} !-d' . PHP_EOL .
-							'RewriteRule ^(.*)$ index.php?$1 [L]'
+							'RewriteRule ^(.*)$ index.php?$1 [L]' . PHP_EOL .
+							'</ifModule>'
 						);
 					}
 				}
@@ -81,7 +83,7 @@ class config extends common {
 			}
 			return [
 				'redirect' => $this->getUrl(),
-				'notification' => 'Configuration enregistrée',
+				'notification' => 'Modifications enregistrées',
 				'state' => true
 			];
 		}
