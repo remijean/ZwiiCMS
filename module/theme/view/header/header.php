@@ -26,13 +26,13 @@
 				<div class="row">
 					<div class="col6">
 						<?php echo template::select('themeHeaderTextTransform', $module::$textTransforms, [
-							'label' => 'Capitalisation',
+							'label' => 'Caractères',
 							'selected' => $this->getData(['theme', 'header', 'textTransform'])
 						]); ?>
 					</div>
 					<div class="col6">
 						<?php echo template::select('themeHeaderFontWeight', $module::$fontWeights, [
-							'label' => 'Épaisseur',
+							'label' => 'Style',
 							'selected' => $this->getData(['theme', 'header', 'fontWeight'])
 						]); ?>
 					</div>
@@ -75,7 +75,7 @@
 	<div class="row">
 		<div class="col12">
 			<div class="block">
-				<h4><?php echo helper::translate('Disposition'); ?></h4>
+				<h4><?php echo helper::translate('Configuration'); ?></h4>
 				<div class="row">
 					<div class="col4">
 						<?php echo template::select('themeHeaderPosition', $module::$headerPositions, [

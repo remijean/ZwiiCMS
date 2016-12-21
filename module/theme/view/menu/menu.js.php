@@ -1,10 +1,10 @@
 // Aperçu en direct
 $("input, select").on("change", function() {
 	// Couleurs du menu
-	var colors = colorVariants($("#themeMenuBackgroundColor").val());
+	var colors = core.colorVariants($("#themeMenuBackgroundColor").val());
 	var css = "nav, nav li > a{background-color:" + colors.normal + "}";
 	css += "nav a{color:" + colors.text + "!important}";
-	css += "nav a:hover{color:" + colors.text + "}";
+	css += "nav a:hover{background-color:" + colors.darken + "}";
 	css += "nav a.target, nav a:active{background-color:" + colors.veryDarken + "}";
 	// Hauteur, épaisseur et capitalisation de caractères du menu
 	css += "#toggle span,#menu a{padding:" + $("#themeMenuHeight").val() + ";font-weight:" + $("#themeMenuFontWeight").val() + ";text-transform:" + $("#themeMenuTextTransform").val() + "}";
@@ -22,8 +22,11 @@ $("input, select").on("change", function() {
 		case 'hide':
 			$("nav").hide();
 			break;
-		case 'site':
-			if(<?php echo json_encode($this->getData(['theme', 'menu', 'position']) === 'site'); ?>) {
+		case 'site-first':
+			$("nav").show().prependTo("#site");
+			break;
+		case 'site-second':
+			if(<?php echo json_encode($this->getData(['theme', 'header', 'position']) === 'site'); ?>) {
 				$("nav").show().insertAfter("header");
 			}
 			else {
@@ -43,19 +46,12 @@ $("input, select").on("change", function() {
 			break;
 	}
 });
-// Lien de connexion
+// Lien de connexion (addClass() et removeClass() au lieu de hide() et show() car ils ne conservent pas le display-inline: block; de #themeMenuLoginLink)
 $("#themeMenuLoginLink").on("change", function() {
 	if($(this).is(":checked")) {
-		$("<li>").append(
-			$("<a>")
-				.attr({
-					"id": "menuLoginLink",
-					"href": "<?php echo helper::baseUrl(true); ?>user/login"
-				})
-				.text("<?php echo helper::translate("Connexion"); ?>")
-		).appendTo("#menu > ul")
+		$("#menuLoginLink").removeClass('displayNone');
 	}
 	else {
-		$("#menuLoginLink").remove();
+		$("#menuLoginLink").addClass('displayNone');
 	}
 }).trigger("change");

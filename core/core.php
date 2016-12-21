@@ -38,7 +38,7 @@ class common {
 	private $defaultData = [
 		'config' => [
 			'analyticsId' => '',
-			'autoBackup' => true,
+			'autoBackup' => false,
 			'cookieConsent' => true,
 			'favicon' => 'favicon.ico',
 			'homePageId' => 'accueil',
@@ -173,6 +173,8 @@ class common {
 		'_GET' => [],
 		'_COOKIE' => []
 	];
+	public static $inputBefore = [];
+	public static $inputNotices = [];
 	public static $outputContent = '';
 	public static $outputDisplay = self::DISPLAY_LAYOUT;
 	public static $outputMetaDescription = '';
@@ -343,8 +345,12 @@ class common {
 		// Cherche et retourne la valeur demandée dans un type précis
 		if($type AND isset($this->input[$type][$key])) {
 			// Champ obligatoire
-			if($type === '_POST' AND empty($this->input[$type][$key])) {
-				template::getRequired($key);
+			if(
+				empty($this->input[$type][$key])
+				AND isset($_SESSION['ZWII_INPUT_REQUIRED'])
+				AND array_key_exists($key, $_SESSION['ZWII_INPUT_REQUIRED'])
+			) {
+				common::$inputNotices[$key] = 'Ce champ est requis';
 			}
 			// Retourne la valeur filtrée
 			return helper::filter($this->input[$type][$key], $filter);
@@ -353,8 +359,12 @@ class common {
 		foreach($this->input as $type => $values) {
 			if(array_key_exists($key, $values)) {
 				// Champ obligatoire
-				if($type === '_POST' AND empty($this->input[$type][$key])) {
-					template::getRequired($key);
+				if(
+					empty($this->input[$type][$key])
+					AND isset($_SESSION['ZWII_INPUT_REQUIRED'])
+					AND array_key_exists($key, $_SESSION['ZWII_INPUT_REQUIRED'])
+				) {
+					common::$inputNotices[$key] = 'Ce champ est requis';
 				}
 				// Retourne la valeur filtrée
 				return helper::filter($this->input[$type][$key], $filter);
@@ -413,7 +423,7 @@ class common {
 	 * Enregistre les données
 	 */
 	public function saveData() {
-		if(empty(template::$notices)) {
+		if(empty(common::$inputNotices)) {
 			file_put_contents('site/data/data.json', json_encode($this->getData()));
 		}
 	}
@@ -462,6 +472,22 @@ class common {
 			case 5:
 				$this->data[$keys[0]][$keys[1]][$keys[2]][$keys[3]] = $keys[4];
 				break;
+		}
+	}
+
+	/**
+	 * Enregistre un champ comme obligatoire
+	 * @param array $attributes Transmet les attributs à la méthode
+	 */
+	public static function setInputRequired($attributes) {
+		if(
+			$attributes['required']
+			AND (
+				empty($_SESSION['ZWII_INPUT_REQUIRED'])
+				OR array_key_exists($attributes['id'], $_SESSION['ZWII_INPUT_REQUIRED']) === false
+			)
+		) {
+			$_SESSION['ZWII_INPUT_REQUIRED'][$attributes['id']] = true;
 		}
 	}
 
@@ -622,9 +648,9 @@ class core extends common {
 							$this->saveData();
 						}
 						// Sauvegarde des données en méthode POST si une notice existe
-						if(template::$notices) {
+						if(common::$inputNotices) {
 							foreach($_POST as $postId => $postValue) {
-								template::$before[$postId] = $postValue;
+								self::$inputBefore[$postId] = $postValue;
 							}
 						}
 						// Sinon traitement des données de sorties
@@ -642,7 +668,7 @@ class core extends common {
 							}
 						}
 						// Contenu du module
-						if(array_key_exists('view', $output) OR template::$notices) {
+						if(array_key_exists('view', $output) OR common::$inputNotices) {
 							// CSS
 							$stylePath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.css';
 							if(file_exists($stylePath)) {
@@ -769,28 +795,6 @@ class helper {
 	}
 
 	/**
-	 * Check que le module d'URL rewriting est activé sur le serveur
-	 * @return bool
-	 */
-	public static function checkServerModRewrite() {
-		// Check si l'URL rewriting est activée
-		if(function_exists('apache_get_modules') AND in_array('mod_rewrite', apache_get_modules())) {
-			return true;
-		}
-		// Check si l'URL rewriting est activée (si la fonction apache_get_modules() n'existe pas)
-		if(function_exists('phpinfo') AND strpos(ini_get('disable_functions'), 'phpinfo') === false) {
-			ob_start();
-			phpinfo(8);
-			$phpinfo = ob_get_clean();
-			if(strpos($phpinfo, 'mod_rewrite') !== false) {
-				return true;
-			}
-		}
-		// l'URL rewriting n'est pas prise en charge
-		return false;
-	}
-
-	/**
 	 * Check le statut de l'URL rewriting
 	 * @return bool
 	 */
@@ -849,7 +853,6 @@ class helper {
 				break;
 			case self::FILTER_EMAIL:
 				$text = filter_var($text, FILTER_SANITIZE_EMAIL);
-				$text = (float)$text;
 				break;
 			case self::FILTER_FLOAT:
 				$text = filter_var($text, FILTER_SANITIZE_NUMBER_FLOAT);
@@ -867,7 +870,6 @@ class helper {
 				break;
 			case self::FILTER_STRING:
 				$text = filter_var($text, FILTER_SANITIZE_STRING);
-				$text = (string)$text;
 				break;
 			case self::FILTER_URL:
 				$text = filter_var(str_replace(explode(',', $search), explode(',', $replace), $text), FILTER_SANITIZE_URL);
@@ -963,7 +965,7 @@ class helper {
 		// Supprime les commentaires
 		$css = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $css);
 		// Supprime les tabulations, espaces, nouvelles lignes, etc...
-		$css = str_replace(["\r\n", "\r", "\n" ,"\t", ' ', ' ', ' '], '', $css);
+		$css = str_replace(["\r\n", "\r", "\n" ,"\t", '  ', '    ', '     '], '', $css);
 		$css = preg_replace(['(( )+{)', '({( )+)'], '{', $css);
 		$css = preg_replace(['(( )+})', '(}( )+)', '(;( )*})'], '}', $css);
 		$css = preg_replace(['(;( )+)', '(( )+;)'], ';', $css);
@@ -978,9 +980,9 @@ class helper {
 	 */
 	public static function minifyJs($js) {
 		// Supprime les commentaires
-		$js = preg_replace('/((?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|\s*(?<![\:\=])\/\/.*)/', '', $js);
+		$js = preg_replace('/\\/\\*[^*]*\\*+([^\\/][^*]*\\*+)*\\/|\s*(?<![\:\=])\/\/.*/', '', $js);
 		// Supprime les tabulations, espaces, nouvelles lignes, etc...
-		$js = str_replace(["\r\n", "\r", "\t", "\n", ' ', ' ', ' '], '', $js);
+		$js = str_replace(["\r\n", "\r", "\t", "\n", '  ', '    ', '     '], '', $js);
 		$js = preg_replace(['(( )+\))', '(\)( )+)'], ')', $js);
 		// Retourne le js minifié
 		return $js;
@@ -1046,6 +1048,34 @@ class helper {
 	}
 
 	/**
+	 * Retourne les attributs d'une balise au bon format
+	 * @param array $array Liste des attributs ($key => $value)
+	 * @param array $exclude Clés à ignorer ($key)
+	 * @return string
+	 */
+	public static function sprintAttributes(array $array = [], array $exclude = []) {
+		// Required est exclu pour privilégier le système de champs requis du système
+		$exclude = array_merge(['col', 'offset', 'label', 'help', 'selected', 'required', 'classContainer'], $exclude);
+		$attributes = [];
+		foreach($array as $key => $value) {
+			if($value AND in_array($key, $exclude) === false) {
+				// Champs à traduire
+				if(in_array($key, ['placeholder'])) {
+					$attributes[] = sprintf('%s="%s"', $key, helper::translate($value));
+				}
+				// Disabled
+				elseif($key === 'disabled') {
+					$attributes[] = sprintf('%s', $key);
+				}
+				else {
+					$attributes[] = sprintf('%s="%s"', $key, $value);
+				}
+			}
+		}
+		return implode(' ', $attributes);
+	}
+	
+	/**
 	 * Traduit les textes
 	 * @param string $text Texte à traduire
 	 * @return string
@@ -1100,8 +1130,14 @@ class layout extends common {
 		$items = '<div id="footerCopyright">';
 		$items .= helper::translate('Motorisé par') . ' <a href="http://zwiicms.com/" target="_blank">Zwii</a>';
 		$items .= ' | <a href="' . helper::baseUrl() . 'sitemap">' . helper::translate('Plan du site') . '</a>';
-		if($this->getData(['theme', 'footer', 'loginLink']) AND $this->getUser('password') !== $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')) {
-			$items .= '<span id="footerLoginLink"> | <a href="' . helper::baseUrl() . 'user/login">' . helper::translate('Connexion') . '</a></span>';
+		if(
+			(
+				$this->getData(['theme', 'footer', 'loginLink'])
+				AND $this->getUser('password') !== $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')
+			)
+			OR $this->getUrl(0) === 'theme'
+		) {
+			$items .= '<span id="footerLoginLink" ' . ($this->getUrl(0) === 'theme' ? 'class="displayNone"' : '') . '> | <a href="' . helper::baseUrl() . 'user/login">' . helper::translate('Connexion') . '</a></span>';
 		}
 		$items .= '</div>';
 		echo $items;
@@ -1153,8 +1189,14 @@ class layout extends common {
 			$items .= '</li>';
 		}
 		// Lien de connexion
-		if($this->getData(['theme', 'menu', 'loginLink']) AND $this->getUser('password') !== $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')) {
-			$items .= '<li><a id="menuLoginLink" href="' . helper::baseUrl() . 'user/login">' . helper::translate('Connexion') . '</a>';
+		if(
+			(
+				$this->getData(['theme', 'menu', 'loginLink'])
+				AND $this->getUser('password') !== $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')
+			)
+			OR $this->getUrl(0) === 'theme'
+		) {
+			$items .= '<li id="menuLoginLink" ' . ($this->getUrl(0) === 'theme' ? 'class="displayNone"' : '') . '><a href="' . helper::baseUrl() . 'user/login">' . helper::translate('Connexion') . '</a>';
 		}
 		// Retourne les items du menu
 		echo '<ul>' . $items . '</ul>';
@@ -1178,7 +1220,7 @@ class layout extends common {
 	 * Affiche la notification
 	 */
 	public function showNotification() {
-		if(template::$notices) {
+		if(common::$inputNotices) {
 			echo '<div id="notification" class="notificationError">' . helper::translate('Impossible de soumettre le formulaire, car il contient des erreurs !') . '</div>';
 		}
 		elseif(empty($_SESSION['ZWII_NOTIFICATION_SUCCESS']) === false) {
@@ -1217,11 +1259,12 @@ class layout extends common {
 					$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/edit/' . $this->getUrl(0) . '" title="' . helper::translate('Modifier la page') . '">' . template::ico('pencil') . '</a></li>';
 				}
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/add" title="' . helper::translate('Créer une page') . '">' . template::ico('plus') . '</a></li>';
+				$rightItems .= '<li><a href="' . helper::baseUrl() . 'file" title="' . helper::translate('Gérer les fichiers') . '" data-lity>' . template::ico('folder') . '</a></li>';
 			}
 			if($this->getUser('rank') >= self::RANK_ADMIN) {
+				$rightItems .= '<li><a href="' . helper::baseUrl() . 'user" title="' . helper::translate('Configurer les utilisateurs') . '">' . template::ico('users') . '</a></li>';
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'theme" title="' . helper::translate('Personnaliser le site') . '">' . template::ico('brush') . '</a></li>';
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'config" title="' . helper::translate('Configurer le site') . '">' . template::ico('gear') . '</a></li>';
-				$rightItems .= '<li><a href="' . helper::baseUrl() . 'user" title="' . helper::translate('Configurer les utilisateurs') . '">' . template::ico('users') . '</a></li>';
 			}
 			$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/edit/' . $this->getUser('id') . '" title="' . helper::translate('Configurer mon compte') . '">' . template::ico('user', 'right') . $this->getUser('name') . '</a></li>';
 			$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/logout" title="' . helper::translate('Se déconnecter') . '">' . template::ico('logout') . '</a></li>';
@@ -1234,12 +1277,10 @@ class layout extends common {
 	 * Affiche le script
 	 */
 	public function showScript() {
-		echo '<script>';
-		// Script du coeur
+		ob_start();
 		require 'core/core.js.php';
-		// Script du module
-		echo self::$outputScript;
-		echo '</script>';
+		$coreScript = ob_get_clean();
+		echo '<script>' . helper::minifyJs($coreScript . self::$outputScript) . '</script>';
 	}
 
 	/**
@@ -1247,7 +1288,7 @@ class layout extends common {
 	 */
 	public function showStyle() {
 		if(self::$outputStyle) {
-			echo '<style>' . self::$outputStyle . '</style>';
+			echo '<style>' . helper::minifyCss(self::$outputStyle) . '</style>';
 		}
 	}
 
@@ -1324,111 +1365,27 @@ class layout extends common {
 
 class template {
 
-	############################################################
-	# GETTERS / SETTERS
-
-	public static $notices = [];
-	public static $before = [];
-
-	/**
-	 * Valeur du champ avant validation et erreur dans le formulaire
-	 * @param string $id Id du champ
-	 * @return mixed
-	 */
-	private static function getBefore($id) {
-		return array_key_exists($id, self::$before) ? self::$before[$id] : null;
-	}
-
-	/**
-	 * Retourne et met en forme une notice depuis une $id
-	 * @param string $id Id du champ
-	 * @return string
-	 */
-	private static function getNotice($id) {
-		return '<div class="notice">' . helper::translate(self::$notices[$id]) . '</div>';
-	}
-
-	/**
-	 * Retourne une notice pour les champs obligatoires
-	 * @param string $id Id du champ
-	 */
-	public static function getRequired($id) {
-		if(
-			empty($_SESSION['ZWII_REQUIRED']) === false
-			AND array_key_exists($id, $_SESSION['ZWII_REQUIRED'])
-		) {
-			self::$notices[$id] = 'Ce champ est requis';
-		}
-	}
-
-	/**
-	 * Enregistre un champ comme obligatoire
-	 * @param array $attributes Transmet les attributs à la méthode
-	 */
-	private static function setRequired($attributes) {
-		if(
-			$attributes['required']
-			AND (
-				empty($_SESSION['ZWII_REQUIRED'])
-				OR array_key_exists($attributes['id'], $_SESSION['ZWII_REQUIRED']) === false
-			)
-		) {
-			$_SESSION['ZWII_REQUIRED'][$attributes['id']] = true;
-		}
-	}
-
-	/**
-	 * Retourne les attributs d'une balise au bon format
-	 * @param array $array Liste des attributs ($key => $value)
-	 * @param array $exclude Clés à ignorer ($key)
-	 * @return string
-	 */
-	private static function sprintAttributes(array $array = [], array $exclude = []) {
-		// Required est exclu pour privilégier le système de champs requis du système
-		$exclude = array_merge(['col', 'offset', 'label', 'help', 'selected', 'required', 'classContainer'], $exclude);
-		$attributes = [];
-		foreach($array as $key => $value) {
-			if($value AND in_array($key, $exclude) === false) {
-				// Champs à traduire
-				if(in_array($key, ['placeholder'])) {
-					$attributes[] = sprintf('%s="%s"', $key, helper::translate($value));
-				}
-				// Disabled
-				elseif($key === 'disabled') {
-					$attributes[] = sprintf('%s', $key);
-				}
-				else {
-					$attributes[] = sprintf('%s="%s"', $key, $value);
-				}
-			}
-		}
-		return implode(' ', $attributes);
-	}
-
-	############################################################
-	# CHAMPS
-
 	/**
 	 * Crée un bouton
 	 * @param string $nameId Nom et id du champ
-	 * @param array $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @param array $attributes Attributs ($key => $value)
 	 * @return string
 	 */
 	public static function button($nameId, array $attributes = []) {
-		// Attributs possibles
+		// Attributs par défaut
 		$attributes = array_merge([
+			'class' => '',
+			'disabled' => false,
+			'href' => 'javascript:void(0);',
 			'id' => $nameId,
 			'name' => $nameId,
-			'value' => 'Bouton',
-			'href' => 'javascript:void(0);',
 			'target' => '',
-			'disabled' => false,
-			'class' => ''
+			'value' => 'Bouton'
 		], $attributes);
 		// Retourne le html
 		return sprintf(
 			'<a %s class="button %s %s">%s</a>',
-			self::sprintAttributes($attributes, ['value', 'class', 'disabled']),
+			helper::sprintAttributes($attributes, ['value', 'class', 'disabled']),
 			$attributes['disabled'] ? 'disabled' : '',
 			$attributes['class'],
 			helper::translate($attributes['value'])
@@ -1438,40 +1395,40 @@ class template {
 	/**
 	 * Crée un champ capcha
 	 * @param string $nameId Nom et id du champ
-	 * @param array $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @param array $attributes Attributs ($key => $value)
 	 * @return string
 	 */
 	public static function capcha($nameId, array $attributes = []) {
-		// Attributs possibles
+		// Attributs par défaut
 		$attributes = array_merge([
+			'class' => '',
+			'classContainer' => '',
+			'help' => '',
 			'id' => $nameId,
 			'name' => $nameId,
-			'value' => '',
 			'required' => true,
-			'help' => '',
-			'class' => '',
-			'classContainer' => ''
+			'value' => ''
 		], $attributes);
 		// Champ requis
-		self::setRequired($attributes);
+		common::setInputRequired($attributes);
 		// Génère deux nombres pour le capcha
 		$firstNumber = mt_rand(1, 15);
 		$secondNumber = mt_rand(1, 15);
 		// Début container
-		$html = '<div class="inputContainer ' . $attributes['classContainer'] . '">';
+		$html = '<div id="' . $attributes['id'] . 'Container" class="inputContainer ' . $attributes['classContainer'] . '">';
 		// Label
 		$html .= self::label($attributes['id'], helper::translate('Quelle est la somme de') . ' ' . $firstNumber . ' + ' . $secondNumber . ' ?', [
 			'help' => $attributes['help']
 		]);
 		// Notice
-		if(empty(self::$notices[$attributes['id']]) === false) {
-			$html .= self::getNotice($attributes['id']);
+		if(empty(common::$inputNotices[$attributes['id']]) === false) {
+			$html .= self::notice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
 		// Capcha
 		$html .= sprintf(
 			'<input type="text" %s>',
-			self::sprintAttributes($attributes)
+			helper::sprintAttributes($attributes)
 		);
 		// Champs cachés contenant les nombres
 		$html .= self::hidden($nameId . 'FirstNumber', [
@@ -1493,35 +1450,40 @@ class template {
 	 * @param string $nameId Nom et id du champ
 	 * @param string $value Valeur de la case à cocher
 	 * @param string $label Label de la case à cocher
-	 * @param array $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @param array $attributes Attributs ($key => $value)
 	 * @return string
 	 */
 	public static function checkbox($nameId, $value, $label, array $attributes = []) {
-		// Attributs possibles
+		// Attributs par défaut
 		$attributes = array_merge([
+			'before' => true,
+			'checked' => '',
+			'class' => '',
+			'classContainer' => '',
+			'disabled' => false,
+			'help' => '',
 			'id' => $nameId,
 			'name' => $nameId,
-			'checked' => '',
-			'disabled' => false,
-			'required' => false,
-			'help' => '',
-			'class' => '',
-			'classContainer' => ''
+			'required' => false
 		], $attributes);
 		// Champ requis
-		self::setRequired($attributes);
+		common::setInputRequired($attributes);
+		// Sauvegarde des données en cas d'erreur
+		if($attributes['before'] AND array_key_exists($attributes['id'], common::$inputBefore)) {
+			$attributes['checked'] = (bool) common::$inputBefore[$attributes['id']];
+		}
 		// Début container
-		$html = '<div class="inputContainer ' . $attributes['classContainer'] . '">';
+		$html = '<div id="' . $attributes['id'] . 'Container" class="inputContainer ' . $attributes['classContainer'] . '">';
 		// Notice
-		if(empty(self::$notices[$attributes['id']]) === false) {
-			$html .= self::getNotice($attributes['id']);
+		if(empty(common::$inputNotices[$attributes['id']]) === false) {
+			$html .= self::notice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
 		// Case à cocher
 		$html .= sprintf(
 			'<input type="checkbox" value="%s" %s>',
 			$value,
-			self::sprintAttributes($attributes)
+			helper::sprintAttributes($attributes)
 		);
 		// Label
 		$html .= self::label($attributes['id'], $label, [
@@ -1536,32 +1498,33 @@ class template {
 	/**
 	 * Crée un champ d'upload de fichier
 	 * @param string $nameId Nom et id du champ
-	 * @param array $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @param array $attributes Attributs ($key => $value)
 	 * @return string
 	 */
 	public static function file($nameId, array $attributes = []) {
-		// Attributs possibles
+		// Attributs par défaut
 		$attributes = array_merge([
-			'id' => $nameId,
-			'name' => $nameId,
-			'value' => '',
-			'disabled' => false,
-			'required' => false,
-			'label' => '',
-			'help' => '',
+			'before' => true,
 			'class' => '',
+			'classContainer' => '',
+			'disabled' => false,
 			'extensions' => '',
+			'help' => '',
+			'id' => $nameId,
+			'label' => '',
+			'name' => $nameId,
+			'required' => false,
 			'type' => '',
-			'classContainer' => ''
+			'value' => ''
 		], $attributes);
 		// Champ requis
-		self::setRequired($attributes);
+		common::setInputRequired($attributes);
 		// Sauvegarde des données en cas d'erreur
-		if(($value = self::getBefore($attributes['id'])) !== null) {
-			$attributes['value'] = $value;
+		if($attributes['before'] AND array_key_exists($attributes['id'], common::$inputBefore)) {
+			$attributes['value'] = common::$inputBefore[$attributes['id']];
 		}
 		// Début container
-		$html = '<div class="inputContainer ' . $attributes['classContainer'] . '">';
+		$html = '<div id="' . $attributes['id'] . 'Container" class="inputContainer ' . $attributes['classContainer'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($attributes['id'], $attributes['label'], [
@@ -1569,8 +1532,8 @@ class template {
 			]);
 		}
 		// Notice
-		if(empty(self::$notices[$attributes['id']]) === false) {
-			$html .= self::getNotice($attributes['id']);
+		if(empty(common::$inputNotices[$attributes['id']]) === false) {
+			$html .= self::notice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
 		// Champ caché contenant l'url de la page
@@ -1596,7 +1559,7 @@ class template {
 			</a>',
 			$attributes['class'],
 			$attributes['disabled'] ? 'disabled' : '',
-			self::sprintAttributes($attributes, ['class', 'extensions', 'type'])
+			helper::sprintAttributes($attributes, ['class', 'extensions', 'type'])
 		);
 		// Bouton de suppression
 		$html .= self::button($nameId . 'Delete', [
@@ -1607,6 +1570,15 @@ class template {
 		$html .= '</div>';
 		// Retourne le html
 		return $html;
+	}
+
+	/**
+	 * Crée une notice
+	 * @param string $id Id du champ
+	 * @return string
+	 */
+	public static function notice($id) {
+		return '<div class="notice">' . helper::translate(common::$inputNotices[$id]) . '</div>';
 	}
 
 	/**
@@ -1621,30 +1593,30 @@ class template {
 	/**
 	 * Crée un champ caché
 	 * @param string $nameId Nom et id du champ
-	 * @param array $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @param array $attributes Attributs ($key => $value)
 	 * @return string
 	 */
 	public static function hidden($nameId, array $attributes = []) {
-		// Attributs possibles
+		// Attributs par défaut
 		$attributes = array_merge([
+			'before' => true,
+			'class' => '',
 			'id' => $nameId,
 			'name' => $nameId,
-			'value' => '',
-			'class' => '',
-			'before' => true
+			'value' => ''
 		], $attributes);
 		// Sauvegarde des données en cas d'erreur
-		if(($value = self::getBefore($attributes['id'])) !== null AND $attributes['before']) {
-			$attributes['value'] = $value;
+		if($attributes['before'] AND array_key_exists($attributes['id'], common::$inputBefore)) {
+			$attributes['value'] = common::$inputBefore[$attributes['id']];
 		}
 		// Texte
-		$html = sprintf('<input type="hidden" %s>', self::sprintAttributes($attributes, ['before']));
+		$html = sprintf('<input type="hidden" %s>', helper::sprintAttributes($attributes, ['before']));
 		// Retourne le html
 		return $html;
 	}
 
 	/**
-	 * Affiche un icône
+	 * Crée un icône
 	 * @param string $ico Classe de l'icône
 	 * @param string $margin Ajoute un margin autour de l'icône (choix : left, right, all)
 	 * @param bool $animate Ajoute une animation à l'icône
@@ -1658,16 +1630,16 @@ class template {
 	/**
 	 * Crée un label
 	 * @param string $for For du label
-	 * @param array $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @param array $attributes Attributs ($key => $value)
 	 * @param string $text Texte du label
 	 * @return string
 	 */
 	public static function label($for, $text, array $attributes = []) {
-		// Attributs possibles
+		// Attributs par défaut
 		$attributes = array_merge([
+			'class' => '',
 			'for' => $for,
-			'help' => '',
-			'class' => ''
+			'help' => ''
 		], $attributes);
 		// Traduit le text
 		$text = helper::translate($text);
@@ -1678,7 +1650,7 @@ class template {
 		// Retourne le html
 		return sprintf(
 			'<label %s>%s</label>',
-			self::sprintAttributes($attributes),
+			helper::sprintAttributes($attributes),
 			$text
 		);
 	}
@@ -1686,28 +1658,28 @@ class template {
 	/**
 	 * Crée un champ mot de passe
 	 * @param string $nameId Nom et id du champ
-	 * @param array $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @param array $attributes Attributs ($key => $value)
 	 * @return string
 	 */
 	public static function password($nameId, array $attributes = []) {
-		// Attributs possibles
+		// Attributs par défaut
 		$attributes = array_merge([
-			'id' => $nameId,
-			'name' => $nameId,
 			'autocomplete' => 'on',
-			'placeholder' => '',
-			'disabled' => false,
-			'readonly' => '',
-			'required' => false,
-			'label' => '',
-			'help' => '',
 			'class' => '',
-			'classContainer' => ''
+			'classContainer' => '',
+			'disabled' => false,
+			'help' => '',
+			'id' => $nameId,
+			'label' => '',
+			'name' => $nameId,
+			'placeholder' => '',
+			'readonly' => '',
+			'required' => false
 		], $attributes);
 		// Champ requis
-		self::setRequired($attributes);
+		common::setInputRequired($attributes);
 		// Début container
-		$html = '<div class="inputContainer ' . $attributes['classContainer'] . '">';
+		$html = '<div id="' . $attributes['id'] . 'Container" class="inputContainer ' . $attributes['classContainer'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($attributes['id'], $attributes['label'], [
@@ -1715,14 +1687,14 @@ class template {
 			]);
 		}
 		// Notice
-		if(empty(self::$notices[$attributes['id']]) === false) {
-			$html .= self::getNotice($attributes['id']);
+		if(empty(common::$inputNotices[$attributes['id']]) === false) {
+			$html .= self::notice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
 		// Mot de passe
 		$html .= sprintf(
 			'<input type="password" %s>',
-			self::sprintAttributes($attributes)
+			helper::sprintAttributes($attributes)
 		);
 		// Fin du container
 		$html .= '</div>';
@@ -1734,30 +1706,31 @@ class template {
 	 * Crée un champ sélection
 	 * @param string $nameId Nom et id du champ
 	 * @param array $options Liste des options du champ de sélection ($value => $text)
-	 * @param array $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @param array $attributes Attributs ($key => $value)
 	 * @return string
 	 */
 	public static function select($nameId, array $options, array $attributes = []) {
-		// Attributs possibles
+		// Attributs par défaut
 		$attributes = array_merge([
-			'id' => $nameId,
-			'name' => $nameId,
-			'selected' => '',
-			'disabled' => false,
-			'required' => false,
-			'label' => '',
-			'help' => '',
+			'before' => true,
 			'class' => '',
-			'classContainer' => ''
+			'classContainer' => '',
+			'disabled' => false,
+			'help' => '',
+			'id' => $nameId,
+			'label' => '',
+			'name' => $nameId,
+			'required' => false,
+			'selected' => ''
 		], $attributes);
 		// Champ requis
-		self::setRequired($attributes);
+		common::setInputRequired($attributes);
 		// Sauvegarde des données en cas d'erreur
-		if($selected = self::getBefore($attributes['id'])) {
-			$attributes['selected'] = $selected;
+		if($attributes['before'] AND array_key_exists($attributes['id'], common::$inputBefore)) {
+			$attributes['selected'] = common::$inputBefore[$attributes['id']];
 		}
 		// Début container
-		$html = '<div class="inputContainer ' . $attributes['classContainer'] . '">';
+		$html = '<div id="' . $attributes['id'] . 'Container" class="inputContainer ' . $attributes['classContainer'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($attributes['id'], $attributes['label'], [
@@ -1765,13 +1738,13 @@ class template {
 			]);
 		}
 		// Notice
-		if(empty(self::$notices[$attributes['id']]) === false) {
-			$html .= self::getNotice($attributes['id']);
+		if(empty(common::$inputNotices[$attributes['id']]) === false) {
+			$html .= self::notice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
 		// Début sélection
 		$html .= sprintf('<select %s>',
-			self::sprintAttributes($attributes)
+			helper::sprintAttributes($attributes)
 		);
 		// Options
 		foreach($options as $value => $text) {
@@ -1791,7 +1764,7 @@ class template {
 	}
 
 	/**
-	 * Affiche une bulle de dialogue
+	 * Crée une bulle de dialogue
 	 * @param string $text Texte de la bulle
 	 * @return string
 	 */
@@ -1802,23 +1775,23 @@ class template {
 	/**
 	 * Crée un bouton validation
 	 * @param string $nameId Nom & id du bouton validation
-	 * @param array $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @param array $attributes Attributs ($key => $value)
 	 * @return string
 	 */
 	public static function submit($nameId, array $attributes = []) {
-		// Attributs possibles
+		// Attributs par défaut
 		$attributes = array_merge([
+			'class' => '',
+			'disabled' => false,
 			'id' => $nameId,
 			'name' => $nameId,
-			'value' => 'Enregistrer',
-			'disabled' => false,
-			'class' => ''
+			'value' => 'Enregistrer'
 		], $attributes);
 		// Retourne le html
 		return sprintf(
 			'<input type="submit" value="%s" %s>',
 			helper::translate($attributes['value']),
-			self::sprintAttributes($attributes, ['value'])
+			helper::sprintAttributes($attributes, ['value'])
 		);
 	}
 
@@ -1827,19 +1800,20 @@ class template {
 	 * @param array $cols Cols des colonnes (format: [col colonne1, col colonne2, etc])
 	 * @param array $body Contenu (format: [[contenu1, contenu2, etc], [contenu1, contenu2, etc]])
 	 * @param array $head Entêtes (format : [[titre colonne1, titre colonne2, etc])
-	 * @param array $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @param array $attributes Attributs ($key => $value)
 	 * @return string
 	 */
 	public static function table(array $cols = [], array $body = [], array $head = [], array $attributes = []) {
-		// Attributs possibles
+		// Attributs par défaut
 		$attributes = array_merge([
 			'class' => '',
-			'classContainer' => ''
+			'classContainer' => '',
+			'id' => ''
 		], $attributes);
 		// Début container
-		$html = '<div class="tableContainer ' . $attributes['classContainer']. '">';
+		$html = '<div id="' . $attributes['id'] . 'Container" class="tableContainer ' . $attributes['classContainer']. '">';
 		// Début tableau
-		$html .= '<table class="' . $attributes['class']. '">';
+		$html .= '<table id="' . $attributes['id'] . '" class="' . $attributes['class']. '">';
 		// Entêtes
 		if($head) {
 			// Début des entêtes
@@ -1876,32 +1850,33 @@ class template {
 	/**
 	 * Crée un champ texte court
 	 * @param string $nameId Nom et id du champ
-	 * @param array $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @param array $attributes Attributs ($key => $value)
 	 * @return string
 	 */
 	public static function text($nameId, array $attributes = []) {
-		// Attributs possibles
+		// Attributs par défaut
 		$attributes = array_merge([
-			'id' => $nameId,
-			'name' => $nameId,
-			'value' => '',
-			'placeholder' => '',
+			'before' => true,
+			'class' => '',
+			'classContainer' => '',
 			'disabled' => false,
+			'help' => '',
+			'id' => $nameId,
+			'label' => '',
+			'name' => $nameId,
+			'placeholder' => '',
 			'readonly' => '',
 			'required' => false,
-			'label' => '',
-			'help' => '',
-			'class' => '',
-			'classContainer' => ''
+			'value' => ''
 		], $attributes);
 		// Champ requis
-		self::setRequired($attributes);
+		common::setInputRequired($attributes);
 		// Sauvegarde des données en cas d'erreur
-		if(($value = self::getBefore($attributes['id'])) !== null) {
-			$attributes['value'] = $value;
+		if($attributes['before'] AND array_key_exists($attributes['id'], common::$inputBefore)) {
+			$attributes['value'] = common::$inputBefore[$attributes['id']];
 		}
 		// Début container
-		$html = '<div class="inputContainer ' . $attributes['classContainer'] . '">';
+		$html = '<div id="' . $attributes['id'] . 'Container" class="inputContainer ' . $attributes['classContainer'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($attributes['id'], $attributes['label'], [
@@ -1909,14 +1884,14 @@ class template {
 			]);
 		}
 		// Notice
-		if(empty(self::$notices[$attributes['id']]) === false) {
-			$html .= self::getNotice($attributes['id']);
+		if(empty(common::$inputNotices[$attributes['id']]) === false) {
+			$html .= self::notice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
 		// Texte
 		$html .= sprintf(
 			'<input type="text" %s>',
-			self::sprintAttributes($attributes)
+			helper::sprintAttributes($attributes)
 		);
 		// Fin du container
 		$html .= '</div>';
@@ -1927,31 +1902,32 @@ class template {
 	/**
 	 * Crée un champ texte long
 	 * @param string $nameId Nom et id du champ
-	 * @param array $attributes Liste des attributs en fonction des attributs disponibles dans la méthode ($key => $value)
+	 * @param array $attributes Attributs ($key => $value)
 	 * @return string
 	 */
 	public static function textarea($nameId, array $attributes = []) {
-		// Attributs possibles
+		// Attributs par défaut
 		$attributes = array_merge([
-			'id' => $nameId,
-			'name' => $nameId,
-			'value' => '',
+			'before' => true,
+			'class' => '',
+			'classContainer' => '',
 			'disabled' => false,
+			'help' => '',
+			'id' => $nameId,
+			'label' => '',
+			'name' => $nameId,
 			'readonly' => '',
 			'required' => false,
-			'label' => '',
-			'help' => '',
-			'class' => '',
-			'classContainer' => ''
+			'value' => ''
 		], $attributes);
 		// Champ requis
-		self::setRequired($attributes);
+		common::setInputRequired($attributes);
 		// Sauvegarde des données en cas d'erreur
-		if(($value = self::getBefore($attributes['id'])) !== null) {
-			$attributes['value'] = $value;
+		if($attributes['before'] AND array_key_exists($attributes['id'], common::$inputBefore)) {
+			$attributes['value'] = common::$inputBefore[$attributes['id']];
 		}
 		// Début container
-		$html = '<div class="inputContainer ' . $attributes['classContainer'] . '">';
+		$html = '<div id="' . $attributes['id'] . 'Container" class="inputContainer ' . $attributes['classContainer'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($attributes['id'], $attributes['label'], [
@@ -1959,14 +1935,14 @@ class template {
 			]);
 		}
 		// Notice
-		if(empty(self::$notices[$attributes['id']]) === false) {
-			$html .= self::getNotice($attributes['id']);
+		if(empty(common::$inputNotices[$attributes['id']]) === false) {
+			$html .= self::notice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
 		// Texte long
 		$html .= sprintf(
 			'<textarea %s>%s</textarea>',
-			self::sprintAttributes($attributes, ['value']),
+			helper::sprintAttributes($attributes, ['value']),
 			$attributes['value']
 		);
 		// Fin du container

@@ -27,7 +27,12 @@ $("input, select").on("change", function() {
 			$("header").hide();
 			break;
 		case 'site':
-			$("header").show().prependTo("#site");
+			if(<?php echo json_encode($this->getData(['theme', 'menu', 'position']) === 'site-first'); ?>) {
+				$("header").show().insertAfter("nav");
+			}
+			else {
+				$("header").show().prependTo("#site");
+			}
 			break;
 		case 'body':
 			if(<?php echo json_encode($this->getData(['theme', 'menu', 'position']) === 'body-first'); ?>) {

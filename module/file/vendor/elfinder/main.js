@@ -40,7 +40,7 @@
 		// Initialisation d'elFinder
 		start = function(elFinder) {
 			// load jQueryUI CSS
-			elFinder.prototype.loadCss("//cdnjs.cloudflare.com/ajax/libs/jqueryui/"+uiver+"/themes/smoothness/jquery-ui.css");
+			elFinder.prototype.loadCss("//cdnjs.cloudflare.com/ajax/libs/jqueryui/"+uiver+"/themes/base/jquery-ui.css");
 			
 			$(function() {
 				var elf = $("#elfinder").elfinder({

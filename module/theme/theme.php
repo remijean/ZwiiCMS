@@ -85,7 +85,8 @@ class theme extends common {
 	];
 	public static $menuPositions = [
 		'hide' => 'Caché',
-		'site' => 'Dans le site',
+		'site-first' => 'Dans le site avant la bannière',
+		'site-second' => 'Dans le site après la bannière',
 		'body-first' => 'Au dessus du site avant la bannière',
 		'body-second' => 'Au dessus du site après la bannière'
 	];
@@ -141,7 +142,7 @@ class theme extends common {
 				'imageSize' => $this->getInput('themeBodyImageSize')
 			]]);
 			return [
-				'notification' => 'Options de l\'arrière plan enregistrés',
+				'notification' => 'Modifications enregistrées',
 				'redirect' => 'theme',
 				'state' => true
 			];
@@ -175,7 +176,7 @@ class theme extends common {
 				'textAlign' => $this->getInput('themeFooterTextAlign')
 			]]);
 			return [
-				'notification' => 'Options du pied de page enregistrés',
+				'notification' => 'Modifications enregistrées',
 				'redirect' => 'theme',
 				'state' => true
 			];
@@ -212,7 +213,7 @@ class theme extends common {
 				'textTransform' => $this->getInput('themeHeaderTextTransform')
 			]]);
 			return [
-				'notification' => 'Options de la bannière enregistrés',
+				'notification' => 'Modifications enregistrées',
 				'redirect' => 'theme',
 				'state' => true
 			];
@@ -255,7 +256,7 @@ class theme extends common {
 				'textTransform' => $this->getInput('themeMenuTextTransform')
 			]]);
 			return [
-				'notification' => 'Options du menu enregistrés',
+				'notification' => 'Modifications enregistrées',
 				'redirect' => 'theme',
 				'state' => true
 			];
@@ -293,7 +294,7 @@ class theme extends common {
 				'width' => $this->getInput('themeSiteWidth')
 			]]);
 			return [
-				'notification' => 'Options du site enregistrés',
+				'notification' => 'Modifications enregistrées',
 				'redirect' => 'theme',
 				'state' => true
 			];

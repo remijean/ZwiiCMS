@@ -13,7 +13,7 @@
 	</script>
 	<?php $layout->showVendor(); ?>
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/main.css">
-	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>site/data/theme.css">
+	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>site/data/theme.css?<?php echo md5(json_encode($this->getData(['theme']))); ?>">
 </head>
 <body>
 <?php $layout->showStyle(); ?>
@@ -47,6 +47,15 @@
 <?php endif; ?>
 <!-- Site -->
 <div id="site" class="container">
+	<!-- Menu dans le site avant la bannière -->
+	<?php if($this->getData(['theme', 'menu', 'position']) === 'site-first'): ?>
+		<nav>
+			<div id="toggle"><?php echo template::ico('menu'); ?></div>
+			<div id="menu" class="container">
+				<?php $layout->showMenu(); ?>
+			</div>
+		</nav>
+	<?php endif; ?>
 	<!-- Bannière dans le site -->
 	<?php if(
 		$this->getData(['theme', 'header', 'position']) === 'site'
@@ -62,9 +71,9 @@
 			</div>
 		</header>
 	<?php endif; ?>
-	<!-- Menu dans le site -->
+	<!-- Menu dans le site après la bannière -->
 	<?php if(
-		$this->getData(['theme', 'menu', 'position']) === 'site'
+		$this->getData(['theme', 'menu', 'position']) === 'site-second'
 		// Affiche toujours le menu pour l'édition du thème
 		OR (
 			$this->getData(['theme', 'menu', 'position']) === 'hide'

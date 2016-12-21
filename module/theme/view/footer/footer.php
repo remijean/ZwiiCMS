@@ -13,7 +13,7 @@
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Disposition'); ?></h4>
+				<h4><?php echo helper::translate('Configuration'); ?></h4>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::select('themeFooterPosition', $module::$footerPositions, [

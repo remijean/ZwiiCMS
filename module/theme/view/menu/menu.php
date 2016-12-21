@@ -34,7 +34,7 @@
 	<div class="row">
 		<div class="col12">
 			<div class="block">
-				<h4><?php echo helper::translate('Disposition'); ?></h4>
+				<h4><?php echo helper::translate('Configuration'); ?></h4>
 				<div class="row">
 					<div class="col4">
 						<?php echo template::select('themeMenuPosition', $module::$menuPositions, [

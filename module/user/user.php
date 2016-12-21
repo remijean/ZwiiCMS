@@ -22,7 +22,7 @@ class user extends common {
 			$password = $this->getInput('userAddPassword', helper::FILTER_PASSWORD);
 			// La confirmation ne correspond pas au mot de passe
 			if($password !== $this->getInput('userAddConfirmPassword', helper::FILTER_PASSWORD)) {
-				template::$notices['userAddConfirmPassword'] = 'La confirmation ne correspond pas au mot de passe';
+				self::$inputNotices['userAddConfirmPassword'] = 'La confirmation ne correspond pas au mot de passe';
 			}
 			// Crée l'utilisateur
 			$this->setData([
@@ -114,12 +114,12 @@ class user extends common {
 				// Pas de changement de mot de passe en mode démo
 				if(self::$demo) {
 					$newPassword = $this->getData(['user', $this->getUrl(2), 'password']);
-					template::$notices['userEditNewPassword'] = 'Action impossible en mode démonstration !';
+					self::$inputNotices['userEditNewPassword'] = 'Action impossible en mode démonstration !';
 				}
 				// La confirmation ne correspond pas au mot de passe
 				elseif($newPassword !== $this->getInput('userEditConfirmPassword', helper::FILTER_PASSWORD)) {
 					$newPassword = $this->getData(['user', $this->getUrl(2), 'password']);
-					template::$notices['userEditConfirmPassword'] = 'La confirmation ne correspond pas au mot de passe';
+					self::$inputNotices['userEditConfirmPassword'] = 'La confirmation ne correspond pas au mot de passe';
 				}
 			}
 			// Sinon conserve le mot de passe d'origine
@@ -150,14 +150,14 @@ class user extends common {
 				helper::deleteCookie('ZWII_USER_PASSWORD');
 				return [
 					'redirect' => 'user/login',
-					'notification' => 'Utilisateur modifié',
+					'notification' => 'Modifications enregistrées',
 					'state' => true
 				];
 			}
 			else {
 				return [
 					'redirect' => $this->getUrl(),
-					'notification' => 'Utilisateur modifié',
+					'notification' => 'Modifications enregistrées',
 					'state' => true
 				];
 			}
@@ -176,7 +176,7 @@ class user extends common {
 	 */
 	public function index() {
 		$userIdsNames = helper::arrayCollumn($this->getData(['user']), 'name');
-		asort($userIdsNames);
+		ksort($userIdsNames);
 		foreach($userIdsNames as $userId => $userName) {
 			self::$users[] = [
 				$userId,
