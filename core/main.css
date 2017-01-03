@@ -38,22 +38,22 @@ a:hover {
 
 /* Titres */
 h1 {
-	font-size: 2em;
+	font-size: 2.2em;
 }
 h2 {
-	font-size: 1.5em;
+	font-size: 1.8em;
 }
 h3 {
-	font-size: 1.2em;
+	font-size: 1.4em;
 }
 h4 {
-	font-size: 1em;
+	font-size: 1.2em;
 }
 h5 {
-	font-size: .8em;
+	font-size: 1em;
 }
 h6 {
-	font-size: .7em;
+	font-size: .8em;
 }
 
 /* Listes */
@@ -503,7 +503,7 @@ footer #footerSocials .zwiico-youtube:hover {
 }
 .block h4 {
 	margin: -20px -20px 10px -20px;
-	padding: 8px;
+	padding: 10px;
 	background: #E8E8E8;
 	color: #555;
 }

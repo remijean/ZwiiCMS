@@ -52,7 +52,7 @@ $("#pageEditParentPageId").on("change", function() {
 		// Liste des pages sans parents
 		for(var key in hierarchy) {
 			if(hierarchy.hasOwnProperty(key)) {
-				// Pour page courante sélectionne la page précédente (pas de - 1 à positionSelected à cause des options par défaut)
+				// Sélectionne la page avant si il s'agit de la page courante
 				if(key === "<?php echo $this->getUrl(2); ?>") {
 					positionSelected = positionPrevious;
 				}
