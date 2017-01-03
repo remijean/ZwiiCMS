@@ -228,6 +228,10 @@ class common {
 		if(empty($this->hierarchy)) {
 			$pages = helper::arrayCollumn($this->getData(['page']), 'position', 'SORT_ASC');
 			foreach($pages as $pageId => $pagePosition) {
+				// Ignore les pages cachées
+				if($pagePosition === 0) {
+					continue;
+				}
 				// Page enfant
 				if($parentId = $this->getData(['page', $pageId, 'parentPageId'])) {
 					if(array_key_exists($parentId, $this->hierarchy) === false) {
@@ -301,7 +305,7 @@ class common {
 		$data = $this->data;
 		foreach($keys as $key) {
 			// Si aucune donnée n'existe retourne null
-			if(empty($data[$key])) {
+			if(isset($data[$key]) === false) {
 				return null;
 			}
 			// Sinon décent dans les niveaux
@@ -1055,7 +1059,18 @@ class helper {
 	 */
 	public static function sprintAttributes(array $array = [], array $exclude = []) {
 		// Required est exclu pour privilégier le système de champs requis du système
-		$exclude = array_merge(['col', 'offset', 'label', 'help', 'selected', 'required', 'classContainer'], $exclude);
+		$exclude = array_merge(
+			['before',
+				'classContainer',
+				'col',
+				'help',
+				'label',
+				'offset',
+				'required',
+				'selected'
+			],
+			$exclude
+		);
 		$attributes = [];
 		foreach($array as $key => $value) {
 			if($value AND in_array($key, $exclude) === false) {
@@ -1167,18 +1182,18 @@ class layout extends common {
 	public function showMenu() {
 		// Met en forme les items du menu
 		$items = '';
-		foreach($this->getHierarchy() as $parentKey => $childrenKeys) {
+		foreach($this->getHierarchy() as $parentPageId => $childrenPageIds) {
 			// Propriétés de l'item
 			$current = '';
-			if($parentKey === $this->getUrl(0) OR in_array($this->getUrl(0), $childrenKeys)) {
+			if($parentPageId === $this->getUrl(0) OR in_array($this->getUrl(0), $childrenPageIds)) {
 				$current = ' class="current"';
 			}
-			$blank = $this->getData(['page', $parentKey, 'blank']) ? ' target="_blank"' : '';
+			$blank = $this->getData(['page', $parentPageId, 'blank']) ? ' target="_blank"' : '';
 			// Mise en page de l'item
 			$items .= '<li>';
-			$items .= '<a href="' . helper::baseUrl() . $parentKey . '"' . $current . $blank . '>' . $this->getData(['page', $parentKey, 'title']) . '</a>';
+			$items .= '<a href="' . helper::baseUrl() . $parentPageId . '"' . $current . $blank . '>' . $this->getData(['page', $parentPageId, 'title']) . '</a>';
 			$items .= '<ul>';
-			foreach($childrenKeys as $childKey) {
+			foreach($childrenPageIds as $childKey) {
 				// Propriétés de l'item
 				$current = ($childKey === $this->getUrl(0)) ? ' class="current"' : '';
 				$blank = $this->getData(['page', $childKey, 'blank']) ? ' target="_blank"' : '';

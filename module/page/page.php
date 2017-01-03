@@ -21,7 +21,7 @@ class page extends common {
 	 */
 	public function add() {
 		$pageTitle = helper::translate('Nouvelle page');
-		$pageId = helper::increment(helper::filter($pageTitle, helper::FILTER_ID), $this->getData('page'));
+		$pageId = helper::increment(helper::filter($pageTitle, helper::FILTER_ID), $this->getData(['page']));
 		$this->setData([
 			'page',
 			$pageId,
@@ -89,7 +89,7 @@ class page extends common {
 			$pageId = $this->getInput('pageEditTitle', helper::FILTER_ID) ? $this->getInput('pageEditTitle', helper::FILTER_ID) : $this->getUrl(2);
 			// Si l'id a changée
 			if($pageId !== $this->getUrl(2)) {
-				// Incrémente la nouvelle clef de la page pour éviter les doublons
+				// Incrémente la nouvelle id de la page pour éviter les doublons
 				$pageId = helper::increment(helper::increment($pageId, $this->getData(['page'])), self::$coreModule);
 				// Met à jour les enfants
 				foreach($this->getHierarchy($this->getUrl(2)) as $childrenPageId) {
@@ -114,39 +114,24 @@ class page extends common {
 				// Ou le l'id du parent à changée
 				OR $parentPageId !== $this->getData(['page', $this->getUrl(2), 'parentPageId'])
 			) {
-				// Supérieur ou égale à 2 pour ignorer les options "Ne pas afficher" et "Au début"
-				// Sinon incrémente de +1 lorsque la nouvelle position est supérieure à la position actuelle afin de prendre en compte la page courante qui n'appraît pas dans la liste
-				if($position >= 2 AND $position >= $this->getData(['page', $this->getUrl(2), 'position'])) {
-					$position++;
-				}
-				// Si la page n'a pas de parent, actualise les positions des pages sans parents
-				if(empty($parentPageId)) {
-					foreach(array_keys($this->getHierarchy()) as $index => $parentPageId) {
-						// Commence à 1 et non 0
-						$index++;
-						// Incrémente de +1 la position des pages suivants la page modifiée
-						if($index >= $position AND $position !== 0) {
-							$index++;
+				// Si la page est une page enfant, actualise les positions des autres enfants du parent, sinon actualise les pages sans parents
+				$lastPosition = 1;
+				$hierarchy = $parentPageId ? $this->getHierarchy($parentPageId) : array_keys($this->getHierarchy());
+				foreach($hierarchy as $hierarchyPageId) {
+					// Ignore l'ancienne position de la page
+					if($hierarchyPageId !== $this->getUrl(2)) {
+						// Incrémente de +1 si la dernière position est égale à la nouvelle position de la page
+						if($lastPosition === $position) {
+							$lastPosition++;
 						}
-						// Change les positions
-						$this->setData(['page', $parentPageId, 'position', $index]);
-					}
-				}
-				// Sinon actualise les positions des pages enfants
-				else {
-					foreach($this->getHierarchy($parentPageId) as $index => $childPageId) {
-						// Commence à 1 et non 0
-						$index++;
-						// Incrémente de +1 la position des pages suivantes
-						if($index >= $position) {
-							$index++;
-						}
-						// Change les positions
-						$this->setData(['page', $childPageId, 'position', $index]);
+						// Change la position
+						$this->setData(['page', $hierarchyPageId, 'position', $lastPosition]);
+						// Incrémente pour la prochaine position
+						$lastPosition++;
 					}
 				}
 			}
-			// Modifie la page ou en crée une nouvelle si la clef à changée
+			// Modifie la page ou en crée une nouvelle si l'id à changée
 			$this->setData([
 				'page',
 				$pageId,
