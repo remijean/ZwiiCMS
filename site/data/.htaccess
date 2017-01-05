@@ -1,0 +1,5 @@
+# Bloque l'accès aux données
+<Files data.json>
+	Order deny,allow
+	Deny from all
+</Files>

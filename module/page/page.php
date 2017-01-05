@@ -116,7 +116,7 @@ class page extends common {
 			) {
 				// Si la page est une page enfant, actualise les positions des autres enfants du parent, sinon actualise les pages sans parents
 				$lastPosition = 1;
-				$hierarchy = $parentPageId ? $this->getHierarchy($parentPageId) : array_keys($this->getHierarchy());
+				$hierarchy = $parentPageId ? $this->getHierarchy($parentPageId, false) : array_keys($this->getHierarchy(null, false));
 				foreach($hierarchy as $hierarchyPageId) {
 					// Ignore l'ancienne position de la page
 					if($hierarchyPageId !== $this->getUrl(2)) {

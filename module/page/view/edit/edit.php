@@ -9,7 +9,12 @@
 					'value' => $this->getData(['page', $this->getUrl(2), 'title'])
 				]); ?>
 				<div class="row">
-					<?php if(empty($this->getHierarchy($this->getUrl(2)))): ?>
+					<?php if($this->getHierarchy($this->getUrl(2), false)): ?>
+						<div class="col12">
+							<?php echo template::hidden('pageEditParentPageId', [
+								'value' => $this->getData(['page', $this->getUrl(2), 'parentPageId'])
+							]); ?>
+					<?php else: ?>
 						<div class="col6">
 							<?php echo template::select('pageEditParentPageId', $module::$pagesNoParentId, [
 								'label' => 'Page parent',
@@ -17,8 +22,6 @@
 							]); ?>
 						</div>
 						<div class="col6">
-					<?php else: ?>
-						<div class="col12">
 					<?php endif; ?>
 						<?php echo template::select('pageEditPosition', [], [
 							'label' => 'Position dans le menu'

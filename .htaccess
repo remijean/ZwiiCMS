@@ -4,11 +4,12 @@ SetEnv SESSION_USE_TRANS_SID 0
 # Bloque l'accès à la liste des fichiers
 Options -Indexes
 
-# Bloque l'accès aux fichiers json
-<FilesMatch "\.json$">
-	Order deny,allow
-	Deny from all
-</FilesMatch>
-
 # Attention, surtout ne rien modifier ci-dessous !
 # URL rewriting
+<ifModule mod_rewrite.c>
+	RewriteEngine on
+	RewriteBase /ZwiiCMS/
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^(.*)$ index.php?$1 [L]
+</ifModule>

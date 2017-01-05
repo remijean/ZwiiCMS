@@ -108,7 +108,7 @@ class common {
 		],
 		'theme' => [
 			'body' => [
-				'backgroundColor' => 'rgba(255, 255, 255, 1)',
+				'backgroundColor' => 'rgba(232, 232, 232, 1)',
 				'image' => '',
 				'imageAttachment' => 'scroll',
 				'imageRepeat' => 'no-repeat',
@@ -129,27 +129,27 @@ class common {
 				'textAlign' => 'left'
 			],
 			'header' => [
-				'backgroundColor' => 'rgba(71, 123, 184, 1)',
+				'backgroundColor' => 'rgba(255, 255, 255, 1)',
 				'font' => 'Oswald',
 				'fontWeight' => 'normal',
-				'height' => '300px',
+				'height' => '150px',
 				'image' => '',
 				'imagePosition' => 'center center',
 				'imageRepeat' => 'no-repeat',
-				'position' => 'body',
+				'position' => 'site',
 				'textAlign' => 'center',
-				'textColor' => 'rgba(255, 255, 255, 1)',
+				'textColor' => 'rgba(85, 85, 85, 1)',
 				'textTransform' => 'uppercase'
 			],
 			'link' => [
 				'textColor' => 'rgba(71, 123, 184, 1)'
 			],
 			'menu' => [
-				'backgroundColor' => 'rgba(255, 255, 255, 1)',
+				'backgroundColor' => 'rgba(71, 123, 184, 1)',
 				'fontWeight' => 'normal',
 				'height' => '15px 10px',
 				'loginLink' => true,
-				'position' => 'body-first',
+				'position' => 'site-second',
 				'textAlign' => 'left',
 				'textTransform' => 'uppercase'
 			],
@@ -167,7 +167,10 @@ class common {
 			]
 		]
 	];
-	private $hierarchy = [];
+	private $hierarchy = [
+		'all' => [],
+		'visible' => []
+	];
 	private $input = [
 		'_POST' => [],
 		'_GET' => [],
@@ -225,23 +228,33 @@ class common {
 			$this->setData([json_decode(file_get_contents('site/data/data.json'), true)]);
 		}
 		// Construit la liste des pages parents/enfants
-		if(empty($this->hierarchy)) {
+		if(empty($this->hierarchy['all'])) {
 			$pages = helper::arrayCollumn($this->getData(['page']), 'position', 'SORT_ASC');
 			foreach($pages as $pageId => $pagePosition) {
-				// Ignore les pages cachées
-				if($pagePosition === 0) {
-					continue;
-				}
 				// Page enfant
 				if($parentId = $this->getData(['page', $pageId, 'parentPageId'])) {
-					if(array_key_exists($parentId, $this->hierarchy) === false) {
-						$this->hierarchy[$parentId] = [];
+					if($pagePosition !== 0) {
+						if(array_key_exists($parentId, $this->hierarchy['visible']) === false) {
+							$this->hierarchy['visible'][$parentId] = [];
+						}
+						$this->hierarchy['visible'][$parentId][] = $pageId;
 					}
-					$this->hierarchy[$parentId][] = $pageId;
+					if(array_key_exists($parentId, $this->hierarchy['all']) === false) {
+						$this->hierarchy['all'][$parentId] = [];
+					}
+					$this->hierarchy['all'][$parentId][] = $pageId;
 				}
-				// page parent (si pas déjà déclarée par une page enfant)
-				elseif(array_key_exists($pageId, $this->hierarchy) === false){
-					$this->hierarchy[$pageId] = [];
+				// Page parent (si pas déjà déclarée par une page enfant)
+				else {
+					if(
+						$pagePosition !== 0
+						AND array_key_exists($pageId, $this->hierarchy['visible']) === false
+					) {
+						$this->hierarchy['visible'][$pageId] = [];
+					}
+					if(array_key_exists($pageId, $this->hierarchy['all']) === false) {
+						$this->hierarchy['all'][$pageId] = [];
+					}
 				}
 			}
 		}
@@ -320,13 +333,15 @@ class common {
 	/**
 	 * Accède à la liste des pages parents et de leurs enfants ou aux enfants d'une page parent
 	 * @param int $parentId Id de la page parent
+	 * @param bool $onlyVisible Affiche seulement les pages visibles
 	 * @return array
 	 */
-	public function getHierarchy($parentId = null) {
+	public function getHierarchy($parentId = null, $onlyVisible = true) {
+		$hierarchy = $onlyVisible ? $this->hierarchy['visible'] : $this->hierarchy['all'];
 		// Enfants d'un parent
 		if($parentId) {
-			if(array_key_exists($parentId, $this->hierarchy)) {
-				return $this->hierarchy[$parentId];
+			if(array_key_exists($parentId, $hierarchy)) {
+				return $hierarchy[$parentId];
 			}
 			else {
 				return [];
@@ -334,7 +349,7 @@ class common {
 		}
 		// Parents et leurs enfants
 		else {
-			return $this->hierarchy;
+			return $hierarchy;
 		}
 	}
 
@@ -375,7 +390,7 @@ class common {
 			}
 		}
 		// Sinon retourne null
-		return null;
+		return helper::filter(null, $filter);
 	}
 
 	/**
@@ -851,23 +866,24 @@ class helper {
 	public static function filter($text, $filter) {
 		$search = 'á,à,â,ä,ã,å,ç,é,è,ê,ë,í,ì,î,ï,ñ,ó,ò,ô,ö,õ,ú,ù,û,ü,ý,ÿ,\',", ';
 		$replace = 'a,a,a,a,a,a,c,e,e,e,e,i,i,i,i,n,o,o,o,o,o,u,u,u,u,y,y,-,-,-';
+		$text = trim($text);
 		switch($filter) {
 			case self::FILTER_BOOLEAN:
-				$text = (bool)$text;
+				$text = (bool) $text;
 				break;
 			case self::FILTER_EMAIL:
 				$text = filter_var($text, FILTER_SANITIZE_EMAIL);
 				break;
 			case self::FILTER_FLOAT:
 				$text = filter_var($text, FILTER_SANITIZE_NUMBER_FLOAT);
-				$text = (float)$text;
+				$text = (float) $text;
 				break;
 			case self::FILTER_ID:
 				$text = preg_replace('/([^a-z0-9!#$%&\'*+-=?^_`{|}~@.\[\]])/', '', str_replace(explode(',', $search), explode(',', $replace), mb_strtolower($text, 'UTF-8')));
 				break;
 			case self::FILTER_INT:
 				$text = filter_var($text, FILTER_SANITIZE_NUMBER_INT);
-				$text = (int)$text;
+				$text = (int) $text;
 				break;
 			case self::FILTER_PASSWORD:
 				$text = hash('sha256', $text);
@@ -1129,13 +1145,14 @@ class layout extends common {
 	public function showContent() {
 		if(
 			self::$outputTitle
-			OR $this->getData(['page', $this->getUrl(0), 'hideTitle']) === false
+			AND (
+				$this->getData(['page', $this->getUrl(0)]) === null
+				OR $this->getData(['page', $this->getUrl(0), 'hideTitle']) === false
+			)
 		) {
-			echo '<h2 id="pageTitle">' . self::$outputTitle . '</h2>' . self::$outputContent;
+			echo '<h2 id="pageTitle">' . self::$outputTitle . '</h2>';
 		}
-		else {
-			echo self::$outputContent;
-		}
+		echo self::$outputContent;
 	}
 
 	/**
@@ -1188,17 +1205,17 @@ class layout extends common {
 			if($parentPageId === $this->getUrl(0) OR in_array($this->getUrl(0), $childrenPageIds)) {
 				$current = ' class="current"';
 			}
-			$blank = $this->getData(['page', $parentPageId, 'blank']) ? ' target="_blank"' : '';
+			$targetBlank = $this->getData(['page', $parentPageId, 'targetBlank']) ? ' target="_blank"' : '';
 			// Mise en page de l'item
 			$items .= '<li>';
-			$items .= '<a href="' . helper::baseUrl() . $parentPageId . '"' . $current . $blank . '>' . $this->getData(['page', $parentPageId, 'title']) . '</a>';
+			$items .= '<a href="' . helper::baseUrl() . $parentPageId . '"' . $current . $targetBlank . '>' . $this->getData(['page', $parentPageId, 'title']) . '</a>';
 			$items .= '<ul>';
 			foreach($childrenPageIds as $childKey) {
 				// Propriétés de l'item
 				$current = ($childKey === $this->getUrl(0)) ? ' class="current"' : '';
-				$blank = $this->getData(['page', $childKey, 'blank']) ? ' target="_blank"' : '';
+				$targetBlank = $this->getData(['page', $childKey, 'targetBlank']) ? ' target="_blank"' : '';
 				// Mise en page du sous-item
-				$items .= '<li><a href="' . helper::baseUrl() . $childKey . '"' . $current . $blank . '>' . $this->getData(['page', $childKey, 'title']) . '</a></li>';
+				$items .= '<li><a href="' . helper::baseUrl() . $childKey . '"' . $current . $targetBlank . '>' . $this->getData(['page', $childKey, 'title']) . '</a></li>';
 			}
 			$items .= '</ul>';
 			$items .= '</li>';
