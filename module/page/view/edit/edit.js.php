@@ -44,7 +44,7 @@ $("#pageEditParentPageId").on("change", function() {
 		$("<option>").val(0).text("<?php echo helper::translate('Ne pas afficher'); ?>"),
 		$("<option>").val(1).text("<?php echo helper::translate('Au début'); ?>")
 	);
-	var parentSelected = $(this).find("option:selected").val();
+	var parentSelected = $(this).val();
 	var positionSelected = 0;
 	var positionPrevious = 1;
 	// Aucune page parent selectionnée

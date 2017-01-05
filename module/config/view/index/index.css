@@ -1,0 +1,10 @@
+#configNewVersion {
+	background: #F3674A;
+	color: #FFF;
+}
+#configNewVersion:hover {
+	background: #F25A3A;
+}
+#configNewVersion:active {
+	background: #F14C2A;
+}

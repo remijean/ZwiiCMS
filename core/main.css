@@ -38,22 +38,22 @@ a:hover {
 
 /* Titres */
 h1 {
-	font-size: 2.2em;
+	font-size: 2em;
 }
 h2 {
-	font-size: 1.8em;
+	font-size: 1.5em;
 }
 h3 {
-	font-size: 1.4em;
-}
-h4 {
 	font-size: 1.2em;
 }
-h5 {
+h4 {
 	font-size: 1em;
 }
-h6 {
+h5 {
 	font-size: .8em;
+}
+h6 {
+	font-size: .7em;
 }
 
 /* Listes */
@@ -581,16 +581,6 @@ label {
 	background: #EEE !important;
 	color: #CCC !important;
 }
-.button#newVersion {
-	background: #F3674A;
-	color: #FFF;
-}
-.button#newVersion:hover {
-	background: #F25A3A;
-}
-.button#newVersion:active {
-	background: #F14C2A;
-}
 
 /* Upload de fichiers */
 .inputFile {
@@ -638,8 +628,7 @@ label {
 }
 
 /* Cases à cocher (pas de display none sinon le hover ne fonctionne pas sous Chrome) */
-input[type='checkbox'],
-input[type='radio'] {
+input[type='checkbox'] {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
@@ -647,14 +636,12 @@ input[type='radio'] {
 	height: 0;
 	width: 0;
 }
-input[type='checkbox'] + label,
-input[type='radio'] + label {
+input[type='checkbox'] + label {
 	display: inline-block;
 	margin-right: 10px;
 	cursor: pointer;
 }
-input[type='checkbox'] + label:before,
-input[type='radio'] + label:before {
+input[type='checkbox'] + label:before {
 	content: '\2713';
 	display: inline-block;
 	text-align: center;
@@ -668,20 +655,14 @@ input[type='radio'] + label:before {
 	background: #DDD;
 	vertical-align: top;
 }
-input[type='checkbox'].notice + label:before,
-input[type='radio'].notice + label:before {
+input[type='checkbox'].notice + label:before {
 	background: #F3674A;
 }
-input[type='radio'] + label:before {
-	border-radius: 50%;
-}
 input[type='checkbox']:hover + label:before,
-input[type='checkbox']:checked:active + label:before,
-input[type='radio']:hover + label:before {
+input[type='checkbox']:checked:active + label:before {
 	background: #CCC;
 }
-input[type='checkbox']:disabled + label:before,
-input[type='radio']:disabled + label:before {
+input[type='checkbox']:disabled + label:before{
 	background: #EEE !important;
 }
 
