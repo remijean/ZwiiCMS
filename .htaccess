@@ -6,10 +6,3 @@ Options -Indexes
 
 # Attention, surtout ne rien modifier ci-dessous !
 # URL rewriting
-<ifModule mod_rewrite.c>
-	RewriteEngine on
-	RewriteBase /ZwiiCMS/
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteRule ^(.*)$ index.php?$1 [L]
-</ifModule>
