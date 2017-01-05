@@ -25,6 +25,7 @@
 					'extensions' => 'ico',
 					'help' => 'Seule une image de format .ico est acceptée. Pensez à supprimer le cache de votre navigateur si la favicon ne change pas.',
 					'label' => 'Favicon',
+					'lang' => $this->getData(['config', 'language']),
 					'value' => $this->getData(['config', 'favicon'])
 				]); ?>
 				<?php echo template::text('configAnalyticsId', [

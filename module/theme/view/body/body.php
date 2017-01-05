@@ -16,6 +16,8 @@
 				<h4><?php echo helper::translate('Image'); ?></h4>
 				<?php echo template::file('themeBodyImage', [
 					'label' => 'Fond',
+					'lang' => $this->getData(['config', 'language']),
+					'type' => 1,
 					'value' => $this->getData(['theme', 'body', 'image'])
 				]); ?>
 				<div id="themeBodyImageOptions" class="displayNone">
