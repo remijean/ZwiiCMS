@@ -42,7 +42,7 @@ class common {
 			'cookieConsent' => true,
 			'favicon' => 'favicon.ico',
 			'homePageId' => 'accueil',
-			'language' => '',
+			'language' => 'fr_FR',
 			'metaDescription' => 'Description',
 			'social' => [
 				'facebookId' => 'ZwiiCMS',
@@ -191,6 +191,7 @@ class common {
 		// 'jquery-ui', Désactivé par défaut mais disponible
 		'normalize',
 		'lity',
+		'filemanager',
 		// 'tinymce', Désactivé par défaut mais disponible
 		'zwiico'
 	];
@@ -1291,7 +1292,7 @@ class layout extends common {
 					$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/edit/' . $this->getUrl(0) . '" title="' . helper::translate('Modifier la page') . '">' . template::ico('pencil') . '</a></li>';
 				}
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/add" title="' . helper::translate('Créer une page') . '">' . template::ico('plus') . '</a></li>';
-				$rightItems .= '<li><a href="' . helper::baseUrl() . 'file" title="' . helper::translate('Gérer les fichiers') . '" data-lity>' . template::ico('folder') . '</a></li>';
+				$rightItems .= '<li><a href="' . helper::baseUrl(false) . 'core/vendor/filemanager/dialog.php?type=0" title="' . helper::translate('Gérer les fichiers') . '" data-lity>' . template::ico('folder') . '</a></li>';
 			}
 			if($this->getUser('rank') >= self::RANK_ADMIN) {
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'user" title="' . helper::translate('Configurer les utilisateurs') . '">' . template::ico('users') . '</a></li>';
@@ -1463,11 +1464,11 @@ class template {
 			helper::sprintAttributes($attributes)
 		);
 		// Champs cachés contenant les nombres
-		$html .= self::hidden($nameId . 'FirstNumber', [
+		$html .= self::hidden($attributes['id'] . 'FirstNumber', [
 			'value' => $firstNumber,
 			'before' => false
 		]);
-		$html .= self::hidden($nameId . 'SecondNumber', [
+		$html .= self::hidden($attributes['id'] . 'SecondNumber', [
 			'value' => $secondNumber,
 			'before' => false
 		]);
@@ -1544,9 +1545,10 @@ class template {
 			'help' => '',
 			'id' => $nameId,
 			'label' => '',
+			'lang' => 'fr_FR',
 			'name' => $nameId,
 			'required' => false,
-			'type' => '',
+			'type' => 2,
 			'value' => ''
 		], $attributes);
 		// Champ requis
@@ -1569,7 +1571,7 @@ class template {
 			$attributes['class'] .= ' notice';
 		}
 		// Champ caché contenant l'url de la page
-		$html .= self::hidden($nameId, [
+		$html .= self::hidden($attributes['id'], [
 			'value' => $attributes['value'],
 			'disabled' => $attributes['disabled'],
 			'class' => 'inputFileHidden'
@@ -1578,9 +1580,12 @@ class template {
 		$html .= sprintf(
 			'<a
 				href="' .
-					helper::baseUrl() . 'file'
-					//($attributes['type'] ? '&' . $attributes['type'] : '') .
-					//($attributes['extensions'] ? '&' . $attributes['extensions'] : '')
+					helper::baseUrl(false) . 'core/vendor/filemanager/dialog.php' .
+					'?relative_url=1' .
+					'&field_id=' . $attributes['id'] .
+					'&type=' . $attributes['type'] .
+					'&lang=' . $attributes['lang'] .
+					($attributes['extensions'] ? '&extensions=' . $attributes['extensions'] : '')
 				. '"
 				class="inputFile %s %s"
 				%s
@@ -1594,7 +1599,7 @@ class template {
 			helper::sprintAttributes($attributes, ['class', 'extensions', 'type'])
 		);
 		// Bouton de suppression
-		$html .= self::button($nameId . 'Delete', [
+		$html .= self::button($attributes['id'] . 'Delete', [
 			'class' => 'inputFileDelete',
 			'value' => self::ico('cancel')
 		]);
