@@ -19,7 +19,7 @@ body {
 	min-height: 100%;
 }
 body {
-	color: #555;
+	color: #272A34;
 	margin: 0 10px;
 	font-size: 14px;
 }
@@ -106,7 +106,7 @@ table {
 	border-collapse: collapse;
 }
 thead tr {
-	background: #3C3C3C;
+	background: #212223;
 	color: #FFF;
 	text-align: left;
 }
@@ -171,7 +171,7 @@ td > .col12 {
 
 /* Panneau */
 #panel {
-	background: #3C3C3C;
+	background: #212223;
 	padding-left: 5px; /* Pour éviter que le select touche le bord lorsque la fenêtre est redimensionnée */
 	margin: 0 -10px;
 	text-align: right;
@@ -201,11 +201,14 @@ td > .col12 {
 #panel a {
 	display: inline-block;
 	padding: 0 14px;
-	color: #E1E1E1;
+	color: #FFF;
 }
 #panel a:hover {
-	background: #343434;
+	background: #191A1A;
 	text-decoration: none;
+}
+#panel a:active {
+	background: #111112;
 }
 #panel select {
 	width: 250px;
@@ -455,7 +458,7 @@ footer #footerSocials .zwiico-youtube:hover {
 	right: 30px;
 	bottom: 50px;
 	padding: 10px 12px;
-	background: #3C3C3C;
+	background: #212223;
 	color: #FFF;
 	cursor: pointer;
 	display: none;
@@ -467,7 +470,7 @@ footer #footerSocials .zwiico-youtube:hover {
 /* Message sur les cookies */
 #cookieConsent {
 	opacity: .9;
-	background: #3C3C3C;
+	background: #212223;
 	position: fixed;
 	right: 0;
 	bottom: 0;

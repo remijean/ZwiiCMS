@@ -21,21 +21,32 @@ class theme extends common {
 	];
 	public static $fonts = [
 		'Abril+Fatface' => 'Abril Fatface',
+		'Arimo' => 'Arimo',
 		'Arvo' => 'Arvo',
 		'Berkshire+Swash' => 'Berkshire Swash',
+		'Cabin' => 'Cabin',
 		'Dancing+Script' => 'Dancing Script',
+		'Droid+Sans' => 'Droid Sans',
+		'Droid+Serif' => 'Droid Serif',
+		'Fira+Sans' => 'Fira Sans',
 		'Inconsolata' => 'Inconsolata',
 		'Indie+Flower' => 'Indie Flower',
 		'Josefin+Slab' => 'Josefin Slab',
-		'Lato' => 'Lato',
 		'Lobster' => 'Lobster',
+		'Lora' => 'Lora',
+		'Lato' => 'Lato',
 		'Marvel' => 'Marvel',
 		'Old+Standard+TT' => 'Old Standard TT',
 		'Open+Sans' => 'Open Sans',
 		'Oswald' => 'Oswald',
+		'PT+Mono' => 'PT Mono',
+		'PT+Serif' => 'PT Serif',
 		'Raleway' => 'Raleway',
 		'Rancho' => 'Rancho',
-		'Ubuntu' => 'Ubuntu'
+		'Roboto' => 'Roboto',
+		'Signika' => 'Signika',
+		'Ubuntu' => 'Ubuntu',
+		'Vollkorn' => 'Vollkorn'
 	];
 	public static $fontWeights = [
 		'normal' => 'Normal',

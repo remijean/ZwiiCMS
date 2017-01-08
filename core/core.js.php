@@ -20,8 +20,8 @@ core.colorVariants = function(rgba) {
 	rgba = rgba[1].split(", ");
 	return {
 		"normal": "rgba(" + rgba[0] + "," + rgba[1] + "," + rgba[2] + "," + rgba[3] + ")",
-		"darken": "rgba(" + Math.max(0, rgba[0] - 20) + "," + Math.max(0, rgba[1] - 20) + "," + Math.max(0, rgba[2] - 20) + "," + rgba[3] + ")",
-		"veryDarken": "rgba(" + Math.max(0, rgba[0] - 25) + "," + Math.max(0, rgba[1] - 25) + "," + Math.max(0, rgba[2] - 25) + "," + rgba[3] + ")",
+		"darken": "rgba(" + Math.max(0, rgba[0] - 15) + "," + Math.max(0, rgba[1] - 15) + "," + Math.max(0, rgba[2] - 15) + "," + rgba[3] + ")",
+		"veryDarken": "rgba(" + Math.max(0, rgba[0] - 20) + "," + Math.max(0, rgba[1] - 20) + "," + Math.max(0, rgba[2] - 20) + "," + rgba[3] + ")",
 		"text": core.relativeLuminanceW3C(rgba) > .22 ? "inherit" : "white"
 	};
 };

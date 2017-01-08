@@ -25,7 +25,7 @@ $("input, select").on("change", function() {
 	// Largeur du site
 	css += ".container{max-width:" + $("#themeSiteWidth").val() + "}";
 	// Arrondi sur les coins du site et ombre sur les bords du site
-	css += "#site{border-radius:" + $("#themeSiteRadius").val() + ";box-shadow:" + $("#themeSiteShadow").val() + " #3C3C3C}";
+	css += "#site{border-radius:" + $("#themeSiteRadius").val() + ";box-shadow:" + $("#themeSiteShadow").val() + " #212223}";
 	// Ajout du css au DOM
 	$("#themePreview").remove();
 	$("<style>")

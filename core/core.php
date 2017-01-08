@@ -84,7 +84,6 @@ class common {
 			]
 		],
 		'module' => [
-
 		],
 		'user' => [
 			'administrator' => [
@@ -108,7 +107,7 @@ class common {
 		],
 		'theme' => [
 			'body' => [
-				'backgroundColor' => 'rgba(232, 232, 232, 1)',
+				'backgroundColor' => 'rgba(235, 238, 242, 1)',
 				'image' => '',
 				'imageAttachment' => 'scroll',
 				'imageRepeat' => 'no-repeat',
@@ -116,10 +115,10 @@ class common {
 				'imageSize' => 'auto'
 			],
 			'button' => [
-				'backgroundColor' => 'rgba(71, 123, 184, 1)'
+				'backgroundColor' => 'rgba(48, 77, 102, 1)'
 			],
 			'footer' => [
-				'backgroundColor' => 'rgba(60, 60, 60, 1)',
+				'backgroundColor' => 'rgba(33, 34, 35, 1)',
 				'copyrightAlign' => 'right',
 				'height' => '30px',
 				'loginLink' => true,
@@ -129,29 +128,29 @@ class common {
 				'textAlign' => 'left'
 			],
 			'header' => [
-				'backgroundColor' => 'rgba(255, 255, 255, 1)',
+				'backgroundColor' => 'rgba(60, 105, 148, 1)',
 				'font' => 'Oswald',
 				'fontWeight' => 'normal',
 				'height' => '150px',
 				'image' => '',
 				'imagePosition' => 'center center',
 				'imageRepeat' => 'no-repeat',
-				'position' => 'site',
+				'position' => 'body',
 				'textAlign' => 'center',
-				'textColor' => 'rgba(85, 85, 85, 1)',
-				'textTransform' => 'uppercase'
+				'textColor' => 'rgba(255, 255, 255, 1)',
+				'textTransform' => 'none'
 			],
 			'link' => [
-				'textColor' => 'rgba(71, 123, 184, 1)'
+				'textColor' => 'rgba(48, 77, 102, 1)'
 			],
 			'menu' => [
-				'backgroundColor' => 'rgba(71, 123, 184, 1)',
+				'backgroundColor' => 'rgba(48, 77, 102, 1)',
 				'fontWeight' => 'normal',
 				'height' => '15px 10px',
 				'loginLink' => true,
-				'position' => 'site-second',
+				'position' => 'body-second',
 				'textAlign' => 'left',
-				'textTransform' => 'uppercase'
+				'textTransform' => 'none'
 			],
 			'site' => [
 				'width' => '960px'
@@ -162,8 +161,8 @@ class common {
 			'title' => [
 				'font' => 'Oswald',
 				'fontWeight' => 'normal',
-				'textColor' => 'rgba(71, 123, 184, 1)',
-				'textTransform' => 'uppercase'
+				'textColor' => 'rgba(60, 105, 148, 1)',
+				'textTransform' => 'none'
 			]
 		]
 	];
@@ -563,7 +562,7 @@ class core extends common {
 			}
 			// Site
 			$css .= '.container{max-width:' . $this->getData(['theme', 'site', 'width']) . '}';
-			$css .= '#site{border-radius:' . $this->getData(['theme', 'site', 'radius']) . ';box-shadow:' . $this->getData(['theme', 'site', 'shadow']) . ' #3C3C3C}';
+			$css .= '#site{border-radius:' . $this->getData(['theme', 'site', 'radius']) . ';box-shadow:' . $this->getData(['theme', 'site', 'shadow']) . ' #212223}';
 			$colors = helper::colorVariants($this->getData(['theme', 'button', 'backgroundColor']));
 			$css .= '.speechBubble,.button,input[type=\'submit\'],pagination a,input[type=\'checkbox\']:checked + label:before,input[type=\'radio\']:checked + label:before,.helpContent{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '!important}';
 			$css .= '.tabTitle.current,.helpButton span{color:' . $colors['normal'] . '}';
@@ -842,8 +841,8 @@ class helper {
 		$rgba = explode(', ', $matches[1]);
 		return [
 			'normal' => 'rgba(' . $rgba[0] . ',' . $rgba[1] . ',' . $rgba[2] . ',' . $rgba[3] . ')',
-			'darken' => 'rgba(' . max(0, $rgba[0] - 20) . ',' . max(0, $rgba[1] - 20) . ',' . max(0, $rgba[2] - 20) . ',' . $rgba[3] . ')',
-			'veryDarken' => 'rgba(' . max(0, $rgba[0] - 25) . ',' . max(0, $rgba[1] - 25) . ',' . max(0, $rgba[2] - 25) . ',' . $rgba[3] . ')',
+			'darken' => 'rgba(' . max(0, $rgba[0] - 15) . ',' . max(0, $rgba[1] - 15) . ',' . max(0, $rgba[2] - 15) . ',' . $rgba[3] . ')',
+			'veryDarken' => 'rgba(' . max(0, $rgba[0] - 20) . ',' . max(0, $rgba[1] - 20) . ',' . max(0, $rgba[2] - 20) . ',' . $rgba[3] . ')',
 			'text' => self::relativeLuminanceW3C($rgba) > .22 ? "inherit" : "white"
 		];
 	}
