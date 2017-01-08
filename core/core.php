@@ -1294,7 +1294,7 @@ class layout extends common {
 			}
 			if($this->getUser('rank') >= self::RANK_ADMIN) {
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'user" title="' . helper::translate('Configurer les utilisateurs') . '">' . template::ico('users') . '</a></li>';
-				$rightItems .= '<li><a href="' . helper::baseUrl() . 'theme" title="' . helper::translate('Personnaliser le site') . '">' . template::ico('brush') . '</a></li>';
+				$rightItems .= '<li><a href="' . helper::baseUrl() . 'theme" title="' . helper::translate('Personnaliser le thème') . '">' . template::ico('brush') . '</a></li>';
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'config" title="' . helper::translate('Configurer le site') . '">' . template::ico('gear') . '</a></li>';
 			}
 			$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/edit/' . $this->getUser('id') . '" title="' . helper::translate('Configurer mon compte') . '">' . template::ico('user', 'right') . $this->getUser('name') . '</a></li>';

@@ -22,7 +22,6 @@ class user extends common {
 			$userId = $this->getInput('userAddName', helper::FILTER_ID);
 			if($this->getData(['user', $userId])) {
 				self::$inputNotices['userAddId'] = 'Identifiant déjà utilisé';
-				self::$inputNotices['userAddName'] = 'Identifiant déjà utilisé';
 			}
 			// Double vérification pour le mot de passe
 			$password = $this->getInput('userAddPassword', helper::FILTER_PASSWORD);
@@ -49,7 +48,7 @@ class user extends common {
 		// Affichage du template
 		else {
 			return [
-				'title' => $this->getData(['user', $this->getUrl(2), 'name']),
+				'title' => 'Nouvel utilisateur',
 				'view' => true
 			];
 		}
@@ -207,7 +206,7 @@ class user extends common {
 			];
 		}
 		return [
-			'title' => 'Utilisateurs',
+			'title' => 'Liste des utilisateurs',
 			'view' => true
 		];
 	}
