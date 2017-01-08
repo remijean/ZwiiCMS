@@ -424,6 +424,21 @@ footer #footerSocials .zwiico-youtube:hover {
 	margin: 0 .4em;
 }
 
+/* Éditeur de texte (ne respect pas le format des classe de Zwii car surcouche de TinyMCE) */
+.mce-tinymce,
+.mce-edit-area,
+.mce-statusbar,
+.mce-btn:hover {
+	border-color: #DDD !important;
+}
+.mce-panel,
+.mce-btn {
+	background: #F5F5F5 !important;
+}
+.mce-btn:hover {
+	background: #EEE !important;
+}
+
 /* Bulle de dialogue */
 .speech {
 	margin: 15px;
@@ -497,7 +512,7 @@ footer #footerSocials .zwiico-youtube:hover {
 
 /* Bloc */
 .block {
-	border: 1px solid #F5F5F5;
+	border: 1px solid #DDD;
 	padding: 20px;
 	margin: 20px 0;
 }
@@ -525,7 +540,7 @@ input[type='password'],
 select,
 textarea {
 	padding: 9px; /* -1px à cause des bordures */
-	background: #FFF;
+	background: #FDFDFD;
 	border: 1px solid #DDD;
 	width: 100%;
 }
@@ -647,6 +662,9 @@ input[type='checkbox'] + label {
 	margin-right: 10px;
 	cursor: pointer;
 }
+input[type='checkbox'] + label span {
+	vertical-align: middle;
+}
 input[type='checkbox'] + label:before {
 	content: '\2713';
 	display: inline-block;
@@ -658,7 +676,8 @@ input[type='checkbox'] + label:before {
 	line-height: 20px;
 	font-size: 10px;
 	font-weight: bold;
-	background: #DDD;
+	background: #FDFDFD;
+	border: 1px solid #DDD;
 	vertical-align: top;
 }
 input[type='checkbox'].notice + label:before {
@@ -666,7 +685,7 @@ input[type='checkbox'].notice + label:before {
 }
 input[type='checkbox']:hover + label:before,
 input[type='checkbox']:checked:active + label:before {
-	background: #CCC;
+	background: #EEE;
 }
 input[type='checkbox']:disabled + label:before{
 	background: #F5F5F5 !important;

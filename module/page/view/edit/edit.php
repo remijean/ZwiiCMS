@@ -73,10 +73,10 @@
 	</div>
 	<div class="block">
 		<h4><?php echo helper::translate('Options avancées'); ?></h4>
-		<?php echo template::checkbox('pageEditHideTitle', true, 'Ne pas afficher le titre en mode public', [
+		<?php echo template::checkbox('pageEditHideTitle', true, 'Cacher le titre de la page', [
 			'checked' => $this->getData(['page', $this->getUrl(2), 'hideTitle'])
 		]); ?>
-		<?php echo template::checkbox('pageEditTargetBlank', true, 'Ouvrir dans un nouvel onglet en mode public', [
+		<?php echo template::checkbox('pageEditTargetBlank', true, 'Ouvrir dans un nouvel onglet', [
 			'checked' => $this->getData(['page', $this->getUrl(2), 'targetBlank'])
 		]); ?>
 	</div>

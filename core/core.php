@@ -1528,7 +1528,7 @@ class template {
 			helper::sprintAttributes($attributes)
 		);
 		// Label
-		$html .= self::label($attributes['id'], $label, [
+		$html .= self::label($attributes['id'], '<span>' . $label . '</span>', [
 			'help' => $attributes['help']
 		]);
 		// Fin du container
