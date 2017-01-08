@@ -140,7 +140,6 @@ $mime_types = array(
 	'png'     => 'image/png',
 	'pnm'     => 'image/x-portable-anymap',
 	'ppm'     => 'image/x-portable-pixmap',
-	'ppt'     => 'application/vnd.ms-powerpoint',
 	'ps'      => 'application/postscript',
 	'qt'      => 'video/quicktime',
 	'ra'      => 'audio/x-realaudio',
@@ -240,6 +239,7 @@ $mime_types = array(
 	'pptm'     => 'application/vnd.ms-powerpoint.presentation.macroEnabled.12',
 	'potm'     => 'application/vnd.ms-powerpoint.template.macroEnabled.12',
 	'ppsm'     => 'application/vnd.ms-powerpoint.slideshow.macroEnabled.12',
+	'ico'      => 'image/x-icon'
 );
 
 if ( ! function_exists('get_extension_from_mime'))
