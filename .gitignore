@@ -1,17 +1,18 @@
-# Fichiers de cache
-core/cache/*
-
 # Fichiers temporaires
 core/tmp/*
 
-# Base de données
-data/data.json
+# Sauvegardes
+site/backup/*
+
+# Fichiers de données
+site/data/*
 
 # Fichiers uploadés
-data/upload/*
+site/file/source/*
+site/file/thumb/*
 
-# Autorise les dossiers vides dans GitHub
+# Dossiers vides dans GitHub
 !.gitkeep
 
-# Configuration de PHPStorm
+# PHPStorm
 .idea/

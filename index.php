@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of ZwiiCMS.
+ * This file is part of Zwii.
  *
  * For full copyright and license information, please see the LICENSE
  * file that was distributed with this source code.
@@ -20,7 +20,7 @@ if(version_compare(PHP_VERSION, '5.4.0', '<')) {
 }
 
 /**
- * Initialisation de ZwiiCMS
+ * Initialisation de Zwii
  */
 session_start();
 require 'core/core.php';

@@ -1,0 +1,3 @@
+# Bloque l'accès aux sauvegardes
+Order deny,allow
+Deny from all

@@ -1,0 +1,32 @@
+#panel,
+#site,
+header,
+nav,
+section,
+footer {
+	position: relative;
+	z-index: 10;
+}
+#themeShowAll {
+	position: relative;
+	z-index: 11;
+}
+.themeOverlay {
+	-webkit-transition: background .3s;
+	transition: background .3s;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 5;
+	cursor: pointer;
+	content: " ";
+	display: block;
+}
+.themeOverlay:hover {
+	background: rgba(103, 198, 114, .7);
+}
+#themeOverlayBody {
+	position: fixed; /* Sinon l'overlay s'arrête à la hauteur de la fenêtre et non de la page*/
+}
