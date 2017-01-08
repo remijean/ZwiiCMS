@@ -559,7 +559,7 @@ class core extends common {
 			$colors = helper::colorVariants($this->getData(['theme', 'body', 'backgroundColor']));
 			$css .= 'body{background-color:' . $colors['normal'] . ';font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'text', 'font'])) . '",sans-serif}';
 			if($themeBodyImage = $this->getData(['theme', 'body', 'image'])) {
-				$css .= 'body{background-image:url("../file/' . $themeBodyImage . '");background-position:' . $this->getData(['theme', 'body', 'imagePosition']) . ';background-attachment:' . $this->getData(['theme', 'body', 'imageAttachment']) . ';background-size:' . $this->getData(['theme', 'body', 'imageSize']) . ';background-repeat:' . $this->getData(['theme', 'body', 'imageRepeat']) . '}';
+				$css .= 'body{background-image:url("../file/source/' . $themeBodyImage . '");background-position:' . $this->getData(['theme', 'body', 'imagePosition']) . ';background-attachment:' . $this->getData(['theme', 'body', 'imageAttachment']) . ';background-size:' . $this->getData(['theme', 'body', 'imageSize']) . ';background-repeat:' . $this->getData(['theme', 'body', 'imageRepeat']) . '}';
 			}
 			// Site
 			$css .= '.container{max-width:' . $this->getData(['theme', 'site', 'width']) . '}';
@@ -582,7 +582,7 @@ class core extends common {
 			$colors = helper::colorVariants($this->getData(['theme', 'header', 'backgroundColor']));
 			$css .= 'header{background-color:' . $colors['normal'] . ';height:' . $this->getData(['theme', 'header', 'height']) . ';line-height:' . $this->getData(['theme', 'header', 'height']) . ';text-align:' . $this->getData(['theme', 'header', 'textAlign']) . '}';
 			if($themeHeaderImage = $this->getData(['theme', 'header', 'image'])) {
-				$css .= 'header{background-image:url("../file/' . $themeHeaderImage . '");background-position:' . $this->getData(['theme', 'header', 'imagePosition']) . ';background-repeat:' . $this->getData(['theme', 'header', 'imageRepeat']) . '}';
+				$css .= 'header{background-image:url("../file/source/' . $themeHeaderImage . '");background-position:' . $this->getData(['theme', 'header', 'imagePosition']) . ';background-repeat:' . $this->getData(['theme', 'header', 'imageRepeat']) . '}';
 			}
 			$colors = helper::colorVariants($this->getData(['theme', 'header', 'textColor']));
 			$css .= 'header h1{color:' . $colors['normal'] . ';font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'header', 'font'])) . '",sans-serif;font-weight:' . $this->getData(['theme', 'header', 'fontWeight']) . ';text-transform:' . $this->getData(['theme', 'header', 'textTransform']) . '}';
@@ -1180,7 +1180,7 @@ class layout extends common {
 	 */
 	public function showFavicon() {
 		if($favicon = $this->getData(['config', 'favicon'])) {
-			echo '<link rel="shortcut icon" href="' . helper::baseUrl(false) . 'site/file/' . $favicon . '">';
+			echo '<link rel="shortcut icon" href="' . helper::baseUrl(false) . 'site/file/source/' . $favicon . '">';
 		}
 	}
 
@@ -1595,7 +1595,7 @@ class template {
 					'&field_id=' . $attributes['id'] .
 					'&type=' . $attributes['type'] .
 					'&lang=' . $attributes['lang'] .
-					'&akey=' . md5('site/data/data.json') .
+					'&akey=' . md5_file('site/data/data.json') .
 					($attributes['extensions'] ? '&extensions=' . $attributes['extensions'] : '')
 				. '"
 				class="inputFile %s %s"
