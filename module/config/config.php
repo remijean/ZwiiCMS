@@ -7,6 +7,8 @@ class config extends common {
 		'index' => self::RANK_ADMIN
 	];
 
+	public static $languages = [];
+
 	/**
 	 * Sauvegarde des données
 	 */
@@ -89,6 +91,13 @@ class config extends common {
 		}
 		// Affichage du template
 		else {
+			// Liste des langues
+			$iterator = new DirectoryIterator('core/lang/');
+			foreach($iterator as $fileInfos) {
+				if($fileInfos->isFile()) {
+					self::$languages[$fileInfos->getBasename('.json')] = $fileInfos->getBasename('.json');
+				}
+			}
 			return [
 				'title' => 'Configuration',
 				'view' => true

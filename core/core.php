@@ -589,7 +589,7 @@ class core extends common {
 			// Menu
 			$colors = helper::colorVariants($this->getData(['theme', 'menu', 'backgroundColor']));
 			$css .= 'nav, nav li > a{background-color:' . $colors['normal'] . '}';
-			$css .= 'nav a{color:' . $colors['text'] . '!important}';
+			$css .= 'nav a,#toggle span{color:' . $colors['text'] . '!important}';
 			$css .= 'nav a:hover{background-color:' . $colors['darken'] . '}';
 			$css .= 'nav a.target,nav a:active{background-color:' . $colors['veryDarken'] . '}';
 			$css .= '#menu{text-align:' . $this->getData(['theme', 'menu', 'textAlign']) . '}';
@@ -807,8 +807,7 @@ class helper {
 	 * @return string
 	 */
 	public static function baseUrl($queryString = true, $host = true) {
-		$currentPath = $_SERVER['PHP_SELF'];
-		$pathInfo = pathinfo($currentPath);
+		$pathInfo = pathinfo($_SERVER['PHP_SELF']);
 		$hostName = $_SERVER['HTTP_HOST'];
 		$protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"], 0, 5)) == 'https://' ? 'https://' : 'http://';
 		return ($host ? $protocol . $hostName : '') . rtrim($pathInfo['dirname'], ' /') . '/' . (($queryString AND helper::checkRewrite() === false) ? '?' : '');
@@ -1292,7 +1291,7 @@ class layout extends common {
 					$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/edit/' . $this->getUrl(0) . '" title="' . helper::translate('Modifier la page') . '">' . template::ico('pencil') . '</a></li>';
 				}
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/add" title="' . helper::translate('Créer une page') . '">' . template::ico('plus') . '</a></li>';
-				$rightItems .= '<li><a href="' . helper::baseUrl(false) . 'core/vendor/filemanager/dialog.php?type=0" title="' . helper::translate('Gérer les fichiers') . '" data-lity>' . template::ico('folder') . '</a></li>';
+				$rightItems .= '<li><a href="' . helper::baseUrl(false) . 'core/vendor/filemanager/dialog.php?type=0&akey=' . md5_file('site/data/data.json') .'" title="' . helper::translate('Gérer les fichiers') . '" data-lity>' . template::ico('folder') . '</a></li>';
 			}
 			if($this->getUser('rank') >= self::RANK_ADMIN) {
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'user" title="' . helper::translate('Configurer les utilisateurs') . '">' . template::ico('users') . '</a></li>';
@@ -1300,7 +1299,7 @@ class layout extends common {
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'config" title="' . helper::translate('Configurer le site') . '">' . template::ico('gear') . '</a></li>';
 			}
 			$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/edit/' . $this->getUser('id') . '" title="' . helper::translate('Configurer mon compte') . '">' . template::ico('user', 'right') . $this->getUser('name') . '</a></li>';
-			$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/logout" title="' . helper::translate('Se déconnecter') . '">' . template::ico('logout') . '</a></li>';
+			$rightItems .= '<li><a id="panelLogout" href="' . helper::baseUrl() . 'user/logout" title="' . helper::translate('Se déconnecter') . '">' . template::ico('logout') . '</a></li>';
 			// Panneau
 			echo '<div id="panel"><div class="container"><ul id="panelLeft">' . $leftItems . '</ul><ul id="panelRight">' . $rightItems . '</ul></div></div>';
 		}
@@ -1366,6 +1365,17 @@ class layout extends common {
 	 * Affiche l'import des librairies
 	 */
 	public function showVendor() {
+		// Variables partagées
+		$vars = 'baseUrl = ' . json_encode(helper::baseUrl(false)) . ';';
+		$vars .= 'baseUrlQs = ' . json_encode(helper::baseUrl()) . ';';
+		if(
+			$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')
+			AND $this->getUser('rank') >= self::RANK_MODERATOR
+		) {
+			$vars .= 'privateKey = "' . md5_file('site/data/data.json') . '";';
+		}
+		echo '<script>' . helper::minifyJs($vars) . '</script>';
+		// Librairies
 		foreach(self::$outputVendor as $vendorName) {
 			// Check si le fichier d'inclusion existe dans le coeur
 			if(file_exists('core/vendor/' . $vendorName . '/inc.json')) {
@@ -1585,6 +1595,7 @@ class template {
 					'&field_id=' . $attributes['id'] .
 					'&type=' . $attributes['type'] .
 					'&lang=' . $attributes['lang'] .
+					'&akey=' . md5('site/data/data.json') .
 					($attributes['extensions'] ? '&extensions=' . $attributes['extensions'] : '')
 				. '"
 				class="inputFile %s %s"

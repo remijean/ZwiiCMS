@@ -1,4 +1,0 @@
-- Bloquer la création d'un utilisateur lorsqu'il utilise un id déjà existant
-- Ajouter script pour dérouler le menu en mode responsive
-- Édition d'un membre, rediriger vers la liste des membres si back est dans l'url (ou avec check des rangs ?)
-- TinyMCE ajoute un slash lors de l'ajout d'une image

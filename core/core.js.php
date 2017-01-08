@@ -81,8 +81,8 @@ core.start = function() {
 	/**
 	 * Affiche / Cache le menu en mode responsive
 	 */
-	var menuDOM = $(".menu");
-	$(".toggle").on("click", function() {
+	var menuDOM = $("#menu");
+	$("#toggle").on("click", function() {
 		menuDOM.slideToggle();
 	});
 	$(window).on("resize", function() {
@@ -142,6 +142,10 @@ core.start = function() {
 	// Suppression du fichier contenu dans le champ
 	$(".inputFileDelete").on("click", function() {
 		$(this).parent().find(".inputFileHidden").val("").trigger("change");
+	});
+	// Confirmation déconnexion
+	$("#panelLogout").on("click", function() {
+		return confirm("<?php echo helper::translate('Se déconnecter ?'); ?>");
 	});
 };
 core.start();

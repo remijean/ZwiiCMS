@@ -18,16 +18,21 @@ class user extends common {
 	public function add() {
 		// Soumission du formulaire
 		if($this->isPost()) {
+			// L'identifiant d'utilisateur est indisponible
+			$userId = $this->getInput('userAddName', helper::FILTER_ID);
+			if($this->getData(['user', $userId])) {
+				self::$inputNotices['userAddId'] = 'Identifiant déjà utilisé';
+				self::$inputNotices['userAddName'] = 'Identifiant déjà utilisé';
+			}
 			// Double vérification pour le mot de passe
 			$password = $this->getInput('userAddPassword', helper::FILTER_PASSWORD);
-			// La confirmation ne correspond pas au mot de passe
 			if($password !== $this->getInput('userAddConfirmPassword', helper::FILTER_PASSWORD)) {
 				self::$inputNotices['userAddConfirmPassword'] = 'La confirmation ne correspond pas au mot de passe';
 			}
 			// Crée l'utilisateur
 			$this->setData([
 				'user',
-				$this->getInput('userAddName', helper::FILTER_ID),
+				$userId,
 				[
 					'mail' => $this->getInput('userAddMail', helper::FILTER_EMAIL),
 					'name' => $this->getInput('userAddName'),
@@ -150,6 +155,14 @@ class user extends common {
 				helper::deleteCookie('ZWII_USER_PASSWORD');
 				return [
 					'redirect' => 'user/login',
+					'notification' => 'Modifications enregistrées',
+					'state' => true
+				];
+			}
+			// Redirection si retour en arrière possible
+			elseif($this->getUrl(3)) {
+				return [
+					'redirect' => 'user',
 					'notification' => 'Modifications enregistrées',
 					'state' => true
 				];

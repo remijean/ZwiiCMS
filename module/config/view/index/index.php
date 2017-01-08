@@ -102,6 +102,11 @@
 					'value' => self::ZWII_VERSION,
 					'disabled' => true
 				]); ?>
+				<?php echo template::select('configLanguage', $module::$languages, [
+					'label' => 'Langue de l\'interface',
+					'required' => true,
+					'selected' => $this->getData(['config', 'language'])
+				]); ?>
 				<?php echo template::checkbox('configAutoBackup', true, 'Sauvegarder automatique des données', [
 					'checked' => $this->getData(['config', 'autoBackup']),
 					'help' => 'Effectue une sauvegarde une fois par jour dans le dossier site/backup/.'
