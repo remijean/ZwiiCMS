@@ -1798,7 +1798,7 @@ class template {
 			$html .= sprintf(
 				'<option value="%s"%s>%s</option>',
 				$value,
-				$attributes['selected'] === $value ? ' selected' : '',
+				$attributes['selected'] == $value ? ' selected' : '', // Double == pour ignorer le type de variable car $_POST change les types en string
 				helper::translate($text)
 			);
 		}
