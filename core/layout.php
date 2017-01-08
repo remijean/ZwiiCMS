@@ -25,16 +25,30 @@
 	</nav>
 <?php endif; ?>
 <!-- Bannière dans le fond du site -->
-<?php if($this->getData(['theme', 'header', 'position']) === 'body'): ?>
-	<header>
+<?php if(
+	$this->getData(['theme', 'header', 'position']) === 'body'
+	// Affiche toujours la bannière pour l'édition du thème
+	OR (
+		$this->getData(['theme', 'header', 'position']) === 'hide'
+		AND $this->getUrl(0) === 'theme'
+	)
+): ?>
+	<header <?php if($this->getData(['theme', 'header', 'position']) === 'hide'): ?>class="displayNone"<?php endif; ?>>
 		<div class="container">
 			<h1><?php echo $this->getData(['config', 'title']); ?></h1>
 		</div>
 	</header>
 <?php endif; ?>
 <!-- Menu dans le fond du site après la bannière -->
-<?php if($this->getData(['theme', 'menu', 'position']) === 'body-second'): ?>
-	<nav>
+<?php if(
+	$this->getData(['theme', 'menu', 'position']) === 'body-second'
+	// Affiche toujours le menu pour l'édition du thème
+	OR (
+		$this->getData(['theme', 'menu', 'position']) === 'hide'
+		AND $this->getUrl(0) === 'theme'
+	)
+): ?>
+	<nav <?php if($this->getData(['theme', 'menu', 'position']) === 'hide'): ?>class="displayNone"<?php endif; ?>>
 		<div id="toggle"><?php echo template::ico('menu'); ?></div>
 		<div id="menu" class="container">
 			<?php $layout->showMenu(); ?>
@@ -53,30 +67,16 @@
 		</nav>
 	<?php endif; ?>
 	<!-- Bannière dans le site -->
-	<?php if(
-		$this->getData(['theme', 'header', 'position']) === 'site'
-		// Affiche toujours la bannière pour l'édition du thème
-		OR (
-			$this->getData(['theme', 'header', 'position']) === 'hide'
-			AND $this->getUrl(0) === 'theme'
-		)
-	): ?>
-		<header <?php if($this->getData(['theme', 'header', 'position']) === 'hide'): ?>class="displayNone"<?php endif; ?>>
+	<?php if($this->getData(['theme', 'header', 'position']) === 'site'): ?>
+		<header>
 			<div class="container">
 				<h1><?php echo $this->getData(['config', 'title']); ?></h1>
 			</div>
 		</header>
 	<?php endif; ?>
 	<!-- Menu dans le site après la bannière -->
-	<?php if(
-		$this->getData(['theme', 'menu', 'position']) === 'site-second'
-		// Affiche toujours le menu pour l'édition du thème
-		OR (
-			$this->getData(['theme', 'menu', 'position']) === 'hide'
-			AND $this->getUrl(0) === 'theme'
-		)
-	): ?>
-		<nav <?php if($this->getData(['theme', 'menu', 'position']) === 'hide'): ?>class="displayNone"<?php endif; ?>>
+	<?php if($this->getData(['theme', 'menu', 'position']) === 'site-second'): ?>
+		<nav>
 			<div id="toggle"><?php echo template::ico('menu'); ?></div>
 			<div id="menu" class="container">
 				<?php $layout->showMenu(); ?>
