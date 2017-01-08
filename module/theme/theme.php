@@ -161,7 +161,7 @@ class theme extends common {
 		// Affichage du template
 		else {
 			return [
-				'title' => 'Personnalisation',
+				'title' => 'Personnalisation du thème',
 				'vendor' => [
 					'tinycolorpicker'
 				],
@@ -195,7 +195,7 @@ class theme extends common {
 		// Affichage du template
 		else {
 			return [
-				'title' => 'Personnalisation',
+				'title' => 'Personnalisation du thème',
 				'vendor' => [
 					'tinycolorpicker'
 				],
@@ -232,7 +232,7 @@ class theme extends common {
 		// Affichage du template
 		else {
 			return [
-				'title' => 'Personnalisation',
+				'title' => 'Personnalisation du thème',
 				'vendor' => [
 					'tinycolorpicker'
 				],
@@ -246,7 +246,7 @@ class theme extends common {
 	 */
 	public function index() {
 		return [
-			'title' => 'Personnalisation',
+			'title' => 'Personnalisation du thème',
 			'view' => true
 		];
 	}
@@ -275,7 +275,7 @@ class theme extends common {
 		// Affichage du template
 		else {
 			return [
-				'title' => 'Personnalisation',
+				'title' => 'Personnalisation du thème',
 				'vendor' => [
 					'tinycolorpicker'
 				],
@@ -313,7 +313,7 @@ class theme extends common {
 		// Affichage du template
 		else {
 			return [
-				'title' => 'Personnalisation',
+				'title' => 'Personnalisation du thème',
 				'vendor' => [
 					'tinycolorpicker'
 				],
