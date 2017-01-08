@@ -85,15 +85,15 @@ if ( ! empty($_FILES) || isset($_POST['url']))
 	$info = pathinfo($_FILES['file']['name']);
 	$mime_type = $_FILES['file']['type'];
 	if (function_exists('mime_content_type')){
-		$mime_type = mime_content_type($_FILES['file']['tmp_name']);
+		$mime_type = @mime_content_type($_FILES['file']['tmp_name']);
 	}elseif(function_exists('finfo_open')){
-		$finfo = finfo_open(FILEINFO_MIME_TYPE);
-		$mime_type = finfo_file($finfo, $_FILES['file']['tmp_name']);
+		$finfo = @finfo_open(FILEINFO_MIME_TYPE);
+		$mime_type = @finfo_file($finfo, $_FILES['file']['tmp_name']);
 	}else{
 		include 'include/mime_type_lib.php';
-		$mime_type = get_file_mime_type($_FILES['file']['tmp_name']);
+		$mime_type = @get_file_mime_type($_FILES['file']['tmp_name']);
 	}
-	$extension = get_extension_from_mime($mime_type);
+	$extension = @get_extension_from_mime($mime_type);
 
 	if($extension=='so'){
 		$extension = $info['extension'];
