@@ -43,7 +43,7 @@ class common {
 			'favicon' => 'favicon.ico',
 			'homePageId' => 'accueil',
 			'language' => 'fr_FR',
-			'metaDescription' => 'Description',
+			'metaDescription' => 'Zwii est un CMS sans base de données qui permet à ses utilisateurs de créer et gérer facilement un site web sans aucune connaissance en programmation.',
 			'social' => [
 				'facebookId' => 'ZwiiCMS',
 				'googleplusId' => '',
@@ -52,7 +52,7 @@ class common {
 				'twitterId' => 'ZwiiCMS',
 				'youtubeId' => ''
 			],
-			'title' => 'Nom du site'
+			'title' => 'Zwii, votre site en quelques clics !'
 		],
 		'core' => [
 			'lastBackup' => 0

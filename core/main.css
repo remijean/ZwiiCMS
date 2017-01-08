@@ -466,6 +466,9 @@ footer #footerSocials .zwiico-youtube:hover {
 #backToTop:hover {
 	opacity: .9;
 }
+#backToTop:active {
+	opacity: 1;
+}
 
 /* Message sur les cookies */
 #cookieConsent {
@@ -494,7 +497,7 @@ footer #footerSocials .zwiico-youtube:hover {
 
 /* Bloc */
 .block {
-	border: 1px solid #DDD;
+	border: 1px solid #F5F5F5;
 	padding: 20px;
 	margin: 20px 0;
 }
@@ -507,7 +510,7 @@ footer #footerSocials .zwiico-youtube:hover {
 .block h4 {
 	margin: -20px -20px 10px -20px;
 	padding: 10px;
-	background: #E8E8E8;
+	background: #F5F5F5;
 	color: #555;
 }
 
@@ -543,7 +546,7 @@ textarea.notice {
 input:disabled,
 select:disabled,
 textarea:disabled {
-	background: #EEE !important;
+	background: #F5F5F5 !important;
 	color: #CCC !important;
 }
 input[type='submit'] {
@@ -581,7 +584,7 @@ label {
 .button.disabled {
 	pointer-events: none;
 	cursor: default;
-	background: #EEE !important;
+	background: #F5F5F5 !important;
 	color: #CCC !important;
 }
 
@@ -596,7 +599,7 @@ label {
 	display: inline-block;
 	width: 10%;
 	padding: 10px 0;
-	background: #EEE;
+	background: #F5F5F5;
 	text-align: center;
 	float: right;
 }
@@ -620,7 +623,7 @@ label {
 .pagination a.disabled {
 	pointer-events: none;
 	cursor: default;
-	background: #EEE !important;
+	background: #F5F5F5 !important;
 	color: #CCC !important;
 }
 .pagination a:first-child {
@@ -666,7 +669,7 @@ input[type='checkbox']:checked:active + label:before {
 	background: #CCC;
 }
 input[type='checkbox']:disabled + label:before{
-	background: #EEE !important;
+	background: #F5F5F5 !important;
 }
 
 /* Aides */
