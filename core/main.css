@@ -428,14 +428,15 @@ footer #footerSocials .zwiico-youtube:hover {
 .mce-tinymce,
 .mce-edit-area,
 .mce-statusbar,
-.mce-btn:hover {
+.mce-toolbar .mce-btn:hover {
 	border-color: #DDD !important;
 }
-.mce-panel,
-.mce-btn {
+.mce-statusbar,
+.mce-toolbar,
+.mce-toolbar .mce-btn {
 	background: #F5F5F5 !important;
 }
-.mce-btn:hover {
+.mce-toolbar .mce-btn:hover {
 	background: #EEE !important;
 }
 
