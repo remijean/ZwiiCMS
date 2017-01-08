@@ -7,10 +7,6 @@
 	<?php $layout->showMetaTitle(); ?>
 	<?php $layout->showMetaDescription(); ?>
 	<?php $layout->showFavicon(); ?>
-	<script>
-		var baseUrl = <?php echo json_encode(helper::baseUrl(false)); ?>;
-		var baseUrlQs = <?php echo json_encode(helper::baseUrl()); ?>;
-	</script>
 	<?php $layout->showVendor(); ?>
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>core/main.css">
 	<link rel="stylesheet" href="<?php echo helper::baseUrl(false); ?>site/data/theme.css?<?php echo md5(json_encode($this->getData(['theme']))); ?>">

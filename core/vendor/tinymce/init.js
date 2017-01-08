@@ -18,8 +18,10 @@ tinymce.init({
 		baseUrl + "core/main.css",
 		baseUrl + "site/data/theme.css"
 	],
+	relative_urls: false,
+	document_base_url: baseUrl,
+	filemanager_access_key: privateKey,
 	external_filemanager_path: baseUrl + "core/vendor/filemanager/",
-	filemanager_title: "Responsive Filemanager" ,
 	external_plugins: {
 		"filemanager": baseUrl + "core/vendor/filemanager/plugin.min.js"
 	}
