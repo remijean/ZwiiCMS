@@ -7,7 +7,7 @@ $("input, select").on("change", function() {
 	css += "header{background-color:" + $("#themeHeaderBackgroundColor").val() + ";text-align:" + $("#themeHeaderTextAlign").val() + ";height:" + $("#themeHeaderHeight").val() + ";line-height:" + $("#themeHeaderHeight").val() + "}";
 	var themeHeaderImage = $("#themeHeaderImage").val();
 	if(themeHeaderImage) {
-		css += "header{background-image:url('site/file/" + themeHeaderImage + "');background-repeat:" + $("#themeHeaderImageRepeat").val() + ";background-position:" + $("#themeHeaderImagePosition").val() + "}";
+		css += "header{background-image:url('site/file/source/" + themeHeaderImage + "');background-repeat:" + $("#themeHeaderImageRepeat").val() + ";background-position:" + $("#themeHeaderImagePosition").val() + "}";
 	}
 	else {
 		css += "header{background-image:none}";

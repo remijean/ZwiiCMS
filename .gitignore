@@ -8,7 +8,8 @@ site/backup/*
 site/data/*
 
 # Fichiers uploadés
-site/file/*
+site/file/source/*
+site/file/thumb/*
 
 # Dossiers vides dans GitHub
 !.gitkeep
