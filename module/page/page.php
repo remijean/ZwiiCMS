@@ -106,31 +106,23 @@ class page extends common {
 					$this->setData(['config', 'homePageId', $pageId]);
 				}
 			}
-			// Actualise la positions des pages suivantes de même parent
+			// Si la page est une page enfant, actualise les positions des autres enfants du parent, sinon actualise les pages sans parents
+			$lastPosition = 1;
+			$hierarchy = $this->getInput('pageEditParentPageId') ? $this->getHierarchy($this->getInput('pageEditParentPageId')) : array_keys($this->getHierarchy());
 			$position = $this->getInput('pageEditPosition', helper::FILTER_INT);
-			$parentPageId = $this->getInput('pageEditParentPageId');
-			if(
-				// Si la position à changée
-				$position !== $this->getData(['page', $this->getUrl(2), 'position'])
-				// Ou le l'id du parent à changée
-				OR $parentPageId !== $this->getData(['page', $this->getUrl(2), 'parentPageId'])
-			) {
-				// Si la page est une page enfant, actualise les positions des autres enfants du parent, sinon actualise les pages sans parents
-				$lastPosition = 1;
-				$hierarchy = $parentPageId ? $this->getHierarchy($parentPageId) : array_keys($this->getHierarchy());
-				foreach($hierarchy as $hierarchyPageId) {
-					// Ignore l'ancienne position de la page
-					if($hierarchyPageId !== $this->getUrl(2)) {
-						// Incrémente de +1 si la dernière position est égale à la nouvelle position de la page
-						if($lastPosition === $position) {
-							$lastPosition++;
-						}
-						// Change la position
-						$this->setData(['page', $hierarchyPageId, 'position', $lastPosition]);
-						// Incrémente pour la prochaine position
-						$lastPosition++;
-					}
+			foreach($hierarchy as $hierarchyPageId) {
+				// Ignore la page en cours de modification
+				if($hierarchyPageId === $this->getUrl(2)) {
+					continue;
 				}
+				// Incrémente de +1 pour laisser la place à la position de la page en cours de modification
+				if($lastPosition === $position) {
+					$lastPosition++;
+				}
+				// Change la position
+				$this->setData(['page', $hierarchyPageId, 'position', $lastPosition]);
+				// Incrémente pour la prochaine position
+				$lastPosition++;
 			}
 			// Modifie la page ou en crée une nouvelle si l'id à changée
 			$this->setData([
@@ -144,16 +136,12 @@ class page extends common {
 					'moduleId' => $this->getInput('pageEditModuleId'),
 					'modulePosition' => $this->getInput('pageEditModulePosition'),
 					'parentPageId' => $this->getInput('pageEditParentPageId'),
-					'position' => $this->getInput('pageEditPosition', helper::FILTER_INT),
+					'position' => $position,
 					'rank' => $this->getInput('pageEditRank', helper::FILTER_INT),
 					'targetBlank' => $this->getInput('pageEditTargetBlank', helper::FILTER_BOOLEAN),
 					'title' => $this->getInput('pageEditTitle')
 				]
 			]);
-			// Supprime l'ancienne page lorsque l'id a changée
-			if($pageId !== $this->getUrl(2)) {
-				$this->deleteData(['page', $this->getUrl(2)]);
-			}
 			return [
 				'redirect' => $pageId,
 				'notification' => 'Modifications enregistrées',

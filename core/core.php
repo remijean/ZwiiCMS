@@ -265,41 +265,44 @@ class common {
 		// Construit la liste des pages parents/enfants
 		if(empty($this->hierarchy['all'])) {
 			$pages = helper::arrayCollumn($this->getData(['page']), 'position', 'SORT_ASC');
+			// Parents
 			foreach($pages as $pageId => $pagePosition) {
-				// Ignore les pages dont l'utilisateur n'a pas accès
 				if(
-					$this->getData(['page', $pageId, 'rank']) !== self::RANK_VISITOR
+					// Page parent
+					$this->getData(['page', $pageId, 'parentPageId']) === ""
+					// Ignore les pages dont l'utilisateur n'a pas accès
 					AND (
-						$this->getUser('password') !== $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')
-						OR $this->getUser('rank') < $this->getData(['page', $pageId, 'rank'])
+						$this->getData(['page', $pageId, 'rank']) === self::RANK_VISITOR
+						OR (
+							$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')
+							AND $this->getUser('rank') >= $this->getData(['page', $pageId, 'rank'])
+						)
 					)
 				) {
-					continue;
-				}
-				// Page enfant
-				if($parentId = $this->getData(['page', $pageId, 'parentPageId'])) {
 					if($pagePosition !== 0) {
-						if(array_key_exists($parentId, $this->hierarchy['visible']) === false) {
-							$this->hierarchy['visible'][$parentId] = [];
-						}
-						$this->hierarchy['visible'][$parentId][] = $pageId;
-					}
-					if(array_key_exists($parentId, $this->hierarchy['all']) === false) {
-						$this->hierarchy['all'][$parentId] = [];
-					}
-					$this->hierarchy['all'][$parentId][] = $pageId;
-				}
-				// Page parent (si pas déjà déclarée par une page enfant)
-				else {
-					if(
-						$pagePosition !== 0
-						AND array_key_exists($pageId, $this->hierarchy['visible']) === false
-					) {
 						$this->hierarchy['visible'][$pageId] = [];
 					}
-					if(array_key_exists($pageId, $this->hierarchy['all']) === false) {
-						$this->hierarchy['all'][$pageId] = [];
+					$this->hierarchy['all'][$pageId] = [];
+				}
+			}
+			// Enfants
+			foreach($pages as $pageId => $pagePosition) {
+				if(
+					// Page parent
+					$parentId = $this->getData(['page', $pageId, 'parentPageId'])
+					// Ignore les pages dont l'utilisateur n'a pas accès
+					AND (
+						$this->getData(['page', $pageId, 'rank']) === self::RANK_VISITOR
+						OR (
+							$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')
+							AND $this->getUser('rank') >= $this->getData(['page', $pageId, 'rank'])
+						)
+					)
+				) {
+					if($pagePosition !== 0) {
+						$this->hierarchy['visible'][$parentId][] = $pageId;
 					}
+					$this->hierarchy['all'][$parentId][] = $pageId;
 				}
 			}
 		}
