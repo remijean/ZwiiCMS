@@ -109,7 +109,7 @@
 				]); ?>
 				<?php echo template::checkbox('configAutoBackup', true, 'Sauvegarder automatique des données', [
 					'checked' => $this->getData(['config', 'autoBackup']),
-					'help' => 'Effectue une sauvegarde une fois par jour dans le dossier site/backup/.'
+					'help' => 'Effectue une sauvegarde des données une fois par jour dans le dossier site/backup/.'
 				]); ?>
 				<div class="row">
 					<div class="col6">
@@ -118,11 +118,11 @@
 							'href' => helper::baseUrl() . 'config/backup'
 						]); ?>
 					</div>
-					<?php if(helper::checkZwiiVersion()): ?>
+					<?php if(helper::checkZwiiVersion() === false): ?>
 						<div class="col6">
 							<?php echo template::button('configNewVersion', [
 								'href' => 'http://zwiicms.com/',
-								'value' => 'Nouvelle version disponible !'
+								'value' => 'Mise à jour disponible'
 							]); ?>
 						</div>
 					<?php endif; ?>

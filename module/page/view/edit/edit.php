@@ -71,14 +71,27 @@
 			]); ?>
 		</div>
 	</div>
-	<div class="block">
-		<h4><?php echo helper::translate('Options avancées'); ?></h4>
-		<?php echo template::checkbox('pageEditHideTitle', true, 'Cacher le titre de la page', [
-			'checked' => $this->getData(['page', $this->getUrl(2), 'hideTitle'])
-		]); ?>
-		<?php echo template::checkbox('pageEditTargetBlank', true, 'Ouvrir dans un nouvel onglet', [
-			'checked' => $this->getData(['page', $this->getUrl(2), 'targetBlank'])
-		]); ?>
+	<div class="row">
+		<div class="col6">
+			<div class="block">
+				<h4><?php echo helper::translate('Options avancées'); ?></h4>
+				<?php echo template::checkbox('pageEditHideTitle', true, 'Cacher le titre de la page', [
+					'checked' => $this->getData(['page', $this->getUrl(2), 'hideTitle'])
+				]); ?>
+				<?php echo template::checkbox('pageEditTargetBlank', true, 'Ouvrir dans un nouvel onglet', [
+					'checked' => $this->getData(['page', $this->getUrl(2), 'targetBlank'])
+				]); ?>
+			</div>
+		</div>
+		<div class="col6">
+			<div class="block">
+				<h4><?php echo helper::translate('Sécurité'); ?></h4>
+				<?php echo template::select('pageEditRank', self::$rankPublics, [
+					'label' => 'Rang minimum pour accéder à la page',
+					'selected' => $this->getData(['page', $this->getUrl(2), 'rank'])
+				]); ?>
+			</div>
+		</div>
 	</div>
 	<div class="row">
 		<div class="col2 offset6">

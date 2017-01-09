@@ -26,7 +26,7 @@ class page extends common {
 			'page',
 			$pageId,
 			[
-				'content' => helper::translate('Contenu de la page.'),
+				'content' => helper::translate('Contenu de votre nouvelle page.'),
 				'hideTitle' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
@@ -34,13 +34,14 @@ class page extends common {
 				'modulePosition' => 'bottom',
 				'parentPageId' => '',
 				'position' => 0,
+				'rank' => self::RANK_VISITOR,
 				'targetBlank' => false,
 				'title' => $pageTitle
 			]
 		]);
 		return [
 			'redirect' => $pageId,
-			'notification' => 'Page créée',
+			'notification' => 'Nouvelle page créée',
 			'state' => true
 		];
 	}
@@ -116,7 +117,7 @@ class page extends common {
 			) {
 				// Si la page est une page enfant, actualise les positions des autres enfants du parent, sinon actualise les pages sans parents
 				$lastPosition = 1;
-				$hierarchy = $parentPageId ? $this->getHierarchy($parentPageId, false) : array_keys($this->getHierarchy(null, false));
+				$hierarchy = $parentPageId ? $this->getHierarchy($parentPageId) : array_keys($this->getHierarchy());
 				foreach($hierarchy as $hierarchyPageId) {
 					// Ignore l'ancienne position de la page
 					if($hierarchyPageId !== $this->getUrl(2)) {
@@ -144,6 +145,7 @@ class page extends common {
 					'modulePosition' => $this->getInput('pageEditModulePosition'),
 					'parentPageId' => $this->getInput('pageEditParentPageId'),
 					'position' => $this->getInput('pageEditPosition', helper::FILTER_INT),
+					'rank' => $this->getInput('pageEditRank', helper::FILTER_INT),
 					'targetBlank' => $this->getInput('pageEditTargetBlank', helper::FILTER_BOOLEAN),
 					'title' => $this->getInput('pageEditTitle')
 				]

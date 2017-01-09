@@ -1,5 +1,4 @@
 [
-	"jquery.tinymce.min.js",
 	"tinymce.min.js",
 	"init.js"
 ]

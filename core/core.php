@@ -59,7 +59,7 @@ class common {
 		],
 		'page' => [
 			'accueil' => [
-				'content' => "<h3>Félicitations Zwii est 100% opérationnel !</h3>\r\n<p>Pour vous dans authentifier vous pouvez utiliser les comptes suivants :</p>\r\n<ul><li>Identifiant : <strong>administrator</strong> ; Mot de passe : <strong>password</strong></li><li>Identifiant : <strong>moderator</strong> ; Mot de passe : <strong>password</strong></li><li>Identifiant : <strong>member</strong> ; Mot de passe : <strong>password</strong></li></ul>\r\n<p>Si vous rencontrez un problème ou si vous avez besoin d'aide, n'hésitez pas à jeter un œil au <a title='site' href='http://zwiicms.com/'>site</a> ou au <a title='forum' href='http://forum.zwiicms.com/'>forum</a> de ZwiiCMS.</p>\r\n<h4>Suivez-nous sur <a href='https://twitter.com/ZwiiCMS/'>Twitter</a> et <a href='https://www.facebook.com/ZwiiCMS/'>Facebook</a> pour ne manquer aucune nouveauté !</h4>",
+				'content' => "<h3>Félicitations Zwii est 100% opérationnel !</h3>\r\n<p>Ci-dessous les comptes utilisateurs par défauts au format identifiant / mot de passe :</p>\r\n<ul><li>administrator / password</li><li>moderator / password</li><li>member / password</li></ul>\r\n<p>Si vous rencontrez un problème ou si vous avez besoin d'aide, n'hésitez pas à jeter un œil au <a title='site' href='http://zwiicms.com/'>site</a> ou au <a title='forum' href='http://forum.zwiicms.com/'>forum</a> de Zwii.</p>\r\n<h4>Suivez-nous sur <a href='https://twitter.com/ZwiiCMS/'>Twitter</a> et <a href='https://www.facebook.com/ZwiiCMS/'>Facebook</a> pour ne manquer aucune nouveauté !</h4>",
 				'hideTitle' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
@@ -67,11 +67,25 @@ class common {
 				'modulePosition' => 'bottom',
 				'parentPageId' => '',
 				'position' => 1,
+				'rank' => self::RANK_VISITOR,
 				'targetBlank' => false,
 				'title' => 'Accueil'
 			],
-			'exemple' => [
-				'content' => "<p>Cette page contient un exemple de formulaire conçu à partir du module de génération de formulaires, si vous voulez le tester n'oubliez pas de changer l'adresse mail depuis la page de paramétrage du module.</p>",
+			'enfant' => [
+				'content' => "<p>Vous pouvez assigner des parents à vos pages afin de mieux organiser votre menu !</p>",
+				'hideTitle' => false,
+				'metaDescription' => '',
+				'metaTitle' => '',
+				'moduleId' => '',
+				'modulePosition' => 'bottom',
+				'parentPageId' => 'accueil',
+				'position' => 1,
+				'rank' => self::RANK_VISITOR,
+				'targetBlank' => false,
+				'title' => 'Enfant'
+			],
+			'cachee' => [
+				'content' => "<p>Cette page n'est visible que par les membres de votre site !</p>",
 				'hideTitle' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
@@ -79,8 +93,9 @@ class common {
 				'modulePosition' => 'bottom',
 				'parentPageId' => '',
 				'position' => 2,
+				'rank' => self::RANK_MEMBER,
 				'targetBlank' => false,
-				'title' => 'Exemple'
+				'title' => 'Cachée'
 			]
 		],
 		'module' => [
@@ -93,7 +108,7 @@ class common {
 				'rank' => 3
 			],
 			'moderator' => [
-				'mail' => 'member@zwiicms.com',
+				'mail' => 'moderator@zwiicms.com',
 				'name' => 'Modérateur',
 				'password' => '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
 				'rank' => 2
@@ -201,6 +216,12 @@ class common {
 		self::RANK_MODERATOR => 'Modérateur',
 		self::RANK_ADMIN => 'Administrateur'
 	];
+	public static $rankPublics = [
+		self::RANK_VISITOR => 'Visiteur',
+		self::RANK_MEMBER => 'Membre',
+		self::RANK_MODERATOR => 'Modérateur',
+		self::RANK_ADMIN => 'Administrateur'
+	];
 	public static $rankVisibles = [
 		self::RANK_BANNED => 'Banni',
 		self::RANK_MEMBER => 'Membre',
@@ -214,6 +235,16 @@ class common {
 	 * Constructeur commun
 	 */
 	public function __construct() {
+		// Extraction des données http
+		if(isset($_POST)) {
+			$this->input['_POST'] = $_POST;
+		}
+		if(isset($_GET)) {
+			$this->input['_GET'] = $_GET;
+		}
+		if(isset($_COOKIE)) {
+			$this->input['_COOKIE'] = $_COOKIE;
+		}
 		// Supprime les données en mode démo
 		if(self::$demo AND file_exists('site/data/data.json') AND filemtime('site/data/data.json') + 600 < time()) {
 			@unlink('site/data/data.json');
@@ -227,10 +258,24 @@ class common {
 		if(empty($this->data)) {
 			$this->setData([json_decode(file_get_contents('site/data/data.json'), true)]);
 		}
+		// Utilisateur connecté
+		if(empty($this->user)) {
+			$this->user = $this->getData(['user', $this->getInput('ZWII_USER_ID', helper::FILTER_STRING, '_COOKIE')]);
+		}
 		// Construit la liste des pages parents/enfants
 		if(empty($this->hierarchy['all'])) {
 			$pages = helper::arrayCollumn($this->getData(['page']), 'position', 'SORT_ASC');
 			foreach($pages as $pageId => $pagePosition) {
+				// Ignore les pages dont l'utilisateur n'a pas accès
+				if(
+					$this->getData(['page', $pageId, 'rank']) !== self::RANK_VISITOR
+					AND (
+						$this->getUser('password') !== $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')
+						OR $this->getUser('rank') < $this->getData(['page', $pageId, 'rank'])
+					)
+				) {
+					continue;
+				}
 				// Page enfant
 				if($parentId = $this->getData(['page', $pageId, 'parentPageId'])) {
 					if($pagePosition !== 0) {
@@ -266,20 +311,6 @@ class common {
 			else {
 				$this->url = $this->getData(['config', 'homePageId']);
 			}
-		}
-		// Extraction des données http
-		if(isset($_POST)) {
-			$this->input['_POST'] = $_POST;
-		}
-		if(isset($_GET)) {
-			$this->input['_GET'] = $_GET;
-		}
-		if(isset($_COOKIE)) {
-			$this->input['_COOKIE'] = $_COOKIE;
-		}
-		// Utilisateur connecté
-		if(empty($this->user)) {
-			$this->user = $this->getData(['user', $this->getInput('ZWII_USER_ID', helper::FILTER_STRING, '_COOKIE')]);
 		}
 	}
 
@@ -590,7 +621,7 @@ class core extends common {
 			$css .= 'nav, nav li > a{background-color:' . $colors['normal'] . '}';
 			$css .= 'nav a,#toggle span{color:' . $colors['text'] . '!important}';
 			$css .= 'nav a:hover{background-color:' . $colors['darken'] . '}';
-			$css .= 'nav a.target,nav a:active{background-color:' . $colors['veryDarken'] . '}';
+			$css .= 'nav a.target,nav a.active{background-color:' . $colors['veryDarken'] . '}';
 			$css .= '#menu{text-align:' . $this->getData(['theme', 'menu', 'textAlign']) . '}';
 			$css .= '#toggle span,#menu a{padding:' . $this->getData(['theme', 'menu', 'height']) . ';font-weight:' . $this->getData(['theme', 'menu', 'fontWeight']) . ';text-transform:' . $this->getData(['theme', 'menu', 'textTransform']) . '}';
 			// Pied de page
@@ -632,7 +663,16 @@ class core extends common {
 	public function router() {
 		// Importe la page
 		$moduleId = $this->getUrl(0);
-		if($this->getData(['page', $moduleId]) !== null) {
+		if(
+			$this->getData(['page', $moduleId]) !== null
+			AND (
+				$this->getData(['page', $moduleId, 'rank']) === self::RANK_VISITOR
+				OR (
+					$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')
+					AND $this->getUser('rank') >= $this->getData(['page', $moduleId, 'rank'])
+				)
+			)
+		) {
 			self::$outputTitle = $this->getData(['page', $moduleId, 'title']);
 			self::$outputContent = $this->getData(['page', $moduleId, 'content']);
 			self::$outputMetaTitle = $this->getData(['page', $moduleId, 'metaTitle']);
@@ -828,7 +868,7 @@ class helper {
 
 	/** Check la version de Zwii */
 	public static function checkZwiiVersion() {
-		return trim(@file_get_contents('http://zwiicms.com/version') === common::ZWII_VERSION);
+		return trim(@file_get_contents('http://zwiicms.com/version')) === common::ZWII_VERSION;
 	}
 
 	/**
@@ -1200,21 +1240,18 @@ class layout extends common {
 		$items = '';
 		foreach($this->getHierarchy() as $parentPageId => $childrenPageIds) {
 			// Propriétés de l'item
-			$current = '';
-			if($parentPageId === $this->getUrl(0) OR in_array($this->getUrl(0), $childrenPageIds)) {
-				$current = ' class="current"';
-			}
+			$active = ($parentPageId === $this->getUrl(0) OR in_array($this->getUrl(0), $childrenPageIds)) ? ' class="active"' : '';
 			$targetBlank = $this->getData(['page', $parentPageId, 'targetBlank']) ? ' target="_blank"' : '';
 			// Mise en page de l'item
 			$items .= '<li>';
-			$items .= '<a href="' . helper::baseUrl() . $parentPageId . '"' . $current . $targetBlank . '>' . $this->getData(['page', $parentPageId, 'title']) . '</a>';
+			$items .= '<a href="' . helper::baseUrl() . $parentPageId . '"' . $active . $targetBlank . '>' . $this->getData(['page', $parentPageId, 'title']) . '</a>';
 			$items .= '<ul>';
 			foreach($childrenPageIds as $childKey) {
 				// Propriétés de l'item
-				$current = ($childKey === $this->getUrl(0)) ? ' class="current"' : '';
+				$active = ($childKey === $this->getUrl(0)) ? ' class="active"' : '';
 				$targetBlank = $this->getData(['page', $childKey, 'targetBlank']) ? ' target="_blank"' : '';
 				// Mise en page du sous-item
-				$items .= '<li><a href="' . helper::baseUrl() . $childKey . '"' . $current . $targetBlank . '>' . $this->getData(['page', $childKey, 'title']) . '</a></li>';
+				$items .= '<li><a href="' . helper::baseUrl() . $childKey . '"' . $active . $targetBlank . '>' . $this->getData(['page', $childKey, 'title']) . '</a></li>';
 			}
 			$items .= '</ul>';
 			$items .= '</li>';
@@ -1275,8 +1312,11 @@ class layout extends common {
 				$leftItems .= '<li><select id="panelSelectPage">';
 				$leftItems .= '<option value="">' . helper::translate('Choisissez une page') . '</option>';
 				$currentPageId = $this->getData(['page', $this->getUrl(0)]) ? $this->getUrl(0) : $this->getUrl(2);
-				foreach(helper::arrayCollumn($this->getData(['page']), 'title', 'SORT_ASC') as $pageKey => $pageTitle) {
-					$leftItems .= '<option value="' . helper::baseUrl() . $pageKey . '"' . ($pageKey === $currentPageId ? ' selected' : false) . '>' . $pageTitle . '</option>';
+				foreach($this->getHierarchy(null, false) as $parentPageId => $childrenPageIds) {
+					$leftItems .= '<option value="' . helper::baseUrl() . $parentPageId . '"' . ($parentPageId === $currentPageId ? ' selected' : false) . '>' . $this->getData(['page', $parentPageId, 'title']) . '</option>';
+					foreach($childrenPageIds as $childKey) {
+						$leftItems .= '<option value="' . helper::baseUrl() . $childKey . '"' . ($childKey === $currentPageId ? ' selected' : false) . '>&nbsp;&nbsp;&nbsp;&nbsp;' . $this->getData(['page', $childKey, 'title']) . '</option>';
+					}
 				}
 				$leftItems .= '</select></li>';
 			}
@@ -1290,7 +1330,7 @@ class layout extends common {
 					$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/edit/' . $this->getUrl(0) . '" title="' . helper::translate('Modifier la page') . '">' . template::ico('pencil') . '</a></li>';
 				}
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/add" title="' . helper::translate('Créer une page') . '">' . template::ico('plus') . '</a></li>';
-				$rightItems .= '<li><a href="' . helper::baseUrl(false) . 'core/vendor/filemanager/dialog.php?type=0&akey=' . md5_file('site/data/data.json') .'" title="' . helper::translate('Gérer les fichiers') . '" data-lity>' . template::ico('folder') . '</a></li>';
+				$rightItems .= '<li><a href="' . helper::baseUrl(false) . 'core/vendor/filemanager/dialog.php?type=0&akey=' . md5_file('site/data/data.json') .'&lang=' . $this->getData(['config', 'language']) . '" title="' . helper::translate('Gérer les fichiers') . '" data-lity>' . template::ico('folder') . '</a></li>';
 			}
 			if($this->getUser('rank') >= self::RANK_ADMIN) {
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'user" title="' . helper::translate('Configurer les utilisateurs') . '">' . template::ico('users') . '</a></li>';
@@ -1365,13 +1405,14 @@ class layout extends common {
 	 */
 	public function showVendor() {
 		// Variables partagées
-		$vars = 'baseUrl = ' . json_encode(helper::baseUrl(false)) . ';';
-		$vars .= 'baseUrlQs = ' . json_encode(helper::baseUrl()) . ';';
+		$vars = 'var baseUrl = ' . json_encode(helper::baseUrl(false)) . ';';
+		$vars .= 'var baseUrlQs = ' . json_encode(helper::baseUrl()) . ';';
+		$vars .= 'var language = ' . json_encode($this->getData(['config', 'language'])) . ';';
 		if(
 			$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')
 			AND $this->getUser('rank') >= self::RANK_MODERATOR
 		) {
-			$vars .= 'privateKey = "' . md5_file('site/data/data.json') . '";';
+			$vars .= 'var privateKey = ' . json_encode(md5_file('site/data/data.json')) . ';';
 		}
 		echo '<script>' . helper::minifyJs($vars) . '</script>';
 		// Librairies
