@@ -62,6 +62,9 @@ class config extends common {
 			]);
 			if(empty(self::$inputNotices)) {
 				// Active l'URL rewriting
+				if(substr(sprintf('%o', fileperms('.htaccess')), -4) !== '0644') {
+					chmod('.htaccess', 0644);
+				}
 				$htaccess = file_get_contents('.htaccess');
 				$rewriteRule = explode('# URL rewriting', $htaccess);
 				if($this->getInput('rewrite', helper::FILTER_BOOLEAN)) {
@@ -83,6 +86,7 @@ class config extends common {
 					file_put_contents('.htaccess', $rewriteRule[0] . '# URL rewriting');
 				}
 			}
+			exit;
 			return [
 				'redirect' => $this->getUrl(),
 				'notification' => 'Modifications enregistrées',

@@ -253,6 +253,7 @@ class common {
 		if(file_exists('site/data/data.json') === false) {
 			$this->setData([$this->defaultData]);
 			$this->saveData();
+			chmod('site/data/data.json', 0644);
 		}
 		// Import des données
 		if(empty($this->data)) {
@@ -580,6 +581,7 @@ class core extends common {
 		// Crée le fichier de personnalisation
 		if(file_exists('site/data/theme.css') === false) {
 			file_put_contents('site/data/theme.css', '');
+			chmod('site/data/theme.css', 0644);
 		}
 		// Check la version
 		$cssVersion = preg_split('/\*+/', file_get_contents('site/data/theme.css'));
