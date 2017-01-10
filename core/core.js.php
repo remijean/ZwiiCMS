@@ -4,8 +4,8 @@
  * For full copyright and license information, please see the LICENSE
  * file that was distributed with this source code.
  *
- * @author Rémi Jean <moi@remijean.fr>
- * @copyright Copyright (C) 2008-2016, Rémi Jean
+ * @author Rémi Jean <remi.jean@outlook.com>
+ * @copyright Copyright (C) 2008-2017, Rémi Jean
  * @license GNU General Public License, version 3
  * @link http://zwiicms.com/
  */
@@ -27,16 +27,20 @@ core.colorVariants = function(rgba) {
 };
 
 /**
- * Scripts à exécuter en fin de page
+ * Scripts à exécuter en dernier
  */
 core.end = function() {
 	/**
 	 * Modifications non enregistrées du formulaire
 	 */
+	var keysNb = 0;
 	var formDOM = $("form");
 	formDOM.data("serialize", formDOM.serialize());
+	$(document).on("keydown", function() {
+		keysNb++;
+	});
 	$(window).on("beforeunload", function() {
-		if(formDOM.length && formDOM.serialize() !== formDOM.data("serialize")) {
+		if(formDOM.length && formDOM.serialize() !== formDOM.data("serialize") && keysNb > 2) {
 			return "<?php echo helper::translate('Les modifications que vous avez apportées ne seront peut-être pas enregistrées.'); ?>";
 		}
 	});
@@ -49,7 +53,7 @@ $(function() {
 });
 
 /**
- * Scripts à exécuter en début de page
+ * Scripts à exécuter en premier
  */
 core.start = function() {
 	/**

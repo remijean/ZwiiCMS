@@ -6,8 +6,8 @@
  * For full copyright and license information, please see the LICENSE
  * file that was distributed with this source code.
  *
- * @author Rémi Jean <moi@remijean.fr>
- * @copyright Copyright (C) 2008-2016, Rémi Jean
+ * @author Rémi Jean <remi.jean@outlook.com>
+ * @copyright Copyright (C) 2008-2017, Rémi Jean
  * @license GNU General Public License, version 3
  * @link http://zwiicms.com/
  */
@@ -22,7 +22,7 @@ class common {
 	const RANK_MEMBER = 1;
 	const RANK_MODERATOR = 2;
 	const RANK_ADMIN = 3;
-	const ZWII_VERSION = '8.0.0';
+	const ZWII_VERSION = '8.0.0 bêta 0.1';
 
 	public static $actions = [];
 	public static $demo = false;
@@ -59,7 +59,7 @@ class common {
 		],
 		'page' => [
 			'accueil' => [
-				'content' => "<h3>Félicitations Zwii est 100% opérationnel !</h3>\r\n<p>Ci-dessous les comptes utilisateurs par défauts au format identifiant / mot de passe :</p>\r\n<ul><li>administrator / password</li><li>moderator / password</li><li>member / password</li></ul>\r\n<p>Si vous rencontrez un problème ou si vous avez besoin d'aide, n'hésitez pas à jeter un œil au <a title='site' href='http://zwiicms.com/'>site</a> ou au <a title='forum' href='http://forum.zwiicms.com/'>forum</a> de Zwii.</p>\r\n<h4>Suivez-nous sur <a href='https://twitter.com/ZwiiCMS/'>Twitter</a> et <a href='https://www.facebook.com/ZwiiCMS/'>Facebook</a> pour ne manquer aucune nouveauté !</h4>",
+				'content' => "<h3>Félicitations Zwii est 100% opérationnel !</h3>\r\n<p><strong>Vous utilisez une version bêta en cours de développement ! Certaines fonctionnalités sont absentes et des bugs peuvent surgirent, si vous avez des retours à faire n'hésitez pas à vous inscrire sur le <a title='forum' href='http://forum.zwiicms.com/'>forum</a> de Zwii.</strong></p>\r\n<p>Ci-dessous les comptes utilisateurs par défauts au format identifiant / mot de passe :</p>\r\n<ul><li>administrator / password</li><li>moderator / password</li><li>member / password</li></ul>\r\n<h4>Suivez-nous sur <a href='https://twitter.com/ZwiiCMS/'>Twitter</a> et <a href='https://www.facebook.com/ZwiiCMS/'>Facebook</a> pour ne manquer aucune nouveauté !</h4>",
 				'hideTitle' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
@@ -98,8 +98,7 @@ class common {
 				'title' => 'Cachée'
 			]
 		],
-		'module' => [
-		],
+		'module' => [],
 		'user' => [
 			'administrator' => [
 				'mail' => 'administrator@zwiicms.com',
@@ -146,7 +145,7 @@ class common {
 				'backgroundColor' => 'rgba(60, 105, 148, 1)',
 				'font' => 'Oswald',
 				'fontWeight' => 'normal',
-				'height' => '150px',
+				'height' => '200px',
 				'image' => '',
 				'imagePosition' => 'center center',
 				'imageRepeat' => 'no-repeat',

@@ -16,5 +16,11 @@ tinymce.init({
 	external_filemanager_path: baseUrl + "core/vendor/filemanager/",
 	external_plugins: {
 		"filemanager": baseUrl + "core/vendor/filemanager/plugin.min.js"
+	},
+	// Permet de détecter un changement dans la textearea, utile pour le message des modifications non enregistrées du formulaire
+	setup: function(editor) {
+		editor.on("keydown", function() {
+			$(editor.targetElm).trigger("keydown");
+		});
 	}
 });

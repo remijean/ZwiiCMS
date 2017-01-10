@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * This file is part of Zwii.
+ *
+ * For full copyright and license information, please see the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @author Rémi Jean <remi.jean@outlook.com>
+ * @copyright Copyright (C) 2008-2017, Rémi Jean
+ * @license GNU General Public License, version 3
+ * @link http://zwiicms.com/
+ */
+
 class page extends common {
 
 	public static $actions = [
@@ -85,8 +97,14 @@ class page extends common {
 	 * Édition
 	 */
 	public function edit() {
+		// La page n'existe pas
+		if($this->getData(['page', $this->getUrl(2)]) === null) {
+			return [
+				'access' => false
+			];
+		}
 		// Soumission du formulaire
-		if($this->isPost()) {
+		elseif($this->isPost()) {
 			$pageId = $this->getInput('pageEditTitle', helper::FILTER_ID) ? $this->getInput('pageEditTitle', helper::FILTER_ID) : $this->getUrl(2);
 			// Si l'id a changée
 			if($pageId !== $this->getUrl(2)) {

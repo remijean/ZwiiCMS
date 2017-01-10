@@ -4,8 +4,8 @@
  * For full copyright and license information, please see the LICENSE
  * file that was distributed with this source code.
  *
- * @author Rémi Jean <moi@remijean.fr>
- * @copyright Copyright (C) 2008-2016, Rémi Jean
+ * @author Rémi Jean <remi.jean@outlook.com>
+ * @copyright Copyright (C) 2008-2017, Rémi Jean
  * @license GNU General Public License, version 3
  * @link http://zwiicms.com/
  */
@@ -81,7 +81,7 @@ p,
 hr,
 ul,
 ol {
-	margin: 15px 0;
+	margin: 16px 0;
 }
 
 /* Image */
@@ -149,7 +149,6 @@ td > .col12 {
 	left: 30px;
 	width: 400px;
 	z-index: 20;
-	opacity: .9;
 }
 #notification.notificationSuccess {
 	background: #67C672;
@@ -441,7 +440,7 @@ footer #footerSocials .zwiico-youtube:hover {
 
 /* Bulle de dialogue */
 .speech {
-	margin: 15px;
+	margin: 16px;
 	text-align: center;
 }
 .speechMimi {
@@ -453,7 +452,7 @@ footer #footerSocials .zwiico-youtube:hover {
 	padding: 20px;
 	position: relative;
 	width: 500px;
-	margin: 15px auto;
+	margin: 16px auto;
 	text-align: left;
 }
 .speechBubble:before {
@@ -472,7 +471,7 @@ footer #footerSocials .zwiico-youtube:hover {
 	z-index: 30;
 	right: 30px;
 	bottom: 50px;
-	padding: 10px 12px;
+	padding: 10px;
 	background: #212223;
 	color: #FFF;
 	cursor: pointer;
