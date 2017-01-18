@@ -41,12 +41,12 @@ class config extends common {
 		readfile('core/tmp/' . $fileName);
 		// Affichage du template
 		return [
-			'display' => self::DISPLAY_BLANK
+			'display' => self::DISPLAY_RAW
 		];
 	}
 
 	/**
-	 * Connexion
+	 * Configuration
 	 */
 	public function index() {
 		// Soumission du formulaire
@@ -72,7 +72,7 @@ class config extends common {
 					'title' => $this->getInput('configTitle')
 				]
 			]);
-			if(empty(self::$inputNotices)) {
+			if(self::$inputNotices === []) {
 				// Active l'URL rewriting
 				if(substr(sprintf('%o', fileperms('.htaccess')), -4) !== '0644') {
 					chmod('.htaccess', 0644);
@@ -94,12 +94,12 @@ class config extends common {
 					}
 				}
 				// Désactive l'URL rewriting
-				else if(empty($rewriteRule[1]) === false) {
+				elseif(empty($rewriteRule[1]) === false) {
 					file_put_contents('.htaccess', $rewriteRule[0] . '# URL rewriting');
 				}
 			}
 			return [
-				'redirect' => $this->getUrl(),
+				'redirect' => helper::baseUrl() . $this->getUrl(),
 				'notification' => 'Modifications enregistrées',
 				'state' => true
 			];

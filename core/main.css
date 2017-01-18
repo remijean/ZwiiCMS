@@ -97,7 +97,7 @@ img[align='right'] {
 }
 
 /* Tableau */
-.tableContainer {
+.tableWrapper {
 	margin: 10px 0;
 }
 table {
@@ -451,7 +451,8 @@ footer #footerSocials .zwiico-youtube:hover {
 	display: block;
 	padding: 20px;
 	position: relative;
-	width: 500px;
+	max-width: 500px;
+	width: 100%;
 	margin: 16px auto;
 	text-align: left;
 }
@@ -577,8 +578,13 @@ label {
 	display: block;
 	margin-bottom: 2px;
 }
-:not([class^="col"]) > .inputContainer {
+/* Simule le padding des cols pour les inputs en dehors des cols */
+:not([class^="col"]) > .inputWrapper {
 	padding: 10px 0;
+}
+/* Supprime le padding d'une row dans un col */
+[class^="col"] > .row {
+	margin: -10px;
 }
 
 /* Bouton */

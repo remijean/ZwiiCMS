@@ -14,27 +14,28 @@
 
 class common {
 
-	const DISPLAY_BLANK = 0;
+	const DISPLAY_RAW = 0;
 	const DISPLAY_JSON = 1;
-	const DISPLAY_LAYOUT = 2;
+	const DISPLAY_LAYOUT_BLANK = 2;
+	const DISPLAY_LAYOUT_NORMAL = 3;
 	const RANK_BANNED = -1;
 	const RANK_VISITOR = 0;
 	const RANK_MEMBER = 1;
 	const RANK_MODERATOR = 2;
 	const RANK_ADMIN = 3;
-	const ZWII_VERSION = '8.0.0 bêta 0.1';
+	const ZWII_VERSION = '8.0.0 bêta 0.2';
 
 	public static $actions = [];
 	public static $demo = false;
 	public static $language = [];
-	public static $coreModule = [
+	public static $coreModuleIds = [
 		'config',
 		'page',
 		'sitemap',
 		'theme',
 		'user'
 	];
-	private $data;
+	private $data = [];
 	private $defaultData = [
 		'config' => [
 			'analyticsId' => '',
@@ -55,7 +56,8 @@ class common {
 			'title' => 'Zwii, votre site en quelques clics !'
 		],
 		'core' => [
-			'lastBackup' => 0
+			'lastBackup' => 0,
+			'lastClearTmp' => 0
 		],
 		'page' => [
 			'accueil' => [
@@ -64,7 +66,6 @@ class common {
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => '',
-				'modulePosition' => 'bottom',
 				'parentPageId' => '',
 				'position' => 1,
 				'rank' => self::RANK_VISITOR,
@@ -77,7 +78,6 @@ class common {
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => '',
-				'modulePosition' => 'bottom',
 				'parentPageId' => 'accueil',
 				'position' => 1,
 				'rank' => self::RANK_VISITOR,
@@ -90,15 +90,31 @@ class common {
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => '',
-				'modulePosition' => 'bottom',
 				'parentPageId' => '',
 				'position' => 2,
 				'rank' => self::RANK_MEMBER,
 				'targetBlank' => false,
 				'title' => 'Cachée'
+			],
+			'site-de-zwii' => [
+				'content' => "",
+				'hideTitle' => false,
+				'metaDescription' => '',
+				'metaTitle' => '',
+				'moduleId' => 'redirection',
+				'parentPageId' => '',
+				'position' => 3,
+				'rank' => self::RANK_VISITOR,
+				'targetBlank' => true,
+				'title' => 'Site de Zwii'
 			]
 		],
-		'module' => [],
+		'module' => [
+			'site-de-zwii' => [
+				'url' => 'http://zwiicms.com/',
+				'count' => 0
+			]
+		],
 		'user' => [
 			'administrator' => [
 				'mail' => 'administrator@zwiicms.com',
@@ -192,7 +208,7 @@ class common {
 	public static $inputBefore = [];
 	public static $inputNotices = [];
 	public static $outputContent = '';
-	public static $outputDisplay = self::DISPLAY_LAYOUT;
+	public static $outputDisplay = self::DISPLAY_LAYOUT_NORMAL;
 	public static $outputMetaDescription = '';
 	public static $outputMetaTitle = '';
 	public static $outputScript = '';
@@ -201,11 +217,11 @@ class common {
 	// Librairies classées par odre d'exécution
 	public static $outputVendor = [
 		'jquery',
-		// 'jquery-ui', Désactivé par défaut mais disponible
+		// 'jquery-ui', Désactivé par défaut
 		'normalize',
 		'lity',
-		'filemanager',
-		// 'tinymce', Désactivé par défaut mais disponible
+		// 'tinycolorpicker', Désactivé par défaut
+		// 'tinymce', Désactivé par défaut
 		'zwiico'
 	];
 	public static $ranks = [
@@ -227,7 +243,7 @@ class common {
 		self::RANK_MODERATOR => 'Modérateur',
 		self::RANK_ADMIN => 'Administrateur'
 	];
-	private $url;
+	private $url = '';
 	private $user = [];
 
 	/**
@@ -255,15 +271,15 @@ class common {
 			chmod('site/data/data.json', 0644);
 		}
 		// Import des données
-		if(empty($this->data)) {
+		if($this->data === []) {
 			$this->setData([json_decode(file_get_contents('site/data/data.json'), true)]);
 		}
 		// Utilisateur connecté
-		if(empty($this->user)) {
+		if($this->user === []) {
 			$this->user = $this->getData(['user', $this->getInput('ZWII_USER_ID', helper::FILTER_STRING, '_COOKIE')]);
 		}
 		// Construit la liste des pages parents/enfants
-		if(empty($this->hierarchy['all'])) {
+		if($this->hierarchy['all'] === []) {
 			$pages = helper::arrayCollumn($this->getData(['page']), 'position', 'SORT_ASC');
 			// Parents
 			foreach($pages as $pageId => $pagePosition) {
@@ -307,7 +323,7 @@ class common {
 			}
 		}
 		// Construit l'url
-		if(empty($this->url)) {
+		if($this->url === '') {
 			if($url = $_SERVER['QUERY_STRING']) {
 				$this->url = $url;
 			}
@@ -440,7 +456,7 @@ class common {
 		// Une partie de l'url
 		else {
 			$url = explode('/', $this->url);
-			return isset($url[$key]) ? $url[$key] : null;
+			return array_key_exists($key, $url) ? $url[$key] : null;
 		}
 	}
 
@@ -469,14 +485,14 @@ class common {
 	 * @return bool
 	 */
 	public function isPost() {
-		return empty($this->input['_POST']) === false;
+		return $this->input['_POST'] !== [];
 	}
 
 	/**
 	 * Enregistre les données
 	 */
 	public function saveData() {
-		if(empty(common::$inputNotices)) {
+		if(common::$inputNotices === []) {
 			file_put_contents('site/data/data.json', json_encode($this->getData()));
 		}
 	}
@@ -552,14 +568,18 @@ class core extends common {
 	 * Constructeur du coeur
 	 */
 	public function __construct() {
-		// Hérite de la méthode __construct() parente
 		parent::__construct();
 		// Supprime les fichiers temporaires
-		$iterator = new DirectoryIterator('core/tmp/');
-		foreach($iterator as $fileInfos) {
-			if($fileInfos->isFile() AND $fileInfos->getBasename() !== '.gitkeep' AND $fileInfos->getMTime() + 86400 < time()) {
-				@unlink($fileInfos->getPathname());
+		$lastClearTmp = mktime(0, 0, 0);
+		if($lastClearTmp > $this->getData(['core', 'lastClearTmp']) + 86400) {
+			$iterator = new DirectoryIterator('core/tmp/');
+			foreach($iterator as $fileInfos) {
+				if($fileInfos->isFile() AND $fileInfos->getBasename() !== '.gitkeep') {
+					@unlink($fileInfos->getPathname());
+				}
 			}
+			// Date de la dernière suppression
+			$this->setData(['core', 'lastClearTmp', $lastClearTmp]);
 		}
 		// Backup automatique des données
 		$lastBackup = mktime(0, 0, 0);
@@ -575,7 +595,6 @@ class core extends common {
 			$zip->close();
 			// Date du dernier backup
 			$this->setData(['core', 'lastBackup', $lastBackup]);
-			$this->saveData();
 		}
 		// Crée le fichier de personnalisation
 		if(file_exists('site/data/theme.css') === false) {
@@ -584,7 +603,7 @@ class core extends common {
 		}
 		// Check la version
 		$cssVersion = preg_split('/\*+/', file_get_contents('site/data/theme.css'));
-		if(isset($cssVersion[1]) === false OR $cssVersion[1] !== md5(json_encode($this->getData(['theme'])))) {
+		if(empty($cssVersion[1]) OR $cssVersion[1] !== md5(json_encode($this->getData(['theme'])))) {
 			// Version
 			$css = '/*' . md5(json_encode($this->getData(['theme']))) . '*/';
 			// Import des polices de caractères
@@ -640,14 +659,21 @@ class core extends common {
 			file_put_contents('site/data/theme.css', $css);
 		}
 		// Importe les fichiers de langue
+		// Coeur
 		$language = 'core/lang/' . $this->getData(['config', 'language']);
 		if(is_file($language)) {
 			self::$language = json_decode(file_get_contents($language), true);
 		}
+		// Module
 		$language = 'module/' . $this->getData(['page', $this->getUrl(0), 'module']) . '/lang/' . $this->getData(['config', 'language']);
-		if(is_file($language)) {
+		if(
+			in_array($this->getData(['page', $this->getUrl(0), 'module']), self::$coreModuleIds) === false
+			AND is_file($language)
+		) {
 			self::$language = array_merge(self::$language, json_decode(file_get_contents($language), true));
 		}
+		// Enregistrement des données (utile pour les fichiers temporaire et le css)
+		$this->saveData();
 	}
 
 	/**
@@ -656,7 +682,12 @@ class core extends common {
 	 */
 	public static function autoload($className) {
 		$classPath = 'module/' . $className . '/' . $className . '.php';
-		if(is_readable($classPath)) {
+		// Module du coeur
+		if(is_readable('core/' . $classPath)) {
+			require 'core/' . $classPath;
+		}
+		// Module
+		elseif(is_readable($classPath)) {
 			require $classPath;
 		}
 	}
@@ -665,32 +696,48 @@ class core extends common {
 	 * Routage des modules
 	 */
 	public function router() {
-		// Importe la page
-		$moduleId = $this->getUrl(0);
-		if(
-			$this->getData(['page', $moduleId]) !== null
-			AND (
-				$this->getData(['page', $moduleId, 'rank']) === self::RANK_VISITOR
+		// Check l'accès à la page
+		$access = null;
+		if($this->getData(['page', $this->getUrl(0)]) !== null) {
+			if(
+				$this->getData(['page', $this->getUrl(0), 'rank']) === self::RANK_VISITOR
 				OR (
 					$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')
-					AND $this->getUser('rank') >= $this->getData(['page', $moduleId, 'rank'])
+					AND $this->getUser('rank') >= $this->getData(['page', $this->getUrl(0), 'rank'])
 				)
-			)
+			) {
+				$access = true;
+			}
+			else {
+				$access = false;
+			}
+		}
+		// Importe la page
+		if(
+			$this->getData(['page', $this->getUrl(0)]) !== null
+			AND $this->getData(['page', $this->getUrl(0), 'moduleId']) === ''
+			AND $access
 		) {
-			self::$outputTitle = $this->getData(['page', $moduleId, 'title']);
-			self::$outputContent = $this->getData(['page', $moduleId, 'content']);
-			self::$outputMetaTitle = $this->getData(['page', $moduleId, 'metaTitle']);
-			self::$outputMetaDescription = $this->getData(['page', $moduleId, 'metaDescription']);
-			$moduleId = $this->getData(['page', $moduleId, 'moduleId']);
+			self::$outputTitle = $this->getData(['page', $this->getUrl(0), 'title']);
+			self::$outputContent = $this->getData(['page', $this->getUrl(0), 'content']);
+			self::$outputMetaTitle = $this->getData(['page', $this->getUrl(0), 'metaTitle']);
+			self::$outputMetaDescription = $this->getData(['page', $this->getUrl(0), 'metaDescription']);
 		}
 		// Importe le module
-		if($moduleId) {
+		else {
+			// Id du module en fonction du type de contenu demandé
+			if($access AND $this->getData(['page', $this->getUrl(0), 'moduleId'])) {
+				$moduleId = $this->getData(['page', $this->getUrl(0), 'moduleId']);
+			}
+			else {
+				$moduleId = $this->getUrl(0);
+			}
 			// Check l'existence du module
 			if(class_exists($moduleId)) {
 				/** @var common $module */
 				$module = new $moduleId;
 				// Check l'existence de l'action
-				$action = array_key_exists($this->getUrl(1), $module::$actions) ?  $this->getUrl(1) : 'index';
+				$action = array_key_exists($this->getUrl(1), $module::$actions) ? $this->getUrl(1) : 'index';
 				if(array_key_exists($action, $module::$actions)) {
 					$output = $module->$action();
 					// Check le rang de l'utilisateur
@@ -726,34 +773,39 @@ class core extends common {
 							// Redirection
 							if(array_key_exists('redirect', $output)) {
 								http_response_code(301);
-								header('Location:' . helper::baseUrl() . $output['redirect']);
+								header('Location:' . $output['redirect']);
 								exit();
 							}
 						}
+						// Affichage
+						if(array_key_exists('display', $output)) {
+							self::$outputDisplay = $output['display'];
+						}
 						// Contenu du module
-						if(array_key_exists('view', $output) OR common::$inputNotices) {
+						if(self::$outputDisplay === self::DISPLAY_JSON) {
+							self::$outputContent = $output['state'];
+						}
+						elseif(array_key_exists('view', $output) OR common::$inputNotices) {
+							// Chemin en fonction d'un module du coeur ou d'un module
+							$modulePath = in_array($moduleId, self::$coreModuleIds) ? 'core/' : '';
 							// CSS
-							$stylePath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.css';
+							$stylePath = $modulePath . 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.css';
 							if(file_exists($stylePath)) {
 								self::$outputStyle = file_get_contents($stylePath);
 							}
 							// JS
-							$scriptPath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.js.php';
+							$scriptPath = $modulePath . 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.js.php';
 							if(file_exists($scriptPath)) {
 								ob_start();
 								include $scriptPath;
 								self::$outputScript .= ob_get_clean();
 							}
 							// Vue
-							$viewPath = 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.php';
+							$viewPath = $modulePath . 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.php';
 							if(file_exists($viewPath)) {
 								ob_start();
 								include $viewPath;
 								self::$outputContent .= ob_get_clean();
-							}
-							// Affichage
-							if(array_key_exists('display', $output)) {
-								self::$outputDisplay = $output['display'];
 							}
 						}
 						// Librairies
@@ -765,40 +817,53 @@ class core extends common {
 							self::$outputTitle = helper::translate($output['title']);
 						}
 					}
-					// Erreur
+					// Erreur 403
 					else {
-						http_response_code(403);
-						self::$outputTitle = helper::translate('Erreur');
-						self::$outputContent = template::speech('vous n\'êtes pas autorisé à accéder à cette page...');
+						$access = false;
 					}
 				}
 			}
 		}
-		// Erreur 404
-		if(empty(self::$outputContent)) {
+		// Erreurs
+		if($access === false) {
+			http_response_code(403);
+			self::$outputTitle = helper::translate('Erreur 403');
+			self::$outputContent = template::speech('vous n\'êtes pas autorisé à accéder à cette page...');
+		}
+		elseif(self::$outputContent === '') {
 			http_response_code(404);
-			self::$outputTitle = helper::translate('Erreur');
+			self::$outputTitle = helper::translate('Erreur 404');
 			self::$outputContent = template::speech('Oups ! La page demandée est introuvable...');
 		}
 		// Mise en forme des métas
-		if(empty(self::$outputMetaTitle)) {
-			self::$outputMetaTitle = self::$outputTitle . ' - ' . $this->getData(['config', 'title']);
+		if(self::$outputMetaTitle === '') {
+			if(self::$outputTitle) {
+				self::$outputMetaTitle = self::$outputTitle . ' - ' . $this->getData(['config', 'title']);
+			}
+			else {
+				self::$outputMetaTitle = $this->getData(['config', 'title']);
+			}
 		}
-		if(empty(self::$outputMetaDescription)) {
+		if(self::$outputMetaDescription === '') {
 			self::$outputMetaDescription = $this->getData(['config', 'metaDescription']);
 		}
 		// Choix du type d'affichage
 		switch(self::$outputDisplay) {
-			// Layout
-			case self::DISPLAY_LAYOUT:
-				require 'core/layout.php';
+			// Layout vide
+			case self::DISPLAY_LAYOUT_BLANK:
+				require 'core/layout/blank.php';
+				break;
+			// Layout normal
+			case self::DISPLAY_LAYOUT_NORMAL:
+				require 'core/layout/normal.php';
 				break;
 			// JSON
 			case self::DISPLAY_JSON:
+				header('Content-Type: application/json');
 				echo json_encode(self::$outputContent);
 				break;
 			// BLANK
-			case self::DISPLAY_BLANK:
+			case self::DISPLAY_RAW:
 				echo self::$outputContent;
 				break;
 		}
@@ -947,9 +1012,9 @@ class helper {
 	 * @param array $array Tableau à vérifier
 	 * @return string
 	 */
-	public static function increment($key, $array) {
+	public static function increment($key, $array = []) {
 		// Pas besoin d'incrémenter si la clef n'existe pas
-		if(empty($array)) {
+		if($array === []) {
 			return $key;
 		}
 		// Incrémente la clef
@@ -1070,7 +1135,7 @@ class helper {
 		// Nombre de page
 		$nbPage = ceil($nbElements / 10);
 		// Page courante
-		$currentPage = is_numeric($urlPagination) ? (int) $urlPagination : 1;
+		$currentPage = is_numeric($urlPagination) ? self::filter($urlPagination, self::FILTER_INT) : 1;
 		// Premier élément de la page
 		$firstElement = ($currentPage - 1) * 10;
 		// Dernier élément de la page
@@ -1120,11 +1185,9 @@ class helper {
 		// Required est exclu pour privilégier le système de champs requis du système
 		$exclude = array_merge(
 			['before',
-				'classContainer',
-				'col',
+				'classWrapper',
 				'help',
 				'label',
-				'offset',
 				'required',
 				'selected'
 			],
@@ -1132,7 +1195,7 @@ class helper {
 		);
 		$attributes = [];
 		foreach($array as $key => $value) {
-			if($value AND in_array($key, $exclude) === false) {
+			if(($value OR $value === 0) AND in_array($key, $exclude) === false) {
 				// Champs à traduire
 				if(in_array($key, ['placeholder'])) {
 					$attributes[] = sprintf('%s="%s"', $key, helper::translate($value));
@@ -1155,8 +1218,8 @@ class helper {
 	 * @return string
 	 */
 	public static function translate($text) {
-		// Traduit le texte en cherchant dans le tableau de langue (ajout d'un (string) au cas ou un $key est vide)
-		if(array_key_exists((string) $text, core::$language)) {
+		// Traduit le texte en cherchant dans le tableau de langue (ajout d'un filtre au cas ou un $key est vide)
+		if(array_key_exists(helper::filter($text, helper::FILTER_STRING), core::$language)) {
 			$text = core::$language[$text];
 		}
 		return $text;
@@ -1395,11 +1458,11 @@ class layout extends common {
 				default:
 					$socialUrl = '';
 			}
-			if(empty($socialId) === false) {
+			if($socialId !== '') {
 				$socials .= '<a href="' . $socialUrl . $socialId . '" target="_blank">' . template::ico(substr($socialName, 0, -2)) . '</a>';
 			}
 		}
-		if(empty($socials) === false) {
+		if($socials !== '') {
 			echo '<div id="footerSocials">' . $socials . '</div>';
 		}
 	}
@@ -1421,15 +1484,18 @@ class layout extends common {
 		echo '<script>' . helper::minifyJs($vars) . '</script>';
 		// Librairies
 		foreach(self::$outputVendor as $vendorName) {
-			// Check si le fichier d'inclusion existe dans le coeur
+			// Coeur
 			if(file_exists('core/vendor/' . $vendorName . '/inc.json')) {
 				$vendorPath = 'core/vendor/' . $vendorName . '/';
 			}
-			// Check si le fichier d'inclusion existe dans le module
-			else if(file_exists('module/' . $this->getUrl(0) . '/vendor/' . $vendorName . '/inc.json')) {
+			// Module
+			elseif(
+				in_array($this->getUrl(0), self::$coreModuleIds) === false
+				AND file_exists('module/' . $this->getUrl(0) . '/vendor/' . $vendorName . '/inc.json')
+			) {
 				$vendorPath = 'module/' . $this->getUrl(0) . '/vendor/' . $vendorName . '/';
 			}
-			// Fichier d'inclusion introuvable
+			// Sinon continue
 			else {
 				continue;
 			}
@@ -1489,7 +1555,7 @@ class template {
 		// Attributs par défaut
 		$attributes = array_merge([
 			'class' => '',
-			'classContainer' => '',
+			'classWrapper' => '',
 			'help' => '',
 			'id' => $nameId,
 			'name' => $nameId,
@@ -1501,14 +1567,14 @@ class template {
 		// Génère deux nombres pour le capcha
 		$firstNumber = mt_rand(1, 15);
 		$secondNumber = mt_rand(1, 15);
-		// Début container
-		$html = '<div id="' . $attributes['id'] . 'Container" class="inputContainer ' . $attributes['classContainer'] . '">';
+		// Début du wrapper
+		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="inputWrapper ' . $attributes['classWrapper'] . '">';
 		// Label
 		$html .= self::label($attributes['id'], helper::translate('Quelle est la somme de') . ' ' . $firstNumber . ' + ' . $secondNumber . ' ?', [
 			'help' => $attributes['help']
 		]);
 		// Notice
-		if(empty(common::$inputNotices[$attributes['id']]) === false) {
+		if(array_key_exists($attributes['id'], common::$inputNotices)) {
 			$html .= self::notice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
@@ -1526,7 +1592,7 @@ class template {
 			'value' => $secondNumber,
 			'before' => false
 		]);
-		// Fin du container
+		// Fin du wrapper
 		$html .= '</div>';
 		// Retourne le html
 		return $html;
@@ -1546,7 +1612,7 @@ class template {
 			'before' => true,
 			'checked' => '',
 			'class' => '',
-			'classContainer' => '',
+			'classWrapper' => '',
 			'disabled' => false,
 			'help' => '',
 			'id' => $nameId,
@@ -1559,10 +1625,10 @@ class template {
 		if($attributes['before'] AND array_key_exists($attributes['id'], common::$inputBefore)) {
 			$attributes['checked'] = (bool) common::$inputBefore[$attributes['id']];
 		}
-		// Début container
-		$html = '<div id="' . $attributes['id'] . 'Container" class="inputContainer ' . $attributes['classContainer'] . '">';
+		// Début du wrapper
+		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="inputWrapper ' . $attributes['classWrapper'] . '">';
 		// Notice
-		if(empty(common::$inputNotices[$attributes['id']]) === false) {
+		if(array_key_exists($attributes['id'], common::$inputNotices)) {
 			$html .= self::notice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
@@ -1576,7 +1642,7 @@ class template {
 		$html .= self::label($attributes['id'], '<span>' . $label . '</span>', [
 			'help' => $attributes['help']
 		]);
-		// Fin du container
+		// Fin du wrapper
 		$html .= '</div>';
 		// Retourne le html
 		return $html;
@@ -1593,7 +1659,7 @@ class template {
 		$attributes = array_merge([
 			'before' => true,
 			'class' => '',
-			'classContainer' => '',
+			'classWrapper' => '',
 			'disabled' => false,
 			'extensions' => '',
 			'help' => '',
@@ -1611,8 +1677,8 @@ class template {
 		if($attributes['before'] AND array_key_exists($attributes['id'], common::$inputBefore)) {
 			$attributes['value'] = common::$inputBefore[$attributes['id']];
 		}
-		// Début container
-		$html = '<div id="' . $attributes['id'] . 'Container" class="inputContainer ' . $attributes['classContainer'] . '">';
+		// Début du wrapper
+		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="inputWrapper ' . $attributes['classWrapper'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($attributes['id'], $attributes['label'], [
@@ -1620,7 +1686,7 @@ class template {
 			]);
 		}
 		// Notice
-		if(empty(common::$inputNotices[$attributes['id']]) === false) {
+		if(array_key_exists($attributes['id'], common::$inputNotices)) {
 			$html .= self::notice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
@@ -1658,7 +1724,7 @@ class template {
 			'class' => 'inputFileDelete',
 			'value' => self::ico('cancel')
 		]);
-		// Fin du container
+		// Fin du wrapper
 		$html .= '</div>';
 		// Retourne le html
 		return $html;
@@ -1736,7 +1802,7 @@ class template {
 		// Traduit le text
 		$text = helper::translate($text);
 		// Ajout d'une aide
-		if(empty($attributes['help']) === false) {
+		if($attributes['help'] !== '') {
 			$text = $text . self::help($attributes['help']);
 		}
 		// Retourne le html
@@ -1758,7 +1824,7 @@ class template {
 		$attributes = array_merge([
 			'autocomplete' => 'on',
 			'class' => '',
-			'classContainer' => '',
+			'classWrapper' => '',
 			'disabled' => false,
 			'help' => '',
 			'id' => $nameId,
@@ -1770,8 +1836,8 @@ class template {
 		], $attributes);
 		// Champ requis
 		common::setInputRequired($attributes);
-		// Début container
-		$html = '<div id="' . $attributes['id'] . 'Container" class="inputContainer ' . $attributes['classContainer'] . '">';
+		// Début du wrapper
+		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="inputWrapper ' . $attributes['classWrapper'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($attributes['id'], $attributes['label'], [
@@ -1779,7 +1845,7 @@ class template {
 			]);
 		}
 		// Notice
-		if(empty(common::$inputNotices[$attributes['id']]) === false) {
+		if(array_key_exists($attributes['id'], common::$inputNotices)) {
 			$html .= self::notice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
@@ -1788,7 +1854,7 @@ class template {
 			'<input type="password" %s>',
 			helper::sprintAttributes($attributes)
 		);
-		// Fin du container
+		// Fin du wrapper
 		$html .= '</div>';
 		// Retourne le html
 		return $html;
@@ -1806,7 +1872,7 @@ class template {
 		$attributes = array_merge([
 			'before' => true,
 			'class' => '',
-			'classContainer' => '',
+			'classWrapper' => '',
 			'disabled' => false,
 			'help' => '',
 			'id' => $nameId,
@@ -1821,8 +1887,8 @@ class template {
 		if($attributes['before'] AND array_key_exists($attributes['id'], common::$inputBefore)) {
 			$attributes['selected'] = common::$inputBefore[$attributes['id']];
 		}
-		// Début container
-		$html = '<div id="' . $attributes['id'] . 'Container" class="inputContainer ' . $attributes['classContainer'] . '">';
+		// Début du wrapper
+		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="inputWrapper ' . $attributes['classWrapper'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($attributes['id'], $attributes['label'], [
@@ -1830,7 +1896,7 @@ class template {
 			]);
 		}
 		// Notice
-		if(empty(common::$inputNotices[$attributes['id']]) === false) {
+		if(array_key_exists($attributes['id'], common::$inputNotices)) {
 			$html .= self::notice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
@@ -1849,7 +1915,7 @@ class template {
 		}
 		// Fin sélection
 		$html .= '</select>';
-		// Fin du container
+		// Fin du wrapper
 		$html .= '</div>';
 		// Retourne le html
 		return $html;
@@ -1899,11 +1965,11 @@ class template {
 		// Attributs par défaut
 		$attributes = array_merge([
 			'class' => '',
-			'classContainer' => '',
+			'classWrapper' => '',
 			'id' => ''
 		], $attributes);
-		// Début container
-		$html = '<div id="' . $attributes['id'] . 'Container" class="tableContainer ' . $attributes['classContainer']. '">';
+		// Début du wrapper
+		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="tableWrapper ' . $attributes['classWrapper']. '">';
 		// Début tableau
 		$html .= '<table id="' . $attributes['id'] . '" class="' . $attributes['class']. '">';
 		// Entêtes
@@ -1950,7 +2016,7 @@ class template {
 		$attributes = array_merge([
 			'before' => true,
 			'class' => '',
-			'classContainer' => '',
+			'classWrapper' => '',
 			'disabled' => false,
 			'help' => '',
 			'id' => $nameId,
@@ -1967,8 +2033,8 @@ class template {
 		if($attributes['before'] AND array_key_exists($attributes['id'], common::$inputBefore)) {
 			$attributes['value'] = common::$inputBefore[$attributes['id']];
 		}
-		// Début container
-		$html = '<div id="' . $attributes['id'] . 'Container" class="inputContainer ' . $attributes['classContainer'] . '">';
+		// Début du wrapper
+		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="inputWrapper ' . $attributes['classWrapper'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($attributes['id'], $attributes['label'], [
@@ -1976,7 +2042,7 @@ class template {
 			]);
 		}
 		// Notice
-		if(empty(common::$inputNotices[$attributes['id']]) === false) {
+		if(array_key_exists($attributes['id'], common::$inputNotices)) {
 			$html .= self::notice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
@@ -1985,7 +2051,7 @@ class template {
 			'<input type="text" %s>',
 			helper::sprintAttributes($attributes)
 		);
-		// Fin du container
+		// Fin du wrapper
 		$html .= '</div>';
 		// Retourne le html
 		return $html;
@@ -2002,7 +2068,7 @@ class template {
 		$attributes = array_merge([
 			'before' => true,
 			'class' => '',
-			'classContainer' => '',
+			'classWrapper' => '',
 			'disabled' => false,
 			'help' => '',
 			'id' => $nameId,
@@ -2018,8 +2084,8 @@ class template {
 		if($attributes['before'] AND array_key_exists($attributes['id'], common::$inputBefore)) {
 			$attributes['value'] = common::$inputBefore[$attributes['id']];
 		}
-		// Début container
-		$html = '<div id="' . $attributes['id'] . 'Container" class="inputContainer ' . $attributes['classContainer'] . '">';
+		// Début du wrapper
+		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="inputWrapper ' . $attributes['classWrapper'] . '">';
 		// Label
 		if($attributes['label']) {
 			$html .= self::label($attributes['id'], $attributes['label'], [
@@ -2027,7 +2093,7 @@ class template {
 			]);
 		}
 		// Notice
-		if(empty(common::$inputNotices[$attributes['id']]) === false) {
+		if(array_key_exists($attributes['id'], common::$inputNotices)) {
 			$html .= self::notice($attributes['id']);
 			$attributes['class'] .= ' notice';
 		}
@@ -2037,7 +2103,7 @@ class template {
 			helper::sprintAttributes($attributes, ['value']),
 			$attributes['value']
 		);
-		// Fin du container
+		// Fin du wrapper
 		$html .= '</div>';
 		// Retourne le html
 		return $html;

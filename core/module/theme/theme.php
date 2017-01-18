@@ -166,7 +166,7 @@ class theme extends common {
 			]]);
 			return [
 				'notification' => 'Modifications enregistrées',
-				'redirect' => 'theme',
+				'redirect' => helper::baseUrl() . 'theme',
 				'state' => true
 			];
 		}
@@ -200,7 +200,7 @@ class theme extends common {
 			]]);
 			return [
 				'notification' => 'Modifications enregistrées',
-				'redirect' => 'theme',
+				'redirect' => helper::baseUrl() . 'theme',
 				'state' => true
 			];
 		}
@@ -237,7 +237,7 @@ class theme extends common {
 			]]);
 			return [
 				'notification' => 'Modifications enregistrées',
-				'redirect' => 'theme',
+				'redirect' => helper::baseUrl() . 'theme',
 				'state' => true
 			];
 		}
@@ -280,7 +280,7 @@ class theme extends common {
 			]]);
 			return [
 				'notification' => 'Modifications enregistrées',
-				'redirect' => 'theme',
+				'redirect' => helper::baseUrl() . 'theme',
 				'state' => true
 			];
 		}
@@ -318,7 +318,7 @@ class theme extends common {
 			]]);
 			return [
 				'notification' => 'Modifications enregistrées',
-				'redirect' => 'theme',
+				'redirect' => helper::baseUrl() . 'theme',
 				'state' => true
 			];
 		}

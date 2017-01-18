@@ -52,7 +52,7 @@ class user extends common {
 				]
 			]);
 			return [
-				'redirect' => 'user',
+				'redirect' => helper::baseUrl() . 'user',
 				'notification' => 'Utilisateur créé',
 				'state' => true
 			];
@@ -84,7 +84,7 @@ class user extends common {
 		// Bloque la suppression de son propre compte
 		elseif($this->getUser('id') === $this->getUrl(2)) {
 			return [
-				'redirect' => 'user',
+				'redirect' => helper::baseUrl() . 'user',
 				'notification' => 'Impossible de supprimer votre propre compte'
 			];
 		}
@@ -92,7 +92,7 @@ class user extends common {
 		else {
 			$this->deleteData(['user', $this->getUrl(2)]);
 			return [
-				'redirect' => 'user',
+				'redirect' => helper::baseUrl() . 'user',
 				'notification' => 'Utilisateur supprimé',
 				'state' => true
 			];
@@ -165,7 +165,7 @@ class user extends common {
 				helper::deleteCookie('ZWII_USER_ID');
 				helper::deleteCookie('ZWII_USER_PASSWORD');
 				return [
-					'redirect' => 'user/login',
+					'redirect' => helper::baseUrl() . 'user/login',
 					'notification' => 'Modifications enregistrées',
 					'state' => true
 				];
@@ -173,14 +173,14 @@ class user extends common {
 			// Redirection si retour en arrière possible
 			elseif($this->getUrl(3)) {
 				return [
-					'redirect' => 'user',
+					'redirect' => helper::baseUrl() . 'user',
 					'notification' => 'Modifications enregistrées',
 					'state' => true
 				];
 			}
 			else {
 				return [
-					'redirect' => $this->getUrl(),
+					'redirect' => helper::baseUrl() . $this->getUrl(),
 					'notification' => 'Modifications enregistrées',
 					'state' => true
 				];
@@ -239,7 +239,7 @@ class user extends common {
 				setcookie('ZWII_USER_PASSWORD', hash('sha256', $this->getInput('userLoginPassword')), $expire, helper::baseUrl(false, false));
 				return [
 					'notification' => 'Connexion réussie',
-					'redirect' => implode('/', array_slice(explode('/', $this->getUrl()), 2)),
+					'redirect' => helper::baseUrl() . implode('/', array_slice(explode('/', $this->getUrl()), 2)),
 					'state' => true
 				];
 			}
@@ -269,7 +269,7 @@ class user extends common {
 		helper::deleteCookie('ZWII_USER_PASSWORD');
 		return [
 			'notification' => 'Déconnexion réussie',
-			'redirect' => '',
+			'redirect' => helper::baseUrl(),
 			'state' => true
 		];
 	}

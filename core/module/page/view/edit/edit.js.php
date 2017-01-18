@@ -20,37 +20,48 @@ $("#pageEditDelete").on("click", function() {
 /**
  * Enregistrement du module de la page en AJAX
  */
-$("#pageModuleId").on("change", function() {
-	var moduleId = $(this).val();
-	var moduleIdOldDOM = $("#pageEditModuleIdOld");
-	var moduleConfigDOM = $("#pageEditModuleConfig");
-	var confirm = true;
-	if(moduleIdOldDOM.val() !== "") {
-		confirm = confirm("<?php echo helper::translate('Si vous confirmez, les données du module précédent seront supprimées !'); ?>");
+var pageEditModuleIdDOM = $("#pageEditModuleId");
+pageEditModuleIdDOM.on("change", function() {
+	var pageEditModuleIdDOM = $(this);
+	var pageEditModuleId = pageEditModuleIdDOM.val();
+	var pageEditModuleIdOldDOM = $("#pageEditModuleIdOld");
+	var confirmState = true;
+	if(pageEditModuleIdOldDOM.val() !== "") {
+		confirmState = confirm("<?php echo helper::translate('Si vous confirmez, les données du module précédent seront supprimées !'); ?>");
 	}
-	if(confirm) {
+	if(confirmState) {
 		$.ajax({
 			type: "POST",
-			url: "<?php echo helper::baseUrl(); ?> . 'page/modulesave/" + <?php echo $this->getUrl(2); ?>,
-			data: {moduleId: moduleId},
+			url: "<?php echo helper::baseUrl(); ?>page/module/<?php echo $this->getUrl(2); ?>",
+			data: {moduleId: pageEditModuleId},
 			success: function() {
-				moduleIdOldDOM.val(moduleId);
-				if(moduleId === "") {
-					moduleConfigDOM.addClass("disabled");
+				pageEditModuleIdOldDOM.val(pageEditModuleId);
+				if(pageEditModuleId === "") {
+					$("#pageEditModuleConfig").addClass("disabled");
+					$("#pageEditContentContainer").slideDown();
 				}
 				else {
-					moduleConfigDOM
-						.removeClass("disabled")
-						.attr("target", "_blank");
+					$("#pageEditModuleConfig").removeClass("disabled").attr("target", "_blank");
+					$("#pageEditContentContainer").slideUp();
 				}
 			},
 			error: function() {
 				alert("<?php echo helper::translate('Impossible d\'enregistrer le module !'); ?>");
-				moduleConfigDOM.addClass("disabled");
+				$("#pageEditModuleConfig").addClass("disabled");
+				$("#pageEditContentContainer").slideDown();
 			}
 		});
 	}
+	else {
+		pageEditModuleIdDOM.val(pageEditModuleIdOldDOM.val());
+	}
 });
+if(pageEditModuleIdDOM.val() === "") {
+	$("#pageEditContentContainer").show();
+}
+else {
+	$("#pageEditContentContainer").hide();
+}
 
 /**
  * Affiche les pages en fonction de la page parent dans le choix de la position

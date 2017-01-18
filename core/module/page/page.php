@@ -17,16 +17,31 @@ class page extends common {
 	public static $actions = [
 		'add' => self::RANK_MODERATOR,
 		'delete' => self::RANK_MODERATOR,
-		'edit' => self::RANK_MODERATOR
+		'edit' => self::RANK_MODERATOR,
+		'module' => self::RANK_MODERATOR
 	];
 	public static $pagesNoParentId = [
 		'' => 'Aucune'
 	];
-	public static $modulePositions = [
-		'top' => 'Haut',
-		'bottom' => 'Bas',
-		'free' => 'Libre'
-	];
+	public static $moduleIds = [];
+
+	/**
+	 * Constructeur du module
+	 */
+	function __construct() {
+		parent::__construct();
+		// Liste des modules
+		$moduleIds = [
+			'' => 'Aucun'
+		];
+		$iterator = new DirectoryIterator('module/');
+		foreach($iterator as $fileInfos) {
+			if(is_file($fileInfos->getPathname() . '/' . $fileInfos->getFilename() . '.php')) {
+				$moduleIds[$fileInfos->getBasename()] = ucfirst($fileInfos->getBasename());
+			}
+		}
+		self::$moduleIds = $moduleIds;
+	}
 
 	/**
 	 * Création
@@ -43,7 +58,6 @@ class page extends common {
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => '',
-				'modulePosition' => 'bottom',
 				'parentPageId' => '',
 				'position' => 0,
 				'rank' => self::RANK_VISITOR,
@@ -52,7 +66,7 @@ class page extends common {
 			]
 		]);
 		return [
-			'redirect' => $pageId,
+			'redirect' => helper::baseUrl() . $pageId,
 			'notification' => 'Nouvelle page créée',
 			'state' => true
 		];
@@ -71,14 +85,14 @@ class page extends common {
 		// Impossible de supprimer la page d'accueil
 		elseif($this->getUrl(2) === $this->getData(['config', 'homePageId'])) {
 			return [
-				'redirect' => 'page/edit/' . $this->getUrl(2),
+				'redirect' => helper::baseUrl() . 'page/edit/' . $this->getUrl(2),
 				'notification' => 'Impossible de supprimer la page d\'accueil'
 			];
 		}
 		// Impossible de supprimer une page contenant des enfants
-		elseif(empty($this->getHierarchy($this->getUrl(2))) === false) {
+		elseif($this->getHierarchy($this->getUrl(2)) !== []) {
 			return [
-				'redirect' => 'page/edit/' . $this->getUrl(2),
+				'redirect' => helper::baseUrl() . 'page/edit/' . $this->getUrl(2),
 				'notification' => 'Impossible de supprimer une page contenant des enfants'
 			];
 		}
@@ -86,7 +100,7 @@ class page extends common {
 		else {
 			$this->deleteData(['page', $this->getUrl(2)]);
 			return [
-				'redirect' => '',
+				'redirect' => helper::baseUrl(),
 				'notification' => 'Page supprimée',
 				'state' => true
 			];
@@ -109,15 +123,16 @@ class page extends common {
 			// Si l'id a changée
 			if($pageId !== $this->getUrl(2)) {
 				// Incrémente la nouvelle id de la page pour éviter les doublons
-				$pageId = helper::increment(helper::increment($pageId, $this->getData(['page'])), self::$coreModule);
+				$pageId = helper::increment(helper::increment($pageId, $this->getData(['page'])), self::$coreModuleIds);
+				$pageId = helper::increment(helper::increment($pageId, $this->getData(['page'])), self::$moduleIds);
 				// Met à jour les enfants
 				foreach($this->getHierarchy($this->getUrl(2)) as $childrenPageId) {
 					$this->setData(['page', $childrenPageId, 'parentPageId', $pageId]);
 				}
 				// Supprime l'ancienne page
 				$this->deleteData(['page', $this->getUrl(2)]);
-				// Supprime les aciennes données du module et crée les nouvelles
-				$this->setData(['module', $pageId, $this->getData([$this->getUrl(2)])]);
+				// Change l'id de page dans les données des modules
+				$this->setData(['module', $pageId, $this->getData(['module', $this->getUrl(2)])]);
 				$this->deleteData(['module', $this->getUrl(2)]);
 				// Si la page correspond à la page d'accueil, change l'id dans la configuration du site
 				if($this->getData(['config', 'homePageId']) === $this->getUrl(2)) {
@@ -152,7 +167,6 @@ class page extends common {
 					'metaDescription' => $this->getInput('pageEditMetaDescription'),
 					'metaTitle' => $this->getInput('pageEditMetaDescription'),
 					'moduleId' => $this->getInput('pageEditModuleId'),
-					'modulePosition' => $this->getInput('pageEditModulePosition'),
 					'parentPageId' => $this->getInput('pageEditParentPageId'),
 					'position' => $position,
 					'rank' => $this->getInput('pageEditRank', helper::FILTER_INT),
@@ -161,7 +175,7 @@ class page extends common {
 				]
 			]);
 			return [
-				'redirect' => $pageId,
+				'redirect' => helper::baseUrl() . $pageId,
 				'notification' => 'Modifications enregistrées',
 				'state' => true
 			];
@@ -180,6 +194,25 @@ class page extends common {
 					'tinymce'
 				],
 				'view' => true
+			];
+		}
+	}
+
+	/**
+	 * Enregistrement du module en ajax
+	 */
+	public function module() {
+		// La page n'existe pas
+		if($this->getData(['page', $this->getUrl(2)]) === null) {
+			return [
+				'access' => false
+			];
+		}
+		else {
+			$this->setData(['page', $this->getUrl(2), 'moduleId', $this->getInput('moduleId')]);
+			return [
+				'display' => self::DISPLAY_JSON,
+				'state' => true
 			];
 		}
 	}
