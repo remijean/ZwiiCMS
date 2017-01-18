@@ -61,7 +61,7 @@ class common {
 		],
 		'page' => [
 			'accueil' => [
-				'content' => "<h3>Félicitations Zwii est 100% opérationnel !</h3>\r\n<p><strong>Vous utilisez une version bêta en cours de développement ! Certaines fonctionnalités sont absentes et des bugs peuvent surgirent, si vous avez des retours à faire n'hésitez pas à vous inscrire sur le <a title='forum' href='http://forum.zwiicms.com/'>forum</a> de Zwii.</strong></p>\r\n<p>Ci-dessous les comptes utilisateurs par défauts au format identifiant / mot de passe :</p>\r\n<ul><li>administrator / password</li><li>moderator / password</li><li>member / password</li></ul>\r\n<h4>Suivez-nous sur <a href='https://twitter.com/ZwiiCMS/'>Twitter</a> et <a href='https://www.facebook.com/ZwiiCMS/'>Facebook</a> pour ne manquer aucune nouveauté !</h4>",
+				'content' => "<h3>Félicitations Zwii est 100% opérationnel !</h3>\r\n<p><strong>Vous utilisez une version bêta en cours de développement ! Certaines fonctionnalités sont absentes et des bugs peuvent surgir. Si vous avez des retours à faire, n'hésitez pas à vous inscrire sur le <a title='forum' href='http://forum.zwiicms.com/'>forum</a> de Zwii.</strong></p>\r\n<p>Ci-dessous les comptes utilisateurs par défaut au format identifiant / mot de passe :</p>\r\n<ul><li>administrator / password</li><li>moderator / password</li><li>member / password</li></ul>\r\n<h4>Suivez-nous sur <a href='https://twitter.com/ZwiiCMS/'>Twitter</a> et <a href='https://www.facebook.com/ZwiiCMS/'>Facebook</a> pour ne manquer aucune nouveauté !</h4>",
 				'hideTitle' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
