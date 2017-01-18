@@ -220,6 +220,7 @@ class common {
 		// 'jquery-ui', Désactivé par défaut
 		'normalize',
 		'lity',
+		'filemanager',
 		// 'tinycolorpicker', Désactivé par défaut
 		// 'tinymce', Désactivé par défaut
 		'zwiico'
