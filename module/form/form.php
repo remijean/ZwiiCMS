@@ -78,7 +78,7 @@ class formAdm extends common
 			// Notification de succès
 			$this->setNotification('Formulaire enregistré avec succès !');
 			// Redirige vers l'URL courante
-			//helper::redirect($this->getUrl(null, false));
+			helper::redirect($this->getUrl(null, false));
 		}
 		// Liste données entregistrées
 		if($this->getData([$this->getUrl(0), 'data'])) {

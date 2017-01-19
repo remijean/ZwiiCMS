@@ -565,6 +565,7 @@ class common
 				}
 			}
 			file_put_contents('data/data.json', json_encode($this->getData()));
+			unset($_POST); // "Correction" d'un bug inexplicable en attendant la version 8 (supposition : les données posts sont conservées entre deux pages du site ce qui supprime des données du data.json)
 		}
 	}
 
@@ -3319,6 +3320,7 @@ class helper
 			header('Location: ' . ($baseUrl ? self::baseUrl() : false) . $url);
 			exit();
 		}
+		unset($_POST); // "Correction" d'un bug inexplicable en attendant la version 8 (supposition : les données posts sont conservées entre deux pages du site ce qui supprime des données du data.json)
 	}
 
 	/**
