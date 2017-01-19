@@ -1,6 +1,9 @@
 ZwiiCMS 7
 =========
 
+## 7.8.1
+* Correction d'un bug qui supprimait la configuration du site
+
 ## 7.8.0
 * Ajout du module livre d'or
 * Ajout d'un mode démonstration et refonte du contenu par défaut
