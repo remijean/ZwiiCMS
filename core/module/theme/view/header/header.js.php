@@ -39,6 +39,9 @@ $("input, select").on("change", function() {
 	if($("#themeHeaderMargin").is(":checked")) {
 		css += 'header{margin:20px 20px 0 20px}';
 	}
+	else {
+		css += 'header{margin:0}';
+	}
 	// Ajout du css au DOM
 	$("#themePreview").remove();
 	$("<style>")

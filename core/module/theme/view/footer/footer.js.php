@@ -26,7 +26,10 @@ $("input, select").on("change", function() {
 	css += "#footerCopyright{text-align:" + $("#themeFooterCopyrightAlign").val() + "}";
 	// Marge
 	if($("#themeFooterMargin").is(":checked")) {
-		css += 'footer{margin:20px}';
+		css += 'footer{margin:0 20px 20px}';
+	}
+	else {
+		css += 'footer{margin:0}';
 	}
 	// Ajout du css au DOM
 	$("#themePreview").remove();
