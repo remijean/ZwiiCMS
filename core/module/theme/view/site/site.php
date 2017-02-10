@@ -100,8 +100,9 @@
 	<div class="row">
 		<div class="col2 offset8">
 			<?php echo template::button('themeSiteBack', [
-				'value' => 'Annuler',
-				'href' => helper::baseUrl() . 'theme'
+				'class' => 'grey',
+				'href' => helper::baseUrl() . 'theme',
+				'value' => 'Annuler'
 			]); ?>
 		</div>
 		<div class="col2">

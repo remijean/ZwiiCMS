@@ -83,8 +83,9 @@
 	<div class="row">
 		<div class="col2 offset6">
 			<?php echo template::button('pageEditBack', [
-				'value' => 'Annuler',
-				'href' => helper::baseUrl() . $this->getUrl(2)
+				'class' => 'grey',
+				'href' => helper::baseUrl() . $this->getUrl(2),
+				'value' => 'Annuler'
 			]); ?>
 		</div>
 		<div class="col2">

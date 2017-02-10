@@ -25,8 +25,10 @@
 	<div class="row">
 		<div class="col2 offset8">
 			<?php echo template::button('redirectionConfigBack', [
-				'value' => 'Annuler',
-				'href' => helper::baseUrl() . 'page/edit/' . $this->getUrl(0)
+				'class' => 'grey',
+				'href' => helper::baseUrl() . 'page/edit/' . $this->getUrl(0),
+				'value' => 'Annuler'
+
 			]); ?>
 		</div>
 		<div class="col2">

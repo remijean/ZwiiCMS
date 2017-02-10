@@ -193,6 +193,7 @@ class theme extends common {
 				'copyrightAlign' => $this->getInput('themeFooterCopyrightAlign'),
 				'height' => $this->getInput('themeFooterHeight'),
 				'loginLink' => $this->getInput('themeFooterLoginLink'),
+				'margin' => $this->getInput('themeFooterMargin', helper::FILTER_BOOLEAN),
 				'position' => $this->getInput('themeFooterPosition'),
 				'socialsAlign' => $this->getInput('themeFooterSocialsAlign'),
 				'text' => $this->getInput('themeFooterText'),
@@ -230,9 +231,11 @@ class theme extends common {
 				'image' => $this->getInput('themeHeaderImage'),
 				'imagePosition' => $this->getInput('themeHeaderImagePosition'),
 				'imageRepeat' => $this->getInput('themeHeaderImageRepeat'),
+				'margin' => $this->getInput('themeHeaderMargin', helper::FILTER_BOOLEAN),
 				'position' => $this->getInput('themeHeaderPosition'),
 				'textAlign' => $this->getInput('themeHeaderTextAlign'),
 				'textColor' => $this->getInput('themeHeaderTextColor'),
+				'textHide' => $this->getInput('themeHeaderTextHide', helper::FILTER_BOOLEAN),
 				'textTransform' => $this->getInput('themeHeaderTextTransform')
 			]]);
 			return [
@@ -274,6 +277,7 @@ class theme extends common {
 				'fontWeight' => $this->getInput('themeMenuFontWeight'),
 				'height' => $this->getInput('themeMenuHeight'),
 				'loginLink' => $this->getInput('themeMenuLoginLink'),
+				'margin' => $this->getInput('themeMenuMargin', helper::FILTER_BOOLEAN),
 				'position' => $this->getInput('themeMenuPosition'),
 				'textAlign' => $this->getInput('themeMenuTextAlign'),
 				'textTransform' => $this->getInput('themeMenuTextTransform')

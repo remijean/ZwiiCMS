@@ -63,6 +63,9 @@
 							]); ?>
 						</div>
 					</div>
+					<?php echo template::checkbox('themeHeaderTextHide', true, 'Cacher le titre du site', [
+						'checked' => $this->getData(['theme', 'header', 'textHide'])
+					]); ?>
 				</div>
 			</div>
 			<div class="block">
@@ -98,13 +101,19 @@
 						]); ?>
 					</div>
 				</div>
+				<div id="themeHeaderPositionOptions" class="displayNone">
+					<?php echo template::checkbox('themeHeaderMargin', true, 'Aligner la bannière avec le contenu', [
+						'checked' => $this->getData(['theme', 'header', 'margin'])
+					]); ?>
+				</div>
 			</div>
 		</div>
 	<div class="row">
 		<div class="col2 offset8">
 			<?php echo template::button('themeHeaderBack', [
-				'value' => 'Annuler',
-				'href' => helper::baseUrl() . 'theme'
+				'class' => 'grey',
+				'href' => helper::baseUrl() . 'theme',
+				'value' => 'Annuler'
 			]); ?>
 		</div>
 		<div class="col2">

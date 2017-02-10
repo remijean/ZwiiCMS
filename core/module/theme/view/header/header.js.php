@@ -28,6 +28,17 @@ $("input, select").on("change", function() {
 	}
 	// Couleur, épaisseur et capitalisation du titre de la bannière
 	css += "header h1{color:" + $("#themeHeaderTextColor").val() + ";font-family:'" + headerFont.replace("+", " ") + "',sans-serif;font-weight:" + $("#themeHeaderFontWeight").val() + ";text-transform:" + $("#themeHeaderTextTransform").val() + "}";
+	// Cache le titre de la bannière
+	if($("#themeHeaderTextHide").is(":checked")) {
+		$("header .container").hide();
+	}
+	else {
+		$("header .container").show();
+	}
+	// Marge
+	if($("#themeHeaderMargin").is(":checked")) {
+		css += 'header{margin:20px 20px 0 20px}';
+	}
 	// Ajout du css au DOM
 	$("#themePreview").remove();
 	$("<style>")
@@ -64,6 +75,19 @@ $("#themeHeaderImage").on("change", function() {
 		$("#themeHeaderImageOptions").slideDown();
 	}
 	else {
-		$("#themeHeaderImageOptions").slideUp();
+		$("#themeHeaderImageOptions").slideUp(function() {
+			$("#themeHeaderTextHide").prop("checked", false).trigger("change");
+		});
+	}
+}).trigger("change");
+// Affiche / Cache les options de la position
+$("#themeHeaderPosition").on("change", function() {
+	if($(this).val() === 'site') {
+		$("#themeHeaderPositionOptions").slideDown();
+	}
+	else {
+		$("#themeHeaderPositionOptions").slideUp(function() {
+			$("#themeHeaderMargin").prop("checked", false).trigger("change");
+		});
 	}
 }).trigger("change");

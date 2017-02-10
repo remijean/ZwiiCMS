@@ -28,6 +28,10 @@ body.editor {
 	background: #FFF !important;
 }
 
+/**
+ * Éléments spécifiques
+ */
+
 /* Liens */
 a {
 	text-decoration: none;
@@ -145,16 +149,37 @@ td > .col12 {
 	padding: 14px;
 	color: #FFF;
 	position: fixed;
-	top: 30px;
-	left: 30px;
-	width: 400px;
+	left: 50%;
+	transform: translateX(-50%);
+	max-width: 500px;
+	width: 100%;
 	z-index: 20;
+	text-align: center;
+	animation: notificationBounce .5s;
+	top: 30px;
 }
 #notification.notificationSuccess {
 	background: #67C672;
 }
 #notification.notificationError {
 	background: #F3674A;
+}
+@keyframes notificationBounce {
+	0% {
+		transform: translateX(-50%) translateY(-30px);
+	}
+	40% {
+		transform: translateX(-50%) translateY(10px);
+	}
+	60% {
+		transform: translateX(-50%) translateY(-10px);
+	}
+	80% {
+		transform: translateX(-50%) translateY(5px);
+	}
+	100% {
+		transform: translateX(-50%) translateY(-5px);
+	}
 }
 
 /* Notice */
@@ -529,6 +554,47 @@ footer #footerSocials .zwiico-youtube:hover {
 	color: #555;
 }
 
+/* Aides */
+.helpButton {
+	cursor: help;
+	margin: 0 5px;
+}
+.helpButton:hover .helpContent {
+	display: inline;
+}
+.helpContent {
+	display: none;
+	position: absolute;
+	margin: 30px 0 0 -30px;
+	text-align: left;
+	padding: 10px;
+	z-index: 10;
+	max-width: 600px;
+}
+.helpButton,
+.helpContent {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+/* Lightbox */
+.lightbox {
+	background: #FFF;
+	width: 100vw;
+	max-width: 500px;
+	padding: 20px;
+}
+.lightbox .lightboxButtons {
+	text-align: center;
+	margin-top: 30px;
+}
+.lightbox .lightboxButtons .button {
+	width: auto;
+	margin: 0 10px;
+}
+
 /**
  * Inputs
  */
@@ -597,6 +663,7 @@ label {
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+	cursor: pointer;
 }
 .button:hover {
 	text-decoration: none;
@@ -606,6 +673,16 @@ label {
 	cursor: default;
 	background: #F5F5F5 !important;
 	color: #CCC !important;
+}
+.button.grey {
+	background: #E9E9E9;
+	color: #272A34 !important;
+}
+.button.grey:hover {
+	background: #E1E1E1;
+}
+.button.grey:active {
+	background: #D8D8D8;
 }
 
 /* Upload de fichiers */
@@ -694,31 +771,6 @@ input[type='checkbox']:checked:active + label:before {
 }
 input[type='checkbox']:disabled + label:before{
 	background: #F5F5F5 !important;
-}
-
-/* Aides */
-.helpButton {
-	cursor: help;
-	margin: 0 5px;
-}
-.helpButton:hover .helpContent {
-	display: inline;
-}
-.helpContent {
-	display: none;
-	position: absolute;
-	margin: 30px 0 0 -30px;
-	text-align: left;
-	padding: 10px;
-	z-index: 10;
-	max-width: 600px;
-}
-.helpButton,
-.helpContent {
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
 }
 
 /**

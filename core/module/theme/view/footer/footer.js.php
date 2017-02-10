@@ -24,6 +24,10 @@ $("input, select").on("change", function() {
 	css += "#footerSocials{text-align:" + $("#themeFooterSocialsAlign").val() + "}";
 	css += "#footerText{text-align:" + $("#themeFooterTextAlign").val() + "}";
 	css += "#footerCopyright{text-align:" + $("#themeFooterCopyrightAlign").val() + "}";
+	// Marge
+	if($("#themeFooterMargin").is(":checked")) {
+		css += 'footer{margin:20px}';
+	}
 	// Ajout du css au DOM
 	$("#themePreview").remove();
 	$("<style>")
@@ -57,3 +61,14 @@ $("#themeFooterLoginLink").on("change", function() {
 $("#themeFooterText").on("keyup keydown change", function() {
 	$("#footerText").text($(this).val());
 });
+// Affiche / Cache les options de la position
+$("#themeFooterPosition").on("change", function() {
+	if($(this).val() === 'site') {
+		$("#themeFooterPositionOptions").slideDown();
+	}
+	else {
+		$("#themeFooterPositionOptions").slideUp(function() {
+			$("#themeFooterMargin").prop("checked", false).trigger("change");
+		});
+	}
+}).trigger("change");

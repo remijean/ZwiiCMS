@@ -27,6 +27,38 @@ core.colorVariants = function(rgba) {
 };
 
 /**
+ * Crée un message de confirmation
+ */
+core.confirm = function(text, yesCallback, noCallback) {
+	var lightbox = lity(function($) {
+		return $("<div>")
+			.addClass("lightbox")
+			.append(
+				$("<span>").text(text),
+				$("<div>")
+					.addClass("lightboxButtons")
+					.append(
+						$("<a>")
+							.addClass("button grey")
+							.text("Non")
+							.on("click", function() {
+								lightbox.close();
+								noCallback();
+						}),
+						$("<a>")
+							.addClass("button")
+							.text("Oui")
+							.on("click", function() {
+								lightbox.close();
+								yesCallback();
+						})
+					)
+			)
+	}(jQuery));
+	return false;
+};
+
+/**
  * Scripts à exécuter en dernier
  */
 core.end = function() {
@@ -149,7 +181,9 @@ core.start = function() {
 	});
 	// Confirmation déconnexion
 	$("#panelLogout").on("click", function() {
-		return confirm("<?php echo helper::translate('Se déconnecter ?'); ?>");
+		return core.confirm("<?php echo helper::translate('Se déconnecter ?'); ?>", function() {
+			$(location).attr("href", $("#panelLogout").attr("href"));
+		});
 	});
 };
 core.start();

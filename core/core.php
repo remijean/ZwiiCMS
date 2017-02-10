@@ -39,7 +39,7 @@ class common {
 	private $defaultData = [
 		'config' => [
 			'analyticsId' => '',
-			'autoBackup' => false,
+			'autoBackup' => true,
 			'cookieConsent' => true,
 			'favicon' => 'favicon.ico',
 			'homePageId' => 'accueil',
@@ -152,6 +152,7 @@ class common {
 				'copyrightAlign' => 'right',
 				'height' => '30px',
 				'loginLink' => true,
+				'margin' => false,
 				'position' => 'body',
 				'socialsAlign' => 'left',
 				'text' => '',
@@ -165,9 +166,11 @@ class common {
 				'image' => '',
 				'imagePosition' => 'center center',
 				'imageRepeat' => 'no-repeat',
+				'margin' => false,
 				'position' => 'body',
 				'textAlign' => 'center',
 				'textColor' => 'rgba(255, 255, 255, 1)',
+				'textHide' => false,
 				'textTransform' => 'none'
 			],
 			'link' => [
@@ -178,6 +181,7 @@ class common {
 				'fontWeight' => 'normal',
 				'height' => '15px 10px',
 				'loginLink' => true,
+				'margin' => false,
 				'position' => 'body-second',
 				'textAlign' => 'left',
 				'textTransform' => 'none'
@@ -499,29 +503,6 @@ class common {
 	}
 
 	/**
-	 * Scan le contenu d'un dossier et de ses sous-dossiers
-	 * @param string $dir Dossier à scanner
-	 * @param array $ignore Élément à ignorer
-	 * @return array
-	 */
-	public static function scanDir($dir, $ignore = ['.', '..']) {
-		$dirContent = [];
-		$iterator = new DirectoryIterator($dir);
-		foreach($iterator as $fileInfos) {
-			if(in_array($fileInfos->getFilename(), $ignore)) {
-				continue;
-			}
-			elseif($fileInfos->isDir()) {
-				$dirContent = array_merge($dirContent, self::scanDir($fileInfos->getPathname()));
-			}
-			else {
-				$dirContent[] = $fileInfos->getPathname();
-			}
-		}
-		return $dirContent;
-	}
-
-	/**
 	 * Insert des données
 	 * @param array $keys Clé(s) des données
 	 */
@@ -585,15 +566,8 @@ class core extends common {
 		// Backup automatique des données
 		$lastBackup = mktime(0, 0, 0);
 		if($this->getData(['config', 'autoBackup']) AND $lastBackup > $this->getData(['core', 'lastBackup']) + 86400) {
-			// Creation du ZIP
-			$fileName = date('Y-m-d', $lastBackup) . '.zip';
-			$zip = new ZipArchive();
-			if($zip->open('site/backup/' . $fileName, ZipArchive::CREATE) === TRUE){
-				foreach(self::scanDir('site/', ['.', '..', 'backup']) as $file) {
-					$zip->addFile($file);
-				}
-			}
-			$zip->close();
+			// Copie du fichier de données
+			copy('site/data/data.json', 'site/backup/' . date('Y-m-d', $lastBackup) . '.json');
 			// Date du dernier backup
 			$this->setData(['core', 'lastBackup', $lastBackup]);
 		}
@@ -634,6 +608,9 @@ class core extends common {
 			$css .= 'h1,h2,h3,h4,h5,h6{color:' . $colors['normal'] . ';font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'title', 'font'])) . '",sans-serif;font-weight:' . $this->getData(['theme', 'title', 'fontWeight']) . ';text-transform:' . $this->getData(['theme', 'title', 'textTransform']) . '}';
 			// Bannière
 			$colors = helper::colorVariants($this->getData(['theme', 'header', 'backgroundColor']));
+			if($this->getData(['theme', 'header', 'margin'])) {
+				$css .= 'header{margin:20px 20px 0 20px}';
+			}
 			$css .= 'header{background-color:' . $colors['normal'] . ';height:' . $this->getData(['theme', 'header', 'height']) . ';line-height:' . $this->getData(['theme', 'header', 'height']) . ';text-align:' . $this->getData(['theme', 'header', 'textAlign']) . '}';
 			if($themeHeaderImage = $this->getData(['theme', 'header', 'image'])) {
 				$css .= 'header{background-image:url("../file/source/' . $themeHeaderImage . '");background-position:' . $this->getData(['theme', 'header', 'imagePosition']) . ';background-repeat:' . $this->getData(['theme', 'header', 'imageRepeat']) . '}';
@@ -647,9 +624,15 @@ class core extends common {
 			$css .= 'nav a:hover{background-color:' . $colors['darken'] . '}';
 			$css .= 'nav a.target,nav a.active{background-color:' . $colors['veryDarken'] . '}';
 			$css .= '#menu{text-align:' . $this->getData(['theme', 'menu', 'textAlign']) . '}';
+			if($this->getData(['theme', 'menu', 'margin'])) {
+				$css .= 'nav{margin:20px 20px 0 20px}';
+			}
 			$css .= '#toggle span,#menu a{padding:' . $this->getData(['theme', 'menu', 'height']) . ';font-weight:' . $this->getData(['theme', 'menu', 'fontWeight']) . ';text-transform:' . $this->getData(['theme', 'menu', 'textTransform']) . '}';
 			// Pied de page
 			$colors = helper::colorVariants($this->getData(['theme', 'footer', 'backgroundColor']));
+			if($this->getData(['theme', 'footer', 'margin'])) {
+				$css .= 'footer{margin:20px}';
+			}
 			$css .= 'footer{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '}';
 			$css .= 'footer a{color:' . $colors['text'] . '!important}';
 			$css .= 'footer .container > div{margin:' . $this->getData(['theme', 'footer', 'height']) . ' 0}';
@@ -918,7 +901,7 @@ class helper {
 	public static function baseUrl($queryString = true, $host = true) {
 		$pathInfo = pathinfo($_SERVER['PHP_SELF']);
 		$hostName = $_SERVER['HTTP_HOST'];
-		$protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"], 0, 5)) == 'https://' ? 'https://' : 'http://';
+		$protocol = ((empty($_SERVER['HTTPS']) === false AND $_SERVER['HTTPS'] !== 'off') OR $_SERVER['SERVER_PORT'] === 443) ? 'https://' : 'http://';
 		return ($host ? $protocol . $hostName : '') . rtrim($pathInfo['dirname'], ' /') . '/' . (($queryString AND helper::checkRewrite() === false) ? '?' : '');
 	}
 

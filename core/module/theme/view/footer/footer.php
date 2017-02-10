@@ -28,6 +28,11 @@
 						]); ?>
 					</div>
 				</div>
+				<div id="themeFooterPositionOptions" class="displayNone">
+					<?php echo template::checkbox('themeFooterMargin', true, 'Aligner le bas de page avec le contenu', [
+						'checked' => $this->getData(['theme', 'footer', 'margin'])
+					]); ?>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -76,8 +81,9 @@
 	<div class="row">
 		<div class="col2 offset8">
 			<?php echo template::button('themeFooterBack', [
-				'value' => 'Annuler',
-				'href' => helper::baseUrl() . 'theme'
+				'class' => 'grey',
+				'href' => helper::baseUrl() . 'theme',
+				'value' => 'Annuler'
 			]); ?>
 		</div>
 		<div class="col2">

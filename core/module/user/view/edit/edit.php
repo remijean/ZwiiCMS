@@ -50,8 +50,10 @@
 		<?php if($this->getUrl(3)): ?>
 			<div class="col2 offset8">
 				<?php echo template::button('userEditBack', [
-					'value' => 'Annuler',
-					'href' => helper::baseUrl() . 'user'
+					'class' => 'grey',
+					'href' => helper::baseUrl() . 'user',
+					'value' => 'Annuler'
+
 				]); ?>
 			</div>
 			<div class="col2">

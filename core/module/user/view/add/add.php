@@ -47,8 +47,9 @@
 	<div class="row">
 		<div class="col2 offset8">
 			<?php echo template::button('userAddBack', [
-				'value' => 'Annuler',
-				'href' => helper::baseUrl() . 'user'
+				'class' => 'grey',
+				'href' => helper::baseUrl() . 'user',
+				'value' => 'Annuler'
 			]); ?>
 		</div>
 		<div class="col2">

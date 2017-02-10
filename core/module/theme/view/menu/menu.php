@@ -55,6 +55,11 @@
 						]); ?>
 					</div>
 				</div>
+				<div id="themeMenuPositionOptions" class="displayNone">
+					<?php echo template::checkbox('themeMenuMargin', true, 'Aligner le menu avec le contenu', [
+						'checked' => $this->getData(['theme', 'menu', 'margin'])
+					]); ?>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -72,8 +77,9 @@
 	<div class="row">
 		<div class="col2 offset8">
 			<?php echo template::button('themeMenuBack', [
-				'value' => 'Annuler',
-				'href' => helper::baseUrl() . 'theme'
+				'class' => 'grey',
+				'href' => helper::baseUrl() . 'theme',
+				'value' => 'Annuler'
 			]); ?>
 		</div>
 		<div class="col2">

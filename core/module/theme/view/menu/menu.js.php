@@ -24,6 +24,10 @@ $("input, select").on("change", function() {
 	css += "#toggle span,#menu a{padding:" + $("#themeMenuHeight").val() + ";font-weight:" + $("#themeMenuFontWeight").val() + ";text-transform:" + $("#themeMenuTextTransform").val() + "}";
 	// Alignement du menu
 	css += "#menu{text-align:" + $("#themeMenuTextAlign").val() + "}";
+	// Marge
+	if($("#themeMenuMargin").is(":checked")) {
+		css += 'nav{margin:20px 20px 0 20px}';
+	}
 	// Ajout du css au DOM
 	$("#themePreview").remove();
 	$("<style>")
@@ -67,5 +71,16 @@ $("#themeMenuLoginLink").on("change", function() {
 	}
 	else {
 		$("#menuLoginLink").addClass('displayNone');
+	}
+}).trigger("change");
+// Affiche / Cache les options de la position
+$("#themeMenuPosition").on("change", function() {
+	if($(this).val() === 'site-first' || $(this).val() === 'site-second') {
+		$("#themeMenuPositionOptions").slideDown();
+	}
+	else {
+		$("#themeMenuPositionOptions").slideUp(function() {
+			$("#themeMenuMargin").prop("checked", false).trigger("change");
+		});
 	}
 }).trigger("change");

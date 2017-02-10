@@ -29,7 +29,7 @@ class config extends common {
 		$fileName = date('Y-m-d-h-i-s', time()) . '.zip';
 		$zip = new ZipArchive();
 		if($zip->open('core/tmp/' . $fileName, ZipArchive::CREATE) === TRUE){
-			foreach(self::scanDir('site/', ['.', '..', 'backup']) as $file) {
+			foreach(configHelper::scanDir('site/', ['.', '..', 'backup']) as $file) {
 				$zip->addFile($file);
 			}
 		}
@@ -118,6 +118,33 @@ class config extends common {
 				'view' => true
 			];
 		}
+	}
+
+}
+
+class configHelper extends helper {
+
+	/**
+	 * Scan le contenu d'un dossier et de ses sous-dossiers
+	 * @param string $dir Dossier à scanner
+	 * @param array $ignore Élément à ignorer
+	 * @return array
+	 */
+	public static function scanDir($dir, $ignore = ['.', '..']) {
+		$dirContent = [];
+		$iterator = new DirectoryIterator($dir);
+		foreach($iterator as $fileInfos) {
+			if(in_array($fileInfos->getFilename(), $ignore)) {
+				continue;
+			}
+			elseif($fileInfos->isDir()) {
+				$dirContent = array_merge($dirContent, self::scanDir($fileInfos->getPathname()));
+			}
+			else {
+				$dirContent[] = $fileInfos->getPathname();
+			}
+		}
+		return $dirContent;
 	}
 
 }
