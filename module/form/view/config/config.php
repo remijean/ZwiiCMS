@@ -65,7 +65,7 @@
 	</div>
 	<div class="block">
 		<h4><?php echo helper::translate('Liste des champs'); ?></h4>
-		<p id="formConfigNoInput"><?php echo helper::translate('Le formulaire ne contient au champ.'); ?></p>
+		<p id="formConfigNoInput"><?php echo helper::translate('Le formulaire ne contient aucun champ.'); ?></p>
 		<div id="formConfigInputs"></div>
 		<div class="row">
 			<div class="col1 offset11">

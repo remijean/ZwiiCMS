@@ -59,7 +59,6 @@ $("input, select").on("change", function() {
 			else {
 				$("header").show().prependTo("#site");
 				// Supprime le margin en trop du menu
-				console.log(<?php echo json_encode($this->getData(['theme', 'menu', 'margin'])); ?>);
 				if(<?php echo json_encode($this->getData(['theme', 'menu', 'margin'])); ?>) {
 					css += 'nav{margin:0 20px}';
 				}

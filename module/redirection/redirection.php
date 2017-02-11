@@ -52,6 +52,7 @@ class redirection extends common {
 			// Affichage du template
 			return [
 				'display' => self::DISPLAY_LAYOUT_BLANK,
+				'title' => '',
 				'view' => true
 			];
 		}

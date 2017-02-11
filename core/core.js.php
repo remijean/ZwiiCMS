@@ -42,6 +42,7 @@ core.confirm = function(text, yesCallback, noCallback) {
 							.addClass("button grey")
 							.text("Non")
 							.on("click", function() {
+								lightbox.options('button', true);
 								lightbox.close();
 								noCallback();
 						}),
@@ -49,12 +50,20 @@ core.confirm = function(text, yesCallback, noCallback) {
 							.addClass("button")
 							.text("Oui")
 							.on("click", function() {
+								lightbox.options('button', true);
 								lightbox.close();
 								yesCallback();
 						})
 					)
 			)
 	}(jQuery));
+	// Callback lors d'un clic sur le fond et sur la croix de fermeture
+	lightbox.options('button', false);
+	$(document).on('lity:close', function(event, instance) {
+		if(instance.options('button') === false) {
+			noCallback();
+		}
+	});
 	return false;
 };
 
