@@ -129,11 +129,12 @@ $("#formConfigInputs")
 	})
 	// Affiche/cache le champ "Valeurs" en fonction des champs cachés
 	.on("change", ".formConfigType", function() {
-		if($(this).val() === "select") {
-			$(".formConfigValuesWrapper").slideDown();
+		var _this = $(this);
+		if(_this.val() === "select") {
+			_this.parents(".formConfigInput").find(".formConfigValuesWrapper").slideDown();
 		}
 		else {
-			$(".formConfigValuesWrapper").slideUp();
+			_this.parents(".formConfigInput").find(".formConfigValuesWrapper").slideUp();
 		}
 	});
 // Simule un changement de type au chargement de la page
