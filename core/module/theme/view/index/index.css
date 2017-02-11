@@ -24,8 +24,8 @@ footer {
 	z-index: 11;
 }
 .themeOverlay {
-	-webkit-transition: background .3s;
-	transition: background .3s;
+	-webkit-transition: all .3s;
+	transition: all .3s;
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -36,7 +36,8 @@ footer {
 	content: " ";
 	display: block;
 }
-.themeOverlay:hover {
+.themeOverlay:not(.themeOverlayHideBackground):hover,
+.themeOverlayTriggerHover {
 	background: rgba(103, 198, 114, .7);
 }
 #themeOverlayBody {

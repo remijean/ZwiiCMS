@@ -37,18 +37,16 @@ $("input, select").on("change", function() {
 	}
 	// Marge
 	if($("#themeHeaderMargin").is(":checked")) {
-		css += 'header{margin:20px 20px 0 20px}';
+		if(<?php echo json_encode($this->getData(['theme', 'menu', 'position']) === 'site-first'); ?>) {
+			css += 'header{margin:0 20px}';
+		}
+		else {
+			css += 'header{margin:20px 20px 0 20px}';
+		}
 	}
 	else {
 		css += 'header{margin:0}';
 	}
-	// Ajout du css au DOM
-	$("#themePreview").remove();
-	$("<style>")
-		.attr("type", "text/css")
-		.attr("id", "themePreview")
-		.text(css)
-		.appendTo("head");
 	// Position de la bannière
 	switch($("#themeHeaderPosition").val()) {
 		case 'hide':
@@ -60,6 +58,11 @@ $("input, select").on("change", function() {
 			}
 			else {
 				$("header").show().prependTo("#site");
+				// Supprime le margin en trop du menu
+				console.log(<?php echo json_encode($this->getData(['theme', 'menu', 'margin'])); ?>);
+				if(<?php echo json_encode($this->getData(['theme', 'menu', 'margin'])); ?>) {
+					css += 'nav{margin:0 20px}';
+				}
 			}
 			break;
 		case 'body':
@@ -71,6 +74,13 @@ $("input, select").on("change", function() {
 			}
 			break;
 	}
+	// Ajout du css au DOM
+	$("#themePreview").remove();
+	$("<style>")
+		.attr("type", "text/css")
+		.attr("id", "themePreview")
+		.text(css)
+		.appendTo("head");
 });
 // Affiche / Cache les options de l'image du fond
 $("#themeHeaderImage").on("change", function() {

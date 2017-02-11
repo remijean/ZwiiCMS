@@ -609,7 +609,12 @@ class core extends common {
 			// Bannière
 			$colors = helper::colorVariants($this->getData(['theme', 'header', 'backgroundColor']));
 			if($this->getData(['theme', 'header', 'margin'])) {
-				$css .= 'header{margin:20px 20px 0 20px}';
+				if($this->getData(['theme', 'menu', 'position']) === 'site-first') {
+					$css .= 'header{margin:0 20px}';
+				}
+				else {
+					$css .= 'header{margin:20px 20px 0 20px}';
+				}
 			}
 			$css .= 'header{background-color:' . $colors['normal'] . ';height:' . $this->getData(['theme', 'header', 'height']) . ';line-height:' . $this->getData(['theme', 'header', 'height']) . ';text-align:' . $this->getData(['theme', 'header', 'textAlign']) . '}';
 			if($themeHeaderImage = $this->getData(['theme', 'header', 'image'])) {
@@ -625,7 +630,15 @@ class core extends common {
 			$css .= 'nav a.target,nav a.active{background-color:' . $colors['veryDarken'] . '}';
 			$css .= '#menu{text-align:' . $this->getData(['theme', 'menu', 'textAlign']) . '}';
 			if($this->getData(['theme', 'menu', 'margin'])) {
-				$css .= 'nav{margin:20px 20px 0 20px}';
+				if(
+					$this->getData(['theme', 'menu', 'position']) === 'site-first'
+					OR $this->getData(['theme', 'header', 'position']) === 'body'
+				) {
+					$css .= 'nav{margin:20px 20px 0 20px}';
+				}
+				else {
+					$css .= 'nav{margin:0 20px 0}';
+				}
 			}
 			$css .= '#toggle span,#menu a{padding:' . $this->getData(['theme', 'menu', 'height']) . ';font-weight:' . $this->getData(['theme', 'menu', 'fontWeight']) . ';text-transform:' . $this->getData(['theme', 'menu', 'textTransform']) . '}';
 			// Pied de page
