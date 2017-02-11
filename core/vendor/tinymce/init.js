@@ -7,7 +7,7 @@ tinymce.init({
 	body_class: "editor",
 	extended_valid_elements: "script[language|type|src]",
 	content_css: [
-		baseUrl + "core/main.css",
+		baseUrl + "core/layout/common.css",
 		baseUrl + "site/data/theme.css"
 	],
 	relative_urls: false,
