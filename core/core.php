@@ -23,7 +23,7 @@ class common {
 	const RANK_MEMBER = 1;
 	const RANK_MODERATOR = 2;
 	const RANK_ADMIN = 3;
-	const ZWII_VERSION = '8.0.0 bêta 0.2';
+	const ZWII_VERSION = '8.0.0 bêta 0.4';
 
 	public static $actions = [];
 	public static $demo = false;
@@ -107,12 +107,55 @@ class common {
 				'rank' => self::RANK_VISITOR,
 				'targetBlank' => true,
 				'title' => 'Site de Zwii'
+			],
+			'contact' => [
+				'content' => "",
+				'hideTitle' => false,
+				'metaDescription' => '',
+				'metaTitle' => '',
+				'moduleId' => 'form',
+				'parentPageId' => '',
+				'position' => 4,
+				'rank' => self::RANK_VISITOR,
+				'targetBlank' => false,
+				'title' => 'Contact'
 			]
 		],
 		'module' => [
 			'site-de-zwii' => [
 				'url' => 'http://zwiicms.com/',
 				'count' => 0
+			],
+			'contact' => [
+				'config' => [
+					'button' => '',
+					'capcha' => true,
+					'mail' => 'zwiicms@outlook.com'
+				],
+				'data' => [],
+				'input' => [
+					[
+						'name' => 'Adresse mail',
+						'position' => 1,
+						'required' => true,
+						'type' => 'text',
+						'values' => ''
+					],
+					[
+						'name' => 'Sujet',
+						'position' => 2,
+						'required' => true,
+						'type' => 'text',
+						'values' => ''
+					],
+					[
+						'name' => 'Message',
+						'position' => 3,
+						'required' => true,
+						'type' => 'textarea',
+						'values' => ''
+					]
+				]
 			]
 		],
 		'user' => [
@@ -205,9 +248,8 @@ class common {
 		'visible' => []
 	];
 	private $input = [
-		'_POST' => [],
-		'_GET' => [],
-		'_COOKIE' => []
+		'_COOKIE' => [],
+		'_POST' => []
 	];
 	public static $inputBefore = [];
 	public static $inputNotices = [];
@@ -259,9 +301,6 @@ class common {
 		if(isset($_POST)) {
 			$this->input['_POST'] = $_POST;
 		}
-		if(isset($_GET)) {
-			$this->input['_GET'] = $_GET;
-		}
 		if(isset($_COOKIE)) {
 			$this->input['_COOKIE'] = $_COOKIE;
 		}
@@ -281,7 +320,7 @@ class common {
 		}
 		// Utilisateur connecté
 		if($this->user === []) {
-			$this->user = $this->getData(['user', $this->getInput('ZWII_USER_ID', helper::FILTER_STRING, '_COOKIE')]);
+			$this->user = $this->getData(['user', $this->getInput('ZWII_USER_ID')]);
 		}
 		// Construit la liste des pages parents/enfants
 		if($this->hierarchy['all'] === []) {
@@ -295,7 +334,7 @@ class common {
 					AND (
 						$this->getData(['page', $pageId, 'rank']) === self::RANK_VISITOR
 						OR (
-							$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')
+							$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
 							AND $this->getUser('rank') >= $this->getData(['page', $pageId, 'rank'])
 						)
 					)
@@ -315,7 +354,7 @@ class common {
 					AND (
 						$this->getData(['page', $pageId, 'rank']) === self::RANK_VISITOR
 						OR (
-							$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')
+							$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
 							AND $this->getUser('rank') >= $this->getData(['page', $pageId, 'rank'])
 						)
 					)
@@ -335,6 +374,33 @@ class common {
 			else {
 				$this->url = $this->getData(['config', 'homePageId']);
 			}
+		}
+	}
+
+	/**
+	 * Ajoute une notice de champ obligatoire
+	 * @param string $key Clef du champ
+	 */
+	public function addRequiredInputNotices($key) {
+		// La clef est un tableau
+		if(preg_match('#\[(.*)\]#', $key, $secondKey)) {
+			$firstKey = explode('[', $key)[0];
+			$secondKey = $secondKey[1];
+			if(
+				empty($this->input['_POST'][$firstKey][$secondKey])
+				AND isset($_SESSION['ZWII_INPUT_REQUIRED'])
+				AND array_key_exists($key, $_SESSION['ZWII_INPUT_REQUIRED'])
+			) {
+				common::$inputNotices[$key] = 'Ce champ est requis';
+			}
+		}
+		// La clef est une chaine
+		elseif(
+			empty($this->input['_POST'][$key])
+			AND isset($_SESSION['ZWII_INPUT_REQUIRED'])
+			AND array_key_exists($key, $_SESSION['ZWII_INPUT_REQUIRED'])
+		) {
+			common::$inputNotices[$key] = 'Ce champ est requis';
 		}
 	}
 
@@ -409,41 +475,53 @@ class common {
 	}
 
 	/**
-	 * Accède à une valeur des variables http (ordre de recherche en l'absence de type : _POST, _GET, _COOKIE)
+	 * Accède à une valeur des variables http (ordre de recherche en l'absence de type : _COOKIE, _POST)
 	 * @param mixed $key Clé de la valeur
-	 * @param mixed $filter Filtre à appliquer à la valeur
-	 * @param mixed $type Type de la valeur
+	 * @param int $filter Filtre à appliquer à la valeur
 	 * @return mixed
 	 */
-	public function getInput($key, $filter = helper::FILTER_STRING, $type = null) {
-		// Cherche et retourne la valeur demandée dans un type précis
-		if($type AND isset($this->input[$type][$key])) {
-			// Champ obligatoire
-			if(
-				empty($this->input[$type][$key])
-				AND isset($_SESSION['ZWII_INPUT_REQUIRED'])
-				AND array_key_exists($key, $_SESSION['ZWII_INPUT_REQUIRED'])
-			) {
-				common::$inputNotices[$key] = 'Ce champ est requis';
-			}
-			// Retourne la valeur filtrée
-			return helper::filter($this->input[$type][$key], $filter);
-		}
-		// Cherche et retourne la valeur demandée
-		foreach($this->input as $type => $values) {
-			if(array_key_exists($key, $values)) {
-				// Champ obligatoire
-				if(
-					empty($this->input[$type][$key])
-					AND isset($_SESSION['ZWII_INPUT_REQUIRED'])
-					AND array_key_exists($key, $_SESSION['ZWII_INPUT_REQUIRED'])
-				) {
-					common::$inputNotices[$key] = 'Ce champ est requis';
+	public function getInput($key, $filter = helper::FILTER_STRING) {
+		// La clef est un tableau
+		if(preg_match('#\[(.*)\]#', $key, $secondKey)) {
+			$firstKey = explode('[', $key)[0];
+			$secondKey = $secondKey[1];
+			foreach($this->input as $type => $values) {
+				if(array_key_exists($firstKey, $values)) {
+					// Champ obligatoire
+					if($type === '_POST') {
+						$this->addRequiredInputNotices($key);
+					}
+					// Retourne la valeur filtrée
+					if($filter) {
+						return helper::filter($this->input[$type][$firstKey][$secondKey], $filter);
+					}
+					// Retourne la valeur
+					else {
+						return $this->input[$type][$firstKey][$secondKey];
+					}
 				}
-				// Retourne la valeur filtrée
-				return helper::filter($this->input[$type][$key], $filter);
 			}
 		}
+		// La clef est une chaine
+		else {
+			foreach($this->input as $type => $values) {
+				if(array_key_exists($key, $values)) {
+					// Champ obligatoire
+					if($type === '_POST') {
+						$this->addRequiredInputNotices($key);
+					}
+					// Retourne la valeur filtrée
+					if($filter) {
+						return helper::filter($this->input[$type][$key], $filter);
+					}
+					// Retourne la valeur
+					else {
+						return $this->input[$type][$key];
+					}
+				}
+			}
+		}
+
 		// Sinon retourne null
 		return helper::filter(null, $filter);
 	}
@@ -475,7 +553,7 @@ class common {
 			return false;
 		}
 		elseif($key === 'id') {
-			return $this->getInput('ZWII_USER_ID', helper::FILTER_STRING, '_COOKIE');
+			return $this->getInput('ZWII_USER_ID');
 		}
 		elseif(array_key_exists($key, $this->user)) {
 			return $this->user[$key];
@@ -593,7 +671,7 @@ class core extends common {
 			$css .= '.container{max-width:' . $this->getData(['theme', 'site', 'width']) . '}';
 			$css .= '#site{border-radius:' . $this->getData(['theme', 'site', 'radius']) . ';box-shadow:' . $this->getData(['theme', 'site', 'shadow']) . ' #212223}';
 			$colors = helper::colorVariants($this->getData(['theme', 'button', 'backgroundColor']));
-			$css .= '.speechBubble,.button,input[type=\'submit\'],pagination a,input[type=\'checkbox\']:checked + label:before,input[type=\'radio\']:checked + label:before,.helpContent{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '!important}';
+			$css .= '.speechBubble,.button,input[type=\'submit\'],.pagination a,input[type=\'checkbox\']:checked + label:before,input[type=\'radio\']:checked + label:before,.helpContent{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '!important}';
 			$css .= '.tabTitle.current,.helpButton span{color:' . $colors['normal'] . '}';
 			$css .= 'input[type=\'text\']:hover,input[type=\'password\']:hover,.inputFile:hover,select:hover,textarea:hover{border-color:' . $colors['normal'] . '}';
 			$css .= '.speechBubble:before{border-color:' . $colors['normal'] . ' transparent transparent transparent}';
@@ -699,7 +777,7 @@ class core extends common {
 			if(
 				$this->getData(['page', $this->getUrl(0), 'rank']) === self::RANK_VISITOR
 				OR (
-					$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')
+					$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
 					AND $this->getUser('rank') >= $this->getData(['page', $this->getUrl(0), 'rank'])
 				)
 			) {
@@ -722,9 +800,12 @@ class core extends common {
 		}
 		// Importe le module
 		else {
-			// Id du module en fonction du type de contenu demandé
+			// Id du module et le titre et les métas pour les pages
 			if($access AND $this->getData(['page', $this->getUrl(0), 'moduleId'])) {
 				$moduleId = $this->getData(['page', $this->getUrl(0), 'moduleId']);
+				self::$outputTitle = $this->getData(['page', $this->getUrl(0), 'title']);
+				self::$outputMetaTitle = $this->getData(['page', $this->getUrl(0), 'metaTitle']);
+				self::$outputMetaDescription = $this->getData(['page', $this->getUrl(0), 'metaDescription']);
 			}
 			else {
 				$moduleId = $this->getUrl(0);
@@ -741,7 +822,7 @@ class core extends common {
 					if(
 						$module::$actions[$action] === 0
 						OR (
-							$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')
+							$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
 							AND $this->getUser('rank') >= $module::$actions[$action]
 						)
 						AND (
@@ -753,6 +834,7 @@ class core extends common {
 						if(array_key_exists('state', $output) AND $output['state'] === true) {
 							$this->setData([$module->getData()]);
 							$this->saveData();
+							unset($_SESSION['ZWII_INPUT_REQUIRED']);
 						}
 						// Sauvegarde des données en méthode POST si une notice existe
 						if(common::$inputNotices) {
@@ -891,16 +973,19 @@ class helper {
 	 * @return array
 	 */
 	public static function arrayCollumn($array, $column, $sort = null) {
-		$newArray = array_map(function($element) use($column) {
-			return $element[$column];
-		}, $array);
-		switch($sort) {
-			case 'SORT_ASC':
-				asort($newArray);
-				break;
-			case 'SORT_DESC':
-				arsort($newArray);
-				break;
+		$newArray = [];
+		if(empty($array) === false) {
+			$newArray = array_map(function($element) use($column) {
+				return $element[$column];
+			}, $array);
+			switch($sort) {
+				case 'SORT_ASC':
+					asort($newArray);
+					break;
+				case 'SORT_DESC':
+					arsort($newArray);
+					break;
+			}
 		}
 		return $newArray;
 	}
@@ -1124,7 +1209,7 @@ class helper {
 		// Scinde l'url
 		$url = explode('/', $url);
 		// Url de pagination
-		$urlPagination = is_numeric(end($url)) ? array_pop($url) : 1;
+		$urlPagination = is_numeric($url[count($url) - 1]) ? array_pop($url) : 1;
 		// Url de la page courante
 		$urlCurrent = implode('/', $url);
 		// Nombre d'éléments à afficher
@@ -1139,17 +1224,19 @@ class helper {
 		$lastElement = $firstElement + 10;
 		$lastElement = ($lastElement > $nbElements) ? $nbElements : $lastElement;
 		// Mise en forme de la liste des pages
-		$pages = false;
-		for($i = 1; $i <= $nbPage; $i++)
-		{
-			$disabled = ($i === $currentPage) ? ' class="disabled"' : false;
-			$pages .= '<a href="' . helper::baseUrl() . $urlCurrent . '/' . $i . $tab . '"' . $disabled . '>' . $i . '</a>';
+		$pages = '';
+		if($nbPage > 1) {
+			for($i = 1; $i <= $nbPage; $i++) {
+				$disabled = ($i === $currentPage) ? ' class="disabled"' : false;
+				$pages .= '<a href="' . helper::baseUrl() . $urlCurrent . '/' . $i . $tab . '"' . $disabled . '>' . $i . '</a>';
+			}
+			$pages = '<div class="pagination">' . $pages . '</div>';
 		}
 		// Retourne un tableau contenant les informations sur la pagination
 		return [
 			'first' => $firstElement,
 			'last' => $lastElement,
-			'page' => '<div class="pagination">' . $pages . '</div>'
+			'pages' => $pages
 		];
 	}
 
@@ -1268,7 +1355,7 @@ class layout extends common {
 		if(
 			(
 				$this->getData(['theme', 'footer', 'loginLink'])
-				AND $this->getUser('password') !== $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')
+				AND $this->getUser('password') !== $this->getInput('ZWII_USER_PASSWORD')
 			)
 			OR $this->getUrl(0) === 'theme'
 		) {
@@ -1324,7 +1411,7 @@ class layout extends common {
 		if(
 			(
 				$this->getData(['theme', 'menu', 'loginLink'])
-				AND $this->getUser('password') !== $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')
+				AND $this->getUser('password') !== $this->getInput('ZWII_USER_PASSWORD')
 			)
 			OR $this->getUrl(0) === 'theme'
 		) {
@@ -1353,7 +1440,7 @@ class layout extends common {
 	 */
 	public function showNotification() {
 		if(common::$inputNotices) {
-			echo '<div id="notification" class="notificationError">' . helper::translate('Impossible de soumettre le formulaire, car il contient des erreurs !') . '</div>';
+			echo '<div id="notification" class="notificationError">' . helper::translate('Impossible de soumettre le formulaire, car il contient des erreurs') . '</div>';
 		}
 		elseif(empty($_SESSION['ZWII_NOTIFICATION_SUCCESS']) === false) {
 			echo '<div id="notification" class="notificationSuccess">' . $_SESSION['ZWII_NOTIFICATION_SUCCESS'] . '</div>';
@@ -1369,7 +1456,7 @@ class layout extends common {
 	 * Affiche le panneau d'administration
 	 */
 	public function showPanel() {
-		if($this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')) {
+		if($this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')) {
 			// Items de gauche
 			$leftItems = '';
 			if($this->getUser('rank') >= self::RANK_MODERATOR) {
@@ -1388,8 +1475,11 @@ class layout extends common {
 			$rightItems = '';
 			if($this->getUser('rank') >= self::RANK_MODERATOR) {
 				if(
-					$this->getData(['page', $this->getUrl(0)])
-					OR $this->getUrl(0) === "" // Lorsqu'un utilisateur arrive sur la racine du site
+					$this->getUrl(1) === null
+					AND (
+						$this->getData(['page', $this->getUrl(0)])
+						OR $this->getUrl(0) === "" // Lorsqu'un utilisateur arrive sur la racine du site
+					)
 				) {
 					$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/edit/' . $this->getUrl(0) . '" title="' . helper::translate('Modifier la page') . '">' . template::ico('pencil') . '</a></li>';
 				}
@@ -1473,7 +1563,7 @@ class layout extends common {
 		$vars .= 'var baseUrlQs = ' . json_encode(helper::baseUrl()) . ';';
 		$vars .= 'var language = ' . json_encode($this->getData(['config', 'language'])) . ';';
 		if(
-			$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')
+			$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
 			AND $this->getUser('rank') >= self::RANK_MODERATOR
 		) {
 			$vars .= 'var privateKey = ' . json_encode(md5_file('site/data/data.json')) . ';';
@@ -1824,7 +1914,7 @@ class template {
 			'classWrapper' => '',
 			'disabled' => false,
 			'help' => '',
-			'id' => $nameId,
+				'id' => $nameId,
 			'label' => '',
 			'name' => $nameId,
 			'placeholder' => '',

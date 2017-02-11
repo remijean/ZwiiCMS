@@ -45,7 +45,7 @@ class redirection extends common {
 	public function index() {
 		// Message si l'utilisateur peut éditer la page
 		if(
-			$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD', helper::FILTER_STRING, '_COOKIE')
+			$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
 			AND $this->getUser('rank') >= $this->getData(['page', self::RANK_MODERATOR, 'rank'])
 			AND $this->getUrl(1) !== 'force'
 		) {

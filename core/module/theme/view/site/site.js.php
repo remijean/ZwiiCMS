@@ -20,7 +20,7 @@ $("input, select").on("change", function() {
 	var css = "@import url('https://fonts.googleapis.com/css?family=" + titleFont + "|" + textFont + "');";
 	// Couleurs des boutons
 	var colors = core.colorVariants($("#themeButtonBackgroundColor").val());
-	css += ".speechBubble,.button,input[type='submit'],pagination a,input[type='checkbox']:checked + label:before,input[type='radio']:checked + label:before,.helpContent{background-color:" + colors.normal + ";color:" + colors.text + "!important}";
+	css += ".speechBubble,.button,input[type='submit'],.pagination a,input[type='checkbox']:checked + label:before,input[type='radio']:checked + label:before,.helpContent{background-color:" + colors.normal + ";color:" + colors.text + "!important}";
 	css += ".tabTitle.current,.helpButton span{color:" + colors.normal + "}";
 	css += "input[type='text']:hover,input[type='password']:hover,.inputFile:hover,select:hover,textarea:hover{border-color:" + colors.normal + "}";
 	css += ".speechBubble:before{border-color:" + colors.normal + " transparent transparent transparent}";

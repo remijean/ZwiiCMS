@@ -15,8 +15,8 @@
 <?php $layout->showStyle(); ?>
 <?php $layout->showPanel(); ?>
 <?php $layout->showNotification(); ?>
-<!-- Menu dans le fond du site avant la bannière -->
 <?php if($this->getData(['theme', 'menu', 'position']) === 'body-first'): ?>
+	<!-- Menu dans le fond du site avant la bannière -->
 	<nav>
 		<div id="toggle"><?php echo template::ico('menu'); ?></div>
 		<div id="menu" class="container">
@@ -24,7 +24,6 @@
 		</div>
 	</nav>
 <?php endif; ?>
-<!-- Bannière dans le fond du site -->
 <?php if(
 	$this->getData(['theme', 'header', 'position']) === 'body'
 	// Affiche toujours la bannière pour l'édition du thème
@@ -33,6 +32,7 @@
 		AND $this->getUrl(0) === 'theme'
 	)
 ): ?>
+	<!-- Bannière dans le fond du site -->
 	<header <?php if($this->getData(['theme', 'header', 'position']) === 'hide'): ?>class="displayNone"<?php endif; ?>>
 		<?php if(
 				$this->getData(['theme', 'header', 'textHide']) === false
@@ -45,7 +45,6 @@
 		<?php endif; ?>
 	</header>
 <?php endif; ?>
-<!-- Menu dans le fond du site après la bannière -->
 <?php if(
 	$this->getData(['theme', 'menu', 'position']) === 'body-second'
 	// Affiche toujours le menu pour l'édition du thème
@@ -54,6 +53,7 @@
 		AND $this->getUrl(0) === 'theme'
 	)
 ): ?>
+	<!-- Menu dans le fond du site après la bannière -->
 	<nav <?php if($this->getData(['theme', 'menu', 'position']) === 'hide'): ?>class="displayNone"<?php endif; ?>>
 		<div id="toggle"><?php echo template::ico('menu'); ?></div>
 		<div id="menu" class="container">
@@ -63,8 +63,8 @@
 <?php endif; ?>
 <!-- Site -->
 <div id="site" class="container">
-	<!-- Menu dans le site avant la bannière -->
 	<?php if($this->getData(['theme', 'menu', 'position']) === 'site-first'): ?>
+		<!-- Menu dans le site avant la bannière -->
 		<nav>
 			<div id="toggle"><?php echo template::ico('menu'); ?></div>
 			<div id="menu" class="container">
@@ -72,16 +72,16 @@
 			</div>
 		</nav>
 	<?php endif; ?>
-	<!-- Bannière dans le site -->
 	<?php if($this->getData(['theme', 'header', 'position']) === 'site'): ?>
+		<!-- Bannière dans le site -->
 		<header>
 			<div class="container">
 				<h1><?php echo $this->getData(['config', 'title']); ?></h1>
 			</div>
 		</header>
 	<?php endif; ?>
-	<!-- Menu dans le site après la bannière -->
 	<?php if($this->getData(['theme', 'menu', 'position']) === 'site-second'): ?>
+		<!-- Menu dans le site après la bannière -->
 		<nav>
 			<div id="toggle"><?php echo template::ico('menu'); ?></div>
 			<div id="menu" class="container">
@@ -91,7 +91,6 @@
 	<?php endif; ?>
 	<!-- Corps -->
 	<section><?php $layout->showContent(); ?></section>
-	<!-- Pied de page dans le site -->
 	<?php if(
 		$this->getData(['theme', 'footer', 'position']) === 'site'
 		// Affiche toujours le pied de page pour l'édition du thème
@@ -100,6 +99,7 @@
 			AND $this->getUrl(0) === 'theme'
 		)
 	): ?>
+		<!-- Pied de page dans le site -->
 		<footer <?php if($this->getData(['theme', 'footer', 'position']) === 'hide'): ?>class="displayNone"<?php endif; ?>>
 			<div class="container">
 				<?php $layout->showSocials(); ?>
@@ -109,8 +109,8 @@
 		</footer>
 	<?php endif; ?>
 </div>
-<!-- Pied de page dans le fond du site -->
 <?php if($this->getData(['theme', 'footer', 'position']) === 'body'): ?>
+	<!-- Pied de page dans le fond du site -->
 	<footer>
 		<div class="container">
 			<?php $layout->showSocials(); ?>

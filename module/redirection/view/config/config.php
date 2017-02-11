@@ -27,7 +27,7 @@
 			<?php echo template::button('redirectionConfigBack', [
 				'class' => 'grey',
 				'href' => helper::baseUrl() . 'page/edit/' . $this->getUrl(0),
-				'value' => 'Annuler'
+				'value' => 'Retour'
 
 			]); ?>
 		</div>
