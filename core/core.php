@@ -188,12 +188,12 @@ class common {
 				'imageSize' => 'auto'
 			],
 			'button' => [
-				'backgroundColor' => 'rgba(48, 77, 102, 1)'
+				'backgroundColor' => 'rgba(71, 123, 184, 1)'
 			],
 			'footer' => [
 				'backgroundColor' => 'rgba(33, 34, 35, 1)',
 				'copyrightAlign' => 'right',
-				'height' => '30px',
+				'height' => '10px',
 				'loginLink' => true,
 				'margin' => false,
 				'position' => 'body',
@@ -202,30 +202,30 @@ class common {
 				'textAlign' => 'left'
 			],
 			'header' => [
-				'backgroundColor' => 'rgba(60, 105, 148, 1)',
+				'backgroundColor' => 'rgba(255, 255, 255, 1)',
 				'font' => 'Oswald',
 				'fontWeight' => 'normal',
-				'height' => '200px',
+				'height' => '150px',
 				'image' => '',
 				'imagePosition' => 'center center',
 				'imageRepeat' => 'no-repeat',
 				'margin' => false,
-				'position' => 'body',
+				'position' => 'site',
 				'textAlign' => 'center',
-				'textColor' => 'rgba(255, 255, 255, 1)',
+				'textColor' => 'rgba(39, 42, 52, 1)',
 				'textHide' => false,
 				'textTransform' => 'none'
 			],
 			'link' => [
-				'textColor' => 'rgba(48, 77, 102, 1)'
+				'textColor' => 'rgba(71, 123, 184, 1)'
 			],
 			'menu' => [
-				'backgroundColor' => 'rgba(48, 77, 102, 1)',
+				'backgroundColor' => 'rgba(71, 123, 184, 1)',
 				'fontWeight' => 'normal',
 				'height' => '15px 10px',
 				'loginLink' => true,
 				'margin' => false,
-				'position' => 'body-second',
+				'position' => 'site-second',
 				'textAlign' => 'left',
 				'textTransform' => 'none'
 			],
@@ -238,7 +238,7 @@ class common {
 			'title' => [
 				'font' => 'Oswald',
 				'fontWeight' => 'normal',
-				'textColor' => 'rgba(60, 105, 148, 1)',
+				'textColor' => 'rgba(71, 123, 184, 1)',
 				'textTransform' => 'none'
 			]
 		]
