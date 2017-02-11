@@ -44,7 +44,9 @@ core.confirm = function(text, yesCallback, noCallback) {
 							.on("click", function() {
 								lightbox.options('button', true);
 								lightbox.close();
-								noCallback();
+								if(typeof noCallback !== "undefined") {
+									noCallback();
+								}
 						}),
 						$("<a>")
 							.addClass("button")
@@ -52,7 +54,9 @@ core.confirm = function(text, yesCallback, noCallback) {
 							.on("click", function() {
 								lightbox.options('button', true);
 								lightbox.close();
-								yesCallback();
+								if(typeof yesCallback !== "undefined") {
+									yesCallback();
+								}
 						})
 					)
 			)
@@ -60,7 +64,10 @@ core.confirm = function(text, yesCallback, noCallback) {
 	// Callback lors d'un clic sur le fond et sur la croix de fermeture
 	lightbox.options('button', false);
 	$(document).on('lity:close', function(event, instance) {
-		if(instance.options('button') === false) {
+		if(
+			instance.options('button') === false
+			&& typeof noCallback !== "undefined"
+		) {
 			noCallback();
 		}
 	});
