@@ -17,8 +17,7 @@ class page extends common {
 	public static $actions = [
 		'add' => self::RANK_MODERATOR,
 		'delete' => self::RANK_MODERATOR,
-		'edit' => self::RANK_MODERATOR,
-		'module' => self::RANK_MODERATOR
+		'edit' => self::RANK_MODERATOR
 	];
 	public static $pagesNoParentId = [
 		'' => 'Aucune'
@@ -194,25 +193,6 @@ class page extends common {
 					'tinymce'
 				],
 				'view' => true
-			];
-		}
-	}
-
-	/**
-	 * Enregistrement du module en ajax
-	 */
-	public function module() {
-		// La page n'existe pas
-		if($this->getData(['page', $this->getUrl(2)]) === null) {
-			return [
-				'access' => false
-			];
-		}
-		else {
-			$this->setData(['page', $this->getUrl(2), 'moduleId', $this->getInput('moduleId')]);
-			return [
-				'display' => self::DISPLAY_JSON,
-				'state' => true
 			];
 		}
 	}
