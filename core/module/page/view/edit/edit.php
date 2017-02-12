@@ -40,7 +40,6 @@
 		<div class="col12">
 			<?php echo template::textarea('pageEditContent', [
 				'class' => 'editor',
-				'required' => true,
 				'value' => $this->getData(['page', $this->getUrl(2), 'content'])
 			]); ?>
 		</div>

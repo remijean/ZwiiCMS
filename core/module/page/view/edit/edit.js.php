@@ -20,42 +20,17 @@ $("#pageEditDelete").on("click", function() {
 });
 
 /**
- * Enregistrement du module de la page en AJAX
+ * Bloque/Débloque le bouton de configuration au changement de module
  */
 var pageEditModuleIdDOM = $("#pageEditModuleId");
 pageEditModuleIdDOM.on("change", function() {
-	var pageEditModuleIdDOM = $(this);
-	var pageEditModuleId = pageEditModuleIdDOM.val();
-	var pageEditModuleIdOldDOM = $("#pageEditModuleIdOld");
-	var confirmState = true;
-	if(pageEditModuleIdOldDOM.val() !== "") {
-		confirmState = confirm("<?php echo helper::translate('Si vous confirmez, les données du module précédent seront supprimées !'); ?>");
-	}
-	if(confirmState) {
-		$.ajax({
-			type: "POST",
-			url: "<?php echo helper::baseUrl(); ?>page/module/<?php echo $this->getUrl(2); ?>",
-			data: {moduleId: pageEditModuleId},
-			success: function() {
-				pageEditModuleIdOldDOM.val(pageEditModuleId);
-				if(pageEditModuleId === "") {
-					$("#pageEditModuleConfig").addClass("disabled");
-					$("#pageEditContentContainer").slideDown();
-				}
-				else {
-					$("#pageEditModuleConfig").removeClass("disabled").attr("target", "_blank");
-					$("#pageEditContentContainer").slideUp();
-				}
-			},
-			error: function() {
-				alert("<?php echo helper::translate('Impossible d\'enregistrer le module !'); ?>");
-				$("#pageEditModuleConfig").addClass("disabled");
-				$("#pageEditContentContainer").slideDown();
-			}
-		});
+	if($(this).val() === "") {
+		$("#pageEditModuleConfig").addClass("disabled");
+		$("#pageEditContentContainer").slideDown();
 	}
 	else {
-		pageEditModuleIdDOM.val(pageEditModuleIdOldDOM.val());
+		$("#pageEditModuleConfig").removeClass("disabled");
+		$("#pageEditContentContainer").slideUp();
 	}
 });
 if(pageEditModuleIdDOM.val() === "") {
@@ -64,6 +39,15 @@ if(pageEditModuleIdDOM.val() === "") {
 else {
 	$("#pageEditContentContainer").hide();
 }
+
+/**
+ * Alerte lors du clic sur le bouon de configuration du module
+ */
+$("#pageEditModuleConfig").on("click", function() {
+	if(pageEditModuleIdDOM.val() !== $("#pageEditModuleIdOld").val()) {
+		return core.alert("<?php echo helper::translate('Vous devez enregistrer la page avant de configurer le nouveau module.'); ?>");
+	}
+});
 
 /**
  * Affiche les pages en fonction de la page parent dans le choix de la position

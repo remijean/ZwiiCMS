@@ -818,6 +818,14 @@ class core extends common {
 				$action = array_key_exists($this->getUrl(1), $module::$actions) ? $this->getUrl(1) : 'index';
 				if(array_key_exists($action, $module::$actions)) {
 					$output = $module->$action();
+					// Rétabli les données précédentes en cas d'erreur lors de la validation du formulaire
+					if(
+						common::$inputNotices
+						AND empty($_SESSION['ZWII_OUTPUT_PREV']) === false
+					) {
+						$output = array_merge($output, $_SESSION['ZWII_OUTPUT_PREV']);
+						unset($_SESSION['ZWII_OUTPUT_PREV']);
+					}
 					// Check le rang de l'utilisateur
 					if(
 						$module::$actions[$action] === 0
@@ -859,6 +867,8 @@ class core extends common {
 						// Affichage
 						if(array_key_exists('display', $output)) {
 							self::$outputDisplay = $output['display'];
+							// Enregistre l'affichage afin de le rétablir en cas d'erreur lors de la validation du formulaire
+							$_SESSION['ZWII_OUTPUT_PREV']['display'] = self::$outputDisplay;
 						}
 						// Contenu du module
 						if(self::$outputDisplay === self::DISPLAY_JSON) {
@@ -886,14 +896,20 @@ class core extends common {
 								include $viewPath;
 								self::$outputContent .= ob_get_clean();
 							}
+							// Enregistre la vue afin de la rétablir en cas d'erreur lors de la validation du formulaire
+							$_SESSION['ZWII_OUTPUT_PREV']['view'] = true;
 						}
 						// Librairies
 						if(array_key_exists('vendor', $output)) {
 							self::$outputVendor = array_merge(self::$outputVendor, $output['vendor']);
+							// Enregistre les librairies afin de les rétablir en cas d'erreur lors de la validation du formulaire
+							$_SESSION['ZWII_OUTPUT_PREV']['vendor'] = self::$outputVendor;
 						}
 						// Titre
 						if(array_key_exists('title', $output)) {
 							self::$outputTitle = helper::translate($output['title']);
+							// Enregistre le titre afin de le rétablir en cas d'erreur lors de la validation du formulaire
+							$_SESSION['ZWII_OUTPUT_PREV']['title'] = self::$outputTitle;
 						}
 					}
 					// Erreur 403

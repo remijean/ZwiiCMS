@@ -591,7 +591,8 @@ footer #footerSocials .zwiico-youtube:hover {
 	margin-top: 30px;
 }
 .lightbox .lightboxButtons .button {
-	width: auto;
+	width: 100%;
+	max-width: 80px;
 	margin: 0 10px;
 }
 

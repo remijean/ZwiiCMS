@@ -13,6 +13,30 @@
 var core = {};
 
 /**
+ * Crée un message d'alerte
+ */
+core.alert = function(text) {
+	var lightbox = lity(function($) {
+		return $("<div>")
+			.addClass("lightbox")
+			.append(
+				$("<span>").text(text),
+				$("<div>")
+					.addClass("lightboxButtons")
+					.append(
+						$("<a>")
+							.addClass("button")
+							.text("<?php echo helper::translate('Ok'); ?>")
+							.on("click", function() {
+								lightbox.close();
+							})
+					)
+			)
+	}(jQuery));
+	return false;
+};
+
+/**
  * Génère des variations d'une couleur
  */
 core.colorVariants = function(rgba) {
@@ -40,7 +64,7 @@ core.confirm = function(text, yesCallback, noCallback) {
 					.append(
 						$("<a>")
 							.addClass("button grey")
-							.text("Non")
+							.text("<?php echo helper::translate('Non'); ?>")
 							.on("click", function() {
 								lightbox.options('button', true);
 								lightbox.close();
@@ -50,7 +74,7 @@ core.confirm = function(text, yesCallback, noCallback) {
 						}),
 						$("<a>")
 							.addClass("button")
-							.text("Oui")
+							.text("<?php echo helper::translate('Oui'); ?>")
 							.on("click", function() {
 								lightbox.options('button', true);
 								lightbox.close();
