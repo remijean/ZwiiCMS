@@ -819,11 +819,10 @@ class core extends common {
 				if(array_key_exists($action, $module::$actions)) {
 					$output = $module->$action();
 					// Rétabli les données précédentes en cas d'erreur lors de la validation du formulaire
-					if(
-						common::$inputNotices
-						AND empty($_SESSION['ZWII_OUTPUT_PREV']) === false
-					) {
-						$output = array_merge($output, $_SESSION['ZWII_OUTPUT_PREV']);
+					if(empty($_SESSION['ZWII_OUTPUT_PREV']) === false) {
+						if(common::$inputNotices) {
+							$output = array_merge($output, $_SESSION['ZWII_OUTPUT_PREV']);
+						}
 						unset($_SESSION['ZWII_OUTPUT_PREV']);
 					}
 					// Check le rang de l'utilisateur
