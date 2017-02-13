@@ -104,7 +104,7 @@ class common {
 				'moduleId' => 'galleries',
 				'parentPageId' => '',
 				'position' => 3,
-				'rank' => self::RANK_MEMBER,
+				'rank' => self::RANK_VISITOR,
 				'targetBlank' => false,
 				'title' => 'Galeries'
 			],
