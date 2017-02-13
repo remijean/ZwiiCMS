@@ -171,15 +171,13 @@ class theme extends common {
 			];
 		}
 		// Affichage du template
-		else {
-			return [
-				'title' => 'Personnalisation du thème',
-				'vendor' => [
-					'tinycolorpicker'
-				],
-				'view' => true
-			];
-		}
+		return [
+			'title' => 'Personnalisation du thème',
+			'vendor' => [
+				'tinycolorpicker'
+			],
+			'view' => true
+		];
 	}
 
 	/**
@@ -206,15 +204,13 @@ class theme extends common {
 			];
 		}
 		// Affichage du template
-		else {
-			return [
-				'title' => 'Personnalisation du thème',
-				'vendor' => [
-					'tinycolorpicker'
-				],
-				'view' => true
-			];
-		}
+		return [
+			'title' => 'Personnalisation du thème',
+			'vendor' => [
+				'tinycolorpicker'
+			],
+			'view' => true
+		];
 	}
 
 	/**
@@ -245,15 +241,13 @@ class theme extends common {
 			];
 		}
 		// Affichage du template
-		else {
-			return [
-				'title' => 'Personnalisation du thème',
-				'vendor' => [
-					'tinycolorpicker'
-				],
-				'view' => true
-			];
-		}
+		return [
+			'title' => 'Personnalisation du thème',
+			'vendor' => [
+				'tinycolorpicker'
+			],
+			'view' => true
+		];
 	}
 
 	/**
@@ -289,15 +283,13 @@ class theme extends common {
 			];
 		}
 		// Affichage du template
-		else {
-			return [
-				'title' => 'Personnalisation du thème',
-				'vendor' => [
-					'tinycolorpicker'
-				],
-				'view' => true
-			];
-		}
+		return [
+			'title' => 'Personnalisation du thème',
+			'vendor' => [
+				'tinycolorpicker'
+			],
+			'view' => true
+		];
 	}
 
 	/**
@@ -327,15 +319,13 @@ class theme extends common {
 			];
 		}
 		// Affichage du template
-		else {
-			return [
-				'title' => 'Personnalisation du thème',
-				'vendor' => [
-					'tinycolorpicker'
-				],
-				'view' => true
-			];
-		}
+		return [
+			'title' => 'Personnalisation du thème',
+			'vendor' => [
+				'tinycolorpicker'
+			],
+			'view' => true
+		];
 	}
 
 }

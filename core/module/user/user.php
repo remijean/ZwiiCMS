@@ -58,12 +58,10 @@ class user extends common {
 			];
 		}
 		// Affichage du template
-		else {
-			return [
-				'title' => 'Nouvel utilisateur',
-				'view' => true
-			];
-		}
+		return [
+			'title' => 'Nouvel utilisateur',
+			'view' => true
+		];
 	}
 
 	/**
@@ -89,14 +87,12 @@ class user extends common {
 			];
 		}
 		// Suppression
-		else {
-			$this->deleteData(['user', $this->getUrl(2)]);
-			return [
-				'redirect' => helper::baseUrl() . 'user',
-				'notification' => 'Utilisateur supprimé',
-				'state' => true
-			];
-		}
+		$this->deleteData(['user', $this->getUrl(2)]);
+		return [
+			'redirect' => helper::baseUrl() . 'user',
+			'notification' => 'Utilisateur supprimé',
+			'state' => true
+		];
 	}
 
 	/**
@@ -187,12 +183,10 @@ class user extends common {
 			}
 		}
 		// Affichage du template
-		else {
-			return [
-				'title' => $this->getData(['user', $this->getUrl(2), 'name']),
-				'view' => true
-			];
-		}
+		return [
+			'title' => $this->getData(['user', $this->getUrl(2), 'name']),
+			'view' => true
+		];
 	}
 
 	/**
@@ -253,12 +247,10 @@ class user extends common {
 			}
 		}
 		// Affichage du template
-		else {
-			return [
-				'title' => 'Connexion',
-				'view' => true
-			];
-		}
+		return [
+			'title' => 'Connexion',
+			'view' => true
+		];
 	}
 
 	/**

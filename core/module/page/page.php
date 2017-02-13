@@ -78,14 +78,12 @@ class page extends common {
 			];
 		}
 		// Suppression
-		else {
-			$this->deleteData(['page', $this->getUrl(2)]);
-			return [
-				'redirect' => helper::baseUrl(),
-				'notification' => 'Page supprimée',
-				'state' => true
-			];
-		}
+		$this->deleteData(['page', $this->getUrl(2)]);
+		return [
+			'redirect' => helper::baseUrl(),
+			'notification' => 'Page supprimée',
+			'state' => true
+		];
 	}
 
 	/**
@@ -98,8 +96,25 @@ class page extends common {
 				'access' => false
 			];
 		}
+		// Liste des modules
+		$moduleIds = [
+			'' => 'Aucun'
+		];
+		$iterator = new DirectoryIterator('module/');
+		foreach($iterator as $fileInfos) {
+			if(is_file($fileInfos->getPathname() . '/' . $fileInfos->getFilename() . '.php')) {
+				$moduleIds[$fileInfos->getBasename()] = ucfirst($fileInfos->getBasename());
+			}
+		}
+		self::$moduleIds = $moduleIds;
+		// Pages sans parent
+		foreach($this->getHierarchy() as $parentPageId => $childrenPageIds) {
+			if($parentPageId !== $this->getUrl(2)) {
+				self::$pagesNoParentId[$parentPageId] = $this->getData(['page', $parentPageId, 'title']);
+			}
+		}
 		// Soumission du formulaire
-		elseif($this->isPost()) {
+		if($this->isPost()) {
 			$pageId = $this->getInput('pageEditTitle', helper::FILTER_ID);
 			// Si l'id a changée
 			if($pageId !== $this->getUrl(2)) {
@@ -176,32 +191,13 @@ class page extends common {
 			}
 		}
 		// Affichage du template
-		else {
-			// Liste des modules
-			$moduleIds = [
-				'' => 'Aucun'
-			];
-			$iterator = new DirectoryIterator('module/');
-			foreach($iterator as $fileInfos) {
-				if(is_file($fileInfos->getPathname() . '/' . $fileInfos->getFilename() . '.php')) {
-					$moduleIds[$fileInfos->getBasename()] = ucfirst($fileInfos->getBasename());
-				}
-			}
-			self::$moduleIds = $moduleIds;
-			// Pages sans parent
-			foreach($this->getHierarchy() as $parentPageId => $childrenPageIds) {
-				if($parentPageId !== $this->getUrl(2)) {
-					self::$pagesNoParentId[$parentPageId] = $this->getData(['page', $parentPageId, 'title']);
-				}
-			}
-			return [
-				'title' => $this->getData(['page', $this->getUrl(2), 'title']),
-				'vendor' => [
-					'tinymce'
-				],
-				'view' => true
-			];
-		}
+		return [
+			'title' => $this->getData(['page', $this->getUrl(2), 'title']),
+			'vendor' => [
+				'tinymce'
+			],
+			'view' => true
+		];
 	}
 
 }

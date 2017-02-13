@@ -897,8 +897,6 @@ class core extends common {
 						// Affichage
 						if(array_key_exists('display', $output)) {
 							self::$outputDisplay = $output['display'];
-							// Enregistre l'affichage afin de le rétablir en cas d'erreur lors de la validation du formulaire
-							$_SESSION['ZWII_OUTPUT_PREV']['display'] = self::$outputDisplay;
 						}
 						// Contenu du module
 						if(self::$outputDisplay === self::DISPLAY_JSON) {

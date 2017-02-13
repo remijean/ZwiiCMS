@@ -65,16 +65,13 @@ class form extends common {
 				'state' => true
 			];
 		}
-		// Affichage du template
-		else {
-			return [
-				'title' => 'Configuration du module',
-				'vendor' => [
-					'jquery-ui'
-				],
-				'view' => true
-			];
-		}
+		return [
+			'title' => 'Configuration du module',
+			'vendor' => [
+				'jquery-ui'
+			],
+			'view' => true
+		];
 	}
 
 	/**

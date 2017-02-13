@@ -49,6 +49,13 @@ class config extends common {
 	 * Configuration
 	 */
 	public function index() {
+		// Liste des langues
+		$iterator = new DirectoryIterator('core/lang/');
+		foreach($iterator as $fileInfos) {
+			if($fileInfos->isFile()) {
+				self::$languages[$fileInfos->getBasename('.json')] = $fileInfos->getBasename('.json');
+			}
+		}
 		// Soumission du formulaire
 		if($this->isPost()) {
 			$this->setData([
@@ -105,19 +112,10 @@ class config extends common {
 			];
 		}
 		// Affichage du template
-		else {
-			// Liste des langues
-			$iterator = new DirectoryIterator('core/lang/');
-			foreach($iterator as $fileInfos) {
-				if($fileInfos->isFile()) {
-					self::$languages[$fileInfos->getBasename('.json')] = $fileInfos->getBasename('.json');
-				}
-			}
-			return [
-				'title' => 'Configuration',
-				'view' => true
-			];
-		}
+		return [
+			'title' => 'Configuration',
+			'view' => true
+		];
 	}
 
 }
