@@ -31,12 +31,12 @@ class form extends common {
 	];
 
 	/**
-	 * Configuration du module
+	 * Configuration
 	 */
 	public function config() {
 		// Soumission du formulaire
 		if($this->isPost()) {
-			// Configuration du module
+			// Configuration
 			$this->setData([
 				'module',
 				$this->getUrl(0),
@@ -106,7 +106,7 @@ class form extends common {
 	}
 
 	/**
-	 * Accueil du module
+	 * Accueil
 	 */
 	public function index() {
 		// Soumission du formulaire
@@ -134,7 +134,7 @@ class form extends common {
 			// Envoi du mail
 			if(self::$inputNotices === []) {
 				if($this->getData(['module', $this->getUrl(0), 'config', 'mail'])) {
-					helper::mail(
+					$sent = helper::mail(
 						false,
 						$this->getData(['module', $this->getUrl(0), 'config', 'mail']),
 						helper::translate('Mail en provenance de votre site'),
@@ -142,14 +142,22 @@ class form extends common {
 					);
 				}
 			}
+			// Notification en fonction du résultat
+			if(isset($sent)) {
+				$notification = 'Formulaire soumis';
+			}
+			else {
+				$notification = 'Formulaire soumis, mais impossible d\'envoyer le mail';
+			}
 			return [
-				'notification' => 'Formulaire soumis',
+				'notification' => $notification,
 				'redirect' => helper::baseUrl() . $this->getUrl(),
 				'state' => true
 			];
 		}
 		// Affichage du template
 		return [
+			'editButton' => true,
 			'view' => true
 		];
 	}

@@ -184,7 +184,8 @@ td > .col12 {
 
 /* Notice */
 .notice {
-	margin-bottom: 2px;
+	display: inline-block;
+	margin: 0 0 2px 5px;
 	color: #F3674A;
 }
 
@@ -642,7 +643,7 @@ textarea {
 	resize: vertical;
 }
 label {
-	display: block;
+	display: inline-block;
 	margin-bottom: 2px;
 }
 /* Simule le padding des cols pour les inputs en dehors des cols */

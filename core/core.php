@@ -23,7 +23,7 @@ class common {
 	const RANK_MEMBER = 1;
 	const RANK_MODERATOR = 2;
 	const RANK_ADMIN = 3;
-	const ZWII_VERSION = '8.0.0 bêta 0.4';
+	const ZWII_VERSION = '8.0.0 bêta 0.5';
 
 	public static $actions = [];
 	public static $demo = false;
@@ -96,6 +96,18 @@ class common {
 				'targetBlank' => false,
 				'title' => 'Cachée'
 			],
+			'galeries' => [
+				'content' => "",
+				'hideTitle' => false,
+				'metaDescription' => '',
+				'metaTitle' => '',
+				'moduleId' => 'galleries',
+				'parentPageId' => '',
+				'position' => 3,
+				'rank' => self::RANK_MEMBER,
+				'targetBlank' => false,
+				'title' => 'Galeries'
+			],
 			'site-de-zwii' => [
 				'content' => "",
 				'hideTitle' => false,
@@ -103,7 +115,7 @@ class common {
 				'metaTitle' => '',
 				'moduleId' => 'redirection',
 				'parentPageId' => '',
-				'position' => 3,
+				'position' => 4,
 				'rank' => self::RANK_VISITOR,
 				'targetBlank' => true,
 				'title' => 'Site de Zwii'
@@ -115,13 +127,26 @@ class common {
 				'metaTitle' => '',
 				'moduleId' => 'form',
 				'parentPageId' => '',
-				'position' => 4,
+				'position' => 5,
 				'rank' => self::RANK_VISITOR,
 				'targetBlank' => false,
 				'title' => 'Contact'
 			]
 		],
 		'module' => [
+			'galeries' => [
+				'beaux-paysages' => [
+					'config' => [
+						'name' => 'Beaux paysages',
+						'directory' => 'site/file/source/gallery'
+					],
+					'legend' => [
+						'desert.jpg' => 'Désert',
+						'iceberg.jpg' => 'Iceberg',
+						'meadow.jpg' => 'Pairie'
+					]
+				]
+			],
 			'site-de-zwii' => [
 				'url' => 'http://zwiicms.com/',
 				'count' => 0
@@ -255,6 +280,7 @@ class common {
 	public static $inputNotices = [];
 	public static $outputContent = '';
 	public static $outputDisplay = self::DISPLAY_LAYOUT_NORMAL;
+	public static $outputEditButton = false;
 	public static $outputMetaDescription = '';
 	public static $outputMetaTitle = '';
 	public static $outputScript = '';
@@ -278,14 +304,19 @@ class common {
 		self::RANK_MODERATOR => 'Modérateur',
 		self::RANK_ADMIN => 'Administrateur'
 	];
-	public static $rankPublics = [
-		self::RANK_VISITOR => 'Visiteur',
+	public static $rankEdits = [
+		self::RANK_BANNED => 'Banni',
 		self::RANK_MEMBER => 'Membre',
 		self::RANK_MODERATOR => 'Modérateur',
 		self::RANK_ADMIN => 'Administrateur'
 	];
-	public static $rankVisibles = [
-		self::RANK_BANNED => 'Banni',
+	public static $rankNews = [
+		self::RANK_MEMBER => 'Membre',
+		self::RANK_MODERATOR => 'Modérateur',
+		self::RANK_ADMIN => 'Administrateur'
+	];
+	public static $rankPublics = [
+		self::RANK_VISITOR => 'Visiteur',
 		self::RANK_MEMBER => 'Membre',
 		self::RANK_MODERATOR => 'Modérateur',
 		self::RANK_ADMIN => 'Administrateur'
@@ -391,7 +422,7 @@ class common {
 				AND isset($_SESSION['ZWII_INPUT_REQUIRED'])
 				AND array_key_exists($key, $_SESSION['ZWII_INPUT_REQUIRED'])
 			) {
-				common::$inputNotices[$key] = 'Ce champ est requis';
+				common::$inputNotices[$key] = 'champ requis';
 			}
 		}
 		// La clef est une chaine
@@ -400,7 +431,7 @@ class common {
 			AND isset($_SESSION['ZWII_INPUT_REQUIRED'])
 			AND array_key_exists($key, $_SESSION['ZWII_INPUT_REQUIRED'])
 		) {
-			common::$inputNotices[$key] = 'Ce champ est requis';
+			common::$inputNotices[$key] = 'champ requis';
 		}
 	}
 
@@ -827,7 +858,7 @@ class core extends common {
 					}
 					// Check le rang de l'utilisateur
 					if(
-						$module::$actions[$action] === 0
+						$module::$actions[$action] === self::RANK_VISITOR
 						OR (
 							$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
 							AND $this->getUser('rank') >= $module::$actions[$action]
@@ -871,7 +902,7 @@ class core extends common {
 						}
 						// Contenu du module
 						if(self::$outputDisplay === self::DISPLAY_JSON) {
-							self::$outputContent = $output['state'];
+							self::$outputContent = $output['result'];
 						}
 						elseif(array_key_exists('view', $output) OR common::$inputNotices) {
 							// Chemin en fonction d'un module du coeur ou d'un module
@@ -910,6 +941,12 @@ class core extends common {
 							// Enregistre le titre afin de le rétablir en cas d'erreur lors de la validation du formulaire
 							$_SESSION['ZWII_OUTPUT_PREV']['title'] = self::$outputTitle;
 						}
+						// Bouton d'édition de la page
+						if(array_key_exists('editButton', $output)) {
+							self::$outputEditButton = true;
+							// Enregistre le bouton d'édition afin de le rétablir en cas d'erreur lors de la validation du formulaire
+							$_SESSION['ZWII_OUTPUT_PREV']['editButton'] = self::$outputEditButton;
+						}
 					}
 					// Erreur 403
 					else {
@@ -922,7 +959,7 @@ class core extends common {
 		if($access === false) {
 			http_response_code(403);
 			self::$outputTitle = helper::translate('Erreur 403');
-			self::$outputContent = template::speech('vous n\'êtes pas autorisé à accéder à cette page...');
+			self::$outputContent = template::speech('Vous n\'êtes pas autorisé à accéder à cette page...');
 		}
 		elseif(self::$outputContent === '') {
 			http_response_code(404);
@@ -1490,11 +1527,12 @@ class layout extends common {
 			$rightItems = '';
 			if($this->getUser('rank') >= self::RANK_MODERATOR) {
 				if(
-					$this->getUrl(1) === null
-					AND (
-						$this->getData(['page', $this->getUrl(0)])
-						OR $this->getUrl(0) === "" // Lorsqu'un utilisateur arrive sur la racine du site
-					)
+					// Sur un module de page qui autorise le bouton de modification de la page
+					self::$outputEditButton
+					// Sur une page sans module
+					OR $this->getData(['page', $this->getUrl(0), 'moduleId']) === ''
+					// Sur une page d'accueil
+					OR $this->getUrl(0) === ''
 				) {
 					$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/edit/' . $this->getUrl(0) . '" title="' . helper::translate('Modifier la page') . '">' . template::ico('pencil') . '</a></li>';
 				}
@@ -1585,6 +1623,7 @@ class layout extends common {
 		}
 		echo '<script>' . helper::minifyJs($vars) . '</script>';
 		// Librairies
+		$moduleId = $this->getData(['page', $this->getUrl(0), 'moduleId']);
 		foreach(self::$outputVendor as $vendorName) {
 			// Coeur
 			if(file_exists('core/vendor/' . $vendorName . '/inc.json')) {
@@ -1592,10 +1631,11 @@ class layout extends common {
 			}
 			// Module
 			elseif(
-				in_array($this->getUrl(0), self::$coreModuleIds) === false
-				AND file_exists('module/' . $this->getUrl(0) . '/vendor/' . $vendorName . '/inc.json')
+				$moduleId
+				AND in_array($moduleId, self::$coreModuleIds) === false
+				AND file_exists('module/' . $moduleId . '/vendor/' . $vendorName . '/inc.json')
 			) {
-				$vendorPath = 'module/' . $this->getUrl(0) . '/vendor/' . $vendorName . '/';
+				$vendorPath = 'module/' . $moduleId . '/vendor/' . $vendorName . '/';
 			}
 			// Sinon continue
 			else {
@@ -1838,7 +1878,7 @@ class template {
 	 * @return string
 	 */
 	public static function notice($id) {
-		return '<div class="notice">' . helper::translate(common::$inputNotices[$id]) . '</div>';
+		return '<span class="notice">(' . helper::translate(common::$inputNotices[$id]) . ')</span>';
 	}
 
 	/**

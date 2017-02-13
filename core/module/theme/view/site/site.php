@@ -102,7 +102,7 @@
 			<?php echo template::button('themeSiteBack', [
 				'class' => 'grey',
 				'href' => helper::baseUrl() . 'theme',
-				'value' => 'Annuler'
+				'value' => 'Retour'
 			]); ?>
 		</div>
 		<div class="col2">

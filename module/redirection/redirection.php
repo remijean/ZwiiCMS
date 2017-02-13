@@ -20,7 +20,7 @@ class redirection extends common {
 	];
 
 	/**
-	 * Configuration du module
+	 * Configuration
 	 */
 	public function config() {
 		// Soumission du formulaire
@@ -40,7 +40,7 @@ class redirection extends common {
 	}
 
 	/**
-	 * Accueil du module
+	 * Accueil
 	 */
 	public function index() {
 		// Message si l'utilisateur peut éditer la page

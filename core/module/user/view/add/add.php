@@ -19,7 +19,7 @@
 						]); ?>
 					</div>
 				</div>
-				<?php echo template::select('userAddRank', self::$rankVisibles, [
+				<?php echo template::select('userAddRank', self::$rankNews, [
 					'label' => 'Rang',
 					'required' => true,
 					'selected' => self::RANK_MEMBER
@@ -49,7 +49,7 @@
 			<?php echo template::button('userAddBack', [
 				'class' => 'grey',
 				'href' => helper::baseUrl() . 'user',
-				'value' => 'Annuler'
+				'value' => 'Retour'
 			]); ?>
 		</div>
 		<div class="col2">

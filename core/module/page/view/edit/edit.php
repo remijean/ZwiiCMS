@@ -1,4 +1,4 @@
-<form method="post">
+<form id="pageEditForm" method="post">
 	<div class="row">
 		<div class="col12">
 			<div class="block">
@@ -14,9 +14,7 @@
 					<div class="col6">
 						<div class="row">
 							<div class="col10">
-								<?php echo template::hidden('pageEditModuleIdOld', [
-									'value' => $this->getData(['page', $this->getUrl(2), 'moduleId'])
-								]); ?>
+								<?php echo template::hidden('pageEditModuleRedirect'); ?>
 								<?php echo template::select('pageEditModuleId', $module::$moduleIds, [
 									'help' => 'En cas de changement de module, les données du module précédent seront supprimées.',
 									'label' => 'Module',
@@ -26,7 +24,6 @@
 							<div class="col2 verticalAlignBottom">
 								<?php echo template::button('pageEditModuleConfig', [
 									'disabled' => (bool) $this->getData(['page', $this->getUrl(2), 'moduleId']) === false,
-									'href' => helper::baseUrl() . $this->getUrl(2) . '/config',
 									'value' => template::ico('gear')
 								]); ?>
 							</div>
@@ -84,7 +81,7 @@
 			<?php echo template::button('pageEditBack', [
 				'class' => 'grey',
 				'href' => helper::baseUrl() . $this->getUrl(2),
-				'value' => 'Annuler'
+				'value' => 'Retour'
 			]); ?>
 		</div>
 		<div class="col2">

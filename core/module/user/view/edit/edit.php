@@ -21,7 +21,7 @@
 					</div>
 				</div>
 				<?php if($this->getUser('rank') === self::RANK_ADMIN): ?>
-					<?php echo template::select('userEditRank', self::$rankVisibles, [
+					<?php echo template::select('userEditRank', self::$rankEdits, [
 						'label' => 'Rang',
 						'required' => true,
 						'selected' => $this->getData(['user', $this->getUrl(2), 'rank'])
@@ -52,7 +52,7 @@
 				<?php echo template::button('userEditBack', [
 					'class' => 'grey',
 					'href' => helper::baseUrl() . 'user',
-					'value' => 'Annuler'
+					'value' => 'Retour'
 
 				]); ?>
 			</div>

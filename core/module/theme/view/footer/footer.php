@@ -83,7 +83,7 @@
 			<?php echo template::button('themeFooterBack', [
 				'class' => 'grey',
 				'href' => helper::baseUrl() . 'theme',
-				'value' => 'Annuler'
+				'value' => 'Retour'
 			]); ?>
 		</div>
 		<div class="col2">

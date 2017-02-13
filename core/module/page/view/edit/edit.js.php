@@ -14,8 +14,9 @@
  * Confirmation de suppression
  */
 $("#pageEditDelete").on("click", function() {
+	var _this = $(this);
 	return core.confirm("<?php echo helper::translate('Êtes-vous sûr de vouloir supprimer cette page ?'); ?>", function() {
-		$(location).attr("href", $("#pageEditDelete").attr("href"));
+		$(location).attr("href", _this.attr("href"));
 	});
 });
 
@@ -41,12 +42,11 @@ else {
 }
 
 /**
- * Alerte lors du clic sur le bouon de configuration du module
+ * Soumission du formulaire pour éditer le module
  */
 $("#pageEditModuleConfig").on("click", function() {
-	if(pageEditModuleIdDOM.val() !== $("#pageEditModuleIdOld").val()) {
-		return core.alert("<?php echo helper::translate('Vous devez enregistrer la page avant de configurer le nouveau module.'); ?>");
-	}
+	$("#pageEditModuleRedirect").val(true);
+	$("#pageEditForm").trigger("submit");
 });
 
 /**

@@ -25,24 +25,6 @@ class page extends common {
 	public static $moduleIds = [];
 
 	/**
-	 * Constructeur du module
-	 */
-	function __construct() {
-		parent::__construct();
-		// Liste des modules
-		$moduleIds = [
-			'' => 'Aucun'
-		];
-		$iterator = new DirectoryIterator('module/');
-		foreach($iterator as $fileInfos) {
-			if(is_file($fileInfos->getPathname() . '/' . $fileInfos->getFilename() . '.php')) {
-				$moduleIds[$fileInfos->getBasename()] = ucfirst($fileInfos->getBasename());
-			}
-		}
-		self::$moduleIds = $moduleIds;
-	}
-
-	/**
 	 * Création
 	 */
 	public function add() {
@@ -118,7 +100,7 @@ class page extends common {
 		}
 		// Soumission du formulaire
 		elseif($this->isPost()) {
-			$pageId = $this->getInput('pageEditTitle', helper::FILTER_ID) ? $this->getInput('pageEditTitle', helper::FILTER_ID) : $this->getUrl(2);
+			$pageId = $this->getInput('pageEditTitle', helper::FILTER_ID);
 			// Si l'id a changée
 			if($pageId !== $this->getUrl(2)) {
 				// Incrémente la nouvelle id de la page pour éviter les doublons
@@ -137,6 +119,10 @@ class page extends common {
 				if($this->getData(['config', 'homePageId']) === $this->getUrl(2)) {
 					$this->setData(['config', 'homePageId', $pageId]);
 				}
+			}
+			// Supprime les données du module en cas de changement
+			if($this->getInput('pageEditModuleId') !== $this->getData(['page', $pageId, 'moduleId'])) {
+				$this->deleteData(['module', $pageId]);
 			}
 			// Si la page est une page enfant, actualise les positions des autres enfants du parent, sinon actualise les pages sans parents
 			$lastPosition = 1;
@@ -173,14 +159,35 @@ class page extends common {
 					'title' => $this->getInput('pageEditTitle')
 				]
 			]);
-			return [
-				'redirect' => helper::baseUrl() . $pageId,
-				'notification' => 'Modifications enregistrées',
-				'state' => true
-			];
+			// Redirection vers la configuration
+			if($this->getInput('pageEditModuleRedirect', helper::FILTER_BOOLEAN)) {
+				return [
+					'redirect' => helper::baseUrl() . $pageId . '/config',
+					'state' => true
+				];
+			}
+			// Redirection vers la page
+			else {
+				return [
+					'redirect' => helper::baseUrl() . $pageId,
+					'notification' => 'Modifications enregistrées',
+					'state' => true
+				];
+			}
 		}
 		// Affichage du template
 		else {
+			// Liste des modules
+			$moduleIds = [
+				'' => 'Aucun'
+			];
+			$iterator = new DirectoryIterator('module/');
+			foreach($iterator as $fileInfos) {
+				if(is_file($fileInfos->getPathname() . '/' . $fileInfos->getFilename() . '.php')) {
+					$moduleIds[$fileInfos->getBasename()] = ucfirst($fileInfos->getBasename());
+				}
+			}
+			self::$moduleIds = $moduleIds;
 			// Pages sans parent
 			foreach($this->getHierarchy() as $parentPageId => $childrenPageIds) {
 				if($parentPageId !== $this->getUrl(2)) {
