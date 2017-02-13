@@ -23,7 +23,6 @@ function dirs() {
 		success: function(result) {
 			if($(result).not(oldResult).length !== 0 || $(oldResult).not(result).length !== 0) {
 				directoryDOM.empty();
-				console.log(1);
 				for(var i = 0; i < result.length; i++) {
 					directoryDOM.append(function(i) {
 						var option = $("<option>").val(result[i]).text(result[i]);
