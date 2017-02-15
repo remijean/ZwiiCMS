@@ -631,6 +631,13 @@ textarea.notice {
 	border: 1px solid #F3674A;
 	background: #FEEDE9;
 }
+input[type='text'].notice:hover,
+input[type='password'].notice:hover,
+.inputFile.notice:hover,
+select.notice:hover,
+textarea.notice:hover {
+	border: 1px solid #CA2E0D;
+}
 button:disabled,
 input:disabled,
 select:disabled,
