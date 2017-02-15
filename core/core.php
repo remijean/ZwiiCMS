@@ -1891,6 +1891,7 @@ class template {
 			'class' => 'inputFileHidden'
 		]);
 		// Champ d'upload
+		$html .= '<div>';
 		$html .= sprintf(
 			'<a
 				href="' .
@@ -1913,11 +1914,11 @@ class template {
 			$attributes['disabled'] ? 'disabled' : '',
 			helper::sprintAttributes($attributes, ['class', 'extensions', 'type'])
 		);
-		// Bouton de suppression
 		$html .= self::button($attributes['id'] . 'Delete', [
 			'class' => 'inputFileDelete',
 			'value' => self::ico('cancel')
 		]);
+		$html .= '</div>';
 		// Fin du wrapper
 		$html .= '</div>';
 		// Retourne le html
