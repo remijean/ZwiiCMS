@@ -660,7 +660,7 @@ textarea {
 	resize: vertical;
 }
 label {
-	display: inline-block;
+	display: block;
 	margin-bottom: 2px;
 }
 /* Simule le padding des cols pour les inputs en dehors des cols */
