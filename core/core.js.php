@@ -217,7 +217,7 @@ core.start = function() {
 	}).trigger("change");
 	// Suppression du fichier contenu dans le champ
 	$(".inputFileDelete").on("click", function() {
-		$(this).parent().find(".inputFileHidden").val("").trigger("change");
+		$(this).parents(".inputWrapper").find(".inputFileHidden").val("").trigger("change");
 	});
 	// Confirmation déconnexion
 	$("#panelLogout").on("click", function() {
