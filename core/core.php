@@ -97,7 +97,7 @@ class common {
 				'title' => 'Cachée'
 			],
 			'galeries' => [
-				'content' => "<p>Cette page contient une instance du module de galeries photos, cliquez sur l'une des galeries afin de l'ouvrir.</p>",
+				'content' => "<p>Cette page contient une instance du module de galeries photos. Cliquez sur la galerie ci-dessous afin de voir les photos qu'elle contient.</p>",
 				'hideTitle' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
