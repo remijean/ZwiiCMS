@@ -924,15 +924,10 @@ class core extends common {
 								'display' => $output['display']
 							]);
 						}
-						// Affiche le contenu de la page
-						$beforeContent = '';
-						if($output['pageContent'] AND $pageContent) {
-							$beforeContent = $pageContent;
-						}
 						// Contenu brut
 						if($output['content']) {
 							$this->addOutput([
-								'content' => $beforeContent . $output['content']
+								'content' => $output['content']
 							]);
 						}
 						// Contenu par vue
@@ -961,7 +956,7 @@ class core extends common {
 								ob_start();
 								include $viewPath;
 								$this->addOutput([
-									'content' => $beforeContent . ob_get_clean()
+									'content' => ($output['pageContent'] ? $pageContent : '') . ob_get_clean()
 								]);
 							}
 						}
