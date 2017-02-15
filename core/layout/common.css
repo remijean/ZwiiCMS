@@ -19,7 +19,7 @@ body {
 	min-height: 100%;
 }
 body {
-	color: #555;
+	color: #212223;
 	margin: 0 10px;
 	font-size: 14px;
 }
@@ -327,7 +327,7 @@ nav li:hover ul {
 }
 nav a {
 	display: inherit;
-	color: #555;
+	color: #212223;
 }
 nav a:hover {
 	text-decoration: none;
@@ -551,7 +551,7 @@ footer #footerSocials .zwiico-youtube:hover {
 	margin: -20px -20px 10px -20px;
 	padding: 10px;
 	background: #F5F5F5;
-	color: #555;
+	color: #212223;
 }
 
 /* Aides */
@@ -610,7 +610,7 @@ textarea {
 	background: #FDFDFD;
 	border: 1px solid #DDD;
 	width: 100%;
-	color: #555;
+	color: #212223;
 	font-family: inherit;
 }
 select {
@@ -698,7 +698,7 @@ label {
 }
 .button.grey {
 	background: #E9E9E9;
-	color: #555 !important;
+	color: #212223 !important;
 }
 .button.grey:hover {
 	background: #E1E1E1;
@@ -711,7 +711,7 @@ label {
 .inputFile {
 	margin: 0;
 	display: inline-block;
-	color: #555;
+	color: #212223;
 	width: 88%;
 }
 .inputFileDelete {
