@@ -22,6 +22,8 @@
 				</div>
 				<?php if($this->getUser('rank') === self::RANK_ADMIN): ?>
 					<?php echo template::select('userEditRank', self::$rankEdits, [
+						'disabled' => ($this->getUrl(2) === $this->getUser('id')),
+						'help' => ($this->getUrl(2) === $this->getUser('id') ? 'Impossible de modifier votre propre rang.' : ''),
 						'label' => 'Rang',
 						'required' => true,
 						'selected' => $this->getData(['user', $this->getUrl(2), 'rank'])

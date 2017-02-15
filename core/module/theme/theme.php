@@ -164,20 +164,21 @@ class theme extends common {
 				'imageRepeat' => $this->getInput('themeBodyImageRepeat'),
 				'imageSize' => $this->getInput('themeBodyImageSize')
 			]]);
-			return [
+			// Valeurs en sortie
+			$this->addOutput([
 				'notification' => 'Modifications enregistrées',
 				'redirect' => helper::baseUrl() . 'theme',
 				'state' => true
-			];
+			]);
 		}
-		// Affichage du template
-		return [
+		// Valeurs en sortie
+		$this->addOutput([
 			'title' => 'Personnalisation du thème',
 			'vendor' => [
 				'tinycolorpicker'
 			],
-			'view' => true
-		];
+			'view' => 'body'
+		]);
 	}
 
 	/**
@@ -197,20 +198,21 @@ class theme extends common {
 				'text' => $this->getInput('themeFooterText'),
 				'textAlign' => $this->getInput('themeFooterTextAlign')
 			]]);
-			return [
+			// Valeurs en sortie
+			$this->addOutput([
 				'notification' => 'Modifications enregistrées',
 				'redirect' => helper::baseUrl() . 'theme',
 				'state' => true
-			];
+			]);
 		}
-		// Affichage du template
-		return [
+		// Valeurs en sortie
+		$this->addOutput([
 			'title' => 'Personnalisation du thème',
 			'vendor' => [
 				'tinycolorpicker'
 			],
-			'view' => true
-		];
+			'view' => 'footer'
+		]);
 	}
 
 	/**
@@ -234,30 +236,32 @@ class theme extends common {
 				'textHide' => $this->getInput('themeHeaderTextHide', helper::FILTER_BOOLEAN),
 				'textTransform' => $this->getInput('themeHeaderTextTransform')
 			]]);
-			return [
+			// Valeurs en sortie
+			$this->addOutput([
 				'notification' => 'Modifications enregistrées',
 				'redirect' => helper::baseUrl() . 'theme',
 				'state' => true
-			];
+			]);
 		}
-		// Affichage du template
-		return [
+		// Valeurs en sortie
+		$this->addOutput([
 			'title' => 'Personnalisation du thème',
 			'vendor' => [
 				'tinycolorpicker'
 			],
-			'view' => true
-		];
+			'view' => 'header'
+		]);
 	}
 
 	/**
 	 * Accueil de la personnalisation
 	 */
 	public function index() {
-		return [
+		// Valeurs en sortie
+		$this->addOutput([
 			'title' => 'Personnalisation du thème',
-			'view' => true
-		];
+			'view' => 'index'
+		]);
 	}
 
 	/**
@@ -276,20 +280,21 @@ class theme extends common {
 				'textAlign' => $this->getInput('themeMenuTextAlign'),
 				'textTransform' => $this->getInput('themeMenuTextTransform')
 			]]);
-			return [
+			// Valeurs en sortie
+			$this->addOutput([
 				'notification' => 'Modifications enregistrées',
 				'redirect' => helper::baseUrl() . 'theme',
 				'state' => true
-			];
+			]);
 		}
-		// Affichage du template
-		return [
+		// Valeurs en sortie
+		$this->addOutput([
 			'title' => 'Personnalisation du thème',
 			'vendor' => [
 				'tinycolorpicker'
 			],
-			'view' => true
-		];
+			'view' => 'menu'
+		]);
 	}
 
 	/**
@@ -312,20 +317,21 @@ class theme extends common {
 				'shadow' => $this->getInput('themeSiteShadow'),
 				'width' => $this->getInput('themeSiteWidth')
 			]]);
-			return [
+			// Valeurs en sortie
+			$this->addOutput([
 				'notification' => 'Modifications enregistrées',
 				'redirect' => helper::baseUrl() . 'theme',
 				'state' => true
-			];
+			]);
 		}
-		// Affichage du template
-		return [
+		// Valeurs en sortie
+		$this->addOutput([
 			'title' => 'Personnalisation du thème',
 			'vendor' => [
 				'tinycolorpicker'
 			],
-			'view' => true
-		];
+			'view' => 'site'
+		]);
 	}
 
 }

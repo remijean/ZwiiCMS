@@ -1,4 +1,4 @@
-<?php $layout = new layout(); ?>
+<?php $layout = new layout($this); ?>
 <!DOCTYPE html>
 <html>
 <head>

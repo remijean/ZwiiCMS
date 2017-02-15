@@ -3,20 +3,20 @@
 		<h4><?php echo helper::translate('Nouvelle galerie'); ?></h4>
 		<div class="row">
 			<div class="col6">
-				<?php echo template::text('galleriesConfigName', [
+				<?php echo template::text('galleryConfigName', [
 					'label' => 'Nom',
 					'required' => true
 				]); ?>
 			</div>
 			<div class="col4">
-				<?php echo template::hidden('galleriesConfigDirectoryOld'); ?>
-				<?php echo template::select('galleriesConfigDirectory', [], [
+				<?php echo template::hidden('galleryConfigDirectoryOld'); ?>
+				<?php echo template::select('galleryConfigDirectory', [], [
 					'label' => 'Dossier cible',
 					'required' => true
 				]); ?>
 			</div>
 			<div class="col2 verticalAlignBottom">
-				<?php echo template::submit('galleriesConfigSubmit', array(
+				<?php echo template::submit('galleryConfigSubmit', array(
 					'value' => 'Créer'
 				)); ?>
 			</div>
@@ -27,7 +27,7 @@
 	<?php endif; ?>
 	<div class="row">
 		<div class="col2 offset10">
-			<?php echo template::button('galleriesConfigBack', [
+			<?php echo template::button('galleryConfigBack', [
 				'class' => 'grey',
 				'href' => helper::baseUrl() . 'page/edit/' . $this->getUrl(0),
 				'value' => 'Retour'

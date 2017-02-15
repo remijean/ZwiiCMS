@@ -29,10 +29,10 @@
 					'value' => $this->getData(['config', 'favicon'])
 				]); ?>
 				<?php echo template::text('configAnalyticsId', [
-					'label' => 'Google Analytics',
-					'value' => $this->getData(['config', 'analyticsId']),
 					'help' => 'Saisissez l\'ID de suivi de votre propriété Google Analytics.',
-					'placeholder' => 'UA-XXXXXXXX-X'
+					'label' => 'Google Analytics',
+					'placeholder' => 'UA-XXXXXXXX-X',
+					'value' => $this->getData(['config', 'analyticsId'])
 				]); ?>
 				<?php echo template::checkbox('configCookieConsent', true, 'Message de consentement pour l\'utilisation des cookies', [
 					'checked' => $this->getData(['config', 'cookieConsent'])
@@ -49,48 +49,48 @@
 				<div class="row">
 					<div class="col6">
 						<?php echo template::text('configSocialFacebookId', [
+							'help' => 'Saisissez votre ID Facebook : https://www.facebook.com/[CETTE PARTIE].',
 							'label' => 'Facebook',
-							'value' => $this->getData(['config', 'social', 'facebookId']),
-							'help' => 'Saisissez votre ID Facebook : https://www.facebook.com/[CETTE PARTIE].'
+							'value' => $this->getData(['config', 'social', 'facebookId'])
 						]); ?>
 					</div>
 					<div class="col6">
 						<?php echo template::text('configSocialGoogleplusId', [
+							'help' => 'Saisissez votre ID Google+ : https://plus.google.com/[CETTE PARTIE].',
 							'label' => 'Google+',
-							'value' => $this->getData(['config', 'social', 'googleplusId']),
-							'help' => 'Saisissez votre ID Google+ : https://plus.google.com/[CETTE PARTIE].'
+							'value' => $this->getData(['config', 'social', 'googleplusId'])
 						]); ?>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::text('configSocialInstagramId', [
+							'help' => 'Saisissez votre ID Instagram : https://www.instagram.com/[CETTE PARTIE].',
 							'label' => 'Instagram',
-							'value' => $this->getData(['config', 'social', 'instagramId']),
-							'help' => 'Saisissez votre ID Instagram : https://www.instagram.com/[CETTE PARTIE].'
+							'value' => $this->getData(['config', 'social', 'instagramId'])
 						]); ?>
 					</div>
 					<div class="col6">
 						<?php echo template::text('configSocialPinterestId', [
+							'help' => 'Saisissez votre ID Pinterest : https://pinterest.com/[CETTE PARTIE].',
 							'label' => 'Pinterest',
-							'value' => $this->getData(['config', 'social', 'pinterestId']),
-							'help' => 'Saisissez votre ID Pinterest : https://pinterest.com/[CETTE PARTIE].'
+							'value' => $this->getData(['config', 'social', 'pinterestId'])
 						]); ?>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::text('configSocialTwitterId', [
+							'help' => 'Saisissez votre ID Twitter : https://twitter.com/[CETTE PARTIE].',
 							'label' => 'Twitter',
-							'value' => $this->getData(['config', 'social', 'twitterId']),
-							'help' => 'Saisissez votre ID Twitter : https://twitter.com/[CETTE PARTIE].'
+							'value' => $this->getData(['config', 'social', 'twitterId'])
 						]); ?>
 					</div>
 					<div class="col6">
 						<?php echo template::text('configSocialYoutubeId', [
+							'help' => 'Saisissez votre ID Youtube : https://www.youtube.com/channel/[CETTE PARTIE].',
 							'label' => 'Youtube',
-							'value' => $this->getData(['config', 'social', 'youtubeId']),
-							'help' => 'Saisissez votre ID Youtube : https://www.youtube.com/channel/[CETTE PARTIE].'
+							'value' => $this->getData(['config', 'social', 'youtubeId'])
 						]); ?>
 					</div>
 				</div>
@@ -99,8 +99,8 @@
 				<h4><?php echo helper::translate('Système'); ?></h4>
 				<?php echo template::text('configVersion', [
 					'label' => 'Version de Zwii',
-					'value' => self::ZWII_VERSION,
-					'disabled' => true
+					'readonly' => true,
+					'value' => self::ZWII_VERSION
 				]); ?>
 				<?php echo template::select('configLanguage', $module::$languages, [
 					'label' => 'Langue de l\'interface',
@@ -114,8 +114,8 @@
 				<div class="row">
 					<div class="col6">
 						<?php echo template::button('configExport', [
-							'value' => 'Exporter les données',
-							'href' => helper::baseUrl() . 'config/backup'
+							'href' => helper::baseUrl() . 'config/backup',
+							'value' => 'Exporter les données'
 						]); ?>
 					</div>
 					<?php if(helper::checkZwiiVersion() === false): ?>

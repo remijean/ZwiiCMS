@@ -13,6 +13,6 @@
 /**
  * Galerie d'image
  */
-$(".galleriesGalleryPicture").simpleLightbox({
+$(".galleryGalleryPicture").simpleLightbox({
 	captionSelector: "self"
 });

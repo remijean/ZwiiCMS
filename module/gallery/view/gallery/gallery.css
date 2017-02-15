@@ -1,16 +1,16 @@
-.galleriesPicture {
+.galleryGalleryPicture {
 	display: block;
 	border: 1px solid #DDD;
-	height: 200px;
+	height: 150px;
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center;
 	position: relative;
 }
-.galleriesPicture:hover {
+.galleryGalleryPicture:hover {
 	opacity: .7;
 }
-.galleriesName {
+.galleryGalleryName {
 	position: absolute;
 	left: 0;
 	right: 0;
@@ -19,4 +19,13 @@
 	background: rgba(0, 0, 0, .6);
 	color: #FFF;
 	text-align: center;
+}
+.sl-overlay {
+	background: rgba(0, 0, 0, .9);
+	opacity: 1;
+}
+.sl-wrapper .sl-close,
+.sl-wrapper .sl-counter,
+.sl-wrapper .sl-navigation button {
+	color: #FFF;
 }

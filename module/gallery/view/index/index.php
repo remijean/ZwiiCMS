@@ -7,11 +7,11 @@
 		<?php endif; ?>
 			<div class="col6">
 				<a
-					href="<?php echo helper::baseUrl() . $this->getUrl(0); ?>/gallery/<?php echo $galleryId; ?>"
-					class="galleriesPicture"
+					href="<?php echo helper::baseUrl() . $this->getUrl(0); ?>/<?php echo $galleryId; ?>"
+					class="galleryPicture"
 					style="background-image:url('<?php echo helper::baseUrl(false) . $module::$firstPictures[$galleryId]; ?>')"
 				>
-					<div class="galleriesName"><?php echo $gallery['config']['name']; ?></div>
+					<div class="galleryName"><?php echo $gallery['config']['name']; ?></div>
 				</a>
 			</div>
 		<?php if($i % 2 === 0 OR $i === $galleriesNb): ?>

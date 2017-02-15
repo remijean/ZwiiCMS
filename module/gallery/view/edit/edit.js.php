@@ -11,21 +11,11 @@
  */
 
 /**
- * Confirmation de suppression
- */
-$(".galleriesConfigDelete").on("click", function() {
-	var _this = $(this);
-	return core.confirm("<?php echo helper::translate('Êtes-vous sûr de vouloir supprimer cette galerie ?'); ?>", function() {
-		$(location).attr("href", _this.attr("href"));
-	});
-});
-
-/**
  * Liste des dossiers
  */
 var oldResult = [];
-var directoryDOM = $("#galleriesConfigDirectory");
-var directoryOldDOM = $("#galleriesConfigDirectoryOld");
+var directoryDOM = $("#galleryEditDirectory");
+var directoryOldDOM = $("#galleryEditDirectoryOld");
 function dirs() {
 	$.ajax({
 		type: "POST",

@@ -44,7 +44,8 @@ class form extends common {
 				[
 					'button' => $this->getInput('formConfigButton'),
 					'capcha' => $this->getInput('formConfigCapcha', helper::FILTER_BOOLEAN),
-					'mail' => $this->getInput('formConfigMail', helper::FILTER_EMAIL)
+					'mail' => $this->getInput('formConfigMail', helper::FILTER_EMAIL),
+					'subject' => $this->getInput('formConfigSubject')
 				]
 			]);
 			// Génération des champs
@@ -59,19 +60,23 @@ class form extends common {
 				];
 			}
 			$this->setData(['module', $this->getUrl(0), 'input', $inputs]);
-			return [
+			// Vide les champs obligatoires
+			unset($_SESSION['ZWII_INPUT_REQUIRED']);
+			// Valeurs en sortie
+			$this->addOutput([
 				'redirect' => helper::baseUrl() . $this->getUrl(),
 				'notification' => 'Modifications enregistrées',
 				'state' => true
-			];
+			]);
 		}
-		return [
+		// Valeurs en sortie
+		$this->addOutput([
 			'title' => 'Configuration du module',
 			'vendor' => [
 				'jquery-ui'
 			],
-			'view' => true
-		];
+			'view' => 'config'
+		]);
 	}
 
 	/**
@@ -95,11 +100,11 @@ class form extends common {
 				self::$data[] = [$content];
 			}
 		}
-		// Affichage du template
-		return [
+		// Valeurs en sortie
+		$this->addOutput([
 			'title' => 'Données enregistrées',
-			'view' => true
-		];
+			'view' => 'data'
+		]);
 	}
 
 	/**
@@ -113,7 +118,7 @@ class form extends common {
 				$this->getData(['module', $this->getUrl(0), 'config', 'capcha'])
 				AND $this->getInput('formCapcha', helper::FILTER_INT) !== $this->getInput('formCapchaFirstNumber', helper::FILTER_INT) + $this->getInput('formCapchaSecondNumber', helper::FILTER_INT))
 			{
-				self::$inputNotices['formCapcha'] = 'La somme indiquée est incorrecte';
+				self::$inputNotices['formCapcha'] = 'Incorrect';
 			}
 			// Préparation des données
 			$data = [];
@@ -131,11 +136,17 @@ class form extends common {
 			// Envoi du mail
 			if(self::$inputNotices === []) {
 				if($this->getData(['module', $this->getUrl(0), 'config', 'mail'])) {
+					if($this->getData(['module', $this->getUrl(0), 'config', 'subject'])) {
+						$subject = $this->getData(['module', $this->getUrl(0), 'config', 'subject']);
+					}
+					else {
+						$subject = helper::translate('Mail en provenance de votre site');
+					}
 					$sent = helper::mail(
 						false,
 						$this->getData(['module', $this->getUrl(0), 'config', 'mail']),
-						helper::translate('Mail en provenance de votre site'),
-						'<h3>' . helper::translate('Mail en provenance de votre site :') . ' ' . helper::baseUrl() . $this->getUrl() . '</h3><ul>' . $mail . '</ul>'
+						$subject,
+						'<h3>' . $subject . ' ' . helper::baseUrl() . $this->getUrl() . '</h3><ul>' . $mail . '</ul>'
 					);
 				}
 			}
@@ -146,17 +157,19 @@ class form extends common {
 			else {
 				$notification = 'Formulaire soumis, mais impossible d\'envoyer le mail';
 			}
-			return [
+			// Valeurs en sortie
+			$this->addOutput([
 				'notification' => $notification,
 				'redirect' => helper::baseUrl() . $this->getUrl(),
 				'state' => true
-			];
+			]);
 		}
-		// Affichage du template
-		return [
+		// Valeurs en sortie
+		$this->addOutput([
 			'editButton' => true,
-			'view' => true
-		];
+			'pageContent' => true,
+			'view' => 'index'
+		]);
 	}
 
 }

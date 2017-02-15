@@ -24,6 +24,7 @@
 							<div class="col2 verticalAlignBottom">
 								<?php echo template::button('pageEditModuleConfig', [
 									'disabled' => (bool) $this->getData(['page', $this->getUrl(2), 'moduleId']) === false,
+									'uniqueSubmission' => true,
 									'value' => template::ico('gear')
 								]); ?>
 							</div>
@@ -33,14 +34,10 @@
 			</div>
 		</div>
 	</div>
-	<div id="pageEditContentContainer" class="row displayNone">
-		<div class="col12">
-			<?php echo template::textarea('pageEditContent', [
-				'class' => 'editor',
-				'value' => $this->getData(['page', $this->getUrl(2), 'content'])
-			]); ?>
-		</div>
-	</div>
+	<?php echo template::textarea('pageEditContent', [
+		'class' => 'editor',
+		'value' => $this->getData(['page', $this->getUrl(2), 'content'])
+	]); ?>
 	<div class="row">
 		<div class="col6">
 			<div class="block">

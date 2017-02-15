@@ -34,12 +34,6 @@ pageEditModuleIdDOM.on("change", function() {
 		$("#pageEditContentContainer").slideUp();
 	}
 });
-if(pageEditModuleIdDOM.val() === "") {
-	$("#pageEditContentContainer").show();
-}
-else {
-	$("#pageEditContentContainer").hide();
-}
 
 /**
  * Soumission du formulaire pour éditer le module

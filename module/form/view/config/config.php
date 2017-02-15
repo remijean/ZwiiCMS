@@ -47,19 +47,31 @@
 	<div class="block">
 		<h4><?php echo helper::translate('Configuration'); ?></h4>
 		<?php echo template::text('formConfigButton', [
-			'label' => 'Personnaliser le texte du bouton de soumission',
+			'help' => 'Laissez vide afin de conserver le texte par défaut.',
+			'label' => 'Texte du bouton de soumission',
 			'value' => $this->getData(['module', $this->getUrl(0), 'config', 'button'])
 		]); ?>
 		<?php echo template::checkbox('formConfigMailOptionsToggle', true, 'Recevoir les données saisies par mail', [
 			'checked' => (bool) $this->getData(['module', $this->getUrl(0), 'config', 'mail'])
 		]); ?>
 		<div id="formConfigMailOptions" class="displayNone">
-			<?php echo template::text('formConfigMail', [
-				'label' => 'Adresse mail',
-				'value' => $this->getData(['module', $this->getUrl(0), 'config', 'mail'])
-			]); ?>
+			<div class="row">
+				<div class="col6">
+					<?php echo template::text('formConfigMail', [
+						'label' => 'Adresse mail',
+						'value' => $this->getData(['module', $this->getUrl(0), 'config', 'mail'])
+					]); ?>
+				</div>
+				<div class="col6">
+					<?php echo template::text('formConfigSubject', [
+						'help' => 'Laissez vide afin de conserver le texte par défaut.',
+						'label' => 'Sujet du mail',
+						'value' => $this->getData(['module', $this->getUrl(0), 'config', 'subject'])
+					]); ?>
+				</div>
+			</div>
 		</div>
-		<?php echo template::checkbox('formConfigCapcha', true, 'Ajouter un capcha à remplir pour soumettre le formulaire', [
+		<?php echo template::checkbox('formConfigCapcha', true, 'Ajouter un capcha à remplir avant de soumettre le formulaire', [
 			'checked' => $this->getData(['module', $this->getUrl(0), 'config', 'capcha'])
 		]); ?>
 	</div>

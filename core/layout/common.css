@@ -19,7 +19,7 @@ body {
 	min-height: 100%;
 }
 body {
-	color: #272A34;
+	color: #555;
 	margin: 0 10px;
 	font-size: 14px;
 }
@@ -185,7 +185,6 @@ td > .col12 {
 /* Notice */
 .notice {
 	display: inline-block;
-	margin: 0 0 2px 5px;
 	color: #F3674A;
 }
 
@@ -316,7 +315,7 @@ nav li {
 nav li ul {
 	display: none;
 	position: absolute;
-	width: 250px;
+	width: 200px;
 	z-index: 20;
 }
 nav li ul li {
@@ -611,6 +610,11 @@ textarea {
 	background: #FDFDFD;
 	border: 1px solid #DDD;
 	width: 100%;
+	color: #555;
+	font-family: inherit;
+}
+select {
+	padding: 7px;
 }
 input[type='text']:hover,
 input[type='password']:hover,
@@ -625,18 +629,24 @@ input[type='password'].notice,
 select.notice,
 textarea.notice {
 	border: 1px solid #F3674A;
+	background: #FEEDE9;
 }
+button:disabled,
 input:disabled,
 select:disabled,
 textarea:disabled {
 	background: #F5F5F5 !important;
-	color: #CCC !important;
+	color: #999 !important;
 }
-input[type='submit'] {
+button:disabled span {
+	color: #999 !important /* Icône de soumission unique */
+}
+button {
 	width: 100%;
 	padding: 10px;
 	border: 0;
 	cursor: pointer;
+	font-family: inherit;
 }
 textarea {
 	height: 100px;
@@ -674,11 +684,14 @@ label {
 	pointer-events: none;
 	cursor: default;
 	background: #F5F5F5 !important;
-	color: #CCC !important;
+	color: #999 !important;
+}
+.button.disabled span {
+	color: #999 !important /* Icône de soumission unique */
 }
 .button.grey {
 	background: #E9E9E9;
-	color: #272A34 !important;
+	color: #555 !important;
 }
 .button.grey:hover {
 	background: #E1E1E1;

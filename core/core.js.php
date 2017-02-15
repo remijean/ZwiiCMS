@@ -225,6 +225,18 @@ core.start = function() {
 			$(location).attr("href", $("#panelLogout").attr("href"));
 		});
 	});
+	/**
+	 * Bloque la multi-soumission des boutons
+	 */
+	$("form").on("submit", function() {
+		$(this).find(".uniqueSubmission")
+			.addClass("disabled")
+			.prop("disabled", true)
+			.empty()
+			.append(
+				$("<span>").addClass("zwiico-spin animate-spin")
+			)
+	});
 };
 core.start();
 

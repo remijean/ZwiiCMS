@@ -22,11 +22,11 @@ class sitemap extends common {
 	 * Plan du site
 	 */
 	public function index() {
-		// Affichage du template
-		return [
+		// Valeurs en sortie
+		$this->addOutput([
 			'title' => 'Plan du site',
-			'view' => true
-		];
+			'view' => 'index'
+		]);
 	}
 
 }

@@ -46,11 +46,12 @@ class page extends common {
 				'title' => $pageTitle
 			]
 		]);
-		return [
+		// Valeurs en sortie
+		$this->addOutput([
 			'redirect' => helper::baseUrl() . $pageId,
 			'notification' => 'Nouvelle page créée',
 			'state' => true
-		];
+		]);
 	}
 
 	/**
@@ -59,31 +60,36 @@ class page extends common {
 	public function delete() {
 		// La page n'existe pas
 		if($this->getData(['page', $this->getUrl(2)]) === null) {
-			return [
+			// Valeurs en sortie
+			$this->addOutput([
 				'access' => false
-			];
+			]);
 		}
 		// Impossible de supprimer la page d'accueil
 		elseif($this->getUrl(2) === $this->getData(['config', 'homePageId'])) {
-			return [
+			// Valeurs en sortie
+			$this->addOutput([
 				'redirect' => helper::baseUrl() . 'page/edit/' . $this->getUrl(2),
 				'notification' => 'Impossible de supprimer la page d\'accueil'
-			];
+			]);
 		}
 		// Impossible de supprimer une page contenant des enfants
-		elseif($this->getHierarchy($this->getUrl(2)) !== []) {
-			return [
+		elseif($this->getHierarchy($this->getUrl(2))) {
+			// Valeurs en sortie
+			$this->addOutput([
 				'redirect' => helper::baseUrl() . 'page/edit/' . $this->getUrl(2),
 				'notification' => 'Impossible de supprimer une page contenant des enfants'
-			];
+			]);
 		}
 		// Suppression
-		$this->deleteData(['page', $this->getUrl(2)]);
-		return [
-			'redirect' => helper::baseUrl(),
-			'notification' => 'Page supprimée',
-			'state' => true
-		];
+		else {
+			// Valeurs en sortie
+			$this->addOutput([
+				'redirect' => helper::baseUrl(false),
+				'notification' => 'Page supprimée',
+				'state' => true
+			]);
+		}
 	}
 
 	/**
@@ -92,112 +98,118 @@ class page extends common {
 	public function edit() {
 		// La page n'existe pas
 		if($this->getData(['page', $this->getUrl(2)]) === null) {
-			return [
+			// Valeurs en sortie
+			$this->addOutput([
 				'access' => false
-			];
+			]);
 		}
-		// Liste des modules
-		$moduleIds = [
-			'' => 'Aucun'
-		];
-		$iterator = new DirectoryIterator('module/');
-		foreach($iterator as $fileInfos) {
-			if(is_file($fileInfos->getPathname() . '/' . $fileInfos->getFilename() . '.php')) {
-				$moduleIds[$fileInfos->getBasename()] = ucfirst($fileInfos->getBasename());
-			}
-		}
-		self::$moduleIds = $moduleIds;
-		// Pages sans parent
-		foreach($this->getHierarchy() as $parentPageId => $childrenPageIds) {
-			if($parentPageId !== $this->getUrl(2)) {
-				self::$pagesNoParentId[$parentPageId] = $this->getData(['page', $parentPageId, 'title']);
-			}
-		}
-		// Soumission du formulaire
-		if($this->isPost()) {
-			$pageId = $this->getInput('pageEditTitle', helper::FILTER_ID);
-			// Si l'id a changée
-			if($pageId !== $this->getUrl(2)) {
-				// Incrémente la nouvelle id de la page pour éviter les doublons
-				$pageId = helper::increment(helper::increment($pageId, $this->getData(['page'])), self::$coreModuleIds);
-				$pageId = helper::increment(helper::increment($pageId, $this->getData(['page'])), self::$moduleIds);
-				// Met à jour les enfants
-				foreach($this->getHierarchy($this->getUrl(2)) as $childrenPageId) {
-					$this->setData(['page', $childrenPageId, 'parentPageId', $pageId]);
+		// La page existe
+		else {
+			// Soumission du formulaire
+			if($this->isPost()) {
+				$pageId = $this->getInput('pageEditTitle', helper::FILTER_ID);
+				// Si l'id a changée
+				if($pageId !== $this->getUrl(2)) {
+					// Incrémente la nouvelle id de la page pour éviter les doublons
+					$pageId = helper::increment(helper::increment($pageId, $this->getData(['page'])), self::$coreModuleIds);
+					$pageId = helper::increment(helper::increment($pageId, $this->getData(['page'])), self::$moduleIds);
+					// Met à jour les enfants
+					foreach($this->getHierarchy($this->getUrl(2)) as $childrenPageId) {
+						$this->setData(['page', $childrenPageId, 'parentPageId', $pageId]);
+					}
+					// Supprime l'ancienne page
+					$this->deleteData(['page', $this->getUrl(2)]);
+					// Change l'id de page dans les données des modules
+					$this->setData(['module', $pageId, $this->getData(['module', $this->getUrl(2)])]);
+					$this->deleteData(['module', $this->getUrl(2)]);
+					// Si la page correspond à la page d'accueil, change l'id dans la configuration du site
+					if($this->getData(['config', 'homePageId']) === $this->getUrl(2)) {
+						$this->setData(['config', 'homePageId', $pageId]);
+					}
 				}
-				// Supprime l'ancienne page
-				$this->deleteData(['page', $this->getUrl(2)]);
-				// Change l'id de page dans les données des modules
-				$this->setData(['module', $pageId, $this->getData(['module', $this->getUrl(2)])]);
-				$this->deleteData(['module', $this->getUrl(2)]);
-				// Si la page correspond à la page d'accueil, change l'id dans la configuration du site
-				if($this->getData(['config', 'homePageId']) === $this->getUrl(2)) {
-					$this->setData(['config', 'homePageId', $pageId]);
+				// Supprime les données du module en cas de changement
+				if($this->getInput('pageEditModuleId') !== $this->getData(['page', $pageId, 'moduleId'])) {
+					$this->deleteData(['module', $pageId]);
 				}
-			}
-			// Supprime les données du module en cas de changement
-			if($this->getInput('pageEditModuleId') !== $this->getData(['page', $pageId, 'moduleId'])) {
-				$this->deleteData(['module', $pageId]);
-			}
-			// Si la page est une page enfant, actualise les positions des autres enfants du parent, sinon actualise les pages sans parents
-			$lastPosition = 1;
-			$hierarchy = $this->getInput('pageEditParentPageId') ? $this->getHierarchy($this->getInput('pageEditParentPageId')) : array_keys($this->getHierarchy());
-			$position = $this->getInput('pageEditPosition', helper::FILTER_INT);
-			foreach($hierarchy as $hierarchyPageId) {
-				// Ignore la page en cours de modification
-				if($hierarchyPageId === $this->getUrl(2)) {
-					continue;
-				}
-				// Incrémente de +1 pour laisser la place à la position de la page en cours de modification
-				if($lastPosition === $position) {
+				// Si la page est une page enfant, actualise les positions des autres enfants du parent, sinon actualise les pages sans parents
+				$lastPosition = 1;
+				$hierarchy = $this->getInput('pageEditParentPageId') ? $this->getHierarchy($this->getInput('pageEditParentPageId')) : array_keys($this->getHierarchy());
+				$position = $this->getInput('pageEditPosition', helper::FILTER_INT);
+				foreach($hierarchy as $hierarchyPageId) {
+					// Ignore la page en cours de modification
+					if($hierarchyPageId === $this->getUrl(2)) {
+						continue;
+					}
+					// Incrémente de +1 pour laisser la place à la position de la page en cours de modification
+					if($lastPosition === $position) {
+						$lastPosition++;
+					}
+					// Change la position
+					$this->setData(['page', $hierarchyPageId, 'position', $lastPosition]);
+					// Incrémente pour la prochaine position
 					$lastPosition++;
 				}
-				// Change la position
-				$this->setData(['page', $hierarchyPageId, 'position', $lastPosition]);
-				// Incrémente pour la prochaine position
-				$lastPosition++;
+				// Modifie la page ou en crée une nouvelle si l'id à changée
+				$this->setData([
+					'page',
+					$pageId,
+					[
+						'content' => $this->getInput('pageEditContent', null),
+						'hideTitle' => $this->getInput('pageEditHideTitle', helper::FILTER_BOOLEAN),
+						'metaDescription' => $this->getInput('pageEditMetaDescription'),
+						'metaTitle' => $this->getInput('pageEditMetaDescription'),
+						'moduleId' => $this->getInput('pageEditModuleId'),
+						'parentPageId' => $this->getInput('pageEditParentPageId'),
+						'position' => $position,
+						'rank' => $this->getInput('pageEditRank', helper::FILTER_INT),
+						'targetBlank' => $this->getInput('pageEditTargetBlank', helper::FILTER_BOOLEAN),
+						'title' => $this->getInput('pageEditTitle')
+					]
+				]);
+				// Redirection vers la configuration
+				if($this->getInput('pageEditModuleRedirect', helper::FILTER_BOOLEAN)) {
+					// Valeurs en sortie
+					$this->addOutput([
+						'redirect' => helper::baseUrl() . $pageId . '/config',
+						'state' => true
+					]);
+				}
+				// Redirection vers la page
+				else {
+					// Valeurs en sortie
+					$this->addOutput([
+						'redirect' => helper::baseUrl() . $pageId,
+						'notification' => 'Modifications enregistrées',
+						'state' => true
+					]);
+				}
 			}
-			// Modifie la page ou en crée une nouvelle si l'id à changée
-			$this->setData([
-				'page',
-				$pageId,
-				[
-					'content' => $this->getInput('pageEditContent', null),
-					'hideTitle' => $this->getInput('pageEditHideTitle', helper::FILTER_BOOLEAN),
-					'metaDescription' => $this->getInput('pageEditMetaDescription'),
-					'metaTitle' => $this->getInput('pageEditMetaDescription'),
-					'moduleId' => $this->getInput('pageEditModuleId'),
-					'parentPageId' => $this->getInput('pageEditParentPageId'),
-					'position' => $position,
-					'rank' => $this->getInput('pageEditRank', helper::FILTER_INT),
-					'targetBlank' => $this->getInput('pageEditTargetBlank', helper::FILTER_BOOLEAN),
-					'title' => $this->getInput('pageEditTitle')
-				]
+			// Liste des modules
+			$moduleIds = [
+				'' => 'Aucun'
+			];
+			$iterator = new DirectoryIterator('module/');
+			foreach($iterator as $fileInfos) {
+				if(is_file($fileInfos->getPathname() . '/' . $fileInfos->getFilename() . '.php')) {
+					$moduleIds[$fileInfos->getBasename()] = ucfirst($fileInfos->getBasename());
+				}
+			}
+			self::$moduleIds = $moduleIds;
+			// Pages sans parent
+			foreach($this->getHierarchy() as $parentPageId => $childrenPageIds) {
+				if($parentPageId !== $this->getUrl(2)) {
+					self::$pagesNoParentId[$parentPageId] = $this->getData(['page', $parentPageId, 'title']);
+				}
+			}
+			// Valeurs en sortie
+			$this->addOutput([
+				'title' => $this->getData(['page', $this->getUrl(2), 'title']),
+				'vendor' => [
+					'tinymce'
+				],
+				'view' => 'edit'
 			]);
-			// Redirection vers la configuration
-			if($this->getInput('pageEditModuleRedirect', helper::FILTER_BOOLEAN)) {
-				return [
-					'redirect' => helper::baseUrl() . $pageId . '/config',
-					'state' => true
-				];
-			}
-			// Redirection vers la page
-			else {
-				return [
-					'redirect' => helper::baseUrl() . $pageId,
-					'notification' => 'Modifications enregistrées',
-					'state' => true
-				];
-			}
 		}
-		// Affichage du template
-		return [
-			'title' => $this->getData(['page', $this->getUrl(2), 'title']),
-			'vendor' => [
-				'tinymce'
-			],
-			'view' => true
-		];
 	}
 
 }

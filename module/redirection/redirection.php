@@ -26,17 +26,18 @@ class redirection extends common {
 		// Soumission du formulaire
 		if($this->isPost()) {
 			$this->setData(['module', $this->getUrl(0), 'url', $this->getInput('redirectionConfigUrl', helper::FILTER_URL)]);
-			return [
+			// Valeurs en sortie
+			$this->addOutput([
 				'redirect' => helper::baseUrl() . $this->getUrl(),
 				'notification' => 'Modifications enregistrées',
 				'state' => true
-			];
+			]);
 		}
-		// Affichage du template
-		return [
+		// Valeurs en sortie
+		$this->addOutput([
 			'title' => 'Configuration du module',
-			'view' => true
-		];
+			'view' => 'config'
+		]);
 	}
 
 	/**
@@ -49,22 +50,22 @@ class redirection extends common {
 			AND $this->getUser('rank') >= $this->getData(['page', self::RANK_MODERATOR, 'rank'])
 			AND $this->getUrl(1) !== 'force'
 		) {
-			// Affichage du template
-			return [
+			// Valeurs en sortie
+			$this->addOutput([
 				'display' => self::DISPLAY_LAYOUT_BLANK,
 				'title' => '',
-				'view' => true
-			];
+				'view' => 'index'
+			]);
 		}
 		// Sinon redirection
 		else {
 			// Incrémente le compteur de clics
 			$this->setData(['module', $this->getUrl(0), 'count', helper::filter($this->getData(['module', $this->getUrl(0), 'count']) + 1, helper::FILTER_INT)]);
-			// Affichage du template
-			return [
+			// Valeurs en sortie
+			$this->addOutput([
 				'redirect' => $this->getData(['module', $this->getUrl(0), 'url']),
 				'state' => true
-			];
+			]);
 		}
 	}
 

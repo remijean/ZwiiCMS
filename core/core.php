@@ -23,7 +23,7 @@ class common {
 	const RANK_MEMBER = 1;
 	const RANK_MODERATOR = 2;
 	const RANK_ADMIN = 3;
-	const ZWII_VERSION = '8.0.0 bêta 0.5';
+	const ZWII_VERSION = '8.0.0 bêta 0.6';
 
 	public static $actions = [];
 	public static $demo = false;
@@ -97,11 +97,11 @@ class common {
 				'title' => 'Cachée'
 			],
 			'galeries' => [
-				'content' => "",
+				'content' => "<p>Cette page contient une instance du module de galeries photos, cliquez sur l'une des galeries afin de l'ouvrir.</p>",
 				'hideTitle' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
-				'moduleId' => 'galleries',
+				'moduleId' => 'gallery',
 				'parentPageId' => '',
 				'position' => 3,
 				'rank' => self::RANK_VISITOR,
@@ -121,7 +121,7 @@ class common {
 				'title' => 'Site de Zwii'
 			],
 			'contact' => [
-				'content' => "",
+				'content' => "<p>Cette page contient un exemple de formulaire conçu à partir du module de génération de formulaires, si vous voulez le tester n'oubliez pas de changer l'adresse mail depuis l'interface de paramétrage du module.</p>",
 				'hideTitle' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
@@ -278,24 +278,31 @@ class common {
 	];
 	public static $inputBefore = [];
 	public static $inputNotices = [];
-	public static $outputContent = '';
-	public static $outputDisplay = self::DISPLAY_LAYOUT_NORMAL;
-	public static $outputEditButton = false;
-	public static $outputMetaDescription = '';
-	public static $outputMetaTitle = '';
-	public static $outputScript = '';
-	public static $outputStyle = '';
-	public static $outputTitle = '';
-	// Librairies classées par odre d'exécution
-	public static $outputVendor = [
-		'jquery',
-		// 'jquery-ui', Désactivé par défaut
-		'normalize',
-		'lity',
-		'filemanager',
-		// 'tinycolorpicker', Désactivé par défaut
-		// 'tinymce', Désactivé par défaut
-		'zwiico'
+	public $output = [
+		'access' => true,
+		'content' => '',
+		'display' => self::DISPLAY_LAYOUT_NORMAL,
+		'editButton' => false,
+		'metaDescription' => '',
+		'metaTitle' => '',
+		'notification' => '',
+		'pageContent' => false,
+		'title' => null, // Null car un titre peut être vide
+		'redirect' => '',
+		'script' => '',
+		'state' => '',
+		'style' => '',
+		'vendor' => [
+			'jquery',
+			// 'jquery-ui', Désactivé par défaut
+			'normalize',
+			'lity',
+			'filemanager',
+			// 'tinycolorpicker', Désactivé par défaut
+			// 'tinymce', Désactivé par défaut
+			'zwiico'
+		],
+		'view' => ''
 	];
 	public static $ranks = [
 		self::RANK_BANNED => 'Banni',
@@ -409,6 +416,14 @@ class common {
 	}
 
 	/**
+	 * Ajoute les valeurs en sortie
+	 * @param array $output Valeurs en sortie
+	 */
+	public function addOutput($output) {
+		$this->output = array_merge($this->output, $output);
+	}
+
+	/**
 	 * Ajoute une notice de champ obligatoire
 	 * @param string $key Clef du champ
 	 */
@@ -420,18 +435,18 @@ class common {
 			if(
 				empty($this->input['_POST'][$firstKey][$secondKey])
 				AND isset($_SESSION['ZWII_INPUT_REQUIRED'])
-				AND array_key_exists($key, $_SESSION['ZWII_INPUT_REQUIRED'])
+				AND array_key_exists($key . '-' . md5($_SERVER['QUERY_STRING']), $_SESSION['ZWII_INPUT_REQUIRED'])
 			) {
-				common::$inputNotices[$key] = 'champ requis';
+				common::$inputNotices[$key] = 'Obligatoire';
 			}
 		}
 		// La clef est une chaine
 		elseif(
 			empty($this->input['_POST'][$key])
 			AND isset($_SESSION['ZWII_INPUT_REQUIRED'])
-			AND array_key_exists($key, $_SESSION['ZWII_INPUT_REQUIRED'])
+			AND array_key_exists($key . '-' . md5($_SERVER['QUERY_STRING']), $_SESSION['ZWII_INPUT_REQUIRED'])
 		) {
-			common::$inputNotices[$key] = 'champ requis';
+			common::$inputNotices[$key] = 'Obligatoire';
 		}
 	}
 
@@ -557,6 +572,10 @@ class common {
 		return helper::filter(null, $filter);
 	}
 
+	public function getOutput($output) {
+		return $this->output[$output];
+	}
+
 	/**
 	 * Accède à une partie l'url ou à l'url complète
 	 * @param int $key Clé de l'url
@@ -606,9 +625,7 @@ class common {
 	 * Enregistre les données
 	 */
 	public function saveData() {
-		if(common::$inputNotices === []) {
-			file_put_contents('site/data/data.json', json_encode($this->getData()));
-		}
+		file_put_contents('site/data/data.json', json_encode($this->getData()));
 	}
 
 	/**
@@ -636,7 +653,7 @@ class common {
 	}
 
 	/**
-	 * Enregistre un champ comme obligatoire
+	 * Insert un champ comme obligatoire
 	 * @param array $attributes Transmet les attributs à la méthode
 	 */
 	public static function setInputRequired($attributes) {
@@ -644,10 +661,10 @@ class common {
 			$attributes['required']
 			AND (
 				empty($_SESSION['ZWII_INPUT_REQUIRED'])
-				OR array_key_exists($attributes['id'], $_SESSION['ZWII_INPUT_REQUIRED']) === false
+				OR array_key_exists($attributes['id'] . '-' . md5($_SERVER['QUERY_STRING']), $_SESSION['ZWII_INPUT_REQUIRED']) === false
 			)
 		) {
-			$_SESSION['ZWII_INPUT_REQUIRED'][$attributes['id']] = true;
+			$_SESSION['ZWII_INPUT_REQUIRED'][$attributes['id'] . '-' . md5($_SERVER['QUERY_STRING'])] = true;
 		}
 	}
 
@@ -702,13 +719,13 @@ class core extends common {
 			$css .= '.container{max-width:' . $this->getData(['theme', 'site', 'width']) . '}';
 			$css .= '#site{border-radius:' . $this->getData(['theme', 'site', 'radius']) . ';box-shadow:' . $this->getData(['theme', 'site', 'shadow']) . ' #212223}';
 			$colors = helper::colorVariants($this->getData(['theme', 'button', 'backgroundColor']));
-			$css .= '.speechBubble,.button,input[type=\'submit\'],.pagination a,input[type=\'checkbox\']:checked + label:before,input[type=\'radio\']:checked + label:before,.helpContent{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '!important}';
+			$css .= '.speechBubble,.button,button[type=\'submit\'],.pagination a,input[type=\'checkbox\']:checked + label:before,input[type=\'radio\']:checked + label:before,.helpContent{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '!important}';
 			$css .= '.tabTitle.current,.helpButton span{color:' . $colors['normal'] . '}';
 			$css .= 'input[type=\'text\']:hover,input[type=\'password\']:hover,.inputFile:hover,select:hover,textarea:hover{border-color:' . $colors['normal'] . '}';
 			$css .= '.speechBubble:before{border-color:' . $colors['normal'] . ' transparent transparent transparent}';
-			$css .= '.button:hover,input[type=\'submit\']:hover,.pagination a:hover,input[type=\'checkbox\']:not(:active):checked:hover + label:before,input[type=\'checkbox\']:active + label:before,input[type=\'radio\']:checked:hover + label:before,input[type=\'radio\']:not(:checked):active + label:before{background-color:' . $colors['darken'] . '}';
+			$css .= '.button:hover,button[type=\'submit\']:hover,.pagination a:hover,input[type=\'checkbox\']:not(:active):checked:hover + label:before,input[type=\'checkbox\']:active + label:before,input[type=\'radio\']:checked:hover + label:before,input[type=\'radio\']:not(:checked):active + label:before{background-color:' . $colors['darken'] . '}';
 			$css .= '.helpButton span:hover{color:' . $colors['darken'] . '}';
-			$css .= '.button:active,input[type=\'submit\']:active,.pagination a:active{background-color:' . $colors['veryDarken'] . '}';
+			$css .= '.button:active,button[type=\'submit\']:active,.pagination a:active{background-color:' . $colors['veryDarken'] . '}';
 			$colors = helper::colorVariants($this->getData(['theme', 'link', 'textColor']));
 			$css .= 'a{color:' . $colors['normal'] . '}';
 			$css .= 'a:hover{color:' . $colors['darken'] . '}';
@@ -802,6 +819,14 @@ class core extends common {
 	 * Routage des modules
 	 */
 	public function router() {
+		// Force la déconnexion des membres bannis
+		if (
+			$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
+			AND $this->getUser('rank') === self::RANK_BANNED
+		) {
+			$user = new user;
+			$user->logout();
+		}
 		// Check l'accès à la page
 		$access = null;
 		if($this->getData(['page', $this->getUrl(0)]) !== null) {
@@ -824,22 +849,28 @@ class core extends common {
 			AND $this->getData(['page', $this->getUrl(0), 'moduleId']) === ''
 			AND $access
 		) {
-			self::$outputTitle = $this->getData(['page', $this->getUrl(0), 'title']);
-			self::$outputContent = $this->getData(['page', $this->getUrl(0), 'content']);
-			self::$outputMetaTitle = $this->getData(['page', $this->getUrl(0), 'metaTitle']);
-			self::$outputMetaDescription = $this->getData(['page', $this->getUrl(0), 'metaDescription']);
+			$this->addOutput([
+				'title' => $this->getData(['page', $this->getUrl(0), 'title']),
+				'content' => $this->getData(['page', $this->getUrl(0), 'content']),
+				'metaDescription' => $this->getData(['page', $this->getUrl(0), 'metaDescription']),
+				'metaTitle' => $this->getData(['page', $this->getUrl(0), 'metaTitle'])
+			]);
 		}
 		// Importe le module
 		else {
-			// Id du module et le titre et les métas pour les pages
+			// Id du module, et valeurs en sortie de la page si il s'agit d'un module de page
 			if($access AND $this->getData(['page', $this->getUrl(0), 'moduleId'])) {
 				$moduleId = $this->getData(['page', $this->getUrl(0), 'moduleId']);
-				self::$outputTitle = $this->getData(['page', $this->getUrl(0), 'title']);
-				self::$outputMetaTitle = $this->getData(['page', $this->getUrl(0), 'metaTitle']);
-				self::$outputMetaDescription = $this->getData(['page', $this->getUrl(0), 'metaDescription']);
+				$this->addOutput([
+					'title' => $this->getData(['page', $this->getUrl(0), 'title']),
+					'metaDescription' => $this->getData(['page', $this->getUrl(0), 'metaDescription']),
+					'metaTitle' => $this->getData(['page', $this->getUrl(0), 'metaTitle'])
+				]);
+				$pageContent = $this->getData(['page', $this->getUrl(0), 'content']);
 			}
 			else {
 				$moduleId = $this->getUrl(0);
+				$pageContent = '';
 			}
 			// Check l'existence du module
 			if(class_exists($moduleId)) {
@@ -848,14 +879,8 @@ class core extends common {
 				// Check l'existence de l'action
 				$action = array_key_exists($this->getUrl(1), $module::$actions) ? $this->getUrl(1) : 'index';
 				if(array_key_exists($action, $module::$actions)) {
-					$output = $module->$action();
-					// Rétabli les données précédentes en cas d'erreur lors de la validation du formulaire
-					if(empty($_SESSION['ZWII_OUTPUT_PREV']) === false) {
-						if(common::$inputNotices) {
-							$output = array_merge($output, $_SESSION['ZWII_OUTPUT_PREV']);
-						}
-						unset($_SESSION['ZWII_OUTPUT_PREV']);
-					}
+					$module->$action();
+					$output = $module->output;
 					// Check le rang de l'utilisateur
 					if(
 						$module::$actions[$action] === self::RANK_VISITOR
@@ -864,86 +889,98 @@ class core extends common {
 							AND $this->getUser('rank') >= $module::$actions[$action]
 						)
 						AND (
-							array_key_exists('access', $output) === false
+							$output['access'] === false
 							OR $output['access'] === true
 						)
 					) {
-						// Enregistrement des données
-						if(array_key_exists('state', $output) AND $output['state'] === true) {
-							$this->setData([$module->getData()]);
-							$this->saveData();
-							unset($_SESSION['ZWII_INPUT_REQUIRED']);
-						}
-						// Sauvegarde des données en méthode POST si une notice existe
+						// Enregistrement du contenu de la méthode POST lorsqu'une notice est présente
 						if(common::$inputNotices) {
 							foreach($_POST as $postId => $postValue) {
 								self::$inputBefore[$postId] = $postValue;
 							}
 						}
-						// Sinon traitement des données de sorties
+						// Sinon traitement des données de sortie qui requiert qu'aucune notice ne soit présente
 						else {
+							// Enregistrement des données
+							if($output['state'] === true) {
+								$this->setData([$module->getData()]);
+								$this->saveData();
+							}
 							// Notification
-							if(array_key_exists('notification', $output)) {
-								$state = array_key_exists('state', $output) ? (bool) $output['state'] : false;
-								$_SESSION[$state ? 'ZWII_NOTIFICATION_SUCCESS' : 'ZWII_NOTIFICATION_ERROR'] = $output['notification'];
+							if($output['notification']) {
+								$_SESSION[$output['state'] ? 'ZWII_NOTIFICATION_SUCCESS' : 'ZWII_NOTIFICATION_ERROR'] = $output['notification'];
 							}
 							// Redirection
-							if(array_key_exists('redirect', $output)) {
+							if($output['redirect']) {
 								http_response_code(301);
 								header('Location:' . $output['redirect']);
 								exit();
 							}
 						}
+						// Données en sortie applicables même lorsqu'une notice est présente
 						// Affichage
-						if(array_key_exists('display', $output)) {
-							self::$outputDisplay = $output['display'];
+						if($output['display']) {
+							$this->addOutput([
+								'display' => $output['display']
+							]);
 						}
-						// Contenu du module
-						if(self::$outputDisplay === self::DISPLAY_JSON) {
-							self::$outputContent = $output['result'];
+						// Affiche le contenu de la page
+						$beforeContent = '';
+						if($output['pageContent'] AND $pageContent) {
+							$beforeContent = $pageContent;
 						}
-						elseif(array_key_exists('view', $output) OR common::$inputNotices) {
+						// Contenu brut
+						if($output['content']) {
+							$this->addOutput([
+								'content' => $beforeContent . $output['content']
+							]);
+						}
+						// Contenu par vue
+						elseif($output['view']) {
 							// Chemin en fonction d'un module du coeur ou d'un module
 							$modulePath = in_array($moduleId, self::$coreModuleIds) ? 'core/' : '';
 							// CSS
-							$stylePath = $modulePath . 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.css';
+							$stylePath = $modulePath . 'module/' . $moduleId . '/view/' . $output['view'] . '/' . $output['view'] . '.css';
 							if(file_exists($stylePath)) {
-								self::$outputStyle = file_get_contents($stylePath);
+								$this->addOutput([
+									'style' => file_get_contents($stylePath)
+								]);
 							}
 							// JS
-							$scriptPath = $modulePath . 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.js.php';
+							$scriptPath = $modulePath . 'module/' . $moduleId . '/view/' . $output['view'] . '/' . $output['view'] . '.js.php';
 							if(file_exists($scriptPath)) {
 								ob_start();
 								include $scriptPath;
-								self::$outputScript .= ob_get_clean();
+								$this->addOutput([
+									'script' => ob_get_clean()
+								]);
 							}
 							// Vue
-							$viewPath = $modulePath . 'module/' . $moduleId . '/view/' . $action . '/' . $action . '.php';
+							$viewPath = $modulePath . 'module/' . $moduleId . '/view/' . $output['view'] . '/' . $output['view'] . '.php';
 							if(file_exists($viewPath)) {
 								ob_start();
 								include $viewPath;
-								self::$outputContent .= ob_get_clean();
+								$this->addOutput([
+									'content' => $beforeContent . ob_get_clean()
+								]);
 							}
-							// Enregistre la vue afin de la rétablir en cas d'erreur lors de la validation du formulaire
-							$_SESSION['ZWII_OUTPUT_PREV']['view'] = true;
 						}
 						// Librairies
-						if(array_key_exists('vendor', $output)) {
-							self::$outputVendor = array_merge(self::$outputVendor, $output['vendor']);
-							// Enregistre les librairies afin de les rétablir en cas d'erreur lors de la validation du formulaire
-							$_SESSION['ZWII_OUTPUT_PREV']['vendor'] = self::$outputVendor;
+						if($output['vendor'] !== $this->output['vendor']) {
+							$this->addOutput([
+								'vendor' => array_merge($this->output['vendor'], $output['vendor'])
+							]);
 						}
-						// Titre
-						if(array_key_exists('title', $output)) {
-							self::$outputTitle = helper::translate($output['title']);
-							// Enregistre le titre afin de le rétablir en cas d'erreur lors de la validation du formulaire
-							$_SESSION['ZWII_OUTPUT_PREV']['title'] = self::$outputTitle;
+						if($output['title'] !== null) {
+							$this->addOutput([
+								'title' => helper::translate($output['title'])
+							]);
 						}
 						// Bouton d'édition de la page
-						if(array_key_exists('editButton', $output)) {
-							self::$outputEditButton = true;
-							// Enregistre le bouton d'édition afin de le rétablir en cas d'erreur lors de la validation du formulaire
-							$_SESSION['ZWII_OUTPUT_PREV']['editButton'] = self::$outputEditButton;
+						if($output['editButton']) {
+							$this->addOutput([
+								'editButton' => $output['editButton']
+							]);
 						}
 					}
 					// Erreur 403
@@ -956,28 +993,38 @@ class core extends common {
 		// Erreurs
 		if($access === false) {
 			http_response_code(403);
-			self::$outputTitle = helper::translate('Erreur 403');
-			self::$outputContent = template::speech('Vous n\'êtes pas autorisé à accéder à cette page...');
+			$this->addOutput([
+				'title' => helper::translate('Erreur 403'),
+				'content' => template::speech('Vous n\'êtes pas autorisé à accéder à cette page...')
+			]);
 		}
-		elseif(self::$outputContent === '') {
+		elseif($this->output['content'] === '') {
 			http_response_code(404);
-			self::$outputTitle = helper::translate('Erreur 404');
-			self::$outputContent = template::speech('Oups ! La page demandée est introuvable...');
+			$this->addOutput([
+				'title' => helper::translate('Erreur 404'),
+				'content' => template::speech('Oups ! La page demandée est introuvable...')
+			]);
 		}
 		// Mise en forme des métas
-		if(self::$outputMetaTitle === '') {
-			if(self::$outputTitle) {
-				self::$outputMetaTitle = self::$outputTitle . ' - ' . $this->getData(['config', 'title']);
+		if($this->output['metaTitle'] === '') {
+			if($this->output['title']) {
+				$this->addOutput([
+					'metaTitle' => $this->output['title'] . ' - ' . $this->getData(['config', 'title'])
+				]);
 			}
 			else {
-				self::$outputMetaTitle = $this->getData(['config', 'title']);
+				$this->addOutput([
+					'metaTitle' => $this->getData(['config', 'title'])
+				]);
 			}
 		}
-		if(self::$outputMetaDescription === '') {
-			self::$outputMetaDescription = $this->getData(['config', 'metaDescription']);
+		if($this->output['metaDescription'] === '') {
+			$this->addOutput([
+				'metaDescription' => $this->getData(['config', 'metaDescription'])
+			]);
 		}
 		// Choix du type d'affichage
-		switch(self::$outputDisplay) {
+		switch($this->output['display']) {
 			// Layout vide
 			case self::DISPLAY_LAYOUT_BLANK:
 				require 'core/layout/blank.php';
@@ -989,11 +1036,11 @@ class core extends common {
 			// JSON
 			case self::DISPLAY_JSON:
 				header('Content-Type: application/json');
-				echo json_encode(self::$outputContent);
+				echo json_encode($this->output['content']);
 				break;
 			// BLANK
 			case self::DISPLAY_RAW:
-				echo self::$outputContent;
+				echo $this->output['content'];
 				break;
 		}
 	}
@@ -1345,7 +1392,7 @@ class helper {
 		}
 		return implode(' ', $attributes);
 	}
-	
+
 	/**
 	 * Traduit les textes
 	 * @param string $text Texte à traduire
@@ -1362,6 +1409,16 @@ class helper {
 }
 
 class layout extends common {
+
+	private $core;
+
+	/**
+	 * Constructeur du layout
+	 */
+	public function __construct(core $core) {
+		parent::__construct();
+		$this->core = $core;
+	}
 
 	/**
 	 * Affiche le script Google Analytics
@@ -1384,15 +1441,15 @@ class layout extends common {
 	 */
 	public function showContent() {
 		if(
-			self::$outputTitle
+			$this->core->output['title']
 			AND (
 				$this->getData(['page', $this->getUrl(0)]) === null
 				OR $this->getData(['page', $this->getUrl(0), 'hideTitle']) === false
 			)
 		) {
-			echo '<h2 id="pageTitle">' . self::$outputTitle . '</h2>';
+			echo '<h2 id="pageTitle">' . $this->core->output['title'] . '</h2>';
 		}
-		echo self::$outputContent;
+		echo $this->core->output['content'];
 	}
 
 	/**
@@ -1475,14 +1532,14 @@ class layout extends common {
 	 * Affiche le meta titre
 	 */
 	public function showMetaTitle() {
-		echo '<title>' . self::$outputMetaTitle . '</title>';
+		echo '<title>' . $this->core->output['metaTitle'] . '</title>';
 	}
 
 	/**
 	 * Affiche la meta description
 	 */
 	public function showMetaDescription() {
-		echo '<meta name="description" content="' . self::$outputMetaDescription . '">';
+		echo '<meta name="description" content="' . $this->core->output['metaDescription'] . '">';
 	}
 
 	/**
@@ -1526,7 +1583,7 @@ class layout extends common {
 			if($this->getUser('rank') >= self::RANK_MODERATOR) {
 				if(
 					// Sur un module de page qui autorise le bouton de modification de la page
-					self::$outputEditButton
+					$this->core->output['editButton']
 					// Sur une page sans module
 					OR $this->getData(['page', $this->getUrl(0), 'moduleId']) === ''
 					// Sur une page d'accueil
@@ -1556,15 +1613,15 @@ class layout extends common {
 		ob_start();
 		require 'core/core.js.php';
 		$coreScript = ob_get_clean();
-		echo '<script>' . helper::minifyJs($coreScript . self::$outputScript) . '</script>';
+		echo '<script>' . helper::minifyJs($coreScript . $this->core->output['script']) . '</script>';
 	}
 
 	/**
 	 * Affiche le style
 	 */
 	public function showStyle() {
-		if(self::$outputStyle) {
-			echo '<style>' . helper::minifyCss(self::$outputStyle) . '</style>';
+		if($this->core->output['style']) {
+			echo '<style>' . helper::minifyCss($this->core->output['style']) . '</style>';
 		}
 	}
 
@@ -1622,7 +1679,7 @@ class layout extends common {
 		echo '<script>' . helper::minifyJs($vars) . '</script>';
 		// Librairies
 		$moduleId = $this->getData(['page', $this->getUrl(0), 'moduleId']);
-		foreach(self::$outputVendor as $vendorName) {
+		foreach($this->core->output['vendor'] as $vendorName) {
 			// Coeur
 			if(file_exists('core/vendor/' . $vendorName . '/inc.json')) {
 				$vendorPath = 'core/vendor/' . $vendorName . '/';
@@ -1673,14 +1730,16 @@ class template {
 			'id' => $nameId,
 			'name' => $nameId,
 			'target' => '',
+			'uniqueSubmission' => false,
 			'value' => 'Bouton'
 		], $attributes);
 		// Retourne le html
 		return sprintf(
-			'<a %s class="button %s %s">%s</a>',
+			'<a %s class="button %s %s %s">%s</a>',
 			helper::sprintAttributes($attributes, ['value', 'class', 'disabled']),
 			$attributes['disabled'] ? 'disabled' : '',
 			$attributes['class'],
+			$attributes['uniqueSubmission'] ? 'uniqueSubmission' : '',
 			helper::translate($attributes['value'])
 		);
 	}
@@ -1710,7 +1769,7 @@ class template {
 		// Début du wrapper
 		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="inputWrapper ' . $attributes['classWrapper'] . '">';
 		// Label
-		$html .= self::label($attributes['id'], helper::translate('Quelle est la somme de') . ' ' . $firstNumber . ' + ' . $secondNumber . ' ?', [
+		$html .= self::label($attributes['id'], helper::translate('Combien font ') . ' ' . $firstNumber . ' + ' . $secondNumber . ' ?', [
 			'help' => $attributes['help']
 		]);
 		// Notice
@@ -1876,7 +1935,7 @@ class template {
 	 * @return string
 	 */
 	public static function notice($id) {
-		return '<span class="notice">(' . helper::translate(common::$inputNotices[$id]) . ')</span>';
+		return ' <span class="notice">' . helper::translate(common::$inputNotices[$id]) . '</span>';
 	}
 
 	/**
@@ -2083,13 +2142,16 @@ class template {
 			'disabled' => false,
 			'id' => $nameId,
 			'name' => $nameId,
+			'uniqueSubmission' => true,
 			'value' => 'Enregistrer'
 		], $attributes);
 		// Retourne le html
 		return sprintf(
-			'<input type="submit" value="%s" %s>',
-			helper::translate($attributes['value']),
-			helper::sprintAttributes($attributes, ['value'])
+			'<button type="submit" class="%s %s" %s>%s</button>',
+			$attributes['class'],
+			$attributes['uniqueSubmission'] ? 'uniqueSubmission' : '',
+			helper::sprintAttributes($attributes, ['value', 'class']),
+			helper::translate($attributes['value'])
 		);
 	}
 

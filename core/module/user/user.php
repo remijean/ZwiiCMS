@@ -51,17 +51,18 @@ class user extends common {
 					'rank' => $this->getInput('userAddRank', helper::FILTER_INT)
 				]
 			]);
-			return [
+			// Valeurs en sortie
+			$this->addOutput([
 				'redirect' => helper::baseUrl() . 'user',
 				'notification' => 'Utilisateur créé',
 				'state' => true
-			];
+			]);
 		}
-		// Affichage du template
-		return [
+		// Valeurs en sortie
+		$this->addOutput([
 			'title' => 'Nouvel utilisateur',
-			'view' => true
-		];
+			'view' => 'add'
+		]);
 	}
 
 	/**
@@ -75,24 +76,29 @@ class user extends common {
 			// Rang insuffisant
 			AND ($this->getUrl('rank') < self::RANK_MODERATOR)
 		) {
-			return [
+			// Valeurs en sortie
+			$this->addOutput([
 				'access' => false
-			];
+			]);
 		}
 		// Bloque la suppression de son propre compte
 		elseif($this->getUser('id') === $this->getUrl(2)) {
-			return [
+			// Valeurs en sortie
+			$this->addOutput([
 				'redirect' => helper::baseUrl() . 'user',
 				'notification' => 'Impossible de supprimer votre propre compte'
-			];
+			]);
 		}
 		// Suppression
-		$this->deleteData(['user', $this->getUrl(2)]);
-		return [
-			'redirect' => helper::baseUrl() . 'user',
-			'notification' => 'Utilisateur supprimé',
-			'state' => true
-		];
+		else {
+			$this->deleteData(['user', $this->getUrl(2)]);
+			// Valeurs en sortie
+			$this->addOutput([
+				'redirect' => helper::baseUrl() . 'user',
+				'notification' => 'Utilisateur supprimé',
+				'state' => true
+			]);
+		}
 	}
 
 	/**
@@ -114,79 +120,81 @@ class user extends common {
 				OR ($this->getUrl('rank') < self::RANK_MODERATOR)
 			)
 		) {
-			return [
+			// Valeurs en sortie
+			$this->addOutput([
 				'access' => false
-			];
-		}
-		// Soumission du formulaire
-		elseif($this->isPost()) {
-			// Double vérification pour le mot de passe
-			if($this->getInput('userEditNewPassword')) {
-				$newPassword = $this->getInput('userEditNewPassword', helper::FILTER_PASSWORD);
-				// Pas de changement de mot de passe en mode démo
-				if(self::$demo) {
-					$newPassword = $this->getData(['user', $this->getUrl(2), 'password']);
-					self::$inputNotices['userEditNewPassword'] = 'Action impossible en mode démonstration !';
-				}
-				// La confirmation ne correspond pas au mot de passe
-				elseif($newPassword !== $this->getInput('userEditConfirmPassword', helper::FILTER_PASSWORD)) {
-					$newPassword = $this->getData(['user', $this->getUrl(2), 'password']);
-					self::$inputNotices['userEditConfirmPassword'] = 'La confirmation ne correspond pas au mot de passe';
-				}
-			}
-			// Sinon conserve le mot de passe d'origine
-			else {
-				$newPassword = $this->getData(['user', $this->getUrl(2), 'password']);
-			}
-			// Modification du rang
-			if($this->getUser('rank') === self::RANK_ADMIN) {
-				$newRank = $this->getInput('userEditRank', helper::FILTER_INT);
-			}
-			else {
-				$newRank = $this->getData(['user', $this->getUrl(2), 'rank']);
-			}
-			// Modifie l'utilisateur
-			$this->setData([
-				'user',
-				$this->getUrl(2),
-				[
-					'mail' => $this->getInput('userEditMail', helper::FILTER_EMAIL),
-					'name' => $this->getInput('userEditName'),
-					'password' => $newPassword,
-					'rank' => $newRank
-				]
 			]);
-			// Redirection spécifique si l'utilisateur change son mot de passe
-			if($this->getUser('id') === $this->getUrl(2) AND $this->getInput('userEditNewPassword')) {
-				helper::deleteCookie('ZWII_USER_ID');
-				helper::deleteCookie('ZWII_USER_PASSWORD');
-				return [
-					'redirect' => helper::baseUrl() . 'user/login',
-					'notification' => 'Modifications enregistrées',
-					'state' => true
-				];
-			}
-			// Redirection si retour en arrière possible
-			elseif($this->getUrl(3)) {
-				return [
-					'redirect' => helper::baseUrl() . 'user',
-					'notification' => 'Modifications enregistrées',
-					'state' => true
-				];
-			}
-			else {
-				return [
-					'redirect' => helper::baseUrl() . $this->getUrl(),
-					'notification' => 'Modifications enregistrées',
-					'state' => true
-				];
-			}
 		}
-		// Affichage du template
-		return [
-			'title' => $this->getData(['user', $this->getUrl(2), 'name']),
-			'view' => true
-		];
+		// Accès autorisé
+		else {
+			// Soumission du formulaire
+			if($this->isPost()) {
+				// Double vérification pour le mot de passe
+				if($this->getInput('userEditNewPassword')) {
+					$newPassword = $this->getInput('userEditNewPassword', helper::FILTER_PASSWORD);
+					// Pas de changement de mot de passe en mode démo
+					if(self::$demo) {
+						$newPassword = $this->getData(['user', $this->getUrl(2), 'password']);
+						self::$inputNotices['userEditNewPassword'] = 'Action impossible en mode démonstration !';
+					}
+					// La confirmation ne correspond pas au mot de passe
+					elseif($newPassword !== $this->getInput('userEditConfirmPassword', helper::FILTER_PASSWORD)) {
+						$newPassword = $this->getData(['user', $this->getUrl(2), 'password']);
+						self::$inputNotices['userEditConfirmPassword'] = 'La confirmation ne correspond pas au mot de passe';
+					}
+				}
+				// Sinon conserve le mot de passe d'origine
+				else {
+					$newPassword = $this->getData(['user', $this->getUrl(2), 'password']);
+				}
+				// Modification du rang
+				if(
+					$this->getUser('rank') === self::RANK_ADMIN
+					AND $this->getUrl(2) !== $this->getUser('id')
+				) {
+					$newRank = $this->getInput('userEditRank', helper::FILTER_INT);
+				}
+				else {
+					$newRank = $this->getData(['user', $this->getUrl(2), 'rank']);
+				}
+				// Modifie l'utilisateur
+				$this->setData([
+					'user',
+					$this->getUrl(2),
+					[
+						'mail' => $this->getInput('userEditMail', helper::FILTER_EMAIL),
+						'name' => $this->getInput('userEditName'),
+						'password' => $newPassword,
+						'rank' => $newRank
+					]
+				]);
+				// Redirection spécifique si l'utilisateur change son mot de passe
+				if($this->getUser('id') === $this->getUrl(2) AND $this->getInput('userEditNewPassword')) {
+					helper::deleteCookie('ZWII_USER_ID');
+					helper::deleteCookie('ZWII_USER_PASSWORD');
+					$redirect = helper::baseUrl() . 'user/login';
+				}
+				// Redirection si retour en arrière possible
+				elseif($this->getUrl(3)) {
+					$redirect = helper::baseUrl() . 'user';
+				}
+				// Redirection normale
+				else {
+					$redirect = helper::baseUrl() . $this->getUrl();
+				}
+				// Valeurs en sortie
+				$this->addOutput([
+					'redirect' => $redirect,
+					'notification' => 'Modifications enregistrées',
+					'state' => true
+				]);
+			}
+			// Valeurs en sortie
+			$this->addOutput([
+				'title' => $this->getData(['user', $this->getUrl(2), 'name']),
+				'view' => 'edit'
+			]);
+		}
 	}
 
 	/**
@@ -211,10 +219,11 @@ class user extends common {
 				])
 			];
 		}
-		return [
+		// Valeurs en sortie
+		$this->addOutput([
 			'title' => 'Liste des utilisateurs',
-			'view' => true
-		];
+			'view' => 'index'
+		]);
 	}
 
 	/**
@@ -231,26 +240,26 @@ class user extends common {
 				$expire = $this->getInput('userLoginLongTime') ? strtotime("+1 year") : 0;
 				setcookie('ZWII_USER_ID', $this->getInput('userLoginId'), $expire, helper::baseUrl(false, false));
 				setcookie('ZWII_USER_PASSWORD', hash('sha256', $this->getInput('userLoginPassword')), $expire, helper::baseUrl(false, false));
-				return [
+				// Valeurs en sortie
+				$this->addOutput([
 					'notification' => 'Connexion réussie',
-					'redirect' => helper::baseUrl() . implode('/', array_slice(explode('/', $this->getUrl()), 2)),
+					'redirect' => helper::baseUrl(false),
 					'state' => true
-				];
+				]);
 			}
 			// Sinon notification d'échec
 			else {
-				return [
-					'notification' => 'Identifiant ou mot de passe incorrect',
-					'title' => 'Connexion',
-					'view' => true
-				];
+				// Valeurs en sortie
+				$this->addOutput([
+					'notification' => 'Identifiant ou mot de passe incorrect'
+				]);
 			}
 		}
-		// Affichage du template
-		return [
+		// Valeurs en sortie
+		$this->addOutput([
 			'title' => 'Connexion',
-			'view' => true
-		];
+			'view' => 'login'
+		]);
 	}
 
 	/**
@@ -259,11 +268,12 @@ class user extends common {
 	public function logout() {
 		helper::deleteCookie('ZWII_USER_ID');
 		helper::deleteCookie('ZWII_USER_PASSWORD');
-		return [
+		// Valeurs en sortie
+		$this->addOutput([
 			'notification' => 'Déconnexion réussie',
-			'redirect' => helper::baseUrl(),
+			'redirect' => helper::baseUrl(false),
 			'state' => true
-		];
+		]);
 	}
 
 }

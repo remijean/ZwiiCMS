@@ -39,10 +39,10 @@ class config extends common {
 		header('Content-Disposition: attachment; filename="' . $fileName . '"');
 		header('Content-Length: ' . filesize('core/tmp/' . $fileName));
 		readfile('core/tmp/' . $fileName);
-		// Affichage du template
-		return [
+		// Valeurs en sortie
+		$this->addOutput([
 			'display' => self::DISPLAY_RAW
-		];
+		]);
 	}
 
 	/**
@@ -105,17 +105,18 @@ class config extends common {
 					file_put_contents('.htaccess', $rewriteRule[0] . '# URL rewriting');
 				}
 			}
-			return [
+			// Valeurs en sortie
+			$this->addOutput([
 				'redirect' => helper::baseUrl() . $this->getUrl(),
 				'notification' => 'Modifications enregistrées',
 				'state' => true
-			];
+			]);
 		}
-		// Affichage du template
-		return [
+		// Valeurs en sortie
+		$this->addOutput([
 			'title' => 'Configuration',
-			'view' => true
-		];
+			'view' => 'index'
+		]);
 	}
 
 }
