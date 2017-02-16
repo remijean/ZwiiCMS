@@ -641,7 +641,7 @@ class common {
 		// Définition du séparateur
 		$boundary = '-----=' . md5(rand());
 		// Définition du header
-		$header = 'Reply-To: ' . $to . $n;
+		$header = 'Reply-To: no-reply@' . $_SERVER['SERVER_NAME'] . $n;
 		$header .= 'From: "' . $this->getData(['config', 'title']) . '" <no-reply@' . $_SERVER['SERVER_NAME'] . '>' . $n;
 		$header .= 'MIME-Version: 1.0' . $n;
 		$header .= 'Content-Type: multipart/alternative;' . $n . ' boundary="' . $boundary . '"' . $n;
