@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="x-apple-disable-message-reformatting">
-	<title>%SUBJECT%</title>
+	<title><?php echo $subject; ?></title>
 	<!--[if mso]>
 		<style>
 			* {
