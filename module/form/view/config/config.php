@@ -51,21 +51,21 @@
 			'label' => 'Texte du bouton de soumission',
 			'value' => $this->getData(['module', $this->getUrl(0), 'config', 'button'])
 		]); ?>
-		<?php echo template::checkbox('formConfigMailOptionsToggle', true, 'Recevoir les données saisies par mail', [
-			'checked' => (bool) $this->getData(['module', $this->getUrl(0), 'config', 'mail'])
+		<?php echo template::checkbox('formConfigEmailOptionsToggle', true, 'Recevoir les données saisies par email', [
+			'checked' => (bool) $this->getData(['module', $this->getUrl(0), 'config', 'email'])
 		]); ?>
-		<div id="formConfigMailOptions" class="displayNone">
+		<div id="formConfigEmailOptions" class="displayNone">
 			<div class="row">
 				<div class="col6">
-					<?php echo template::text('formConfigMail', [
-						'label' => 'Adresse mail',
-						'value' => $this->getData(['module', $this->getUrl(0), 'config', 'mail'])
+					<?php echo template::text('formConfigEmail', [
+						'label' => 'Adresse email',
+						'value' => $this->getData(['module', $this->getUrl(0), 'config', 'email'])
 					]); ?>
 				</div>
 				<div class="col6">
 					<?php echo template::text('formConfigSubject', [
 						'help' => 'Laissez vide afin de conserver le texte par défaut.',
-						'label' => 'Sujet du mail',
+						'label' => 'Sujet du email',
 						'value' => $this->getData(['module', $this->getUrl(0), 'config', 'subject'])
 					]); ?>
 				</div>

@@ -121,7 +121,7 @@ class common {
 				'title' => 'Site de Zwii'
 			],
 			'contact' => [
-				'content' => "<p>Cette page contient un exemple de formulaire conçu à partir du module de génération de formulaires, si vous voulez le tester n'oubliez pas de changer l'adresse mail depuis l'interface de paramétrage du module.</p>",
+				'content' => "<p>Cette page contient un exemple de formulaire conçu à partir du module de génération de formulaires, si vous voulez le tester n'oubliez pas de changer l'adresse email depuis l'interface de paramétrage du module.</p>",
 				'hideTitle' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
@@ -155,12 +155,12 @@ class common {
 				'config' => [
 					'button' => '',
 					'capcha' => true,
-					'mail' => 'zwiicms@outlook.com'
+					'email' => 'zwiicms@outlook.com'
 				],
 				'data' => [],
 				'input' => [
 					[
-						'name' => 'Adresse mail',
+						'name' => 'Adresse email',
 						'position' => 1,
 						'required' => true,
 						'type' => 'text',
@@ -185,19 +185,19 @@ class common {
 		],
 		'user' => [
 			'administrator' => [
-				'mail' => 'administrator@zwiicms.com',
+				'email' => 'administrator@zwiicms.com',
 				'name' => 'Administrateur',
 				'password' => '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
 				'rank' => 3
 			],
 			'moderator' => [
-				'mail' => 'moderator@zwiicms.com',
+				'email' => 'moderator@zwiicms.com',
 				'name' => 'Modérateur',
 				'password' => '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
 				'rank' => 2
 			],
 			'member' => [
-				'mail' => 'member@zwiicms.com',
+				'email' => 'member@zwiicms.com',
 				'name' => 'Membre',
 				'password' => '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
 				'rank' => 1
@@ -626,6 +626,45 @@ class common {
 	 */
 	public function saveData() {
 		file_put_contents('site/data/data.json', json_encode($this->getData()));
+	}
+
+	/**
+	 * Envoi un email
+	 * @param string $to Destinataire
+	 * @param string $subject Sujet
+	 * @param string $content Contenu
+	 * @return bool
+	 */
+	public function sendMail($to, $subject, $content) {
+		// Retour chariot différent pour les adresses Microsoft
+		$n = preg_match("#^[a-z0-9._-]+@(hotmail|live|msn|outlook).[a-z]{2,4}$#", $to) ? "\n" : "\r\n";
+		// Définition du séparateur
+		$boundary = '-----=' . md5(rand());
+		// Définition du header
+		$header = 'Reply-To: ' . $to . $n;
+		$header .= 'From: "' . $this->getData(['config', 'title']) . '" <no-reply@' . $_SERVER['SERVER_NAME'] . '>' . $n;
+		$header .= 'MIME-Version: 1.0' . $n;
+		$header .= 'Content-Type: multipart/alternative;' . $n . ' boundary="' . $boundary . '"' . $n;
+		// Message au format texte
+		$message = $n . '--' . $boundary . $n;
+		$message .= 'Content-Type: text/plain; charset="utf-8"' . $n;
+		$message .= 'Content-Transfer-Encoding: 8bit' . $n;
+		$message .= $n . strip_tags($content) . $n;
+		// Message au format HTML
+		ob_start();
+		include 'core/layout/email.php';
+		$layout = ob_get_clean();
+		$message .= $n . '--' . $boundary . $n;
+		$message .= 'Content-Type: text/html; charset="utf-8"' . $n;
+		$message .= 'Content-Transfer-Encoding: 8bit' . $n;
+		$message .= $n . $layout . $n;
+		// Fermeture des séparateurs
+		$message .= $n . '--' . $boundary . '--' . $n;
+		$message .= $n . '--' . $boundary . '--' . $n;
+		// Accents dans le sujet d'un email
+		$subject = mb_encode_mimeheader($subject,'UTF-8', 'Q', $n);
+		// Envoi du email
+		return @mail($to, $subject, $message, $header);
 	}
 
 	/**
@@ -1214,51 +1253,6 @@ class helper {
 	}
 
 	/**
-	 * Envoi un mail
-	 * @param string $from Expéditeur
-	 * @param string $to Destinataire
-	 * @param string $subject Sujet
-	 * @param string $message Message
-	 * @return bool
-	 */
-	public static function mail($from, $to, $subject, $message) {
-		// Retour chariot différent pour les adresses Microsoft
-		$n = preg_match("#^[a-z0-9._-]+@(hotmail|live|msn|outlook).[a-z]{2,4}$#", $to) ? "\n" : "\r\n";
-		// Définition du séparateur
-		$boundary = '-----=' . md5(rand());
-		// Création du template
-		$html = '<html><head></head><body>' . nl2br($message) . '</body></html>';
-		$txt = strip_tags($html);
-		// Définition du header
-		$header = 'Reply-To: ' . $to . $n;
-		if($from) {
-			$header .= 'From: ' . $from . $n;
-		}
-		else {
-			$header .= 'From: ' . helper::translate('Votre site Zwii') . ' <no-reply@' . $_SERVER['SERVER_NAME'] . '>' . $n;
-		}
-		$header .= 'MIME-Version: 1.0' . $n;
-		$header .= 'Content-Type: multipart/alternative;' . $n . ' boundary="' . $boundary . '"' . $n;
-		// Message au format texte
-		$message .= $n . '--' . $boundary . $n;
-		$message .= 'Content-Type: text/plain; charset="utf-8"' . $n;
-		$message .= 'Content-Transfer-Encoding: 8bit' . $n;
-		$message .= $n . $txt . $n;
-		// Message au format HTML
-		$message .= $n . '--' . $boundary . $n;
-		$message .= 'Content-Type: text/html; charset="utf-8"' . $n;
-		$message .= 'Content-Transfer-Encoding: 8bit' . $n;
-		$message .= $n . $html . $n;
-		// Fermeture des séparateurs
-		$message .= $n . '--' . $boundary . '--' . $n;
-		$message .= $n . '--' . $boundary . '--' . $n;
-		// Accents dans le sujet d'un mail
-		$subject = mb_encode_mimeheader($subject,'UTF-8', 'Q', $n);
-		// Envoi du mail
-		return @mail($to, $subject, $message, $header);
-	}
-
-	/**
 	 * Minimise du css
 	 * @param string $css Css à minimiser
 	 * @return string
@@ -1267,7 +1261,7 @@ class helper {
 		// Supprime les commentaires
 		$css = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $css);
 		// Supprime les tabulations, espaces, nouvelles lignes, etc...
-		$css = str_replace(["\r\n", "\r", "\n" ,"\t", '  ', '    ', '     '], '', $css);
+		$css = str_replace(["\r\n", "\r", "\n" ,"\t", '  ', '	', '	 '], '', $css);
 		$css = preg_replace(['(( )+{)', '({( )+)'], '{', $css);
 		$css = preg_replace(['(( )+})', '(}( )+)', '(;( )*})'], '}', $css);
 		$css = preg_replace(['(;( )+)', '(( )+;)'], ';', $css);
@@ -1284,7 +1278,7 @@ class helper {
 		// Supprime les commentaires
 		$js = preg_replace('/\\/\\*[^*]*\\*+([^\\/][^*]*\\*+)*\\/|\s*(?<![\:\=])\/\/.*/', '', $js);
 		// Supprime les tabulations, espaces, nouvelles lignes, etc...
-		$js = str_replace(["\r\n", "\r", "\t", "\n", '  ', '    ', '     '], '', $js);
+		$js = str_replace(["\r\n", "\r", "\t", "\n", '  ', '	', '	 '], '', $js);
 		$js = preg_replace(['(( )+\))', '(\)( )+)'], ')', $js);
 		// Retourne le js minifié
 		return $js;

@@ -24,8 +24,8 @@
 					'required' => true,
 					'selected' => self::RANK_MEMBER
 				]); ?>
-				<?php echo template::text('userAddMail', [
-					'label' => 'Adresse mail',
+				<?php echo template::text('userAddEmail', [
+					'label' => 'Adresse email',
 					'required' => true
 				]); ?>
 			</div>

@@ -44,7 +44,7 @@ class form extends common {
 				[
 					'button' => $this->getInput('formConfigButton'),
 					'capcha' => $this->getInput('formConfigCapcha', helper::FILTER_BOOLEAN),
-					'mail' => $this->getInput('formConfigMail', helper::FILTER_EMAIL),
+					'email' => $this->getInput('formConfigEmail', helper::FILTER_EMAIL),
 					'subject' => $this->getInput('formConfigSubject')
 				]
 			]);
@@ -120,33 +120,32 @@ class form extends common {
 			{
 				self::$inputNotices['formCapcha'] = 'Incorrect';
 			}
-			// Préparation des données
+			// Préparation le contenu du email
 			$data = [];
-			$mail = '';
+			$content = '';
 			foreach($this->getInput('formInput', null) as $index => $value) {
 				// Erreur champ obligatoire
 				$this->addRequiredInputNotices('formInput[' . $index . ']');
 				// Préparation des données pour la création dans la base
 				$data[$this->getData(['module', $this->getUrl(0), 'input', $index, 'name'])] = $value;
-				// Préparation des données pour le mail
-				$mail .= '<li>' . $this->getData(['module', $this->getUrl(0), 'input', $index, 'name']) . ' : ' . $value . '</li>';
+				// Préparation des données pour le email
+				$content .= '<strong>' . $this->getData(['module', $this->getUrl(0), 'input', $index, 'name']) . ' :</strong> ' . $value . '<br>';
 			}
 			// Crée les données
 			$this->setData(['module', $this->getUrl(0), 'data', helper::increment(1, $this->getData(['module', $this->getUrl(0), 'data'])), $data]);
-			// Envoi du mail
+			// Envoi du email
 			if(self::$inputNotices === []) {
-				if($this->getData(['module', $this->getUrl(0), 'config', 'mail'])) {
+				if($this->getData(['module', $this->getUrl(0), 'config', 'email'])) {
 					if($this->getData(['module', $this->getUrl(0), 'config', 'subject'])) {
 						$subject = $this->getData(['module', $this->getUrl(0), 'config', 'subject']);
 					}
 					else {
-						$subject = helper::translate('Mail en provenance de votre site');
+						$subject = helper::translate('Nouveau message en provenance de la page') . ' "' . $this->getData(['page', $this->getUrl(0), 'title']) . '"';
 					}
-					$sent = helper::mail(
-						false,
-						$this->getData(['module', $this->getUrl(0), 'config', 'mail']),
+					$sent = $this->sendMail(
+						$this->getData(['module', $this->getUrl(0), 'config', 'email']),
 						$subject,
-						'<h3>' . $subject . ' ' . helper::baseUrl() . $this->getUrl() . '</h3><ul>' . $mail . '</ul>'
+						$subject . ' :<br><br>' . $content
 					);
 				}
 			}
@@ -155,7 +154,7 @@ class form extends common {
 				$notification = 'Formulaire soumis';
 			}
 			else {
-				$notification = 'Formulaire soumis, mais impossible d\'envoyer le mail';
+				$notification = 'Formulaire soumis, mais impossible d\'envoyer le email';
 			}
 			// Valeurs en sortie
 			$this->addOutput([

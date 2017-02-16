@@ -29,10 +29,10 @@
 						'selected' => $this->getData(['user', $this->getUrl(2), 'rank'])
 					]); ?>
 				<?php endif; ?>
-				<?php echo template::text('userEditMail', [
-					'label' => 'Adresse mail',
+				<?php echo template::text('userEditEmail', [
+					'label' => 'Adresse email',
 					'required' => true,
-					'value' => $this->getData(['user', $this->getUrl(2), 'mail'])
+					'value' => $this->getData(['user', $this->getUrl(2), 'email'])
 				]); ?>
 			</div>
 		</div>

@@ -141,15 +141,15 @@ $("#formConfigInputs")
 $(".formConfigType").trigger("change");
 
 /**
- * Affiche/cache les options de la case à cocher mail
+ * Affiche/cache les options de la case à cocher email
  */
-$("#formConfigMailOptionsToggle").on("change", function() {
+$("#formConfigEmailOptionsToggle").on("change", function() {
 	if($(this).is(":checked")) {
-		$("#formConfigMailOptions").slideDown();
+		$("#formConfigEmailOptions").slideDown();
 	}
 	else {
-		$("#formConfigMailOptions").slideUp(function() {
-			$("#formConfigMail").val("");
+		$("#formConfigEmailOptions").slideUp(function() {
+			$("#formConfigEmail").val("");
 		});
 	}
 }).trigger("change");

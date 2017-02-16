@@ -45,7 +45,7 @@ class user extends common {
 				'user',
 				$userId,
 				[
-					'mail' => $this->getInput('userAddMail', helper::FILTER_EMAIL),
+					'email' => $this->getInput('userAddEmail', helper::FILTER_EMAIL),
 					'name' => $this->getInput('userAddName'),
 					'password' => $password,
 					'rank' => $this->getInput('userAddRank', helper::FILTER_INT)
@@ -162,7 +162,7 @@ class user extends common {
 					'user',
 					$this->getUrl(2),
 					[
-						'mail' => $this->getInput('userEditMail', helper::FILTER_EMAIL),
+						'email' => $this->getInput('userEditEmail', helper::FILTER_EMAIL),
 						'name' => $this->getInput('userEditName'),
 						'password' => $newPassword,
 						'rank' => $newRank
@@ -206,8 +206,8 @@ class user extends common {
 		foreach($userIdsNames as $userId => $userName) {
 			self::$users[] = [
 				$userId,
-				self::$ranks[$this->getData(['user', $userId, 'rank'])],
 				$userName,
+				self::$ranks[$this->getData(['user', $userId, 'rank'])],
 				template::button('userEdit' . $userId, [
 					'value' => template::ico('pencil'),
 					'href' => helper::baseUrl() . 'user/edit/' . $userId . '/back'
