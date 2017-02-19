@@ -15,9 +15,9 @@
 class page extends common {
 
 	public static $actions = [
-		'add' => self::RANK_MODERATOR,
-		'delete' => self::RANK_MODERATOR,
-		'edit' => self::RANK_MODERATOR
+		'add' => self::GROUP_MODERATOR,
+		'delete' => self::GROUP_MODERATOR,
+		'edit' => self::GROUP_MODERATOR
 	];
 	public static $pagesNoParentId = [
 		'' => 'Aucune'
@@ -41,7 +41,7 @@ class page extends common {
 				'moduleId' => '',
 				'parentPageId' => '',
 				'position' => 0,
-				'rank' => self::RANK_VISITOR,
+				'group' => self::GROUP_VISITOR,
 				'targetBlank' => false,
 				'title' => $pageTitle
 			]
@@ -161,7 +161,7 @@ class page extends common {
 						'moduleId' => $this->getInput('pageEditModuleId'),
 						'parentPageId' => $this->getInput('pageEditParentPageId'),
 						'position' => $position,
-						'rank' => $this->getInput('pageEditRank', helper::FILTER_INT),
+						'group' => $this->getInput('pageEditGroup', helper::FILTER_INT),
 						'targetBlank' => $this->getInput('pageEditTargetBlank', helper::FILTER_BOOLEAN),
 						'title' => $this->getInput('pageEditTitle')
 					]

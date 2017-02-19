@@ -15,9 +15,9 @@
 class form extends common {
 
 	public static $actions = [
-		'config' => self::RANK_MODERATOR,
-		'data' => self::RANK_MODERATOR,
-		'index' => self::RANK_VISITOR
+		'config' => self::GROUP_MODERATOR,
+		'data' => self::GROUP_MODERATOR,
+		'index' => self::GROUP_VISITOR
 	];
 
 	public static $data = [];
@@ -44,7 +44,7 @@ class form extends common {
 				[
 					'button' => $this->getInput('formConfigButton'),
 					'capcha' => $this->getInput('formConfigCapcha', helper::FILTER_BOOLEAN),
-					'email' => $this->getInput('formConfigEmail', helper::FILTER_EMAIL),
+					'group' => $this->getInput('formConfigGroup'),
 					'subject' => $this->getInput('formConfigSubject')
 				]
 			]);
@@ -85,7 +85,7 @@ class form extends common {
 	public function data() {
 		$data = $this->getData(['module', $this->getUrl(0), 'data']);
 		if($data) {
-			// Crée une pagination (retourne la première news et dernière news de la page et la liste des pages
+			// Crée une pagination
 			$pagination = helper::pagination($data, $this->getUrl());
 			// Pages
 			self::$pages = $pagination['pages'];
@@ -120,7 +120,7 @@ class form extends common {
 			{
 				self::$inputNotices['formCapcha'] = 'Incorrect';
 			}
-			// Préparation le contenu du email
+			// Préparation le contenu du mail
 			$data = [];
 			$content = '';
 			foreach($this->getInput('formInput', null) as $index => $value) {
@@ -128,22 +128,32 @@ class form extends common {
 				$this->addRequiredInputNotices('formInput[' . $index . ']');
 				// Préparation des données pour la création dans la base
 				$data[$this->getData(['module', $this->getUrl(0), 'input', $index, 'name'])] = $value;
-				// Préparation des données pour le email
+				// Préparation des données pour le mail
 				$content .= '<strong>' . $this->getData(['module', $this->getUrl(0), 'input', $index, 'name']) . ' :</strong> ' . $value . '<br>';
 			}
 			// Crée les données
 			$this->setData(['module', $this->getUrl(0), 'data', helper::increment(1, $this->getData(['module', $this->getUrl(0), 'data'])), $data]);
-			// Envoi du email
-			if(self::$inputNotices === []) {
-				if($this->getData(['module', $this->getUrl(0), 'config', 'email'])) {
-					if($this->getData(['module', $this->getUrl(0), 'config', 'subject'])) {
-						$subject = $this->getData(['module', $this->getUrl(0), 'config', 'subject']);
+			// Envoi du mail
+			if(
+				self::$inputNotices === []
+				AND $group = $this->getData(['module', $this->getUrl(0), 'config', 'group'])
+			) {
+				// Utilisateurs dans le groupe
+				$to = [];
+				foreach($this->getData(['user']) as $userId => $user) {
+					if($user['group'] === $group) {
+						$to[] = $user['mail'];
 					}
-					else {
+				}
+				if($to) {
+					$to = implode(',', $to);
+					// Sujet du mail
+					$subject = $this->getData(['module', $this->getUrl(0), 'config', 'subject']);
+					if($subject === '') {
 						$subject = helper::translate('Nouveau message en provenance de la page') . ' "' . $this->getData(['page', $this->getUrl(0), 'title']) . '"';
 					}
 					$sent = $this->sendMail(
-						$this->getData(['module', $this->getUrl(0), 'config', 'email']),
+						$to,
 						$subject,
 						$subject . ' :<br><br>' . $content
 					);
@@ -154,7 +164,7 @@ class form extends common {
 				$notification = 'Formulaire soumis';
 			}
 			else {
-				$notification = 'Formulaire soumis, mais impossible d\'envoyer le email';
+				$notification = 'Formulaire soumis, mais impossible d\'envoyer le mail';
 			}
 			// Valeurs en sortie
 			$this->addOutput([

@@ -22,7 +22,7 @@
 			</div>
 		</div>
 	</div>
-	<?php if($this->getData(['module', $this->getUrl(0)])): ?>
+	<?php if($module::$galleries): ?>
 		<?php echo template::table([4, 6, 1, 1], $module::$galleries, ['Nom', 'Dossier cible', '', '']); ?>
 	<?php endif; ?>
 	<div class="row">

@@ -15,12 +15,12 @@
 class user extends common {
 
 	public static $actions = [
-		'add' => self::RANK_ADMIN,
-		'delete' => self::RANK_ADMIN,
-		'edit' => self::RANK_MEMBER,
-		'index' => self::RANK_ADMIN,
-		'login' => self::RANK_VISITOR,
-		'logout' => self::RANK_MEMBER
+		'add' => self::GROUP_ADMIN,
+		'delete' => self::GROUP_ADMIN,
+		'edit' => self::GROUP_MEMBER,
+		'index' => self::GROUP_ADMIN,
+		'login' => self::GROUP_VISITOR,
+		'logout' => self::GROUP_MEMBER
 	];
 	public static $users = [];
 
@@ -45,10 +45,10 @@ class user extends common {
 				'user',
 				$userId,
 				[
-					'email' => $this->getInput('userAddEmail', helper::FILTER_EMAIL),
+					'mail' => $this->getInput('userAddMail', helper::FILTER_MAIL),
 					'name' => $this->getInput('userAddName'),
 					'password' => $password,
-					'rank' => $this->getInput('userAddRank', helper::FILTER_INT)
+					'group' => $this->getInput('userAddGroup', helper::FILTER_INT)
 				]
 			]);
 			// Valeurs en sortie
@@ -73,8 +73,8 @@ class user extends common {
 		if(
 			// L'utilisateur n'existe pas
 			$this->getData(['user', $this->getUrl(2)]) === null
-			// Rang insuffisant
-			AND ($this->getUrl('rank') < self::RANK_MODERATOR)
+			// Groupe insuffisant
+			AND ($this->getUrl('group') < self::GROUP_MODERATOR)
 		) {
 			// Valeurs en sortie
 			$this->addOutput([
@@ -114,10 +114,10 @@ class user extends common {
 				// Impossible de s'auto-éditer
 				(
 					$this->getUser('id') === $this->getUrl(2)
-					AND $this->getUrl('rank') <= self::RANK_VISITOR
+					AND $this->getUrl('group') <= self::GROUP_VISITOR
 				)
 				// Impossible d'éditer un autre utilisateur
-				OR ($this->getUrl('rank') < self::RANK_MODERATOR)
+				OR ($this->getUrl('group') < self::GROUP_MODERATOR)
 			)
 		) {
 			// Valeurs en sortie
@@ -147,25 +147,25 @@ class user extends common {
 				else {
 					$newPassword = $this->getData(['user', $this->getUrl(2), 'password']);
 				}
-				// Modification du rang
+				// Modification du groupe
 				if(
-					$this->getUser('rank') === self::RANK_ADMIN
+					$this->getUser('group') === self::GROUP_ADMIN
 					AND $this->getUrl(2) !== $this->getUser('id')
 				) {
-					$newRank = $this->getInput('userEditRank', helper::FILTER_INT);
+					$newGroup = $this->getInput('userEditGroup', helper::FILTER_INT);
 				}
 				else {
-					$newRank = $this->getData(['user', $this->getUrl(2), 'rank']);
+					$newGroup = $this->getData(['user', $this->getUrl(2), 'group']);
 				}
 				// Modifie l'utilisateur
 				$this->setData([
 					'user',
 					$this->getUrl(2),
 					[
-						'email' => $this->getInput('userEditEmail', helper::FILTER_EMAIL),
+						'mail' => $this->getInput('userEditMail', helper::FILTER_MAIL),
 						'name' => $this->getInput('userEditName'),
 						'password' => $newPassword,
-						'rank' => $newRank
+						'group' => $newGroup
 					]
 				]);
 				// Redirection spécifique si l'utilisateur change son mot de passe
@@ -207,7 +207,7 @@ class user extends common {
 			self::$users[] = [
 				$userId,
 				$userName,
-				self::$ranks[$this->getData(['user', $userId, 'rank'])],
+				self::$groups[$this->getData(['user', $userId, 'group'])],
 				template::button('userEdit' . $userId, [
 					'value' => template::ico('pencil'),
 					'href' => helper::baseUrl() . 'user/edit/' . $userId . '/back'
@@ -235,7 +235,7 @@ class user extends common {
 			// Connexion si les informations sont correctes
 			if(
 				$this->getData(['user', $this->getInput('userLoginId'), 'password']) === hash('sha256', $this->getInput('userLoginPassword'))
-				AND $this->getData(['user', $this->getInput('userLoginId'), 'rank']) >= self::RANK_MEMBER
+				AND $this->getData(['user', $this->getInput('userLoginId'), 'group']) >= self::GROUP_MEMBER
 			) {
 				$expire = $this->getInput('userLoginLongTime') ? strtotime("+1 year") : 0;
 				setcookie('ZWII_USER_ID', $this->getInput('userLoginId'), $expire, helper::baseUrl(false, false));

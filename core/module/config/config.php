@@ -15,8 +15,8 @@
 class config extends common {
 
 	public static $actions = [
-		'backup' => self::RANK_ADMIN,
-		'index' => self::RANK_ADMIN
+		'backup' => self::GROUP_ADMIN,
+		'index' => self::GROUP_ADMIN
 	];
 
 	public static $languages = [];

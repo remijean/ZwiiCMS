@@ -51,27 +51,27 @@
 			'label' => 'Texte du bouton de soumission',
 			'value' => $this->getData(['module', $this->getUrl(0), 'config', 'button'])
 		]); ?>
-		<?php echo template::checkbox('formConfigEmailOptionsToggle', true, 'Recevoir les données saisies par email', [
-			'checked' => (bool) $this->getData(['module', $this->getUrl(0), 'config', 'email'])
+		<?php echo template::checkbox('formConfigMailOptionsToggle', true, 'Envoyer par mail les données saisies à un groupe', [
+			'checked' => (bool) $this->getData(['module', $this->getUrl(0), 'config', 'group'])
 		]); ?>
-		<div id="formConfigEmailOptions" class="displayNone">
+		<div id="formConfigMailOptions" class="displayNone">
 			<div class="row">
 				<div class="col6">
-					<?php echo template::text('formConfigEmail', [
-						'label' => 'Adresse email',
-						'value' => $this->getData(['module', $this->getUrl(0), 'config', 'email'])
+					<?php echo template::select('formConfigGroup', self::$groupNews, [
+						'label' => 'Groupe',
+						'selected' => $this->getData(['module', $this->getUrl(0), 'config', 'group'])
 					]); ?>
 				</div>
 				<div class="col6">
 					<?php echo template::text('formConfigSubject', [
 						'help' => 'Laissez vide afin de conserver le texte par défaut.',
-						'label' => 'Sujet du email',
+						'label' => 'Sujet du mail',
 						'value' => $this->getData(['module', $this->getUrl(0), 'config', 'subject'])
 					]); ?>
 				</div>
 			</div>
 		</div>
-		<?php echo template::checkbox('formConfigCapcha', true, 'Ajouter un capcha à remplir avant de soumettre le formulaire', [
+		<?php echo template::checkbox('formConfigCapcha', true, 'Capcha à remplir pour soumettre le formulaire', [
 			'checked' => $this->getData(['module', $this->getUrl(0), 'config', 'capcha'])
 		]); ?>
 	</div>

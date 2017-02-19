@@ -15,12 +15,12 @@
 class theme extends common {
 
 	public static $actions = [
-		'body' => self::RANK_ADMIN,
-		'footer' => self::RANK_ADMIN,
-		'header' => self::RANK_ADMIN,
-		'index' => self::RANK_ADMIN,
-		'menu' => self::RANK_ADMIN,
-		'site' => self::RANK_ADMIN
+		'body' => self::GROUP_ADMIN,
+		'footer' => self::GROUP_ADMIN,
+		'header' => self::GROUP_ADMIN,
+		'index' => self::GROUP_ADMIN,
+		'menu' => self::GROUP_ADMIN,
+		'site' => self::GROUP_ADMIN
 	];
 	public static $aligns = [
 		'left' => 'À gauche',

@@ -20,19 +20,19 @@
 						]); ?>
 					</div>
 				</div>
-				<?php if($this->getUser('rank') === self::RANK_ADMIN): ?>
-					<?php echo template::select('userEditRank', self::$rankEdits, [
+				<?php if($this->getUser('group') === self::GROUP_ADMIN): ?>
+					<?php echo template::select('userEditGroup', self::$groupEdits, [
 						'disabled' => ($this->getUrl(2) === $this->getUser('id')),
-						'help' => ($this->getUrl(2) === $this->getUser('id') ? 'Impossible de modifier votre propre rang.' : ''),
-						'label' => 'Rang',
+						'help' => ($this->getUrl(2) === $this->getUser('id') ? 'Impossible de modifier votre propre groupe.' : ''),
+						'label' => 'Groupe',
 						'required' => true,
-						'selected' => $this->getData(['user', $this->getUrl(2), 'rank'])
+						'selected' => $this->getData(['user', $this->getUrl(2), 'group'])
 					]); ?>
 				<?php endif; ?>
-				<?php echo template::text('userEditEmail', [
-					'label' => 'Adresse email',
+				<?php echo template::text('userEditMail', [
+					'label' => 'Adresse mail',
 					'required' => true,
-					'value' => $this->getData(['user', $this->getUrl(2), 'email'])
+					'value' => $this->getData(['user', $this->getUrl(2), 'mail'])
 				]); ?>
 			</div>
 		</div>

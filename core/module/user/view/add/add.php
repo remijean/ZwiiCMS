@@ -19,13 +19,13 @@
 						]); ?>
 					</div>
 				</div>
-				<?php echo template::select('userAddRank', self::$rankNews, [
-					'label' => 'Rang',
+				<?php echo template::select('userAddGroup', self::$groupNews, [
+					'label' => 'Groupe',
 					'required' => true,
-					'selected' => self::RANK_MEMBER
+					'selected' => self::GROUP_MEMBER
 				]); ?>
-				<?php echo template::text('userAddEmail', [
-					'label' => 'Adresse email',
+				<?php echo template::text('userAddMail', [
+					'label' => 'Adresse mail',
 					'required' => true
 				]); ?>
 			</div>

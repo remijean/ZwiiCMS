@@ -63,9 +63,9 @@
 		<div class="col6">
 			<div class="block">
 				<h4><?php echo helper::translate('Options avancées'); ?></h4>
-				<?php echo template::select('pageEditRank', self::$rankPublics, [
-					'label' => 'Rang minimum d\'accès',
-					'selected' => $this->getData(['page', $this->getUrl(2), 'rank'])
+				<?php echo template::select('pageEditGroup', self::$groupPublics, [
+					'label' => 'Groupe minimum d\'accès',
+					'selected' => $this->getData(['page', $this->getUrl(2), 'group'])
 				]); ?>
 				<?php echo template::checkbox('pageEditHideTitle', true, 'Cacher le titre', [
 					'checked' => $this->getData(['page', $this->getUrl(2), 'hideTitle'])

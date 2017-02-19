@@ -18,11 +18,11 @@ class common {
 	const DISPLAY_JSON = 1;
 	const DISPLAY_LAYOUT_BLANK = 2;
 	const DISPLAY_LAYOUT_NORMAL = 3;
-	const RANK_BANNED = -1;
-	const RANK_VISITOR = 0;
-	const RANK_MEMBER = 1;
-	const RANK_MODERATOR = 2;
-	const RANK_ADMIN = 3;
+	const GROUP_BANNED = -1;
+	const GROUP_VISITOR = 0;
+	const GROUP_MEMBER = 1;
+	const GROUP_MODERATOR = 2;
+	const GROUP_ADMIN = 3;
 	const ZWII_VERSION = '8.0.0 bêta 0.6';
 
 	public static $actions = [];
@@ -68,7 +68,7 @@ class common {
 				'moduleId' => '',
 				'parentPageId' => '',
 				'position' => 1,
-				'rank' => self::RANK_VISITOR,
+				'group' => self::GROUP_VISITOR,
 				'targetBlank' => false,
 				'title' => 'Accueil'
 			],
@@ -80,7 +80,7 @@ class common {
 				'moduleId' => '',
 				'parentPageId' => 'accueil',
 				'position' => 1,
-				'rank' => self::RANK_VISITOR,
+				'group' => self::GROUP_VISITOR,
 				'targetBlank' => false,
 				'title' => 'Enfant'
 			],
@@ -92,7 +92,7 @@ class common {
 				'moduleId' => '',
 				'parentPageId' => '',
 				'position' => 2,
-				'rank' => self::RANK_MEMBER,
+				'group' => self::GROUP_MEMBER,
 				'targetBlank' => false,
 				'title' => 'Cachée'
 			],
@@ -104,7 +104,7 @@ class common {
 				'moduleId' => 'gallery',
 				'parentPageId' => '',
 				'position' => 3,
-				'rank' => self::RANK_VISITOR,
+				'group' => self::GROUP_VISITOR,
 				'targetBlank' => false,
 				'title' => 'Galeries'
 			],
@@ -116,19 +116,19 @@ class common {
 				'moduleId' => 'redirection',
 				'parentPageId' => '',
 				'position' => 4,
-				'rank' => self::RANK_VISITOR,
+				'group' => self::GROUP_VISITOR,
 				'targetBlank' => true,
 				'title' => 'Site de Zwii'
 			],
 			'contact' => [
-				'content' => "<p>Cette page contient un exemple de formulaire conçu à partir du module de génération de formulaires, si vous voulez le tester n'oubliez pas de changer l'adresse email depuis l'interface de paramétrage du module.</p>",
+				'content' => "<p>Cette page contient un exemple de formulaire conçu à partir du module de génération de formulaires. Il est configuré pour envoyer les données saisies par mail aux administrateurs du site.</p>",
 				'hideTitle' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => 'form',
 				'parentPageId' => '',
 				'position' => 5,
-				'rank' => self::RANK_VISITOR,
+				'group' => self::GROUP_VISITOR,
 				'targetBlank' => false,
 				'title' => 'Contact'
 			]
@@ -155,12 +155,13 @@ class common {
 				'config' => [
 					'button' => '',
 					'capcha' => true,
-					'email' => 'zwiicms@outlook.com'
+					'group' => self::GROUP_ADMIN,
+					'subject' => ''
 				],
 				'data' => [],
 				'input' => [
 					[
-						'name' => 'Adresse email',
+						'name' => 'Adresse mail',
 						'position' => 1,
 						'required' => true,
 						'type' => 'text',
@@ -185,22 +186,22 @@ class common {
 		],
 		'user' => [
 			'administrator' => [
-				'email' => 'administrator@zwiicms.com',
+				'mail' => 'administrator@zwiicms.com',
 				'name' => 'Administrateur',
 				'password' => '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
-				'rank' => 3
+				'group' => 3
 			],
 			'moderator' => [
-				'email' => 'moderator@zwiicms.com',
+				'mail' => 'moderator@zwiicms.com',
 				'name' => 'Modérateur',
 				'password' => '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
-				'rank' => 2
+				'group' => 2
 			],
 			'member' => [
-				'email' => 'member@zwiicms.com',
+				'mail' => 'member@zwiicms.com',
 				'name' => 'Membre',
 				'password' => '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
-				'rank' => 1
+				'group' => 1
 			]
 		],
 		'theme' => [
@@ -304,29 +305,29 @@ class common {
 		],
 		'view' => ''
 	];
-	public static $ranks = [
-		self::RANK_BANNED => 'Banni',
-		self::RANK_VISITOR => 'Visiteur',
-		self::RANK_MEMBER => 'Membre',
-		self::RANK_MODERATOR => 'Modérateur',
-		self::RANK_ADMIN => 'Administrateur'
+	public static $groups = [
+		self::GROUP_BANNED => 'Banni',
+		self::GROUP_VISITOR => 'Visiteur',
+		self::GROUP_MEMBER => 'Membre',
+		self::GROUP_MODERATOR => 'Modérateur',
+		self::GROUP_ADMIN => 'Administrateur'
 	];
-	public static $rankEdits = [
-		self::RANK_BANNED => 'Banni',
-		self::RANK_MEMBER => 'Membre',
-		self::RANK_MODERATOR => 'Modérateur',
-		self::RANK_ADMIN => 'Administrateur'
+	public static $groupEdits = [
+		self::GROUP_BANNED => 'Banni',
+		self::GROUP_MEMBER => 'Membre',
+		self::GROUP_MODERATOR => 'Modérateur',
+		self::GROUP_ADMIN => 'Administrateur'
 	];
-	public static $rankNews = [
-		self::RANK_MEMBER => 'Membre',
-		self::RANK_MODERATOR => 'Modérateur',
-		self::RANK_ADMIN => 'Administrateur'
+	public static $groupNews = [
+		self::GROUP_MEMBER => 'Membre',
+		self::GROUP_MODERATOR => 'Modérateur',
+		self::GROUP_ADMIN => 'Administrateur'
 	];
-	public static $rankPublics = [
-		self::RANK_VISITOR => 'Visiteur',
-		self::RANK_MEMBER => 'Membre',
-		self::RANK_MODERATOR => 'Modérateur',
-		self::RANK_ADMIN => 'Administrateur'
+	public static $groupPublics = [
+		self::GROUP_VISITOR => 'Visiteur',
+		self::GROUP_MEMBER => 'Membre',
+		self::GROUP_MODERATOR => 'Modérateur',
+		self::GROUP_ADMIN => 'Administrateur'
 	];
 	private $url = '';
 	private $user = [];
@@ -370,10 +371,10 @@ class common {
 					$this->getData(['page', $pageId, 'parentPageId']) === ""
 					// Ignore les pages dont l'utilisateur n'a pas accès
 					AND (
-						$this->getData(['page', $pageId, 'rank']) === self::RANK_VISITOR
+						$this->getData(['page', $pageId, 'group']) === self::GROUP_VISITOR
 						OR (
 							$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
-							AND $this->getUser('rank') >= $this->getData(['page', $pageId, 'rank'])
+							AND $this->getUser('group') >= $this->getData(['page', $pageId, 'group'])
 						)
 					)
 				) {
@@ -390,10 +391,10 @@ class common {
 					$parentId = $this->getData(['page', $pageId, 'parentPageId'])
 					// Ignore les pages dont l'utilisateur n'a pas accès
 					AND (
-						$this->getData(['page', $pageId, 'rank']) === self::RANK_VISITOR
+						$this->getData(['page', $pageId, 'group']) === self::GROUP_VISITOR
 						OR (
 							$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
-							AND $this->getUser('rank') >= $this->getData(['page', $pageId, 'rank'])
+							AND $this->getUser('group') >= $this->getData(['page', $pageId, 'group'])
 						)
 					)
 				) {
@@ -629,41 +630,39 @@ class common {
 	}
 
 	/**
-	 * Envoi un email
+	 * Envoi un mail
 	 * @param string $to Destinataire
 	 * @param string $subject Sujet
 	 * @param string $content Contenu
 	 * @return bool
 	 */
 	public function sendMail($to, $subject, $content) {
-		// Retour chariot différent pour les adresses Microsoft
-		$n = preg_match("#^[a-z0-9._-]+@(hotmail|live|msn|outlook).[a-z]{2,4}$#", $to) ? "\n" : "\r\n";
 		// Définition du séparateur
-		$boundary = '-----=' . md5(rand());
+		$boundary = '-----=' . md5(mt_rand());
 		// Définition du header
-		$header = 'Reply-To: no-reply@' . $_SERVER['SERVER_NAME'] . $n;
-		$header .= 'From: "' . $this->getData(['config', 'title']) . '" <no-reply@' . $_SERVER['SERVER_NAME'] . '>' . $n;
-		$header .= 'MIME-Version: 1.0' . $n;
-		$header .= 'Content-Type: multipart/alternative;' . $n . ' boundary="' . $boundary . '"' . $n;
+		$header = 'From: "' . $this->getData(['config', 'title']) . '" <no-reply@' . $_SERVER['SERVER_NAME'] . '>' . "\n";
+		$header .= 'Reply-to: "' . $this->getData(['config', 'title']) . '" <no-reply@' . $_SERVER['SERVER_NAME'] . '>' . "\n";
+		$header .= 'MIME-Version: 1.0' . "\n";
+		$header .= 'Content-Type: multipart/alternative;' . "\n" . ' boundary="' . $boundary . '"' . "\n";
 		// Message au format texte
-		$message = $n . '--' . $boundary . $n;
-		$message .= 'Content-Type: text/plain; charset="utf-8"' . $n;
-		$message .= 'Content-Transfer-Encoding: 8bit' . $n;
-		$message .= $n . strip_tags($content) . $n;
+		$message = "\n" . '--' . $boundary . "\n";
+		$message .= 'Content-Type: text/plain; charset="utf-8"' . "\n";
+		$message .= 'Content-Transfer-Encoding: 8bit' . "\n";
+		$message .= "\n" . strip_tags($content) . "\n";
 		// Message au format HTML
 		ob_start();
-		include 'core/layout/email.php';
+		include 'core/layout/mail.php';
 		$layout = ob_get_clean();
-		$message .= $n . '--' . $boundary . $n;
-		$message .= 'Content-Type: text/html; charset="utf-8"' . $n;
-		$message .= 'Content-Transfer-Encoding: 8bit' . $n;
-		$message .= $n . $layout . $n;
+		$message .= "\n" . '--' . $boundary . "\n";
+		$message .= 'Content-Type: text/html; charset="utf-8"' . "\n";
+		$message .= 'Content-Transfer-Encoding: 8bit' . "\n";
+		$message .= "\n" . $layout . "\n";
 		// Fermeture des séparateurs
-		$message .= $n . '--' . $boundary . '--' . $n;
-		$message .= $n . '--' . $boundary . '--' . $n;
-		// Accents dans le sujet d'un email
-		$subject = mb_encode_mimeheader($subject,'UTF-8', 'Q', $n);
-		// Envoi du email
+		$message .= "\n" . '--' . $boundary . '--' . "\n";
+		$message .= "\n" . '--' . $boundary . '--' . "\n";
+		// Accents dans le sujet d'un mail
+		$subject = mb_encode_mimeheader($subject,'UTF-8', 'Q', "\n");
+		// Envoi du mail
 		return @mail($to, $subject, $message, $header);
 	}
 
@@ -861,7 +860,7 @@ class core extends common {
 		// Force la déconnexion des membres bannis
 		if (
 			$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
-			AND $this->getUser('rank') === self::RANK_BANNED
+			AND $this->getUser('group') === self::GROUP_BANNED
 		) {
 			$user = new user;
 			$user->logout();
@@ -870,10 +869,10 @@ class core extends common {
 		$access = null;
 		if($this->getData(['page', $this->getUrl(0)]) !== null) {
 			if(
-				$this->getData(['page', $this->getUrl(0), 'rank']) === self::RANK_VISITOR
+				$this->getData(['page', $this->getUrl(0), 'group']) === self::GROUP_VISITOR
 				OR (
 					$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
-					AND $this->getUser('rank') >= $this->getData(['page', $this->getUrl(0), 'rank'])
+					AND $this->getUser('group') >= $this->getData(['page', $this->getUrl(0), 'group'])
 				)
 			) {
 				$access = true;
@@ -920,12 +919,12 @@ class core extends common {
 				if(array_key_exists($action, $module::$actions)) {
 					$module->$action();
 					$output = $module->output;
-					// Check le rang de l'utilisateur
+					// Check le groupe de l'utilisateur
 					if(
-						$module::$actions[$action] === self::RANK_VISITOR
+						$module::$actions[$action] === self::GROUP_VISITOR
 						OR (
 							$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
-							AND $this->getUser('rank') >= $module::$actions[$action]
+							AND $this->getUser('group') >= $module::$actions[$action]
 						)
 						AND (
 							$output['access'] === false
@@ -1088,7 +1087,7 @@ class helper {
 
 	/** Filtres personnalisés */
 	const FILTER_BOOLEAN = 1;
-	const FILTER_EMAIL = 2;
+	const FILTER_MAIL = 2;
 	const FILTER_FLOAT = 3;
 	const FILTER_ID = 4;
 	const FILTER_INT = 5;
@@ -1192,7 +1191,7 @@ class helper {
 			case self::FILTER_BOOLEAN:
 				$text = (bool) $text;
 				break;
-			case self::FILTER_EMAIL:
+			case self::FILTER_MAIL:
 				$text = filter_var($text, FILTER_SANITIZE_EMAIL);
 				break;
 			case self::FILTER_FLOAT:
@@ -1555,7 +1554,7 @@ class layout extends common {
 		if($this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')) {
 			// Items de gauche
 			$leftItems = '';
-			if($this->getUser('rank') >= self::RANK_MODERATOR) {
+			if($this->getUser('group') >= self::GROUP_MODERATOR) {
 				$leftItems .= '<li><select id="panelSelectPage">';
 				$leftItems .= '<option value="">' . helper::translate('Choisissez une page') . '</option>';
 				$currentPageId = $this->getData(['page', $this->getUrl(0)]) ? $this->getUrl(0) : $this->getUrl(2);
@@ -1569,7 +1568,7 @@ class layout extends common {
 			}
 			// Items de droite
 			$rightItems = '';
-			if($this->getUser('rank') >= self::RANK_MODERATOR) {
+			if($this->getUser('group') >= self::GROUP_MODERATOR) {
 				if(
 					// Sur un module de page qui autorise le bouton de modification de la page
 					$this->core->output['editButton']
@@ -1583,7 +1582,7 @@ class layout extends common {
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/add" title="' . helper::translate('Créer une page') . '">' . template::ico('plus') . '</a></li>';
 				$rightItems .= '<li><a href="' . helper::baseUrl(false) . 'core/vendor/filemanager/dialog.php?type=0&akey=' . md5_file('site/data/data.json') .'&lang=' . $this->getData(['config', 'language']) . '" title="' . helper::translate('Gérer les fichiers') . '" data-lity>' . template::ico('folder') . '</a></li>';
 			}
-			if($this->getUser('rank') >= self::RANK_ADMIN) {
+			if($this->getUser('group') >= self::GROUP_ADMIN) {
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'user" title="' . helper::translate('Configurer les utilisateurs') . '">' . template::ico('users') . '</a></li>';
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'theme" title="' . helper::translate('Personnaliser le thème') . '">' . template::ico('brush') . '</a></li>';
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'config" title="' . helper::translate('Configurer le site') . '">' . template::ico('gear') . '</a></li>';
@@ -1661,7 +1660,7 @@ class layout extends common {
 		$vars .= 'var language = ' . json_encode($this->getData(['config', 'language'])) . ';';
 		if(
 			$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
-			AND $this->getUser('rank') >= self::RANK_MODERATOR
+			AND $this->getUser('group') >= self::GROUP_MODERATOR
 		) {
 			$vars .= 'var privateKey = ' . json_encode(md5_file('site/data/data.json')) . ';';
 		}

@@ -15,11 +15,11 @@
 class gallery extends common {
 
 	public static $actions = [
-		'config' => self::RANK_MODERATOR,
-		'delete' => self::RANK_MODERATOR,
-		'dirs' => self::RANK_MODERATOR,
-		'edit' => self::RANK_MODERATOR,
-		'index' => self::RANK_VISITOR
+		'config' => self::GROUP_MODERATOR,
+		'delete' => self::GROUP_MODERATOR,
+		'dirs' => self::GROUP_MODERATOR,
+		'edit' => self::GROUP_MODERATOR,
+		'index' => self::GROUP_VISITOR
 	];
 
 	public static $directories = [];
