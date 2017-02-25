@@ -1216,7 +1216,7 @@ class helper {
 				$text = (int) $text;
 				break;
 			case self::FILTER_PASSWORD:
-				$text = hash('sha256', $text);
+				$text = password_hash($text, PASSWORD_BCRYPT);
 				break;
 			case self::FILTER_STRING:
 				$text = filter_var($text, FILTER_SANITIZE_STRING);

@@ -39,8 +39,7 @@ class install extends common {
 			// Soumission du formulaire
 			if($this->isPost()) {
 				// Double vérification pour le mot de passe
-				$password = $this->getInput('installConfigPassword', helper::FILTER_PASSWORD);
-				if($password !== $this->getInput('installConfigConfirmPassword', helper::FILTER_PASSWORD)) {
+				if($this->getInput('installConfigPassword') !== $this->getInput('installConfigConfirmPassword')) {
 					self::$inputNotices['installConfigConfirmPassword'] = 'Ne correspond pas au mot de passe';
 				}
 				// Crée l'utilisateur
@@ -56,7 +55,7 @@ class install extends common {
 						'group' => self::GROUP_ADMIN,
 						'lastname' => $lastname,
 						'mail' => $mail,
-						'password' => $password
+						'password' => $this->getInput('installConfigPassword', helper::FILTER_PASSWORD)
 					]
 				]);
 				// Envoi le mail

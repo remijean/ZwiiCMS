@@ -38,8 +38,7 @@ class user extends common {
 				self::$inputNotices['userAddId'] = 'Identifiant déjà utilisé';
 			}
 			// Double vérification pour le mot de passe
-			$password = $this->getInput('userAddPassword', helper::FILTER_PASSWORD);
-			if($password !== $this->getInput('userAddConfirmPassword', helper::FILTER_PASSWORD)) {
+			if($this->getInput('userAddPassword') !== $this->getInput('userAddConfirmPassword')) {
 				self::$inputNotices['userAddConfirmPassword'] = 'Ne correspond pas au mot de passe';
 			}
 			// Crée l'utilisateur
@@ -54,7 +53,7 @@ class user extends common {
 					'group' => $this->getInput('userAddGroup', helper::FILTER_INT),
 					'lastname' => $lastname,
 					'mail' => $mail,
-					'password' => $password
+					'password' => $this->getInput('userAddPassword', helper::FILTER_PASSWORD)
 				]
 			]);
 			// Envoi le mail
@@ -148,17 +147,20 @@ class user extends common {
 			// Soumission du formulaire
 			if($this->isPost()) {
 				// Double vérification pour le mot de passe
+				$newPassword = $this->getData(['user', $this->getUrl(2), 'password']);
 				if($this->getInput('userEditNewPassword')) {
-					$newPassword = $this->getInput('userEditNewPassword', helper::FILTER_PASSWORD);
 					// La confirmation ne correspond pas au mot de passe
-					if($newPassword !== $this->getInput('userEditConfirmPassword', helper::FILTER_PASSWORD)) {
-						$newPassword = $this->getData(['user', $this->getUrl(2), 'password']);
+					if($this->getInput('userEditNewPassword') === $this->getInput('userEditConfirmPassword')) {
+						$newPassword = $this->getInput('userEditNewPassword', helper::FILTER_PASSWORD);
+						// Déconnexion de l'utilisateur si il change le mot de passe de son propre compte
+						if($this->getUser('id') === $this->getUrl(2)) {
+							helper::deleteCookie('ZWII_USER_ID');
+							helper::deleteCookie('ZWII_USER_PASSWORD');
+						}
+					}
+					else {
 						self::$inputNotices['userEditConfirmPassword'] = 'Ne correspond pas au mot de passe';
 					}
-				}
-				// Sinon conserve le mot de passe d'origine
-				else {
-					$newPassword = $this->getData(['user', $this->getUrl(2), 'password']);
 				}
 				// Modification du groupe
 				if(
@@ -184,8 +186,6 @@ class user extends common {
 				]);
 				// Redirection spécifique si l'utilisateur change son mot de passe
 				if($this->getUser('id') === $this->getUrl(2) AND $this->getInput('userEditNewPassword')) {
-					helper::deleteCookie('ZWII_USER_ID');
-					helper::deleteCookie('ZWII_USER_PASSWORD');
 					$redirect = helper::baseUrl() . 'user/login';
 				}
 				// Redirection si retour en arrière possible
@@ -291,12 +291,12 @@ class user extends common {
 			$userId = $this->getInput('userLoginId', helper::FILTER_ID);
 			// Connexion si les informations sont correctes
 			if(
-				$this->getData(['user', $userId, 'password']) === hash('sha256', $this->getInput('userLoginPassword'))
+				password_verify($this->getInput('userLoginPassword'), $this->getData(['user', $userId, 'password']))
 				AND $this->getData(['user', $userId, 'group']) >= self::GROUP_MEMBER
 			) {
 				$expire = $this->getInput('userLoginLongTime') ? strtotime("+1 year") : 0;
 				setcookie('ZWII_USER_ID', $userId, $expire, helper::baseUrl(false, false));
-				setcookie('ZWII_USER_PASSWORD', hash('sha256', $this->getInput('userLoginPassword')), $expire, helper::baseUrl(false, false));
+				setcookie('ZWII_USER_PASSWORD', $this->getData(['user', $userId, 'password']), $expire, helper::baseUrl(false, false));
 				// Valeurs en sortie
 				$this->addOutput([
 					'notification' => 'Connexion réussie',
@@ -359,7 +359,7 @@ class user extends common {
 				if($this->getInput('userResetNewPassword')) {
 					$newPassword = $this->getInput('userResetNewPassword', helper::FILTER_PASSWORD);
 					// La confirmation ne correspond pas au mot de passe
-					if($newPassword !== $this->getInput('userResetConfirmPassword', helper::FILTER_PASSWORD)) {
+					if($this->getInput('userResetNewPassword') !== $this->getInput('userResetConfirmPassword')) {
 						$newPassword = $this->getData(['user', $this->getUrl(2), 'password']);
 						self::$inputNotices['userResetConfirmPassword'] = 'Ne correspond pas au mot de passe';
 					}
