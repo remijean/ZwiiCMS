@@ -25,7 +25,7 @@
 						]); ?>
 					</div>
 				</div>
-				<?php echo template::text('userEditMail', [
+				<?php echo template::mail('userEditMail', [
 					'label' => 'Adresse mail',
 					'required' => true,
 					'value' => $this->getData(['user', $this->getUrl(2), 'mail'])

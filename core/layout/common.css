@@ -592,6 +592,7 @@ footer #footerSocials .zwiico-youtube:hover {
  */
 
 /* Inputs génériques */
+input[type='email'],
 input[type='text'],
 input[type='password'],
 .inputFile,
@@ -607,6 +608,7 @@ textarea {
 select {
 	padding: 7px;
 }
+input[type='email']:hover,
 input[type='text']:hover,
 input[type='password']:hover,
 .inputFile:hover,
@@ -614,6 +616,7 @@ select:hover,
 textarea:hover {
 	border: 1px solid;
 }
+input[type='email'].notice,
 input[type='text'].notice,
 input[type='password'].notice,
 .inputFile.notice,
@@ -622,6 +625,7 @@ textarea.notice {
 	border: 1px solid #F3674A;
 	background: #FEEDE9;
 }
+input[type='email'].notice:hover,
 input[type='text'].notice:hover,
 input[type='password'].notice:hover,
 .inputFile.notice:hover,

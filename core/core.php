@@ -62,7 +62,7 @@ class common {
 		],
 		'page' => [
 			'accueil' => [
-				'content' => "<h3>Félicitations Zwii est 100% opérationnel !</h3>\r\n<p><strong>Vous utilisez une version bêta en cours de développement ! Certaines fonctionnalités sont absentes et des bugs peuvent surgir. Si vous avez des retours à faire, n'hésitez pas à vous inscrire sur le <a title='forum' href='http://forum.zwiicms.com/'>forum</a> de Zwii.</strong></p>\r\n<p>Ci-dessous les comptes utilisateurs par défaut au format identifiant / mot de passe :</p>\r\n<ul><li>administrator / password</li><li>moderator / password</li><li>member / password</li></ul>\r\n<h4>Suivez-nous sur <a href='https://twitter.com/ZwiiCMS/'>Twitter</a> et <a href='https://www.facebook.com/ZwiiCMS/'>Facebook</a> pour ne manquer aucune nouveauté !</h4>",
+				'content' => "<p>Félicitations Zwii est 100% opérationnel !</p>\r\n<p>Si vous rencontrez un problème ou si vous avez besoin d'aide, n'hésitez pas à jeter un œil au <a title='Site' href='http://zwiicms.com/'>site</a> ou au <a title='Forum' href='http://forum.zwiicms.com/'>forum</a> de Zwii.</p>\r\n<h4>Suivez-nous sur <a href='https://twitter.com/ZwiiCMS/'>Twitter</a> et <a href='https://www.facebook.com/ZwiiCMS/'>Facebook</a> pour ne manquer aucune nouveauté !</h4>",
 				'hideTitle' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
@@ -166,7 +166,7 @@ class common {
 						'name' => 'Adresse mail',
 						'position' => 1,
 						'required' => true,
-						'type' => 'text',
+						'type' => 'mail',
 						'values' => ''
 					],
 					[
@@ -1771,10 +1771,12 @@ class template {
 			'help' => $attributes['help']
 		]);
 		// Notice
+		$notice = '';
 		if(array_key_exists($attributes['id'], common::$inputNotices)) {
-			$html .= self::notice($attributes['id']);
+			$notice = common::$inputNotices[$attributes['id']];
 			$attributes['class'] .= ' notice';
 		}
+		$html .= self::notice($attributes['id'], $notice);
 		// Capcha
 		$html .= sprintf(
 			'<input type="text" %s>',
@@ -1825,10 +1827,12 @@ class template {
 		// Début du wrapper
 		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="inputWrapper ' . $attributes['classWrapper'] . '">';
 		// Notice
+		$notice = '';
 		if(array_key_exists($attributes['id'], common::$inputNotices)) {
-			$html .= self::notice($attributes['id']);
+			$notice = common::$inputNotices[$attributes['id']];
 			$attributes['class'] .= ' notice';
 		}
+		$html .= self::notice($attributes['id'], $notice);
 		// Case à cocher
 		$html .= sprintf(
 			'<input type="checkbox" value="%s" %s>',
@@ -1883,10 +1887,12 @@ class template {
 			]);
 		}
 		// Notice
+		$notice = '';
 		if(array_key_exists($attributes['id'], common::$inputNotices)) {
-			$html .= self::notice($attributes['id']);
+			$notice = common::$inputNotices[$attributes['id']];
 			$attributes['class'] .= ' notice';
 		}
+		$html .= self::notice($attributes['id'], $notice);
 		// Champ caché contenant l'url de la page
 		$html .= self::hidden($attributes['id'], [
 			'value' => $attributes['value'],
@@ -1931,10 +1937,11 @@ class template {
 	/**
 	 * Crée une notice
 	 * @param string $id Id du champ
+	 * @param string $notice Notice
 	 * @return string
 	 */
-	public static function notice($id) {
-		return ' <span class="notice">' . helper::translate(common::$inputNotices[$id]) . '</span>';
+	public static function notice($id, $notice) {
+		return ' <span id="' . $id . 'Notice" class="notice">' . helper::translate($notice) . '</span>';
 	}
 
 	/**
@@ -2012,6 +2019,60 @@ class template {
 	}
 
 	/**
+	 * Crée un champ mail
+	 * @param string $nameId Nom et id du champ
+	 * @param array $attributes Attributs ($key => $value)
+	 * @return string
+	 */
+	public static function mail($nameId, array $attributes = []) {
+		// Attributs par défaut
+		$attributes = array_merge([
+			'before' => true,
+			'class' => '',
+			'classWrapper' => '',
+			'disabled' => false,
+			'help' => '',
+			'id' => $nameId,
+			'label' => '',
+			'name' => $nameId,
+			'placeholder' => '',
+			'readonly' => '',
+			'required' => false,
+			'value' => ''
+		], $attributes);
+		// Champ requis
+		common::setInputRequired($attributes);
+		// Sauvegarde des données en cas d'erreur
+		if($attributes['before'] AND array_key_exists($attributes['id'], common::$inputBefore)) {
+			$attributes['value'] = common::$inputBefore[$attributes['id']];
+		}
+		// Début du wrapper
+		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="inputWrapper ' . $attributes['classWrapper'] . '">';
+		// Label
+		if($attributes['label']) {
+			$html .= self::label($attributes['id'], $attributes['label'], [
+				'help' => $attributes['help']
+			]);
+		}
+		// Notice
+		$notice = '';
+		if(array_key_exists($attributes['id'], common::$inputNotices)) {
+			$notice = common::$inputNotices[$attributes['id']];
+			$attributes['class'] .= ' notice';
+		}
+		$html .= self::notice($attributes['id'], $notice);
+		// Texte
+		$html .= sprintf(
+			'<input type="email" %s>',
+			helper::sprintAttributes($attributes)
+		);
+		// Fin du wrapper
+		$html .= '</div>';
+		// Retourne le html
+		return $html;
+	}
+
+	/**
 	 * Crée un champ mot de passe
 	 * @param string $nameId Nom et id du champ
 	 * @param array $attributes Attributs ($key => $value)
@@ -2043,10 +2104,12 @@ class template {
 			]);
 		}
 		// Notice
+		$notice = '';
 		if(array_key_exists($attributes['id'], common::$inputNotices)) {
-			$html .= self::notice($attributes['id']);
+			$notice = common::$inputNotices[$attributes['id']];
 			$attributes['class'] .= ' notice';
 		}
+		$html .= self::notice($attributes['id'], $notice);
 		// Mot de passe
 		$html .= sprintf(
 			'<input type="password" %s>',
@@ -2094,10 +2157,12 @@ class template {
 			]);
 		}
 		// Notice
+		$notice = '';
 		if(array_key_exists($attributes['id'], common::$inputNotices)) {
-			$html .= self::notice($attributes['id']);
+			$notice = common::$inputNotices[$attributes['id']];
 			$attributes['class'] .= ' notice';
 		}
+		$html .= self::notice($attributes['id'], $notice);
 		// Début sélection
 		$html .= sprintf('<select %s>',
 			helper::sprintAttributes($attributes)
@@ -2243,10 +2308,12 @@ class template {
 			]);
 		}
 		// Notice
+		$notice = '';
 		if(array_key_exists($attributes['id'], common::$inputNotices)) {
-			$html .= self::notice($attributes['id']);
+			$notice = common::$inputNotices[$attributes['id']];
 			$attributes['class'] .= ' notice';
 		}
+		$html .= self::notice($attributes['id'], $notice);
 		// Texte
 		$html .= sprintf(
 			'<input type="text" %s>',
@@ -2294,10 +2361,12 @@ class template {
 			]);
 		}
 		// Notice
+		$notice = '';
 		if(array_key_exists($attributes['id'], common::$inputNotices)) {
-			$html .= self::notice($attributes['id']);
+			$notice = common::$inputNotices[$attributes['id']];
 			$attributes['class'] .= ' notice';
 		}
+		$html .= self::notice($attributes['id'], $notice);
 		// Texte long
 		$html .= sprintf(
 			'<textarea %s>%s</textarea>',

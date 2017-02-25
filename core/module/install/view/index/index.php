@@ -8,7 +8,7 @@
 			]); ?>
 		</div>
 		<div class="col6">
-			<?php echo template::text('installMail', [
+			<?php echo template::mail('installMail', [
 				'label' => 'Adresse mail',
 				'required' => true
 			]); ?>

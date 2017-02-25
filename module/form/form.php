@@ -27,6 +27,7 @@ class form extends common {
 	public static $pagination;
 
 	public static $types = [
+		'mail' => 'Champ mail',
 		'text' => 'Champ texte',
 		'textarea' => 'Grand champ texte',
 		'select' => 'Sélection'

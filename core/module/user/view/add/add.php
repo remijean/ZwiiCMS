@@ -21,7 +21,7 @@
 						]); ?>
 					</div>
 				</div>
-				<?php echo template::text('userAddMail', [
+				<?php echo template::mail('userAddMail', [
 					'label' => 'Adresse mail',
 					'required' => true
 				]); ?>

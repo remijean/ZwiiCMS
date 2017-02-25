@@ -62,7 +62,7 @@ $("#themeFooterLoginLink").on("change", function() {
 }).trigger("change");
 // Aperçu du texte
 $("#themeFooterText").on("keyup keydown change", function() {
-	$("#footerText").text($(this).val());
+	$("#footerText").html($(this).val());
 });
 // Affiche / Cache les options de la position
 $("#themeFooterPosition").on("change", function() {

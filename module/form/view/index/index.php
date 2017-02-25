@@ -1,7 +1,12 @@
 <?php if($this->getData(['module', $this->getUrl(0), 'input'])): ?>
 	<form method="post">
 		<?php foreach($this->getData(['module', $this->getUrl(0), 'input']) as $index => $input): ?>
-			<?php if($input['type'] === 'text'): ?>
+			<?php if($input['type'] === 'mail'): ?>
+				<?php echo template::mail('formInput[' . $index . ']', [
+					'label' => $input['name'],
+					'required' => $input['required']
+				]); ?>
+			<?php elseif($input['type'] === 'text'): ?>
 				<?php echo template::text('formInput[' . $index . ']', [
 					'label' => $input['name'],
 					'required' => $input['required']
