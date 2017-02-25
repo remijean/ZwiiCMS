@@ -13,12 +13,20 @@
 /**
  * Affichage de l'id en simulant FILTER_ID
  */
-$("#installConfigId").on("change", function() {
-	var searchReplace = {"á": "a", "à": "a", "â": "a", "ä": "a", "ã": "a", "å": "a", "ç": "c", "é": "e", "è": "e", "ê": "e", "ë": "e", "í": "i", "ì": "i", "î": "i", "ï": "i", "ñ": "n", "ó": "o", "ò": "o", "ô": "o", "ö": "o", "õ": "o", "ú": "u", "ù": "u", "û": "u", "ü": "u", "ý": "y", "ÿ": "y", "'": "-", "\"": "-", " ": "-"};
+$("#installConfigId").on("change keydown keyupp", function(event) {
 	var userId = $(this).val().toLowerCase();
-	userId = userId.replace(/[áàâäãåçéèêëíìîïñóòôöõúùûüýÿ'" ]/g, function(match) {
-		return searchReplace[match];
-	});
-	userId = userId.replace(/[^a-z0-9!#$%&'*+-=?^_`{|}~@.\[\]]/g, "");
-	$(this).val(userId);
+	if(
+		event.keyCode !== 8 // BACKSPACE
+		&& event.keyCode !== 37 // LEFT
+		&& event.keyCode !== 39 // RIGHT
+		&& event.keyCode !== 46 // DELETE
+		&& window.getSelection().toString() !== userId // Texte sélectionné
+	) {
+		var searchReplace = {"á": "a", "à": "a", "â": "a", "ä": "a", "ã": "a", "å": "a", "ç": "c", "é": "e", "è": "e", "ê": "e", "ë": "e", "í": "i", "ì": "i", "î": "i", "ï": "i", "ñ": "n", "ó": "o", "ò": "o", "ô": "o", "ö": "o", "õ": "o", "ú": "u", "ù": "u", "û": "u", "ü": "u", "ý": "y", "ÿ": "y", "'": "-", "\"": "-", " ": "-"};
+		userId = userId.replace(/[áàâäãåçéèêëíìîïñóòôöõúùûüýÿ'" ]/g, function(match) {
+			return searchReplace[match];
+		});
+		userId = userId.replace(/[^a-z0-9!#$%&'*+-=?^_`{|}~@.\[\]]/g, "");
+		$(this).val(userId);
+	}
 });
