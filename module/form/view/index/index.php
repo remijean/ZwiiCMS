@@ -3,16 +3,19 @@
 		<?php foreach($this->getData(['module', $this->getUrl(0), 'input']) as $index => $input): ?>
 			<?php if($input['type'] === 'mail'): ?>
 				<?php echo template::mail('formInput[' . $index . ']', [
+					'id' => 'formInput_' . $index,
 					'label' => $input['name'],
 					'required' => $input['required']
 				]); ?>
 			<?php elseif($input['type'] === 'text'): ?>
 				<?php echo template::text('formInput[' . $index . ']', [
+					'id' => 'formInput_' . $index,
 					'label' => $input['name'],
 					'required' => $input['required']
 				]); ?>
 			<?php elseif($input['type'] === 'textarea'): ?>
 				<?php echo template::textarea('formInput[' . $index . ']', [
+					'id' => 'formInput_' . $index,
 					'label' => $input['name'],
 					'required' => $input['required']
 				]); ?>
@@ -24,6 +27,7 @@
 				}
 				?>
 				<?php echo template::select('formInput[' . $index . ']', $values, [
+					'id' => 'formInput_' . $index,
 					'label' => $input['name'],
 					'required' => $input['required']
 				]); ?>

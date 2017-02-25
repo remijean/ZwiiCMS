@@ -13,7 +13,7 @@
 /**
  * Affichage de l'id en simulant FILTER_ID
  */
-$("#installConfigId").on("change keydown keyupp", function(event) {
+$("#installConfigId").on("change keydown keyup", function(event) {
 	var userId = $(this).val().toLowerCase();
 	if(
 		event.keyCode !== 8 // BACKSPACE

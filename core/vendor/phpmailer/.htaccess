@@ -1,3 +1,3 @@
-# Bloque l'accès aux sauvegardes
+# Bloque l'accès à la librairie
 Order deny,allow
 Deny from all
