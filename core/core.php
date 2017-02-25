@@ -281,7 +281,6 @@ class common {
 			'normalize',
 			'lity',
 			'filemanager',
-			// 'pikaday',
 			// 'tinycolorpicker', Désactivé par défaut
 			// 'tinymce', Désactivé par défaut
 			'zwiico'
@@ -854,7 +853,7 @@ class core extends common {
 			$this->getData(['user']) === []
 			AND $this->getUrl(0) !== 'install'
 		) {
-			http_response_code(301);
+			http_response_code(302);
 			header('Location:' . helper::baseUrl() . 'install');
 			exit();
 		}
