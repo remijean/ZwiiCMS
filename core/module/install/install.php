@@ -15,13 +15,18 @@
 class install extends common {
 
 	public static $actions = [
+		'config' => self::GROUP_VISITOR,
 		'index' => self::GROUP_VISITOR
 	];
-	
+
+	public static $languages = [
+		'fr_FR' => 'fr_FR'
+	];
+
 	/**
-	 * Installation
+	 * Configuration
 	 */
-	public function index() {
+	public function config() {
 		// Accès refusé
 		if($this->getData(['user']) !== []) {
 			// Valeurs en sortie
@@ -34,15 +39,15 @@ class install extends common {
 			// Soumission du formulaire
 			if($this->isPost()) {
 				// Double vérification pour le mot de passe
-				$password = $this->getInput('installPassword', helper::FILTER_PASSWORD);
-				if($password !== $this->getInput('installConfirmPassword', helper::FILTER_PASSWORD)) {
-					self::$inputNotices['installConfirmPassword'] = 'Ne correspond pas au mot de passe';
+				$password = $this->getInput('installConfigPassword', helper::FILTER_PASSWORD);
+				if($password !== $this->getInput('installConfigConfirmPassword', helper::FILTER_PASSWORD)) {
+					self::$inputNotices['installConfigConfirmPassword'] = 'Ne correspond pas au mot de passe';
 				}
 				// Crée l'utilisateur
-				$userId = $this->getInput('installId', helper::FILTER_ID);
-				$firstname = $this->getInput('installFirstname');
-				$lastname = $this->getInput('installLastname');
-				$mail = $this->getInput('installMail', helper::FILTER_MAIL);
+				$userId = $this->getInput('installConfigId', helper::FILTER_ID);
+				$firstname = $this->getInput('installConfigFirstname');
+				$lastname = $this->getInput('installConfigLastname');
+				$mail = $this->getInput('installConfigMail', helper::FILTER_MAIL);
 				$this->setData([
 					'user',
 					$userId,
@@ -70,6 +75,45 @@ class install extends common {
 					'state' => true
 				]);
 			}
+			// Valeurs en sortie
+			$this->addOutput([
+				'display' => self::DISPLAY_LAYOUT_LIGHT,
+				'title' => 'Installation',
+				'view' => 'config'
+			]);
+		}
+	}
+
+	/**
+	 * Choix de la langue
+	 */
+	public function index() {
+		// Accès refusé
+		if($this->getData(['user']) !== []) {
+			// Valeurs en sortie
+			$this->addOutput([
+				'access' => false
+			]);
+		}
+		// Accès autorisé
+		else {
+			// Soumission du formulaire
+			if($this->isPost()) {
+				$this->setData(['config', 'language', $this->getInput('installLanguage')]);
+				// Valeurs en sortie
+				$this->addOutput([
+					'redirect' => helper::baseUrl() . 'install/config',
+					'state' => true
+				]);
+			}
+			// Liste des langues
+			$iterator = new DirectoryIterator('core/lang/');
+			foreach($iterator as $fileInfos) {
+				if($fileInfos->isFile()) {
+					self::$languages[$fileInfos->getBasename('.json')] = $fileInfos->getBasename('.json');
+				}
+			}
+			asort(self::$languages);
 			// Valeurs en sortie
 			$this->addOutput([
 				'display' => self::DISPLAY_LAYOUT_LIGHT,
