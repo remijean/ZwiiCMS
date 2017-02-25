@@ -17,19 +17,20 @@ class common {
 	const DISPLAY_RAW = 0;
 	const DISPLAY_JSON = 1;
 	const DISPLAY_LAYOUT_BLANK = 2;
-	const DISPLAY_LAYOUT_NORMAL = 3;
+	const DISPLAY_LAYOUT_MAIN = 3;
+	const DISPLAY_LAYOUT_LIGHT = 4;
 	const GROUP_BANNED = -1;
 	const GROUP_VISITOR = 0;
 	const GROUP_MEMBER = 1;
 	const GROUP_MODERATOR = 2;
 	const GROUP_ADMIN = 3;
-	const ZWII_VERSION = '8.0.0 bêta 0.6';
+	const ZWII_VERSION = '8.0.0 bêta 0.7';
 
 	public static $actions = [];
-	public static $demo = false;
 	public static $language = [];
 	public static $coreModuleIds = [
 		'config',
+		'install',
 		'page',
 		'sitemap',
 		'theme',
@@ -156,6 +157,7 @@ class common {
 					'button' => '',
 					'capcha' => true,
 					'group' => self::GROUP_ADMIN,
+					'pageId' => '',
 					'subject' => ''
 				],
 				'data' => [],
@@ -184,26 +186,7 @@ class common {
 				]
 			]
 		],
-		'user' => [
-			'administrator' => [
-				'mail' => 'administrator@zwiicms.com',
-				'name' => 'Administrateur',
-				'password' => '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
-				'group' => 3
-			],
-			'moderator' => [
-				'mail' => 'moderator@zwiicms.com',
-				'name' => 'Modérateur',
-				'password' => '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
-				'group' => 2
-			],
-			'member' => [
-				'mail' => 'member@zwiicms.com',
-				'name' => 'Membre',
-				'password' => '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
-				'group' => 1
-			]
-		],
+		'user' => [],
 		'theme' => [
 			'body' => [
 				'backgroundColor' => 'rgba(235, 238, 242, 1)',
@@ -282,7 +265,7 @@ class common {
 	public $output = [
 		'access' => true,
 		'content' => '',
-		'display' => self::DISPLAY_LAYOUT_NORMAL,
+		'display' => self::DISPLAY_LAYOUT_MAIN,
 		'editButton' => false,
 		'metaDescription' => '',
 		'metaTitle' => '',
@@ -295,10 +278,10 @@ class common {
 		'style' => '',
 		'vendor' => [
 			'jquery',
-			// 'jquery-ui', Désactivé par défaut
 			'normalize',
 			'lity',
 			'filemanager',
+			// 'pikaday',
 			// 'tinycolorpicker', Désactivé par défaut
 			// 'tinymce', Désactivé par défaut
 			'zwiico'
@@ -342,10 +325,6 @@ class common {
 		}
 		if(isset($_COOKIE)) {
 			$this->input['_COOKIE'] = $_COOKIE;
-		}
-		// Supprime les données en mode démo
-		if(self::$demo AND file_exists('site/data/data.json') AND filemtime('site/data/data.json') + 600 < time()) {
-			@unlink('site/data/data.json');
 		}
 		// Génère le fichier de donnée
 		if(file_exists('site/data/data.json') === false) {
@@ -626,44 +605,47 @@ class common {
 	 * Enregistre les données
 	 */
 	public function saveData() {
-		file_put_contents('site/data/data.json', json_encode($this->getData()));
+		// Trois tentatives
+		for($i = 0; $i < 3; $i++) {
+			if(file_put_contents('site/data/data.json', json_encode($this->getData()), LOCK_EX) !== false) {
+				break;
+			}
+			// Pause de 10 millisecondes
+			usleep(10000);
+		}
+
 	}
 
 	/**
 	 * Envoi un mail
-	 * @param string $to Destinataire
+	 * @param string|array $to Destinataire
 	 * @param string $subject Sujet
 	 * @param string $content Contenu
 	 * @return bool
 	 */
 	public function sendMail($to, $subject, $content) {
-		// Définition du séparateur
-		$boundary = '-----=' . md5(mt_rand());
-		// Définition du header
-		$header = 'From: "' . $this->getData(['config', 'title']) . '" <no-reply@' . $_SERVER['SERVER_NAME'] . '>' . "\n";
-		$header .= 'Reply-to: "' . $this->getData(['config', 'title']) . '" <no-reply@' . $_SERVER['SERVER_NAME'] . '>' . "\n";
-		$header .= 'MIME-Version: 1.0' . "\n";
-		$header .= 'Content-Type: multipart/alternative;' . "\n" . ' boundary="' . $boundary . '"' . "\n";
-		// Message au format texte
-		$message = "\n" . '--' . $boundary . "\n";
-		$message .= 'Content-Type: text/plain; charset="utf-8"' . "\n";
-		$message .= 'Content-Transfer-Encoding: 8bit' . "\n";
-		$message .= "\n" . strip_tags($content) . "\n";
-		// Message au format HTML
+		// Layout
 		ob_start();
 		include 'core/layout/mail.php';
 		$layout = ob_get_clean();
-		$message .= "\n" . '--' . $boundary . "\n";
-		$message .= 'Content-Type: text/html; charset="utf-8"' . "\n";
-		$message .= 'Content-Transfer-Encoding: 8bit' . "\n";
-		$message .= "\n" . $layout . "\n";
-		// Fermeture des séparateurs
-		$message .= "\n" . '--' . $boundary . '--' . "\n";
-		$message .= "\n" . '--' . $boundary . '--' . "\n";
-		// Accents dans le sujet d'un mail
-		$subject = mb_encode_mimeheader($subject,'UTF-8', 'Q', "\n");
-		// Envoi du mail
-		return @mail($to, $subject, $message, $header);
+		// Mail
+		$mail = new PHPMailer;
+		$mail->CharSet = 'UTF-8';
+		$mail->setFrom('no-reply@' . $_SERVER['SERVER_NAME'], $this->getData(['config', 'title']));
+		$mail->addReplyTo('no-reply@' . $_SERVER['SERVER_NAME'], $this->getData(['config', 'title']));
+		if(is_array($to)) {
+			foreach($to as $userMail) {
+				$mail->addAddress($userMail);
+			}
+		}
+		else {
+			$mail->addAddress($to);
+		}
+		$mail->isHTML(true);
+		$mail->Subject = $subject;
+		$mail->Body = $layout;
+		$mail->AltBody = strip_tags($content);
+		return $mail->send();
 	}
 
 	/**
@@ -726,14 +708,22 @@ class core extends common {
 			}
 			// Date de la dernière suppression
 			$this->setData(['core', 'lastClearTmp', $lastClearTmp]);
+			// Enregistre les données
+			$this->saveData();
 		}
 		// Backup automatique des données
 		$lastBackup = mktime(0, 0, 0);
-		if($this->getData(['config', 'autoBackup']) AND $lastBackup > $this->getData(['core', 'lastBackup']) + 86400) {
+		if(
+			$this->getData(['config', 'autoBackup'])
+			AND $lastBackup > $this->getData(['core', 'lastBackup']) + 86400
+			AND $this->getData(['user']) // Pas de backup pendant l'installation
+		) {
 			// Copie du fichier de données
 			copy('site/data/data.json', 'site/backup/' . date('Y-m-d', $lastBackup) . '.json');
 			// Date du dernier backup
 			$this->setData(['core', 'lastBackup', $lastBackup]);
+			// Enregistre les données
+			$this->saveData();
 		}
 		// Crée le fichier de personnalisation
 		if(file_exists('site/data/theme.css') === false) {
@@ -821,20 +811,18 @@ class core extends common {
 		}
 		// Importe les fichiers de langue
 		// Coeur
-		$language = 'core/lang/' . $this->getData(['config', 'language']);
+		$language = 'core/lang/' . $this->getData(['config', 'language']) . '.json';
 		if(is_file($language)) {
 			self::$language = json_decode(file_get_contents($language), true);
 		}
 		// Module
-		$language = 'module/' . $this->getData(['page', $this->getUrl(0), 'module']) . '/lang/' . $this->getData(['config', 'language']);
+		$language = 'module/' . $this->getData(['page', $this->getUrl(0), 'moduleId']) . '/lang/' . $this->getData(['config', 'language']) . '.json';
 		if(
 			in_array($this->getData(['page', $this->getUrl(0), 'module']), self::$coreModuleIds) === false
 			AND is_file($language)
 		) {
 			self::$language = array_merge(self::$language, json_decode(file_get_contents($language), true));
 		}
-		// Enregistrement des données (utile pour les fichiers temporaire et le css)
-		$this->saveData();
 	}
 
 	/**
@@ -842,14 +830,18 @@ class core extends common {
 	 * @param string $className Nom de la classe à charger
 	 */
 	public static function autoload($className) {
-		$classPath = 'module/' . $className . '/' . $className . '.php';
+		$classPath = strtolower($className) . '/' . strtolower($className) . '.php';
 		// Module du coeur
-		if(is_readable('core/' . $classPath)) {
-			require 'core/' . $classPath;
+		if(is_readable('core/module/' . $classPath)) {
+			require 'core/module/' . $classPath;
 		}
 		// Module
-		elseif(is_readable($classPath)) {
-			require $classPath;
+		elseif(is_readable('module/' . $classPath)) {
+			require 'module/' . $classPath;
+		}
+		// Librairie
+		elseif(is_readable('core/vendor/' . $classPath)) {
+			require 'core/vendor/' . $classPath;
 		}
 	}
 
@@ -857,6 +849,15 @@ class core extends common {
 	 * Routage des modules
 	 */
 	public function router() {
+		// Installation
+		if(
+			$this->getData(['user']) === []
+			AND $this->getUrl(0) !== 'install'
+		) {
+			http_response_code(301);
+			header('Location:' . helper::baseUrl() . 'install');
+			exit();
+		}
 		// Force la déconnexion des membres bannis
 		if (
 			$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
@@ -921,20 +922,26 @@ class core extends common {
 					$output = $module->output;
 					// Check le groupe de l'utilisateur
 					if(
-						$module::$actions[$action] === self::GROUP_VISITOR
-						OR (
-							$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
-							AND $this->getUser('group') >= $module::$actions[$action]
+						(
+							$module::$actions[$action] === self::GROUP_VISITOR
+							OR (
+								$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
+								AND $this->getUser('group') >= $module::$actions[$action]
+							)
 						)
-						AND (
-							$output['access'] === false
-							OR $output['access'] === true
-						)
+						AND $output['access'] === true
 					) {
 						// Enregistrement du contenu de la méthode POST lorsqu'une notice est présente
 						if(common::$inputNotices) {
 							foreach($_POST as $postId => $postValue) {
-								self::$inputBefore[$postId] = $postValue;
+								if(is_array($postValue)) {
+									foreach($postValue as $subPostId => $subPostValue) {
+										self::$inputBefore[$postId . '[' . $subPostId . ']'] = $subPostValue;
+									}
+								}
+								else {
+									self::$inputBefore[$postId] = $postValue;
+								}
 							}
 						}
 						// Sinon traitement des données de sortie qui requiert qu'aucune notice ne soit présente
@@ -1062,16 +1069,20 @@ class core extends common {
 			case self::DISPLAY_LAYOUT_BLANK:
 				require 'core/layout/blank.php';
 				break;
-			// Layout normal
-			case self::DISPLAY_LAYOUT_NORMAL:
-				require 'core/layout/normal.php';
-				break;
-			// JSON
+			// Affichage en JSON
 			case self::DISPLAY_JSON:
 				header('Content-Type: application/json');
 				echo json_encode($this->output['content']);
 				break;
-			// BLANK
+			// Layout alléger
+			case self::DISPLAY_LAYOUT_LIGHT:
+				require 'core/layout/light.php';
+				break;
+			// Layout principal
+			case self::DISPLAY_LAYOUT_MAIN:
+				require 'core/layout/main.php';
+				break;
+			// Layout brut
 			case self::DISPLAY_RAW:
 				echo $this->output['content'];
 				break;
@@ -1260,7 +1271,7 @@ class helper {
 		// Supprime les commentaires
 		$css = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $css);
 		// Supprime les tabulations, espaces, nouvelles lignes, etc...
-		$css = str_replace(["\r\n", "\r", "\n" ,"\t", '  ', '	', '	 '], '', $css);
+		$css = str_replace(["\r\n", "\r", "\n" ,"\t", '  ', '    ', '     '], '', $css);
 		$css = preg_replace(['(( )+{)', '({( )+)'], '{', $css);
 		$css = preg_replace(['(( )+})', '(}( )+)', '(;( )*})'], '}', $css);
 		$css = preg_replace(['(;( )+)', '(( )+;)'], ';', $css);
@@ -1277,7 +1288,7 @@ class helper {
 		// Supprime les commentaires
 		$js = preg_replace('/\\/\\*[^*]*\\*+([^\\/][^*]*\\*+)*\\/|\s*(?<![\:\=])\/\/.*/', '', $js);
 		// Supprime les tabulations, espaces, nouvelles lignes, etc...
-		$js = str_replace(["\r\n", "\r", "\t", "\n", '  ', '	', '	 '], '', $js);
+		$js = str_replace(["\r\n", "\r", "\t", "\n", '  ', '    ', '     '], '', $js);
 		$js = preg_replace(['(( )+\))', '(\)( )+)'], ')', $js);
 		// Retourne le js minifié
 		return $js;
@@ -1388,7 +1399,7 @@ class helper {
 	 */
 	public static function translate($text) {
 		// Traduit le texte en cherchant dans le tableau de langue (ajout d'un filtre au cas ou un $key est vide)
-		if(array_key_exists(helper::filter($text, helper::FILTER_STRING), core::$language)) {
+		if(array_key_exists($text, core::$language)) {
 			$text = core::$language[$text];
 		}
 		return $text;
@@ -1538,11 +1549,11 @@ class layout extends common {
 			echo '<div id="notification" class="notificationError">' . helper::translate('Impossible de soumettre le formulaire, car il contient des erreurs') . '</div>';
 		}
 		elseif(empty($_SESSION['ZWII_NOTIFICATION_SUCCESS']) === false) {
-			echo '<div id="notification" class="notificationSuccess">' . $_SESSION['ZWII_NOTIFICATION_SUCCESS'] . '</div>';
+			echo '<div id="notification" class="notificationSuccess">' . helper::translate($_SESSION['ZWII_NOTIFICATION_SUCCESS']) . '</div>';
 			unset($_SESSION['ZWII_NOTIFICATION_SUCCESS']);
 		}
 		elseif(empty($_SESSION['ZWII_NOTIFICATION_ERROR']) === false) {
-			echo '<div id="notification" class="notificationError">' . $_SESSION['ZWII_NOTIFICATION_ERROR'] . '</div>';
+			echo '<div id="notification" class="notificationError">' . helper::translate($_SESSION['ZWII_NOTIFICATION_ERROR']) . '</div>';
 			unset($_SESSION['ZWII_NOTIFICATION_ERROR']);
 		}
 	}
@@ -1587,7 +1598,7 @@ class layout extends common {
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'theme" title="' . helper::translate('Personnaliser le thème') . '">' . template::ico('brush') . '</a></li>';
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'config" title="' . helper::translate('Configurer le site') . '">' . template::ico('gear') . '</a></li>';
 			}
-			$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/edit/' . $this->getUser('id') . '" title="' . helper::translate('Configurer mon compte') . '">' . template::ico('user', 'right') . $this->getUser('name') . '</a></li>';
+			$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/edit/' . $this->getUser('id') . '" title="' . helper::translate('Configurer mon compte') . '">' . template::ico('user', 'right') . $this->getUser('firstname') . ' ' . $this->getUser('lastname') . '</a></li>';
 			$rightItems .= '<li><a id="panelLogout" href="' . helper::baseUrl() . 'user/logout" title="' . helper::translate('Se déconnecter') . '">' . template::ico('logout') . '</a></li>';
 			// Panneau
 			echo '<div id="panel"><div class="container"><ul id="panelLeft">' . $leftItems . '</ul><ul id="panelRight">' . $rightItems . '</ul></div></div>';
@@ -1757,7 +1768,7 @@ class template {
 		// Début du wrapper
 		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="inputWrapper ' . $attributes['classWrapper'] . '">';
 		// Label
-		$html .= self::label($attributes['id'], helper::translate('Combien font ') . ' ' . $firstNumber . ' + ' . $secondNumber . ' ?', [
+		$html .= self::label($attributes['id'], helper::translate('Combien font') . ' ' . $firstNumber . ' + ' . $secondNumber . ' ?', [
 			'help' => $attributes['help']
 		]);
 		// Notice
@@ -1826,7 +1837,7 @@ class template {
 			helper::sprintAttributes($attributes)
 		);
 		// Label
-		$html .= self::label($attributes['id'], '<span>' . $label . '</span>', [
+		$html .= self::label($attributes['id'], '<span>' . helper::translate($label) . '</span>', [
 			'help' => $attributes['help']
 		]);
 		// Fin du wrapper
@@ -2015,7 +2026,7 @@ class template {
 			'classWrapper' => '',
 			'disabled' => false,
 			'help' => '',
-				'id' => $nameId,
+			'id' => $nameId,
 			'label' => '',
 			'name' => $nameId,
 			'placeholder' => '',

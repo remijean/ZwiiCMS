@@ -85,7 +85,7 @@ p,
 hr,
 ul,
 ol {
-	margin: 16px 0;
+	margin: 15px 0;
 }
 
 /* Image */
@@ -139,10 +139,6 @@ td > .col11,
 td > .col12 {
 	padding: 0 !important;
 }
-
-/**
- * Éléments spécifiques
- */
 
 /* Notifications */
 #notification {
@@ -262,11 +258,6 @@ td > .col12 {
 	margin: 20px auto;
 	background: #FFF;
 	overflow: hidden;
-}
-
-/* Popup */
-#popup {
-	max-width: 600px !important;
 }
 
 /* Bannière */
@@ -998,6 +989,9 @@ th.col12 {
 }
 .textAlignCenter {
 	text-align: center;
+}
+.textAlignRight {
+	text-align: right;
 }
 .verticalAlignTop {
 	vertical-align: top;

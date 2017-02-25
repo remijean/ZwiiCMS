@@ -1,2 +1,23 @@
 {
+	"Capcha à remplir pour soumettre le formulaire": "Capcha to fill out to submit the form",
+	"Champ obligatoire": "Required field",
+	"Champ texte": "Text field",
+	"Configuration": "Configuration",
+	"Configuration du module": "Configuration of the module",
+	"Données enregistrées": "Data",
+	"Envoyer par mail les données saisies aux utilisateurs d'un groupe": "Send by mail the data entered to the users in a group",
+	"Formulaire soumis": "Form submitted",
+	"Grand champ texte": "Big text field",
+	"Intitulé": "Title",
+	"Laissez vide afin de conserver le texte par défaut.": "Leave blank in order to keep the default text.",
+	"Le formulaire ne contient aucun champ.": "The form contains no field.",
+	"Liste des champs": "Field-list",
+	"Liste des valeurs séparées par des virgules (valeur1,valeur2,...)": "List of comma-separated values (value1, value2,...)",
+	"Message": "Message",
+	"Nouveau message en provenance de la page": "New message from the page",
+	"Nouveau message en provenance de votre site": "New message from your site",
+	"Sujet": "Subject",
+	"Sujet du mail": "The mail subject",
+	"Sélection": "Selection",
+	"Texte du bouton de soumission": "The submit button text"
 }

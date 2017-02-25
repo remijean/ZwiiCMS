@@ -1,5 +1,5 @@
 <?php echo template::table([12], $module::$data); ?>
-<?php echo $module::$pages; ?>
+<?php echo $module::$pagination; ?>
 <div class="row">
 	<div class="col2 offset10">
 		<?php echo template::button('formDataBack', [

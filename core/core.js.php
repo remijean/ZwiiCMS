@@ -152,7 +152,7 @@ core.start = function() {
 	if($("#notification").length) {
 		setTimeout(function() {
 			$("#notification").fadeOut();
-		}, 4000);
+		}, 5000);
 	}
 	/**
 	 * Affiche / Cache le menu en mode responsive

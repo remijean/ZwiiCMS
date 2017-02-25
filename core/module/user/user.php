@@ -18,9 +18,11 @@ class user extends common {
 		'add' => self::GROUP_ADMIN,
 		'delete' => self::GROUP_ADMIN,
 		'edit' => self::GROUP_MEMBER,
+		'forgot' => self::GROUP_VISITOR,
 		'index' => self::GROUP_ADMIN,
 		'login' => self::GROUP_VISITOR,
-		'logout' => self::GROUP_MEMBER
+		'logout' => self::GROUP_MEMBER,
+		'reset' => self::GROUP_VISITOR
 	];
 	public static $users = [];
 
@@ -31,26 +33,42 @@ class user extends common {
 		// Soumission du formulaire
 		if($this->isPost()) {
 			// L'identifiant d'utilisateur est indisponible
-			$userId = $this->getInput('userAddName', helper::FILTER_ID);
+			$userId = $this->getInput('userAddId', helper::FILTER_ID);
 			if($this->getData(['user', $userId])) {
 				self::$inputNotices['userAddId'] = 'Identifiant déjà utilisé';
 			}
 			// Double vérification pour le mot de passe
 			$password = $this->getInput('userAddPassword', helper::FILTER_PASSWORD);
 			if($password !== $this->getInput('userAddConfirmPassword', helper::FILTER_PASSWORD)) {
-				self::$inputNotices['userAddConfirmPassword'] = 'La confirmation ne correspond pas au mot de passe';
+				self::$inputNotices['userAddConfirmPassword'] = 'Ne correspond pas au mot de passe';
 			}
 			// Crée l'utilisateur
+			$firstname = $this->getInput('userAddFirstname');
+			$lastname = $this->getInput('userAddLastname');
+			$mail = $this->getInput('userAddMail', helper::FILTER_MAIL);
 			$this->setData([
 				'user',
 				$userId,
 				[
-					'mail' => $this->getInput('userAddMail', helper::FILTER_MAIL),
-					'name' => $this->getInput('userAddName'),
-					'password' => $password,
-					'group' => $this->getInput('userAddGroup', helper::FILTER_INT)
+					'firstname' => $firstname,
+					'group' => $this->getInput('userAddGroup', helper::FILTER_INT),
+					'lastname' => $lastname,
+					'mail' => $mail,
+					'password' => $password
 				]
 			]);
+			// Envoi le mail
+			if($this->getInput('userAddSendMail', helper::FILTER_BOOLEAN)) {
+				$this->sendMail(
+					$mail,
+					helper::translate('Compte créé sur') . ' ' . $this->getData(['config', 'title']),
+					helper::translate('Bonjour') . ' <strong>' . $firstname . ' ' . $lastname . '</strong>,<br><br>' .
+					helper::translate('Un administrateur vous a créé un compte sur le site') . $this->getData(['config', 'title']) . '. ' . helper::translate('Vous trouverez ci-dessous les détails de votre compte.') . '<br><br>' .
+					'<strong>' . helper::translate('Identifiant du compte :') . '</strong> ' . $userId . '<br>' .
+					'<strong>' . helper::translate('Mot de passe du compte :') . '</strong> ' . $this->getInput('addUserPassword') . '<br><br>' .
+					'<small>' . helper::translate('Nous ne conservons pas les mots de passe, par conséquence nous vous conseillons de garder ce mail tant que vous ne vous êtes pas connecté. Vous pourrez modifier votre mot de passe après votre première connexion.') . '</small>'
+				);
+			}
 			// Valeurs en sortie
 			$this->addOutput([
 				'redirect' => helper::baseUrl() . 'user',
@@ -132,15 +150,10 @@ class user extends common {
 				// Double vérification pour le mot de passe
 				if($this->getInput('userEditNewPassword')) {
 					$newPassword = $this->getInput('userEditNewPassword', helper::FILTER_PASSWORD);
-					// Pas de changement de mot de passe en mode démo
-					if(self::$demo) {
-						$newPassword = $this->getData(['user', $this->getUrl(2), 'password']);
-						self::$inputNotices['userEditNewPassword'] = 'Action impossible en mode démonstration !';
-					}
 					// La confirmation ne correspond pas au mot de passe
-					elseif($newPassword !== $this->getInput('userEditConfirmPassword', helper::FILTER_PASSWORD)) {
+					if($newPassword !== $this->getInput('userEditConfirmPassword', helper::FILTER_PASSWORD)) {
 						$newPassword = $this->getData(['user', $this->getUrl(2), 'password']);
-						self::$inputNotices['userEditConfirmPassword'] = 'La confirmation ne correspond pas au mot de passe';
+						self::$inputNotices['userEditConfirmPassword'] = 'Ne correspond pas au mot de passe';
 					}
 				}
 				// Sinon conserve le mot de passe d'origine
@@ -162,10 +175,11 @@ class user extends common {
 					'user',
 					$this->getUrl(2),
 					[
+						'firstname' => $this->getInput('userEditFirstname'),
+						'group' => $newGroup,
+						'lastname' => $this->getInput('userEditLastname'),
 						'mail' => $this->getInput('userEditMail', helper::FILTER_MAIL),
-						'name' => $this->getInput('userEditName'),
-						'password' => $newPassword,
-						'group' => $newGroup
+						'password' => $newPassword
 					]
 				]);
 				// Redirection spécifique si l'utilisateur change son mot de passe
@@ -191,22 +205,64 @@ class user extends common {
 			}
 			// Valeurs en sortie
 			$this->addOutput([
-				'title' => $this->getData(['user', $this->getUrl(2), 'name']),
+				'title' => $this->getData(['user', $this->getUrl(2), 'firstname']) . ' ' . $this->getData(['user', $this->getUrl(2), 'lastname']),
 				'view' => 'edit'
 			]);
 		}
 	}
 
 	/**
+	 * Mot de passe perdu
+	 */
+	public function forgot() {
+		// Soumission du formulaire
+		if($this->isPost()) {
+			$userId = $this->getInput('userForgotId', helper::FILTER_ID);
+			if($this->getData(['user', $userId])) {
+				// Enregistre la date de la demande dans le compte utilisateur
+				$this->setData(['user', $userId, 'forgot', time()]);
+				// Crée un id unique pour la réinitialisation
+				$uniqId = md5(json_encode($this->getData(['user', $userId])));
+				// Envoi le mail
+				$this->sendMail(
+					$this->getData(['user', $userId, 'mail']),
+					helper::translate('Réinitialisation de votre mot de passe'),
+					helper::translate('Bonjour') . ' <strong>' . $this->getData(['user', $userId, 'firstname']) . ' ' . $this->getData(['user', $userId, 'lastname']) . '</strong>,<br><br>' .
+					helper::translate('Vous avez demandé à changer le mot de passe lié à votre compte. Vous trouverez ci-dessous un lien vous permettant de modifier celui-ci.') . '<br><br>' .
+					'<a href="' . helper::baseUrl() . 'user/reset/' . $userId . '/' . $uniqId . '" target="_blank">' . helper::baseUrl() . 'user/reset/' . $userId . '/' . $uniqId . '</a><br><br>' .
+					'<small>' . helper::translate('Si nous n\'avez pas demandé à réinitialiser votre mot de passe, veuillez ignorer ce mail.') . '</small>'
+				);
+				// Valeurs en sortie
+				$this->addOutput([
+					'notification' => 'Un mail vous a été envoyé afin de continuer la réinitialisation',
+					'state' => true
+				]);
+			}
+			// L'utilisateur n'existe pas
+			else {
+				// Valeurs en sortie
+				$this->addOutput([
+					'notification' => 'Cet utilisateur n\'existe pas'
+				]);
+			}
+		}
+		// Valeurs en sortie
+		$this->addOutput([
+			'title' => 'Mot de passe oublié',
+			'view' => 'forgot'
+		]);
+	}
+
+	/**
 	 * Liste des utilisateurs
 	 */
 	public function index() {
-		$userIdsNames = helper::arrayCollumn($this->getData(['user']), 'name');
-		ksort($userIdsNames);
-		foreach($userIdsNames as $userId => $userName) {
+		$userIdsFirstnames = helper::arrayCollumn($this->getData(['user']), 'firstname');
+		ksort($userIdsFirstnames);
+		foreach($userIdsFirstnames as $userId => $userFirstname) {
 			self::$users[] = [
 				$userId,
-				$userName,
+				$userFirstname . ' ' . $this->getData(['user', $userId, 'lastname']),
 				self::$groups[$this->getData(['user', $userId, 'group'])],
 				template::button('userEdit' . $userId, [
 					'value' => template::ico('pencil'),
@@ -232,13 +288,14 @@ class user extends common {
 	public function login() {
 		// Soumission du formulaire
 		if($this->isPost()) {
+			$userId = $this->getInput('userLoginId', helper::FILTER_ID);
 			// Connexion si les informations sont correctes
 			if(
-				$this->getData(['user', $this->getInput('userLoginId'), 'password']) === hash('sha256', $this->getInput('userLoginPassword'))
-				AND $this->getData(['user', $this->getInput('userLoginId'), 'group']) >= self::GROUP_MEMBER
+				$this->getData(['user', $userId, 'password']) === hash('sha256', $this->getInput('userLoginPassword'))
+				AND $this->getData(['user', $userId, 'group']) >= self::GROUP_MEMBER
 			) {
 				$expire = $this->getInput('userLoginLongTime') ? strtotime("+1 year") : 0;
-				setcookie('ZWII_USER_ID', $this->getInput('userLoginId'), $expire, helper::baseUrl(false, false));
+				setcookie('ZWII_USER_ID', $userId, $expire, helper::baseUrl(false, false));
 				setcookie('ZWII_USER_PASSWORD', hash('sha256', $this->getInput('userLoginPassword')), $expire, helper::baseUrl(false, false));
 				// Valeurs en sortie
 				$this->addOutput([
@@ -274,6 +331,56 @@ class user extends common {
 			'redirect' => helper::baseUrl(false),
 			'state' => true
 		]);
+	}
+
+	/**
+	 * Réinitialisation du mot de passe
+	 */
+	public function reset() {
+		// Accès refusé
+		if(
+			// L'utilisateur n'existe pas
+			$this->getData(['user', $this->getUrl(2)]) === null
+			// Lien de réinitialisation trop vieux
+			OR $this->getData(['user', $this->getUrl(2), 'forgot']) + 86400 < time()
+			// Id unique incorrecte
+			OR $this->getUrl(3) !== md5(json_encode($this->getData(['user', $this->getUrl(2)])))
+		) {
+			// Valeurs en sortie
+			$this->addOutput([
+				'access' => false
+			]);
+		}
+		// Accès autorisé
+		else {
+			// Soumission du formulaire
+			if($this->isPost()) {
+				// Double vérification pour le mot de passe
+				if($this->getInput('userResetNewPassword')) {
+					$newPassword = $this->getInput('userResetNewPassword', helper::FILTER_PASSWORD);
+					// La confirmation ne correspond pas au mot de passe
+					if($newPassword !== $this->getInput('userResetConfirmPassword', helper::FILTER_PASSWORD)) {
+						$newPassword = $this->getData(['user', $this->getUrl(2), 'password']);
+						self::$inputNotices['userResetConfirmPassword'] = 'Ne correspond pas au mot de passe';
+					}
+					// Modifie le mot de passe
+					$this->setData(['user', $this->getUrl(2), 'password', $newPassword]);
+					// Réinitialise la date de la demande
+					$this->setData(['user', $this->getUrl(2), 'forgot', 0]);
+					// Valeurs en sortie
+					$this->addOutput([
+						'notification' => 'Nouveau mot de passe enregistré',
+						'redirect' => helper::baseUrl() . 'user/login',
+						'state' => true
+					]);
+				}
+			}
+			// Valeurs en sortie
+			$this->addOutput([
+				'title' => 'Réinitialisation du mot de passe',
+				'view' => 'reset'
+			]);
+		}
 	}
 
 }

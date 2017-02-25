@@ -94,24 +94,16 @@ $("#formConfigAdd").on("click", function() {
 /**
  * Actions sur les champs
  */
+// Tri entre les champs
+sortable("#formConfigInputs", {
+	forcePlaceholderSize: true,
+	containment: "#formConfigInputs",
+	handle: ".formConfigMove"
+});
 $("#formConfigInputs")
-	// Tri entre les champs
-	.sortable({
-		axis: "y",
-		containment: "#formConfigInputs",
-		retard: 150,
-		handle: ".formConfigMove",
-		placeholder: "placeholder",
-		forcePlaceholderSize: true,
-		tolerance: "pointer",
-		start: function(e, ui) {
-			// Calcul la hauteur du placeholder
-			ui.placeholder.height(ui.helper.outerHeight());
-		},
-		update: function() {
-			// Actualise les positions
-			position();
-		}
+	// Actualise les positions
+	.on("sortupdate", function() {
+		position();
 	})
 	// Suppression du champ
 	.on("click", ".formConfigDelete", function() {
@@ -141,7 +133,7 @@ $("#formConfigInputs")
 $(".formConfigType").trigger("change");
 
 /**
- * Affiche/cache les options de la case à cocher mail
+ * Affiche/cache les options de la case à cocher du mail
  */
 $("#formConfigMailOptionsToggle").on("change", function() {
 	if($(this).is(":checked")) {
@@ -151,6 +143,20 @@ $("#formConfigMailOptionsToggle").on("change", function() {
 		$("#formConfigMailOptions").slideUp(function() {
 			$("#formConfigGroup").val("");
 			$("#formConfigSubject").val("");
+		});
+	}
+}).trigger("change");
+
+/**
+ * Affiche/cache les options de la case à cocher de la redirection
+ */
+$("#formConfigPageIdToggle").on("change", function() {
+	if($(this).is(":checked")) {
+		$("#formConfigPageIdWrapper").slideDown();
+	}
+	else {
+		$("#formConfigPageIdWrapper").slideUp(function() {
+			$("#formConfigPageId").val("");
 		});
 	}
 }).trigger("change");

@@ -195,7 +195,7 @@ class theme extends common {
 				'margin' => $this->getInput('themeFooterMargin', helper::FILTER_BOOLEAN),
 				'position' => $this->getInput('themeFooterPosition'),
 				'socialsAlign' => $this->getInput('themeFooterSocialsAlign'),
-				'text' => $this->getInput('themeFooterText'),
+				'text' => $this->getInput('themeFooterText', null),
 				'textAlign' => $this->getInput('themeFooterTextAlign')
 			]]);
 			// Valeurs en sortie

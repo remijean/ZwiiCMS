@@ -15,7 +15,7 @@
 	<![endif]-->
 	<!--[if !mso]>
 		<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-	<!--<![endif]-->
+	<![endif]-->
 	<style>
 		html,
 		body {
@@ -59,7 +59,7 @@
 			display: none !important;
 			opacity: 0.01 !important;
 		}
-		@media only screen and (min-device-width: 375px) and (max-device-width: 413px) { /* iPhone 6 and 6+ */
+		@media only screen and (min-device-width: 375px) and (max-device-width: 413px) {
 			.email-container {
 				min-width: 375px !important;
 			}
@@ -96,7 +96,7 @@
 					<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
 						<tr>
 							<td style="padding: 30px; font-family: 'Open Sans', sans-serif; font-size: 14px; line-height: 19px; color: #212223;">
-								<?php echo $content; ?>
+								<?php echo nl2br($content); ?>
 							</td>
 						</tr>
 					</table>

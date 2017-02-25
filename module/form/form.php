@@ -22,7 +22,9 @@ class form extends common {
 
 	public static $data = [];
 
-	public static $pages;
+	public static $pages = [];
+	
+	public static $pagination;
 
 	public static $types = [
 		'text' => 'Champ texte',
@@ -44,7 +46,8 @@ class form extends common {
 				[
 					'button' => $this->getInput('formConfigButton'),
 					'capcha' => $this->getInput('formConfigCapcha', helper::FILTER_BOOLEAN),
-					'group' => $this->getInput('formConfigGroup'),
+					'group' => $this->getInput('formConfigGroup', helper::FILTER_INT),
+					'pageId' => $this->getInput('formConfigPageId', helper::FILTER_ID),
 					'subject' => $this->getInput('formConfigSubject')
 				]
 			]);
@@ -64,16 +67,23 @@ class form extends common {
 			unset($_SESSION['ZWII_INPUT_REQUIRED']);
 			// Valeurs en sortie
 			$this->addOutput([
-				'redirect' => helper::baseUrl() . $this->getUrl(),
 				'notification' => 'Modifications enregistrées',
+				'redirect' => helper::baseUrl() . $this->getUrl(),
 				'state' => true
 			]);
+		}
+		// Liste des pages
+		foreach($this->getHierarchy(null, false) as $parentPageId => $childrenPageIds) {
+			self::$pages[$parentPageId] = $this->getData(['page', $parentPageId, 'title']);
+			foreach($childrenPageIds as $childKey) {
+				self::$pages[$childKey] = '&nbsp;&nbsp;&nbsp;&nbsp;' . $this->getData(['page', $childKey, 'title']);
+			}
 		}
 		// Valeurs en sortie
 		$this->addOutput([
 			'title' => 'Configuration du module',
 			'vendor' => [
-				'jquery-ui'
+				'html-sortable'
 			],
 			'view' => 'config'
 		]);
@@ -88,7 +98,7 @@ class form extends common {
 			// Crée une pagination
 			$pagination = helper::pagination($data, $this->getUrl());
 			// Pages
-			self::$pages = $pagination['pages'];
+			self::$pagination = $pagination['pages'];
 			// Inverse l'ordre du tableau pour afficher les données en ordre décroissant
 			$inputs = array_reverse($data);
 			// Crée l'affichage des données en fonction de la pagination
@@ -146,30 +156,26 @@ class form extends common {
 					}
 				}
 				if($to) {
-					$to = implode(',', $to);
 					// Sujet du mail
 					$subject = $this->getData(['module', $this->getUrl(0), 'config', 'subject']);
 					if($subject === '') {
-						$subject = helper::translate('Nouveau message en provenance de la page') . ' "' . $this->getData(['page', $this->getUrl(0), 'title']) . '"';
+						$subject = helper::translate('Nouveau message en provenance de votre site');
 					}
-					$sent = $this->sendMail(
+					// Envoi le mail
+					$this->sendMail(
 						$to,
 						$subject,
-						$subject . ' :<br><br>' . $content
+						helper::translate('Nouveau message en provenance de la page') . ' "' . $this->getData(['page', $this->getUrl(0), 'title']) . '" :<br><br>' .
+						$content
 					);
 				}
 			}
-			// Notification en fonction du résultat
-			if(isset($sent)) {
-				$notification = 'Formulaire soumis';
-			}
-			else {
-				$notification = 'Formulaire soumis, mais impossible d\'envoyer le mail';
-			}
+			// Redirection
+			$redirect = $this->getData(['module', $this->getUrl(0), 'config', 'pageId']);
 			// Valeurs en sortie
 			$this->addOutput([
-				'notification' => $notification,
-				'redirect' => helper::baseUrl() . $this->getUrl(),
+				'notification' => 'Formulaire soumis',
+				'redirect' => $redirect ? helper::baseUrl() . $redirect : '',
 				'state' => true
 			]);
 		}

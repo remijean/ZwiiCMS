@@ -109,7 +109,7 @@
 				]); ?>
 				<?php echo template::checkbox('configAutoBackup', true, 'Sauvegarder automatique des données', [
 					'checked' => $this->getData(['config', 'autoBackup']),
-					'help' => 'Sauvegarde le fichier de données une fois par jour dans le dossier site/backup/. (Pour également sauvegarder les fichiers uploadés vous devez utiliser le bouton ci-dessous "Exporter les données".'
+					'help' => 'Sauvegarde le fichier de données une fois par jour dans le dossier site/backup/. (Pour une sauvegarde complète vous devez utiliser le bouton ci-dessous "Exporter les données".'
 				]); ?>
 				<div class="row">
 					<div class="col6">

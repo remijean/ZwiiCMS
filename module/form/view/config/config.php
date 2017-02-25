@@ -51,7 +51,7 @@
 			'label' => 'Texte du bouton de soumission',
 			'value' => $this->getData(['module', $this->getUrl(0), 'config', 'button'])
 		]); ?>
-		<?php echo template::checkbox('formConfigMailOptionsToggle', true, 'Envoyer par mail les données saisies à un groupe', [
+		<?php echo template::checkbox('formConfigMailOptionsToggle', true, 'Envoyer par mail les données saisies aux utilisateurs d\'un groupe', [
 			'checked' => (bool) $this->getData(['module', $this->getUrl(0), 'config', 'group'])
 		]); ?>
 		<div id="formConfigMailOptions" class="displayNone">
@@ -71,6 +71,14 @@
 				</div>
 			</div>
 		</div>
+		<?php echo template::checkbox('formConfigPageIdToggle', true, 'Rediriger vers une page du site après soumission du formulaire', [
+			'checked' => (bool) $this->getData(['module', $this->getUrl(0), 'config', 'pageId'])
+		]); ?>
+		<?php echo template::select('formConfigPageId', $module::$pages, [
+			'classWrapper' => 'displayNone',
+			'label' => 'Page',
+			'selected' => $this->getData(['module', $this->getUrl(0), 'config', 'pageId'])
+		]); ?>
 		<?php echo template::checkbox('formConfigCapcha', true, 'Capcha à remplir pour soumettre le formulaire', [
 			'checked' => $this->getData(['module', $this->getUrl(0), 'config', 'capcha'])
 		]); ?>

@@ -19,7 +19,9 @@ class config extends common {
 		'index' => self::GROUP_ADMIN
 	];
 
-	public static $languages = [];
+	public static $languages = [
+		'fr_FR' => 'fr_FR'
+	];
 
 	/**
 	 * Sauvegarde des données
@@ -56,6 +58,7 @@ class config extends common {
 				self::$languages[$fileInfos->getBasename('.json')] = $fileInfos->getBasename('.json');
 			}
 		}
+		asort(self::$languages);
 		// Soumission du formulaire
 		if($this->isPost()) {
 			$this->setData([

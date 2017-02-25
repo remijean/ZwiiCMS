@@ -1,2 +1,8 @@
 {
+	"Configuration du module": "Configuration of the module",
+	"Lien de redirection": "Redirect link",
+	"Nombre de redirection": "Number of redirection",
+	"Redirection": "Redirection",
+	"Souhaitez-vous accéder à l'interface de modification de la page ? En cas de refus, vous serez redirigé vers l'URL saisie dans le module de redirection.": "Do you want to access the interface for editing the page? If you refuse, you will be redirected the URL entered in the redirection module.",
+	"Statistiques": "Statistics"
 }
