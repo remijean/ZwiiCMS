@@ -3,25 +3,24 @@
 		<div class="col6">
 			<div class="block">
 				<h4><?php echo helper::translate('Informations générales'); ?></h4>
-				<?php echo template::text('userAddId', [
-					'label' => 'Identifiant',
-					'required' => true
-				]); ?>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::text('userAddFirstname', [
+							'autocomplete' => 'off',
 							'label' => 'Prénom',
 							'required' => true
 						]); ?>
 					</div>
 					<div class="col6">
 						<?php echo template::text('userAddLastname', [
+							'autocomplete' => 'off',
 							'label' => 'Nom',
 							'required' => true
 						]); ?>
 					</div>
 				</div>
 				<?php echo template::mail('userAddMail', [
+					'autocomplete' => 'off',
 					'label' => 'Adresse mail',
 					'required' => true
 				]); ?>
@@ -52,12 +51,19 @@
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Sécurité'); ?></h4>
+				<h4><?php echo helper::translate('Authentification'); ?></h4>
+				<?php echo template::text('userAddId', [
+					'autocomplete' => 'off',
+					'label' => 'Identifiant',
+					'required' => true
+				]); ?>
 				<?php echo template::password('userAddPassword', [
+					'autocomplete' => 'off',
 					'label' => 'Mot de passe',
 					'required' => true
 				]); ?>
 				<?php echo template::password('userAddConfirmPassword', [
+					'autocomplete' => 'off',
 					'label' => 'Confirmation',
 					'required' => true
 				]); ?>

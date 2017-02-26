@@ -23,8 +23,14 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col2 offset10">
-			<?php echo template::submit('userLoginSubmit', [
+		<div class="col3 offset6">
+			<?php echo template::button('userLoginBack', [
+				'class' => 'grey',
+				'href' => helper::baseUrl(),
+				'value' => 'Annuler'
+			]); ?>
+		</div>
+		<div class="col3">			<?php echo template::submit('userLoginSubmit', [
 				'value' => 'Connexion'
 			]); ?>
 		</div>

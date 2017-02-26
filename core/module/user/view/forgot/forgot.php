@@ -4,7 +4,7 @@
 		'required' => true
 	]); ?>
 	<div class="row">
-		<div class="col2 offset8">
+		<div class="col3 offset6">
 			<?php echo template::button('userForgotBack', [
 				'class' => 'grey',
 				'href' => helper::baseUrl() . 'user/login',
@@ -12,7 +12,7 @@
 
 			]); ?>
 		</div>
-		<div class="col2">
+		<div class="col3">
 			<?php echo template::submit('userForgotSubmit', [
 				'value' => 'Valider'
 			]); ?>

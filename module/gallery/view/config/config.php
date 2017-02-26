@@ -16,9 +16,9 @@
 				]); ?>
 			</div>
 			<div class="col2 verticalAlignBottom">
-				<?php echo template::submit('galleryConfigSubmit', array(
+				<?php echo template::submit('galleryConfigSubmit', [
 					'value' => 'Créer'
-				)); ?>
+				]); ?>
 			</div>
 		</div>
 	</div>

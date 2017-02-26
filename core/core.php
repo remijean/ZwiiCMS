@@ -24,7 +24,7 @@ class common {
 	const GROUP_MEMBER = 1;
 	const GROUP_MODERATOR = 2;
 	const GROUP_ADMIN = 3;
-	const ZWII_VERSION = '8.0.0 bêta 0.7';
+	const ZWII_VERSION = '8.0.0';
 
 	public static $actions = [];
 	public static $language = [];
@@ -62,7 +62,7 @@ class common {
 		],
 		'page' => [
 			'accueil' => [
-				'content' => "<p>Félicitations Zwii est 100% opérationnel !</p>\r\n<p>Si vous rencontrez un problème ou si vous avez besoin d'aide, n'hésitez pas à jeter un œil au <a title='Site' href='http://zwiicms.com/'>site</a> ou au <a title='Forum' href='http://forum.zwiicms.com/'>forum</a> de Zwii.</p>\r\n<h4>Suivez-nous sur <a href='https://twitter.com/ZwiiCMS/'>Twitter</a> et <a href='https://www.facebook.com/ZwiiCMS/'>Facebook</a> pour ne manquer aucune nouveauté !</h4>",
+				'content' => "<p><strong>Bienvenue sur votre nouveau site Zwii !</strong></p>\r\n<p>Un mail contenant un récapitulatif de votre installation vient de vous être envoyé.</p>\r\n<p>Connectez-vous dès maintenant à l'espace d'administration afin de créer un site à votre image ! Vous allez pouvoir personnaliser le thème, créer des pages, ajouter des utilisateurs et bien plus encore !</p>\r\n<p>Si vous rencontrez un problème ou si vous avez besoin d'aide, n'hésitez pas à jeter un œil au <a title='Forum' href='http://forum.zwiicms.com/'>forum</a> de Zwii.</p>",
 				'hideTitle' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
@@ -74,7 +74,7 @@ class common {
 				'title' => 'Accueil'
 			],
 			'enfant' => [
-				'content' => "<p>Vous pouvez assigner des parents à vos pages afin de mieux organiser votre menu !</p>",
+				'content' => "<p>Vous pouvez assigner des parents à vos pages afin de mieux organiser votre menu !</p>\r\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque placerat magna sit amet sapien gravida commodo. In hendrerit ut nulla et bibendum. Morbi fringilla dolor arcu, sit amet porta nibh sodales lacinia. Donec molestie dui lacus, ac consectetur neque posuere at. Vestibulum aliquam, urna a euismod mattis, diam tortor consectetur elit, quis feugiat magna dolor eget nisl. Etiam id purus nulla. Vestibulum tincidunt massa vitae iaculis volutpat.</p>\r\n<p>In eget auctor dui, a tincidunt est. Nam felis magna, venenatis vel ultrices ut, luctus et orci. Etiam vitae ligula sollicitudin, ultricies felis et, bibendum justo. Duis et imperdiet neque. Integer ultrices nulla sit amet lorem molestie, vel pulvinar tellus pulvinar. Cras laoreet risus in est feugiat fringilla. Nullam quis ornare odio, ut pretium enim.</p>",
 				'hideTitle' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
@@ -144,7 +144,7 @@ class common {
 					'legend' => [
 						'desert.jpg' => 'Désert',
 						'iceberg.jpg' => 'Iceberg',
-						'meadow.jpg' => 'Pairie'
+						'meadow.jpg' => 'Prairie'
 					]
 				]
 			],
@@ -211,17 +211,17 @@ class common {
 				'textAlign' => 'left'
 			],
 			'header' => [
-				'backgroundColor' => 'rgba(255, 255, 255, 1)',
+				'backgroundColor' => 'rgba(71, 123, 184, 1)',
 				'font' => 'Oswald',
 				'fontWeight' => 'normal',
-				'height' => '150px',
+				'height' => '200px',
 				'image' => '',
 				'imagePosition' => 'center center',
 				'imageRepeat' => 'no-repeat',
 				'margin' => false,
-				'position' => 'site',
+				'position' => 'body',
 				'textAlign' => 'center',
-				'textColor' => 'rgba(39, 42, 52, 1)',
+				'textColor' => 'rgba(255, 255, 255, 1)',
 				'textHide' => false,
 				'textTransform' => 'none'
 			],
@@ -229,12 +229,12 @@ class common {
 				'textColor' => 'rgba(71, 123, 184, 1)'
 			],
 			'menu' => [
-				'backgroundColor' => 'rgba(71, 123, 184, 1)',
+				'backgroundColor' => 'rgba(62, 107, 159, 1)',
 				'fontWeight' => 'normal',
 				'height' => '15px 10px',
 				'loginLink' => true,
 				'margin' => false,
-				'position' => 'site-second',
+				'position' => 'body-second',
 				'textAlign' => 'left',
 				'textTransform' => 'none'
 			],
@@ -1363,7 +1363,8 @@ class helper {
 	public static function sprintAttributes(array $array = [], array $exclude = []) {
 		// Required est exclu pour privilégier le système de champs requis du système
 		$exclude = array_merge(
-			['before',
+			[
+				'before',
 				'classWrapper',
 				'help',
 				'label',
@@ -1380,9 +1381,11 @@ class helper {
 					$attributes[] = sprintf('%s="%s"', $key, helper::translate($value));
 				}
 				// Disabled
-				elseif($key === 'disabled') {
+				// Readonly
+				elseif(in_array($key, ['disabled', 'readonly'])) {
 					$attributes[] = sprintf('%s', $key);
 				}
+				// Autres
 				else {
 					$attributes[] = sprintf('%s="%s"', $key, $value);
 				}
@@ -2027,6 +2030,7 @@ class template {
 	public static function mail($nameId, array $attributes = []) {
 		// Attributs par défaut
 		$attributes = array_merge([
+			'autocomplete' => 'on',
 			'before' => true,
 			'class' => '',
 			'classWrapper' => '',
@@ -2036,7 +2040,7 @@ class template {
 			'label' => '',
 			'name' => $nameId,
 			'placeholder' => '',
-			'readonly' => '',
+			'readonly' => false,
 			'required' => false,
 			'value' => ''
 		], $attributes);
@@ -2090,7 +2094,7 @@ class template {
 			'label' => '',
 			'name' => $nameId,
 			'placeholder' => '',
-			'readonly' => '',
+			'readonly' => false,
 			'required' => false
 		], $attributes);
 		// Champ requis
@@ -2280,6 +2284,7 @@ class template {
 	public static function text($nameId, array $attributes = []) {
 		// Attributs par défaut
 		$attributes = array_merge([
+			'autocomplete' => 'on',
 			'before' => true,
 			'class' => '',
 			'classWrapper' => '',
@@ -2289,7 +2294,7 @@ class template {
 			'label' => '',
 			'name' => $nameId,
 			'placeholder' => '',
-			'readonly' => '',
+			'readonly' => false,
 			'required' => false,
 			'value' => ''
 		], $attributes);
@@ -2342,7 +2347,7 @@ class template {
 			'id' => $nameId,
 			'label' => '',
 			'name' => $nameId,
-			'readonly' => '',
+			'readonly' => false,
 			'required' => false,
 			'value' => ''
 		], $attributes);

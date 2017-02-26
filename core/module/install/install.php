@@ -40,7 +40,7 @@ class install extends common {
 			if($this->isPost()) {
 				// Double vérification pour le mot de passe
 				if($this->getInput('installConfigPassword') !== $this->getInput('installConfigConfirmPassword')) {
-					self::$inputNotices['installConfigConfirmPassword'] = 'Ne correspond pas au mot de passe';
+					self::$inputNotices['installConfigConfirmPassword'] = 'Incorrect';
 				}
 				// Crée l'utilisateur
 				$userId = $this->getInput('installConfigId', helper::FILTER_ID);
@@ -52,6 +52,7 @@ class install extends common {
 					$userId,
 					[
 						'firstname' => $firstname,
+						'forgot' => 0,
 						'group' => self::GROUP_ADMIN,
 						'lastname' => $lastname,
 						'mail' => $mail,

@@ -270,8 +270,8 @@ header {
 header h1 {
 	display: inline-block;
 	vertical-align: middle;
-	margin: 0 20px;
 	line-height: 1.2;
+	margin: 0 10px;
 }
 header .container {
 	overflow: hidden;

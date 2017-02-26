@@ -3,15 +3,10 @@
 		<div class="col6">
 			<div class="block">
 				<h4><?php echo helper::translate('Informations générales'); ?></h4>
-				<?php echo template::text('userEditId', [
-					'help' => 'L\'identifiant est défini lors de la création du compte, il ne peut pas être modifié.',
-					'label' => 'Identifiant',
-					'readonly' => true,
-					'value' => $this->getUrl(2)
-				]); ?>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::text('userEditFirstname', [
+							'autocomplete' => 'off',
 							'label' => 'Prénom',
 							'required' => true,
 							'value' => $this->getData(['user', $this->getUrl(2), 'firstname'])
@@ -19,6 +14,7 @@
 					</div>
 					<div class="col6">
 						<?php echo template::text('userEditLastname', [
+							'autocomplete' => 'off',
 							'label' => 'Nom',
 							'required' => true,
 							'value' => $this->getData(['user', $this->getUrl(2), 'lastname'])
@@ -26,6 +22,7 @@
 					</div>
 				</div>
 				<?php echo template::mail('userEditMail', [
+					'autocomplete' => 'off',
 					'label' => 'Adresse mail',
 					'required' => true,
 					'value' => $this->getData(['user', $this->getUrl(2), 'mail'])
@@ -60,11 +57,24 @@
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Sécurité'); ?></h4>
+				<h4><?php echo helper::translate('Authentification'); ?></h4>
+				<?php echo template::text('userEditId', [
+					'autocomplete' => 'off',
+					'help' => 'L\'identifiant est défini lors de la création du compte, il ne peut pas être modifié.',
+					'label' => 'Identifiant',
+					'readonly' => true,
+					'value' => $this->getUrl(2)
+				]); ?>
+				<?php echo template::password('userEditOldPassword', [
+					'autocomplete' => 'off',
+					'label' => 'Ancien mot de passe'
+				]); ?>
 				<?php echo template::password('userEditNewPassword', [
+					'autocomplete' => 'off',
 					'label' => 'Nouveau mot de passe'
 				]); ?>
 				<?php echo template::password('userEditConfirmPassword', [
+					'autocomplete' => 'off',
 					'label' => 'Confirmation'
 				]); ?>
 			</div>

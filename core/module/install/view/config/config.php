@@ -1,43 +1,43 @@
-<p><?php echo helper::translate('Veuillez saisir les champs ci-dessous afin de terminer l\'installation de Zwii.'); ?></p>
+<p><?php echo helper::translate('Veuillez saisir les champs ci-dessous afin de terminer l\'installation.'); ?></p>
 <form method="post">
-	<div class="row">
-		<div class="col6">
-			<?php echo template::text('installConfigId', [
-				'label' => 'Identifiant',
-				'required' => true
-			]); ?>
-		</div>
-		<div class="col6">
-			<?php echo template::mail('installConfigMail', [
-				'label' => 'Adresse mail',
-				'required' => true
-			]); ?>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col6">
-			<?php echo template::text('installConfigFirstname', [
-				'label' => 'Prénom',
-				'required' => true
-			]); ?>
-		</div>
-		<div class="col6">
-			<?php echo template::text('installConfigLastname', [
-				'label' => 'Nom',
-				'required' => true
-			]); ?>
-		</div>
-	</div>
+	<?php echo template::text('installConfigId', [
+		'autocomplete' => 'off',
+		'label' => 'Identifiant',
+		'required' => true
+	]); ?>
 	<div class="row">
 		<div class="col6">
 			<?php echo template::password('installConfigPassword', [
+				'autocomplete' => 'off',
 				'label' => 'Mot de passe',
 				'required' => true
 			]); ?>
 		</div>
 		<div class="col6">
 			<?php echo template::password('installConfigConfirmPassword', [
+				'autocomplete' => 'off',
 				'label' => 'Confirmation',
+				'required' => true
+			]); ?>
+		</div>
+	</div>
+	<?php echo template::mail('installConfigMail', [
+		'autocomplete' => 'off',
+		'label' => 'Adresse mail',
+		'required' => true
+	]); ?>
+	<div class="row">
+		<div class="col6">
+			<?php echo template::text('installConfigFirstname', [
+				'autocomplete' => 'off',
+				'label' => 'Prénom',
+				'required' => true
+			]); ?>
+		</div>
+		<div class="col6">
+			<?php echo template::text('installConfigLastname', [
+				'autocomplete' => 'off',
+				'label' => 'Nom',
 				'required' => true
 			]); ?>
 		</div>
