@@ -89,7 +89,7 @@
 	"Grande (300px)": "Big (300px)",
 	"Gras": "Strong",
 	"Groupe": "Group",
-	"Groupe minimum": "Minimum group",
+	"Groupe requis pour accéder à la page": "Required group to access the page",
 	"Gérer les fichiers": "Manage files",
 	"Hauteur": "Height",
 	"Identifiant": "Username",
@@ -190,7 +190,7 @@
 	"Saisissez votre ID Pinterest : https://pinterest.com/[CETTE PARTIE].": "Enter your ID Pinterest: https://pinterest.com/[THIS PART].",
 	"Saisissez votre ID Twitter : https://twitter.com/[CETTE PARTIE].": "Enter your Twitter ID: https://twitter.com/[THIS PART].",
 	"Saisissez votre ID Youtube : https://www.youtube.com/channel/[CETTE PARTIE].": "Enter your Youtube ID: https://www.youtube.com/channel/[THIS PART].",
-	"Sauvegarde le fichier de données une fois par jour dans le dossier site/backup/. (Pour une sauvegarde complète vous devez utiliser le bouton ci-dessous \"Exporter les données\".": "Backup the database once per day in the site/backup folder (For a full backup you must use the button below \"Export data\".",
+	"Sauvegarde une fois par jour le fichier de données dans le dossier site/backup/. La sauvegarde est conservée 30 jours.": "Backup once a day the data file in the site/backup folder. The backup is kept 30 days.",
 	"Sauvegarder automatique des données": "Save data automatic",
 	"Se déconnecter": "Log out",
 	"Se déconnecter ?": "Log out ?",
@@ -234,5 +234,6 @@
 	"À droite": "Right",
 	"À gauche": "Left",
 	"Êtes-vous sûr de vouloir supprimer cet utilisateur ?": "Are you sure you want to delete this user?",
-	"Êtes-vous sûr de vouloir supprimer cette page ?": "Are you sure you want to delete this page?"
+	"Êtes-vous sûr de vouloir supprimer cette page ?": "Are you sure you want to delete this page?",
+	"Mot de passe du compte :": "Account password:"
 }

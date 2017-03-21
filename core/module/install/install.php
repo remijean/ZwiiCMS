@@ -43,13 +43,12 @@ class install extends common {
 					self::$inputNotices['installConfigConfirmPassword'] = 'Incorrect';
 				}
 				// Crée l'utilisateur
-				$userId = $this->getInput('installConfigId', helper::FILTER_ID);
 				$firstname = $this->getInput('installConfigFirstname');
 				$lastname = $this->getInput('installConfigLastname');
 				$mail = $this->getInput('installConfigMail', helper::FILTER_MAIL);
 				$this->setData([
 					'user',
-					$userId,
+					$this->getInput('installConfigId', helper::FILTER_ID),
 					[
 						'firstname' => $firstname,
 						'forgot' => 0,
@@ -66,7 +65,8 @@ class install extends common {
 					helper::translate('Bonjour') . ' <strong>' . $firstname . ' ' . $lastname . '</strong>,<br><br>' .
 					helper::translate('Vous trouverez ci-dessous les détails de votre installation.') . '<br><br>' .
 					'<strong>' . helper::translate('URL du site :') . '</strong> <a href="' . helper::baseUrl(false) . '" target="_blank">' . helper::baseUrl(false) . '</a><br>' .
-					'<strong>' . helper::translate('Identifiant du compte :') . '</strong> ' . $userId . '<br>'
+					'<strong>' . helper::translate('Identifiant du compte :') . '</strong> ' . $this->getInput('installConfigId') . '<br>' .
+					'<strong>' . helper::translate('Mot de passe du compte :') . '</strong> ' . $this->getInput('installConfigPassword')
 				);
 				// Valeurs en sortie
 				$this->addOutput([

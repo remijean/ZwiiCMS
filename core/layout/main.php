@@ -35,12 +35,12 @@
 	<!-- Bannière dans le fond du site -->
 	<header <?php if($this->getData(['theme', 'header', 'position']) === 'hide'): ?>class="displayNone"<?php endif; ?>>
 		<?php if(
-				$this->getData(['theme', 'header', 'textHide']) === false
-				// Affiche toujours le titre de la bannière pour l'édition du thème
-				OR $this->getUrl(0) === 'theme'
+			$this->getData(['theme', 'header', 'textHide']) === false
+			// Affiche toujours le titre de la bannière pour l'édition du thème
+			OR ($this->getUrl(0) === 'theme' AND $this->getUrl(1) === 'header')
 		): ?>
 			<div class="container <?php if($this->getData(['theme', 'menu', 'textHide'])): ?>displayNone<?php endif; ?>">
-				<h1><?php echo $this->getData(['config', 'title']); ?></h1>
+				<span><?php echo $this->getData(['config', 'title']); ?></span>
 			</div>
 		<?php endif; ?>
 	</header>
@@ -75,9 +75,15 @@
 	<?php if($this->getData(['theme', 'header', 'position']) === 'site'): ?>
 		<!-- Bannière dans le site -->
 		<header>
-			<div class="container">
-				<h1><?php echo $this->getData(['config', 'title']); ?></h1>
-			</div>
+			<?php if(
+				$this->getData(['theme', 'header', 'textHide']) === false
+				// Affiche toujours le titre de la bannière pour l'édition du thème
+				OR ($this->getUrl(0) === 'theme' AND $this->getUrl(1) === 'header')
+			): ?>
+				<div class="container <?php if($this->getData(['theme', 'menu', 'textHide'])): ?>displayNone<?php endif; ?>">
+					<span><?php echo $this->getData(['config', 'title']); ?></span>
+				</div>
+			<?php endif; ?>
 		</header>
 	<?php endif; ?>
 	<?php if($this->getData(['theme', 'menu', 'position']) === 'site-second'): ?>

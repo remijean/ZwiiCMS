@@ -39,6 +39,7 @@ return array(
 	'Text_filter' => 'text filter',
 	'Swipe_help' => 'Swipe the name of file/folder to show options',
 	'Upload_base' => 'Base upload',
+	'Upload_url' => 'URL',
 	'Upload_java' => 'JAVA upload (big size files)',
 	'Upload_java_help' => "If the Java Applet doesn't load, 1. make sure you have Java installed, otherwise <a href='http://java.com/en/download/'>[download link]</a>   2. make sure nothing is blocked by your firewall",
 	'Upload_base_help' => "Drag & Drop files or click in the area above (modern browsers) and select the file(s). When the upload is complete, click the 'Return to files list' button.",

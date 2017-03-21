@@ -42,10 +42,10 @@ a:hover {
 
 /* Titres */
 h1 {
-	font-size: 2em;
+	font-size: 1.8em;
 }
 h2 {
-	font-size: 1.8em;
+	font-size: 1.6em;
 }
 h3 {
 	font-size: 1.4em;
@@ -220,7 +220,7 @@ td > .col12 {
 }
 #panel a {
 	display: inline-block;
-	padding: 0 14px;
+	padding: 0 12px;
 	color: #FFF;
 }
 #panel a:hover {
@@ -267,11 +267,12 @@ body > header {
 header {
 	position: relative;
 }
-header h1 {
+header span {
 	display: inline-block;
 	vertical-align: middle;
 	line-height: 1.2;
 	margin: 0 10px;
+	font-size: 2em;
 }
 header .container {
 	overflow: hidden;
@@ -323,14 +324,6 @@ nav a {
 nav a:hover {
 	text-decoration: none;
 }
-header nav {
-	position: absolute;
-	left: 0;
-	top: 0;
-	right: 0;
-	font-size: 14px !important; /* Pour contrer la suppression du titre du site */
-	line-height: initial;
-}
 @media (max-width: 768px) {
 	nav #toggle {
 		display: block;
@@ -360,8 +353,13 @@ header nav {
 section {
 	padding: 20px;
 }
-section #pageTitle {
+section #sectionTitle {
 	margin-top: 0;
+}
+section:after {
+	content: " ";
+	display: table;
+	clear: both;
 }
 
 /* Pied de page */

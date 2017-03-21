@@ -88,9 +88,9 @@ if(isset($_GET['action']))
 			if (
 				strpos($_POST['path'], '/') === 0
 				|| strpos($_POST['path'], '../') !== false
+				|| strpos($_POST['path'], '..\\') !== false
 				|| strpos($_POST['path'], './') === 0
-				|| (strpos($_POST['url'], 'http://s3.amazonaws.com/feather') !== 0
-				&& strpos($_POST['url'], 'https://s3.amazonaws.com/feather') !== 0)
+				|| (strpos($_POST['url'], 'http://s3.amazonaws.com/feather') !== 0 && strpos($_POST['url'], 'https://s3.amazonaws.com/feather') !== 0)
 				|| $_POST['name'] != fix_filename($_POST['name'], $config)
 				|| ! in_array(strtolower($info['extension']), array( 'jpg', 'jpeg', 'png' ))
 			)
@@ -150,7 +150,10 @@ if(isset($_GET['action']))
 			}
 			break;
 		case 'extract':
-			if (strpos($_POST['path'], '/') === 0 || strpos($_POST['path'], '../') !== false || strpos($_POST['path'], './') === 0)
+			if (	strpos($_POST['path'], '/') === 0 
+				|| strpos($_POST['path'], '../') !== false 
+				|| strpos($_POST['path'], '..\\') !== false 
+				|| strpos($_POST['path'], './') === 0)
 			{
 				response(trans('wrong path'.AddErrorLocation()))->send();
 				exit;
@@ -266,6 +269,15 @@ if(isset($_GET['action']))
 			if ($_POST['sub_action'] != 'copy' && $_POST['sub_action'] != 'cut')
 			{
 				response(trans('wrong sub-action').AddErrorLocation())->send();
+				exit;
+			}
+
+			if (strpos($_POST['path'],'../') !== FALSE
+				|| strpos($_POST['path'],'./') !== FALSE 
+				|| strpos($_POST['path'],'..\\') !== FALSE
+				|| strpos($_POST['path'],'.\\') !== FALSE )
+			{
+				response(trans('wrong path'.AddErrorLocation()))->send();
 				exit;
 			}
 
@@ -473,6 +485,29 @@ if(isset($_GET['action']))
 			}
 
 			break;
+		case 'cad_preview':
+			if($ftp){
+				$selected_file = $ftp_base_url.$upload_dir . $_GET['file'];
+			}else{
+				$selected_file = $current_path . $_GET['file'];
+
+				if ( ! file_exists($selected_file))
+				{
+					response(trans('File_Not_Found').AddErrorLocation())->send();
+					exit;
+				}
+			}
+			if($ftp){
+				$url_file = $selected_file;
+			}else{
+				$url_file = $base_url . $upload_dir . str_replace($current_path, '', $_GET["file"]);
+			}
+
+			$cad_url = urlencode($url_file);
+			$cad_html = "<iframe src=\"//sharecad.org/cadframe/load?url=" . $url_file . "\" class=\"google-iframe\" scrolling=\"no\"></iframe>";
+			$ret = $cad_html;
+			response($ret)->send();
+			break;
 		case 'get_file': // preview or edit
 			$sub_action = $_GET['sub_action'];
 			$preview_mode = $_GET["preview_mode"];
@@ -528,27 +563,19 @@ if(isset($_GET['action']))
 				if ($preview_mode == 'text')
 				{
 					// get and sanities
-					$data = stripslashes(htmlspecialchars(file_get_contents($selected_file)));
-
+					$data = file_get_contents($selected_file);
+					$data = htmlspecialchars(htmlspecialchars_decode($data));
 					$ret = '';
 
 					if ( ! in_array($info['extension'],$previewable_text_file_exts_no_prettify))
 					{
-						$ret .= '<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang='.$info['extension'].'&skin=sunburst"></script>';
-						$ret .= '<pre class="prettyprint">'.$data.'</pre>';
+						$ret .= '<script src="https://rawgit.com/google/code-prettify/master/loader/run_prettify.js?autoload=true&skin=sunburst"></script>';
+						$ret .= '<?prettify lang='.$info['extension'].' linenums=true?><pre class="prettyprint"><code class="language-'.$info['extension'].'">'.$data.'</code></pre>';
 					} else {
 						$ret .= '<pre class="no-prettify">'.$data.'</pre>';
 					}
 
-				} 
-				// elseif ($preview_mode == 'viewerjs') {
-				// 	if($ftp){
-				// 		$ret = '<iframe id="viewer" src="'.$selected_file.'" allowfullscreen="" webkitallowfullscreen="" class="viewer-iframe"></iframe>';
-				// 	}else{
-				// 		$ret = '<iframe id="viewer" src="js/ViewerJS/#../../'.$selected_file.'" allowfullscreen="" webkitallowfullscreen="" class="viewer-iframe"></iframe>';
-				// 	}
-
-				// } 
+				}
 				elseif ($preview_mode == 'google' || $preview_mode == 'viewerjs') {
 					if($ftp){
 						$url_file = $selected_file;
@@ -557,7 +584,7 @@ if(isset($_GET['action']))
 					}
 
 					$googledoc_url = urlencode($url_file);
-					$googledoc_html = "<iframe src=\"http://docs.google.com/viewer?url=" . $url_file . "&embedded=true\" class=\"google-iframe\"></iframe>";
+					$googledoc_html = "<iframe src=\"https://docs.google.com/viewer?url=" . $url_file . "&embedded=true\" class=\"google-iframe\"></iframe>";
 					$ret = $googledoc_html;
 				}
 			} else {

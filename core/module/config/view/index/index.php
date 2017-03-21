@@ -109,7 +109,7 @@
 				]); ?>
 				<?php echo template::checkbox('configAutoBackup', true, 'Sauvegarder automatique des données', [
 					'checked' => $this->getData(['config', 'autoBackup']),
-					'help' => 'Sauvegarde le fichier de données une fois par jour dans le dossier site/backup/. (Pour une sauvegarde complète vous devez utiliser le bouton ci-dessous "Exporter les données".'
+					'help' => 'Sauvegarde une fois par jour le fichier de données dans le dossier site/backup/. La sauvegarde est conservée 30 jours.'
 				]); ?>
 				<div class="row">
 					<div class="col6">
@@ -118,7 +118,7 @@
 							'value' => 'Exporter les données'
 						]); ?>
 					</div>
-					<?php if(helper::checkZwiiVersion() === false): ?>
+					<?php if(helper::checkNewVersion()): ?>
 						<div class="col6">
 							<?php echo template::button('configNewVersion', [
 								'href' => 'http://zwiicms.com/',

@@ -33,8 +33,7 @@ class user extends common {
 		// Soumission du formulaire
 		if($this->isPost()) {
 			// L'identifiant d'utilisateur est indisponible
-			$userId = $this->getInput('userAddId', helper::FILTER_ID);
-			if($this->getData(['user', $userId])) {
+			if($this->getData(['user', $this->getInput('userAddId', helper::FILTER_ID)])) {
 				self::$inputNotices['userAddId'] = 'Identifiant déjà utilisé';
 			}
 			// Double vérification pour le mot de passe
@@ -47,7 +46,7 @@ class user extends common {
 			$mail = $this->getInput('userAddMail', helper::FILTER_MAIL);
 			$this->setData([
 				'user',
-				$userId,
+				$this->getInput('userAddId', helper::FILTER_ID),
 				[
 					'firstname' => $firstname,
 					'forgot' => 0,
@@ -64,8 +63,8 @@ class user extends common {
 					helper::translate('Compte créé sur') . ' ' . $this->getData(['config', 'title']),
 					helper::translate('Bonjour') . ' <strong>' . $firstname . ' ' . $lastname . '</strong>,<br><br>' .
 					helper::translate('Un administrateur vous a créé un compte sur le site') . $this->getData(['config', 'title']) . '. ' . helper::translate('Vous trouverez ci-dessous les détails de votre compte.') . '<br><br>' .
-					'<strong>' . helper::translate('Identifiant du compte :') . '</strong> ' . $userId . '<br>' .
-					'<strong>' . helper::translate('Mot de passe du compte :') . '</strong> ' . $this->getInput('addUserPassword') . '<br><br>' .
+					'<strong>' . helper::translate('Identifiant du compte :') . '</strong> ' . $this->getInput('userAddId') . '<br>' .
+					'<strong>' . helper::translate('Mot de passe du compte :') . '</strong> ' . $this->getInput('userAddPassword') . '<br><br>' .
 					'<small>' . helper::translate('Nous ne conservons pas les mots de passe, par conséquence nous vous conseillons de garder ce mail tant que vous ne vous êtes pas connecté. Vous pourrez modifier votre mot de passe après votre première connexion.') . '</small>'
 				);
 			}

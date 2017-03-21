@@ -24,7 +24,7 @@ class common {
 	const GROUP_MEMBER = 1;
 	const GROUP_MODERATOR = 2;
 	const GROUP_ADMIN = 3;
-	const ZWII_VERSION = '8.0.0';
+	const ZWII_VERSION = '8.0.1';
 
 	public static $actions = [];
 	public static $language = [];
@@ -86,7 +86,7 @@ class common {
 				'title' => 'Enfant'
 			],
 			'cachee' => [
-				'content' => "<p>Cette page n'est visible que par les membres de votre site !</p>",
+				'content' => "<p>Cette page n'est visible que par les membres de votre site !</p>\r\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque placerat magna sit amet sapien gravida commodo. In hendrerit ut nulla et bibendum. Morbi fringilla dolor arcu, sit amet porta nibh sodales lacinia. Donec molestie dui lacus, ac consectetur neque posuere at. Vestibulum aliquam, urna a euismod mattis, diam tortor consectetur elit, quis feugiat magna dolor eget nisl. Etiam id purus nulla. Vestibulum tincidunt massa vitae iaculis volutpat.</p>\r\n<p>In eget auctor dui, a tincidunt est. Nam felis magna, venenatis vel ultrices ut, luctus et orci. Etiam vitae ligula sollicitudin, ultricies felis et, bibendum justo. Duis et imperdiet neque. Integer ultrices nulla sit amet lorem molestie, vel pulvinar tellus pulvinar. Cras laoreet risus in est feugiat fringilla. Nullam quis ornare odio, ut pretium enim.</p>",
 				'hideTitle' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
@@ -276,6 +276,7 @@ class common {
 		'script' => '',
 		'state' => '',
 		'style' => '',
+		// Trié par ordre d'exécution
 		'vendor' => [
 			'jquery',
 			'normalize',
@@ -369,9 +370,13 @@ class common {
 					$parentId = $this->getData(['page', $pageId, 'parentPageId'])
 					// Ignore les pages dont l'utilisateur n'a pas accès
 					AND (
-						$this->getData(['page', $pageId, 'group']) === self::GROUP_VISITOR
+						(
+							$this->getData(['page', $pageId, 'group']) === self::GROUP_VISITOR
+							AND $this->getData(['page', $parentId, 'group']) === self::GROUP_VISITOR
+						)
 						OR (
 							$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
+							AND $this->getUser('group') >= $this->getData(['page', $parentId, 'group'])
 							AND $this->getUser('group') >= $this->getData(['page', $pageId, 'group'])
 						)
 					)
@@ -630,8 +635,9 @@ class common {
 		// Mail
 		$mail = new PHPMailer;
 		$mail->CharSet = 'UTF-8';
-		$mail->setFrom('no-reply@' . $_SERVER['SERVER_NAME'], $this->getData(['config', 'title']));
-		$mail->addReplyTo('no-reply@' . $_SERVER['SERVER_NAME'], $this->getData(['config', 'title']));
+		$host = str_replace('www.', '', $_SERVER['HTTP_HOST']);
+		$mail->setFrom('no-reply@' . $host, $this->getData(['config', 'title']));
+		$mail->addReplyTo('no-reply@' . $host, $this->getData(['config', 'title']));
 		if(is_array($to)) {
 			foreach($to as $userMail) {
 				$mail->addAddress($userMail);
@@ -713,6 +719,7 @@ class core extends common {
 		// Backup automatique des données
 		$lastBackup = mktime(0, 0, 0);
 		if(
+			true OR
 			$this->getData(['config', 'autoBackup'])
 			AND $lastBackup > $this->getData(['core', 'lastBackup']) + 86400
 			AND $this->getData(['user']) // Pas de backup pendant l'installation
@@ -723,6 +730,17 @@ class core extends common {
 			$this->setData(['core', 'lastBackup', $lastBackup]);
 			// Enregistre les données
 			$this->saveData();
+			// Supprime les backups de plus de 30 jours
+			$iterator = new DirectoryIterator('site/backup/');
+			foreach($iterator as $fileInfos) {
+				if(
+					$fileInfos->isFile()
+					AND $fileInfos->getBasename() !== '.htaccess'
+					AND strtotime($fileInfos->getBasename('.json')) + (86400 * 30) < time()
+				) {
+					@unlink($fileInfos->getPathname());
+				}
+			}
 		}
 		// Crée le fichier de personnalisation
 		if(file_exists('site/data/theme.css') === false) {
@@ -774,7 +792,7 @@ class core extends common {
 				$css .= 'header{background-image:url("../file/source/' . $themeHeaderImage . '");background-position:' . $this->getData(['theme', 'header', 'imagePosition']) . ';background-repeat:' . $this->getData(['theme', 'header', 'imageRepeat']) . '}';
 			}
 			$colors = helper::colorVariants($this->getData(['theme', 'header', 'textColor']));
-			$css .= 'header h1{color:' . $colors['normal'] . ';font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'header', 'font'])) . '",sans-serif;font-weight:' . $this->getData(['theme', 'header', 'fontWeight']) . ';text-transform:' . $this->getData(['theme', 'header', 'textTransform']) . '}';
+			$css .= 'header span{color:' . $colors['normal'] . ';font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'header', 'font'])) . '",sans-serif;font-weight:' . $this->getData(['theme', 'header', 'fontWeight']) . ';text-transform:' . $this->getData(['theme', 'header', 'textTransform']) . '}';
 			// Menu
 			$colors = helper::colorVariants($this->getData(['theme', 'menu', 'backgroundColor']));
 			$css .= 'nav, nav li > a{background-color:' . $colors['normal'] . '}';
@@ -878,7 +896,12 @@ class core extends common {
 				$access = true;
 			}
 			else {
-				$access = false;
+				if($this->getUrl(0) === $this->getData(['config', 'homePageId'])) {
+					$access = 'login';
+				}
+				else {
+					$access = false;
+				}
 			}
 		}
 		// Importe la page
@@ -1030,6 +1053,11 @@ class core extends common {
 			}
 		}
 		// Erreurs
+		if($access === 'login') {
+			http_response_code(302);
+			header('Location:' . helper::baseUrl() . 'user/login/');
+			exit();
+		}
 		if($access === false) {
 			http_response_code(403);
 			$this->addOutput([
@@ -1157,9 +1185,17 @@ class helper {
 		return self::$rewriteStatus;
 	}
 
-	/** Check la version de Zwii */
-	public static function checkZwiiVersion() {
-		return trim(@file_get_contents('http://zwiicms.com/version')) === common::ZWII_VERSION;
+	/**
+	 * Check si une nouvelle version de Zwii est disponible
+	 * @return bool
+	 */
+	public static function checkNewVersion() {
+		if($version = @file_get_contents('http://zwiicms.com/version')) {
+			return trim($version) !== common::ZWII_VERSION;
+		}
+		else {
+			return false;
+		}
 	}
 
 	/**
@@ -1448,7 +1484,7 @@ class layout extends common {
 				OR $this->getData(['page', $this->getUrl(0), 'hideTitle']) === false
 			)
 		) {
-			echo '<h2 id="pageTitle">' . $this->core->output['title'] . '</h2>';
+			echo '<h1 id="sectionTitle">' . $this->core->output['title'] . '</h1>';
 		}
 		echo $this->core->output['content'];
 	}
@@ -1497,9 +1533,10 @@ class layout extends common {
 	public function showMenu() {
 		// Met en forme les items du menu
 		$items = '';
+		$currentPageId = $this->getData(['page', $this->getUrl(0)]) ? $this->getUrl(0) : $this->getUrl(2);
 		foreach($this->getHierarchy() as $parentPageId => $childrenPageIds) {
 			// Propriétés de l'item
-			$active = ($parentPageId === $this->getUrl(0) OR in_array($this->getUrl(0), $childrenPageIds)) ? ' class="active"' : '';
+			$active = ($parentPageId === $currentPageId OR in_array($currentPageId, $childrenPageIds)) ? ' class="active"' : '';
 			$targetBlank = $this->getData(['page', $parentPageId, 'targetBlank']) ? ' target="_blank"' : '';
 			// Mise en page de l'item
 			$items .= '<li>';
@@ -1507,7 +1544,7 @@ class layout extends common {
 			$items .= '<ul>';
 			foreach($childrenPageIds as $childKey) {
 				// Propriétés de l'item
-				$active = ($childKey === $this->getUrl(0)) ? ' class="active"' : '';
+				$active = ($childKey === $currentPageId) ? ' class="active"' : '';
 				$targetBlank = $this->getData(['page', $childKey, 'targetBlank']) ? ' target="_blank"' : '';
 				// Mise en page du sous-item
 				$items .= '<li><a href="' . helper::baseUrl() . $childKey . '"' . $active . $targetBlank . '>' . $this->getData(['page', $childKey, 'title']) . '</a></li>';
