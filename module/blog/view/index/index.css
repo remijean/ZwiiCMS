@@ -1,0 +1,20 @@
+.blogPicture {
+	float: left;
+	margin: 10px 20px 0 0;
+}
+.blogPicture:hover {
+	opacity: .7;
+}
+.block:after {
+	content: " ";
+	display: table;
+	clear: both;
+}
+.blogComment {
+	float: right;
+}
+@media (max-width: 768px) {
+	.blogContent {
+		display: none;
+	}
+}

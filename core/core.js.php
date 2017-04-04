@@ -128,7 +128,7 @@ $(function() {
  * Ajoute une notice
  */
 core.noticeAdd = function(id, notice) {
-	$("#" + id + "Notice").text(notice);
+	$("#" + id + "Notice").text(notice).removeClass("displayNone");
 	$("#" + id).addClass("notice");
 };
 
@@ -136,7 +136,7 @@ core.noticeAdd = function(id, notice) {
  * Supprime une notice
  */
 core.noticeRemove = function(id) {
-	$("#" + id + "Notice").text("");
+	$("#" + id + "Notice").text("").addClass("displayNone");
 	$("#" + id).removeClass("notice");
 };
 

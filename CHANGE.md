@@ -1,6 +1,12 @@
 Zwii 8 Changelog
 ================
 
+## 8.1.0
+* Ajout d'un message d'erreur en cas d'échec lors d'un envoi de mail
+* Ajout du module de création de blog
+* Correction d'une erreur qui bloquait l'option "Champ obligatoire" dans le module de génération de formulaire
+* Optimisation des filtres afin de sécuriser davantage les données enregistrées dans le fichier data.json
+
 ## 8.0.1
 * Ajout du mot de passe dans le mail d'installation
 * Ajout d'une redirection vers l'interface de connexion si la page d'accueil est privée

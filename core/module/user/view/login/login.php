@@ -19,18 +19,19 @@
 
 		</div>
 		<div class="col6 textAlignRight">
-			<a href="<?php echo helper::baseUrl(); ?>user/forgot"><?php echo helper::translate('Mot de passe perdu ?'); ?></a>
+			<a href="<?php echo helper::baseUrl(); ?>user/forgot/<?php echo $this->getUrl(2); ?>"><?php echo helper::translate('Mot de passe perdu ?'); ?></a>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col3 offset6">
 			<?php echo template::button('userLoginBack', [
 				'class' => 'grey',
-				'href' => helper::baseUrl(),
+				'href' => helper::baseUrl() . str_replace('_', '/', str_replace('__', '#', $this->getUrl(2))),
 				'value' => 'Annuler'
 			]); ?>
 		</div>
-		<div class="col3">			<?php echo template::submit('userLoginSubmit', [
+		<div class="col3">
+			<?php echo template::submit('userLoginSubmit', [
 				'value' => 'Connexion'
 			]); ?>
 		</div>

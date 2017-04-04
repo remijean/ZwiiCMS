@@ -39,7 +39,7 @@ pageEditModuleIdDOM.on("change", function() {
  * Soumission du formulaire pour éditer le module
  */
 $("#pageEditModuleConfig").on("click", function() {
-	$("#pageEditModuleRedirect").val(true);
+	$("#pageEditModuleRedirect").val(1);
 	$("#pageEditForm").trigger("submit");
 });
 

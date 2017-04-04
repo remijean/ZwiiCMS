@@ -1,4 +1,6 @@
-// Initialisation de TinyMCE
+/**
+ * Initialisation de TinyMCE
+ */
 tinymce.init({
 	selector: ".editor",
 	language: language,

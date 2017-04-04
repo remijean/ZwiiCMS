@@ -101,26 +101,26 @@ img[align='right'] {
 }
 
 /* Tableau */
-.tableWrapper {
+:not([class^="col"]) > .tableWrapper {
 	margin: 10px 0;
 }
-table {
+.table {
 	width: 100%;
 	border-spacing: 0;
 	border-collapse: collapse;
 }
-thead tr {
+.table thead tr {
 	background: #212223;
 	color: #FFF;
 	text-align: left;
 }
-tbody tr {
+.table tbody tr {
 	background: #F5F5F5;
 }
-tbody tr:nth-child(2n + 2) {
+.table tbody tr:nth-child(2n + 2) {
 	background: #E9E9E9;
 }
-th {
+.table th {
 	font-weight: normal;
 	padding: 15px 10px !important;
 }
@@ -381,40 +381,40 @@ footer #footerSocials span {
 	display: inline-block;
 }
 footer #footerSocials .zwiico-facebook {
-	background: #5D82D2;
+	background: #3B5999;
 }
 footer #footerSocials .zwiico-facebook:hover {
-	background: #3764C5;
+	background: #324B80;
 }
 footer #footerSocials .zwiico-googleplus {
-	background: #E46049;
+	background: #DD4B39;
 }
 footer #footerSocials .zwiico-googleplus:hover {
-	background: #DA3C20;
+	background: #D03724;
 }
 footer #footerSocials .zwiico-instagram {
-	background: #558BB7;
+	background: #E4405F;
 }
 footer #footerSocials .zwiico-instagram:hover {
-	background: #417198;
+	background: #E02246;
 }
 footer #footerSocials .zwiico-pinterest {
-	background: #E23139;
+	background: #BD081C;
 }
 footer #footerSocials .zwiico-pinterest:hover {
-	background: #C41C23;
+	background: #9C0717;
 }
 footer #footerSocials .zwiico-twitter {
-	background: #40BFF6;
+	background: #55ACEE;
 }
 footer #footerSocials .zwiico-twitter:hover {
-	background: #0FAFF4;
+	background: #369DEB;
 }
 footer #footerSocials .zwiico-youtube {
-	background: #EF4E43;
+	background: #CD201F;
 }
 footer #footerSocials .zwiico-youtube:hover {
-	background: #EB2214;
+	background: #AF1B1B;
 }
 
 /* Icônes (ne respect pas le format des classe de Zwii car surcouche de Zwiico) */
@@ -434,6 +434,88 @@ footer #footerSocials .zwiico-youtube:hover {
 }
 .zwiico-margin-all:before {
 	margin: 0 .4em;
+}
+.animate-spin {
+	-moz-animation: spin 2s infinite linear;
+	-o-animation: spin 2s infinite linear;
+	-webkit-animation: spin 2s infinite linear;
+	animation: spin 2s infinite linear;
+	display: inline-block;
+}
+@-moz-keyframes spin {
+	0% {
+		-moz-transform: rotate(0deg);
+		-o-transform: rotate(0deg);
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+
+	100% {
+		-moz-transform: rotate(359deg);
+		-o-transform: rotate(359deg);
+		-webkit-transform: rotate(359deg);
+		transform: rotate(359deg);
+	}
+}
+@-webkit-keyframes spin {
+	0% {
+		-moz-transform: rotate(0deg);
+		-o-transform: rotate(0deg);
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+
+	100% {
+		-moz-transform: rotate(359deg);
+		-o-transform: rotate(359deg);
+		-webkit-transform: rotate(359deg);
+		transform: rotate(359deg);
+	}
+}
+@-o-keyframes spin {
+	0% {
+		-moz-transform: rotate(0deg);
+		-o-transform: rotate(0deg);
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+
+	100% {
+		-moz-transform: rotate(359deg);
+		-o-transform: rotate(359deg);
+		-webkit-transform: rotate(359deg);
+		transform: rotate(359deg);
+	}
+}
+@-ms-keyframes spin {
+	0% {
+		-moz-transform: rotate(0deg);
+		-o-transform: rotate(0deg);
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+
+	100% {
+		-moz-transform: rotate(359deg);
+		-o-transform: rotate(359deg);
+		-webkit-transform: rotate(359deg);
+		transform: rotate(359deg);
+	}
+}
+@keyframes spin {
+	0% {
+		-moz-transform: rotate(0deg);
+		-o-transform: rotate(0deg);
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+
+	100% {
+		-moz-transform: rotate(359deg);
+		-o-transform: rotate(359deg);
+		-webkit-transform: rotate(359deg);
+		transform: rotate(359deg);
+	}
 }
 
 /* Éditeur de texte (ne respect pas le format des classe de Zwii car surcouche de TinyMCE) */
@@ -527,8 +609,9 @@ footer #footerSocials .zwiico-youtube:hover {
 /* Bloc */
 .block {
 	border: 1px solid #DDD;
-	padding: 20px;
+	padding: 20px 20px 10px;
 	margin: 20px 0;
+	word-wrap: break-word;
 }
 .block:first-of-type {
 	margin-top: 0;
@@ -788,6 +871,14 @@ input[type='checkbox']:disabled + label:before{
 	background: #F5F5F5 !important;
 }
 
+/* Sélecteur de date */
+.datepicker {
+	cursor: text;
+}
+.pika-select {
+	padding: 0; /* À cause du padding ajouté aux selects */
+}
+
 /**
  * Grille
  */
@@ -983,20 +1074,11 @@ th.col12 {
 .displayNone {
 	display: none;
 }
-.backgroundWhite {
-	background: #FFF;
-}
-.clearBoth {
-	clear: both;
-}
 .textAlignCenter {
 	text-align: center;
 }
 .textAlignRight {
 	text-align: right;
-}
-.verticalAlignTop {
-	vertical-align: top;
 }
 .verticalAlignBottom {
 	vertical-align: bottom;

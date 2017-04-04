@@ -57,8 +57,9 @@ class user extends common {
 				]
 			]);
 			// Envoi le mail
+			$sent = true;
 			if($this->getInput('userAddSendMail', helper::FILTER_BOOLEAN)) {
-				$this->sendMail(
+				$sent = $this->sendMail(
 					$mail,
 					helper::translate('Compte créé sur') . ' ' . $this->getData(['config', 'title']),
 					helper::translate('Bonjour') . ' <strong>' . $firstname . ' ' . $lastname . '</strong>,<br><br>' .
@@ -71,7 +72,7 @@ class user extends common {
 			// Valeurs en sortie
 			$this->addOutput([
 				'redirect' => helper::baseUrl() . 'user',
-				'notification' => 'Utilisateur créé',
+				'notification' => ($sent === true ? 'Utilisateur créé' : $sent),
 				'state' => true
 			]);
 		}
@@ -193,7 +194,7 @@ class user extends common {
 				]);
 				// Redirection spécifique si l'utilisateur change son mot de passe
 				if($this->getUser('id') === $this->getUrl(2) AND $this->getInput('userEditNewPassword')) {
-					$redirect = helper::baseUrl() . 'user/login';
+					$redirect = helper::baseUrl() . 'user/login/' . str_replace('/', '_', $this->getUrl());
 				}
 				// Redirection si retour en arrière possible
 				elseif($this->getUrl(3)) {
@@ -231,7 +232,7 @@ class user extends common {
 				// Crée un id unique pour la réinitialisation
 				$uniqId = md5(json_encode($this->getData(['user', $userId])));
 				// Envoi le mail
-				$this->sendMail(
+				$sent = $this->sendMail(
 					$this->getData(['user', $userId, 'mail']),
 					helper::translate('Réinitialisation de votre mot de passe'),
 					helper::translate('Bonjour') . ' <strong>' . $this->getData(['user', $userId, 'firstname']) . ' ' . $this->getData(['user', $userId, 'lastname']) . '</strong>,<br><br>' .
@@ -241,7 +242,7 @@ class user extends common {
 				);
 				// Valeurs en sortie
 				$this->addOutput([
-					'notification' => 'Un mail vous a été envoyé afin de continuer la réinitialisation',
+					'notification' => ($sent === true ? 'Un mail vous a été envoyé afin de continuer la réinitialisation' : $sent),
 					'state' => true
 				]);
 			}
@@ -308,7 +309,7 @@ class user extends common {
 				// Valeurs en sortie
 				$this->addOutput([
 					'notification' => 'Connexion réussie',
-					'redirect' => helper::baseUrl(false),
+					'redirect' => helper::baseUrl() . str_replace('_', '/', str_replace('__', '#', $this->getUrl(2))),
 					'state' => true
 				]);
 			}
@@ -379,7 +380,7 @@ class user extends common {
 					// Valeurs en sortie
 					$this->addOutput([
 						'notification' => 'Nouveau mot de passe enregistré',
-						'redirect' => helper::baseUrl() . 'user/login',
+						'redirect' => helper::baseUrl() . 'user/login' . str_replace('/', '_', $this->getUrl()),
 						'state' => true
 					]);
 				}

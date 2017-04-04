@@ -96,16 +96,16 @@ class form extends common {
 	public function data() {
 		$data = $this->getData(['module', $this->getUrl(0), 'data']);
 		if($data) {
-			// Crée une pagination
+			// Pagination
 			$pagination = helper::pagination($data, $this->getUrl());
-			// Pages
+			// Liste des pages
 			self::$pagination = $pagination['pages'];
-			// Inverse l'ordre du tableau pour afficher les données en ordre décroissant
-			$inputs = array_reverse($data);
-			// Crée l'affichage des données en fonction de la pagination
+			// Inverse l'ordre du tableau
+			$data = array_reverse($data);
+			// Données en fonction de la pagination
 			for($i = $pagination['first']; $i < $pagination['last']; $i++) {
 				$content = '';
-				foreach($inputs[$i] as $input => $value) {
+				foreach($data[$i] as $input => $value) {
 					$content .= $input . ' : ' . $value . '<br>';
 				}
 				self::$data[] = [$content];
@@ -135,6 +135,8 @@ class form extends common {
 			$data = [];
 			$content = '';
 			foreach($this->getInput('formInput', null) as $index => $value) {
+				// Filtre la valeur
+				$value = helper::filter($value, helper::FILTER_STRING_LONG);
 				// Erreur champ obligatoire
 				$this->addRequiredInputNotices('formInput[' . $index . ']');
 				// Préparation des données pour la création dans la base
@@ -145,6 +147,7 @@ class form extends common {
 			// Crée les données
 			$this->setData(['module', $this->getUrl(0), 'data', helper::increment(1, $this->getData(['module', $this->getUrl(0), 'data'])), $data]);
 			// Envoi du mail
+			$sent = true;
 			if(
 				self::$inputNotices === []
 				AND $group = $this->getData(['module', $this->getUrl(0), 'config', 'group'])
@@ -163,7 +166,7 @@ class form extends common {
 						$subject = helper::translate('Nouveau message en provenance de votre site');
 					}
 					// Envoi le mail
-					$this->sendMail(
+					$sent = $this->sendMail(
 						$to,
 						$subject,
 						helper::translate('Nouveau message en provenance de la page') . ' "' . $this->getData(['page', $this->getUrl(0), 'title']) . '" :<br><br>' .
@@ -175,7 +178,7 @@ class form extends common {
 			$redirect = $this->getData(['module', $this->getUrl(0), 'config', 'pageId']);
 			// Valeurs en sortie
 			$this->addOutput([
-				'notification' => 'Formulaire soumis',
+				'notification' => ($sent === true ? 'Formulaire soumis' : $sent),
 				'redirect' => $redirect ? helper::baseUrl() . $redirect : '',
 				'state' => true
 			]);

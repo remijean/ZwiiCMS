@@ -46,9 +46,10 @@ class install extends common {
 				$firstname = $this->getInput('installConfigFirstname');
 				$lastname = $this->getInput('installConfigLastname');
 				$mail = $this->getInput('installConfigMail', helper::FILTER_MAIL);
+				$id = $this->getInput('installConfigId', helper::FILTER_ID);
 				$this->setData([
 					'user',
-					$this->getInput('installConfigId', helper::FILTER_ID),
+					$id,
 					[
 						'firstname' => $firstname,
 						'forgot' => 0,
@@ -58,8 +59,12 @@ class install extends common {
 						'password' => $this->getInput('installConfigPassword', helper::FILTER_PASSWORD)
 					]
 				]);
+				// Configure certaines données par défaut
+				$this->setData(['module', 'blog', 'mon-premier-article', 'userId', $id]);
+				$this->setData(['module', 'blog', 'mon-deuxieme-article', 'userId', $id]);
+				$this->setData(['module', 'blog', 'mon-troisieme-article', 'userId', $id]);
 				// Envoi le mail
-				$this->sendMail(
+				$sent = $this->sendMail(
 					$mail,
 					helper::translate('Installation de votre site'),
 					helper::translate('Bonjour') . ' <strong>' . $firstname . ' ' . $lastname . '</strong>,<br><br>' .
@@ -71,7 +76,7 @@ class install extends common {
 				// Valeurs en sortie
 				$this->addOutput([
 					'redirect' => helper::baseUrl(false),
-					'notification' => 'Installation terminée',
+					'notification' => ($sent === true ? 'Installation terminée' : $sent),
 					'state' => true
 				]);
 			}

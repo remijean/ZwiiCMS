@@ -1,0 +1,13 @@
+#blogArticlePicture {
+	height: 350px;
+	width: 100%;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+#blogArticleCommentShow {
+	cursor: text;
+}
+#blogArticleOr {
+	padding: 10px;
+}

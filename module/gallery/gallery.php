@@ -146,12 +146,17 @@ class gallery extends common {
 					// Supprime l'ancienne galerie
 					$this->deleteData(['module', $this->getUrl(0), $this->getUrl(2)]);
 				}
+				$legends = [];
+				foreach((array) $this->getInput('legend', null) as $file => $legend) {
+					$legends[$file] = helper::filter($legend, helper::FILTER_STRING_SHORT);
+				}
+
 				$this->setData(['module', $this->getUrl(0), $galleryId, [
 					'config' => [
 						'name' => $this->getInput('galleryEditName'),
 						'directory' => $this->getInput('galleryEditDirectory')
 					],
-					'legend' => $this->getInput('legend', null)
+					'legend' => $legends
 				]]);
 				// Valeurs en sortie
 				$this->addOutput([

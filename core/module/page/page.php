@@ -157,8 +157,8 @@ class page extends common {
 					[
 						'content' => $this->getInput('pageEditContent', null),
 						'hideTitle' => $this->getInput('pageEditHideTitle', helper::FILTER_BOOLEAN),
-						'metaDescription' => $this->getInput('pageEditMetaDescription'),
-						'metaTitle' => $this->getInput('pageEditMetaDescription'),
+						'metaDescription' => $this->getInput('pageEditMetaDescription', helper::FILTER_STRING_LONG),
+						'metaTitle' => $this->getInput('pageEditMetaTitle'),
 						'moduleId' => $this->getInput('pageEditModuleId'),
 						'parentPageId' => $this->getInput('pageEditParentPageId'),
 						'position' => $position,

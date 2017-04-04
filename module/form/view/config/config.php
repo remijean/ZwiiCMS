@@ -44,54 +44,60 @@
 	</div>
 </div>
 <form method="post">
-	<div class="block">
-		<h4><?php echo helper::translate('Configuration'); ?></h4>
-		<?php echo template::text('formConfigButton', [
-			'help' => 'Laissez vide afin de conserver le texte par défaut.',
-			'label' => 'Texte du bouton de soumission',
-			'value' => $this->getData(['module', $this->getUrl(0), 'config', 'button'])
-		]); ?>
-		<?php echo template::checkbox('formConfigMailOptionsToggle', true, 'Envoyer par mail les données saisies aux utilisateurs d\'un groupe', [
-			'checked' => (bool) $this->getData(['module', $this->getUrl(0), 'config', 'group'])
-		]); ?>
-		<div id="formConfigMailOptions" class="displayNone">
-			<div class="row">
-				<div class="col6">
-					<?php echo template::select('formConfigGroup', self::$groupNews, [
-						'label' => 'Groupe',
-						'selected' => $this->getData(['module', $this->getUrl(0), 'config', 'group'])
-					]); ?>
-				</div>
-				<div class="col6">
-					<?php echo template::text('formConfigSubject', [
-						'help' => 'Laissez vide afin de conserver le texte par défaut.',
-						'label' => 'Sujet du mail',
-						'value' => $this->getData(['module', $this->getUrl(0), 'config', 'subject'])
-					]); ?>
-				</div>
-			</div>
-		</div>
-		<?php echo template::checkbox('formConfigPageIdToggle', true, 'Rediriger vers une page du site après soumission du formulaire', [
-			'checked' => (bool) $this->getData(['module', $this->getUrl(0), 'config', 'pageId'])
-		]); ?>
-		<?php echo template::select('formConfigPageId', $module::$pages, [
-			'classWrapper' => 'displayNone',
-			'label' => 'Page',
-			'selected' => $this->getData(['module', $this->getUrl(0), 'config', 'pageId'])
-		]); ?>
-		<?php echo template::checkbox('formConfigCapcha', true, 'Capcha à remplir pour soumettre le formulaire', [
-			'checked' => $this->getData(['module', $this->getUrl(0), 'config', 'capcha'])
-		]); ?>
-	</div>
-	<div class="block">
-		<h4><?php echo helper::translate('Liste des champs'); ?></h4>
-		<p id="formConfigNoInput"><?php echo helper::translate('Le formulaire ne contient aucun champ.'); ?></p>
-		<div id="formConfigInputs"></div>
-		<div class="row">
-			<div class="col1 offset11">
-				<?php echo template::button('formConfigAdd', [
-					'value' => template::ico('plus')
+	<div class="row">
+		<div class="col12">
+			<div class="block">
+				<h4><?php echo helper::translate('Configuration'); ?></h4>
+				<?php echo template::text('formConfigButton', [
+					'help' => 'Laissez vide afin de conserver le texte par défaut.',
+					'label' => 'Texte du bouton de soumission',
+					'value' => $this->getData(['module', $this->getUrl(0), 'config', 'button'])
 				]); ?>
+				<?php echo template::checkbox('formConfigMailOptionsToggle', true, 'Envoyer par mail les données saisies aux utilisateurs d\'un groupe', [
+					'checked' => (bool) $this->getData(['module', $this->getUrl(0), 'config', 'group'])
+				]); ?>
+				<div id="formConfigMailOptions" class="displayNone">
+					<div class="row">
+						<div class="col6">
+							<?php echo template::select('formConfigGroup', self::$groupNews, [
+								'label' => 'Groupe',
+								'selected' => $this->getData(['module', $this->getUrl(0), 'config', 'group'])
+							]); ?>
+						</div>
+						<div class="col6">
+							<?php echo template::text('formConfigSubject', [
+								'help' => 'Laissez vide afin de conserver le texte par défaut.',
+								'label' => 'Sujet du mail',
+								'value' => $this->getData(['module', $this->getUrl(0), 'config', 'subject'])
+							]); ?>
+						</div>
+					</div>
+				</div>
+				<?php echo template::checkbox('formConfigPageIdToggle', true, 'Rediriger vers une page du site après soumission du formulaire', [
+					'checked' => (bool) $this->getData(['module', $this->getUrl(0), 'config', 'pageId'])
+				]); ?>
+				<?php echo template::select('formConfigPageId', $module::$pages, [
+					'classWrapper' => 'displayNone',
+					'label' => 'Page',
+					'selected' => $this->getData(['module', $this->getUrl(0), 'config', 'pageId'])
+				]); ?>
+				<?php echo template::checkbox('formConfigCapcha', true, 'Capcha à remplir pour soumettre le formulaire', [
+					'checked' => $this->getData(['module', $this->getUrl(0), 'config', 'capcha'])
+				]); ?>
+			</div>
+			<div class="block">
+				<h4><?php echo helper::translate('Liste des champs'); ?></h4>
+				<div id="formConfigNoInput">
+					<?php echo template::speech('Le formulaire ne contient aucun champ.'); ?>
+				</div>
+				<div id="formConfigInputs"></div>
+				<div class="row">
+					<div class="col1 offset11">
+						<?php echo template::button('formConfigAdd', [
+							'value' => template::ico('plus')
+						]); ?>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

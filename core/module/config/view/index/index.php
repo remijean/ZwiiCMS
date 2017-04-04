@@ -107,6 +107,11 @@
 					'required' => true,
 					'selected' => $this->getData(['config', 'language'])
 				]); ?>
+				<?php echo template::select('configUtc', $module::$timezones, [
+					'label' => 'Fuseau horaire',
+					'required' => true,
+					'selected' => $this->getData(['config', 'timezone'])
+				]); ?>
 				<?php echo template::checkbox('configAutoBackup', true, 'Sauvegarder automatique des données', [
 					'checked' => $this->getData(['config', 'autoBackup']),
 					'help' => 'Sauvegarde une fois par jour le fichier de données dans le dossier site/backup/. La sauvegarde est conservée 30 jours.'

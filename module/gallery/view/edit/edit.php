@@ -1,22 +1,26 @@
 <form method="post">
-	<div class="block">
-		<h4><?php echo helper::translate('Informations générales'); ?></h4>
-		<div class="row">
-			<div class="col6">
-				<?php echo template::text('galleryEditName', [
-					'label' => 'Nom',
-					'required' => true,
-					'value' => $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'config', 'name'])
-				]); ?>
-			</div>
-			<div class="col6">
-				<?php echo template::hidden('galleryEditDirectoryOld', [
-					'value' => $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'config', 'directory'])
-				]); ?>
-				<?php echo template::select('galleryEditDirectory', [], [
-					'label' => 'Dossier cible',
-					'required' => true
-				]); ?>
+	<div class="row">
+		<div class="col12">
+			<div class="block">
+				<h4><?php echo helper::translate('Informations générales'); ?></h4>
+				<div class="row">
+					<div class="col6">
+						<?php echo template::text('galleryEditName', [
+							'label' => 'Nom',
+							'required' => true,
+							'value' => $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'config', 'name'])
+						]); ?>
+					</div>
+					<div class="col6">
+						<?php echo template::hidden('galleryEditDirectoryOld', [
+							'value' => $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'config', 'directory'])
+						]); ?>
+						<?php echo template::select('galleryEditDirectory', [], [
+							'label' => 'Dossier cible',
+							'required' => true
+						]); ?>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

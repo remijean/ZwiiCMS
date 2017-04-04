@@ -77,11 +77,11 @@ class theme extends common {
 		'body' => 'En dessous du site'
 	];
 	public static $headerHeights = [
-		'100px' => 'Très petite (100px)',
-		'150px' => 'Petite (150px)',
-		'200px' => 'Moyenne (200px)',
-		'300px' => 'Grande (300px)',
-		'400px' => 'Très grande (400px)'
+		'100px' => 'Très petite (100 pixels)',
+		'150px' => 'Petite (150 pixels)',
+		'200px' => 'Moyenne (200 pixels)',
+		'300px' => 'Grande (300 pixels)',
+		'400px' => 'Très grande (400 pixels)'
 	];
 	public static $headerPositions = [
 		'hide' => 'Cachée',
@@ -144,9 +144,9 @@ class theme extends common {
 		'uppercase' => 'Majuscules'
 	];
 	public static $widths = [
-		'750px' => 'Petite (750px)',
-		'960px' => 'Moyenne (960px)',
-		'1170px' => 'Grande (1170px)',
+		'750px' => 'Petite (750 pixels)',
+		'960px' => 'Moyenne (960 pixels)',
+		'1170px' => 'Grande (1170 pixels)',
 		'100%' => 'Fluide (100%)'
 	];
 
