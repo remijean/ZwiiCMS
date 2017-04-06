@@ -39,14 +39,15 @@ class install extends common {
 			// Soumission du formulaire
 			if($this->isPost()) {
 				// Double vérification pour le mot de passe
-				if($this->getInput('installConfigPassword') !== $this->getInput('installConfigConfirmPassword')) {
+				$password = $this->getInput('installConfigPassword', helper::FILTER_PASSWORD, true);
+				if($password !== $this->getInput('installConfigConfirmPassword', helper::FILTER_PASSWORD, true)) {
 					self::$inputNotices['installConfigConfirmPassword'] = 'Incorrect';
 				}
 				// Crée l'utilisateur
-				$firstname = $this->getInput('installConfigFirstname');
-				$lastname = $this->getInput('installConfigLastname');
-				$mail = $this->getInput('installConfigMail', helper::FILTER_MAIL);
-				$id = $this->getInput('installConfigId', helper::FILTER_ID);
+				$firstname = $this->getInput('installConfigFirstname', helper::FILTER_STRING_SHORT, true);
+				$lastname = $this->getInput('installConfigLastname', helper::FILTER_STRING_SHORT, true);
+				$mail = $this->getInput('installConfigMail', helper::FILTER_MAIL, true);
+				$id = $this->getInput('installConfigId', helper::FILTER_ID, true);
 				$this->setData([
 					'user',
 					$id,
@@ -56,7 +57,7 @@ class install extends common {
 						'group' => self::GROUP_ADMIN,
 						'lastname' => $lastname,
 						'mail' => $mail,
-						'password' => $this->getInput('installConfigPassword', helper::FILTER_PASSWORD)
+						'password' => $password
 					]
 				]);
 				// Configure certaines données par défaut
@@ -77,7 +78,7 @@ class install extends common {
 				$this->addOutput([
 					'redirect' => helper::baseUrl(false),
 					'notification' => ($sent === true ? 'Installation terminée' : $sent),
-					'state' => true
+					'state' => ($sent === true ? true : null)
 				]);
 			}
 			// Valeurs en sortie
@@ -104,7 +105,7 @@ class install extends common {
 		else {
 			// Soumission du formulaire
 			if($this->isPost()) {
-				$this->setData(['config', 'language', $this->getInput('installLanguage')]);
+				$this->setData(['config', 'language', $this->getInput('installLanguage', helper::FILTER_STRING_SHORT, true)]);
 				// Valeurs en sortie
 				$this->addOutput([
 					'redirect' => helper::baseUrl() . 'install/config',

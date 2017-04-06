@@ -1,21 +1,31 @@
 <form method="post">
 	<div class="row">
+		<div class="col2">
+			<?php echo template::button('configBack', [
+				'class' => 'buttonGrey',
+				'href' => helper::baseUrl(false),
+				'ico' => 'home',
+				'value' => 'Accueil'
+			]); ?>
+		</div>
+		<div class="col2 offset8">
+			<?php echo template::submit('configSubmit'); ?>
+		</div>
+	</div>
+	<div class="row">
 		<div class="col6">
 			<div class="block">
 				<h4><?php echo helper::translate('Informations générales'); ?></h4>
 				<?php echo template::text('configTitle', [
 					'label' => 'Titre du site',
-					'required' => true,
 					'value' => $this->getData(['config', 'title'])
 				]); ?>
 				<?php echo template::textarea('configMetaDescription', [
 					'label' => 'Description du site',
-					'required' => true,
 					'value' => $this->getData(['config', 'metaDescription'])
 				]); ?>
 				<?php echo template::select('configHomePageId', helper::arrayCollumn($this->getData(['page']), 'title', 'SORT_ASC'), [
 					'label' => 'Page d\'accueil',
-					'required' => true,
 					'selected' => $this->getData(['config', 'homePageId'])
 				]); ?>
 			</div>
@@ -104,12 +114,10 @@
 				]); ?>
 				<?php echo template::select('configLanguage', $module::$languages, [
 					'label' => 'Langue de l\'interface',
-					'required' => true,
 					'selected' => $this->getData(['config', 'language'])
 				]); ?>
-				<?php echo template::select('configUtc', $module::$timezones, [
+				<?php echo template::select('configTimezone', $module::$timezones, [
 					'label' => 'Fuseau horaire',
-					'required' => true,
 					'selected' => $this->getData(['config', 'timezone'])
 				]); ?>
 				<?php echo template::checkbox('configAutoBackup', true, 'Sauvegarder automatique des données', [
@@ -126,6 +134,7 @@
 					<?php if(helper::checkNewVersion()): ?>
 						<div class="col6">
 							<?php echo template::button('configNewVersion', [
+								'class' => 'buttonRed',
 								'href' => 'http://zwiicms.com/',
 								'value' => 'Mise à jour disponible'
 							]); ?>
@@ -133,11 +142,6 @@
 					<?php endif; ?>
 				</div>
 			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col2 offset10">
-			<?php echo template::submit('configSubmit'); ?>
 		</div>
 	</div>
 </form>

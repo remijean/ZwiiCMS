@@ -33,27 +33,29 @@ class user extends common {
 		// Soumission du formulaire
 		if($this->isPost()) {
 			// L'identifiant d'utilisateur est indisponible
-			if($this->getData(['user', $this->getInput('userAddId', helper::FILTER_ID)])) {
+			$id = $this->getData(['user', $this->getInput('userAddId', helper::FILTER_ID, true)]);
+			if($id) {
 				self::$inputNotices['userAddId'] = 'Identifiant déjà utilisé';
 			}
 			// Double vérification pour le mot de passe
-			if($this->getInput('userAddPassword') !== $this->getInput('userAddConfirmPassword')) {
+			$password = $this->getInput('userAddPassword', helper::FILTER_PASSWORD, true);
+			if($password !== $this->getInput('userAddConfirmPassword', helper::FILTER_PASSWORD)) {
 				self::$inputNotices['userAddConfirmPassword'] = 'Incorrect';
 			}
 			// Crée l'utilisateur
-			$firstname = $this->getInput('userAddFirstname');
-			$lastname = $this->getInput('userAddLastname');
-			$mail = $this->getInput('userAddMail', helper::FILTER_MAIL);
+			$firstname = $this->getInput('userAddFirstname', helper::FILTER_STRING_SHORT, true);
+			$lastname = $this->getInput('userAddLastname', helper::FILTER_STRING_SHORT, true);
+			$mail = $this->getInput('userAddMail', helper::FILTER_MAIL, true);
 			$this->setData([
 				'user',
-				$this->getInput('userAddId', helper::FILTER_ID),
+				$id,
 				[
 					'firstname' => $firstname,
 					'forgot' => 0,
-					'group' => $this->getInput('userAddGroup', helper::FILTER_INT),
+					'group' => $this->getInput('userAddGroup', helper::FILTER_INT, true),
 					'lastname' => $lastname,
 					'mail' => $mail,
-					'password' => $this->getInput('userAddPassword', helper::FILTER_PASSWORD)
+					'password' => $password
 				]
 			]);
 			// Envoi le mail
@@ -73,7 +75,7 @@ class user extends common {
 			$this->addOutput([
 				'redirect' => helper::baseUrl() . 'user',
 				'notification' => ($sent === true ? 'Utilisateur créé' : $sent),
-				'state' => true
+				'state' => ($sent === true ? true : null)
 			]);
 		}
 		// Valeurs en sortie
@@ -174,7 +176,7 @@ class user extends common {
 					$this->getUser('group') === self::GROUP_ADMIN
 					AND $this->getUrl(2) !== $this->getUser('id')
 				) {
-					$newGroup = $this->getInput('userEditGroup', helper::FILTER_INT);
+					$newGroup = $this->getInput('userEditGroup', helper::FILTER_INT, true);
 				}
 				else {
 					$newGroup = $this->getData(['user', $this->getUrl(2), 'group']);
@@ -184,11 +186,11 @@ class user extends common {
 					'user',
 					$this->getUrl(2),
 					[
-						'firstname' => $this->getInput('userEditFirstname'),
+						'firstname' => $this->getInput('userEditFirstname', helper::FILTER_STRING_SHORT, true),
 						'forgot' => 0,
 						'group' => $newGroup,
-						'lastname' => $this->getInput('userEditLastname'),
-						'mail' => $this->getInput('userEditMail', helper::FILTER_MAIL),
+						'lastname' => $this->getInput('userEditLastname', helper::FILTER_STRING_SHORT, true),
+						'mail' => $this->getInput('userEditMail', helper::FILTER_MAIL, true),
 						'password' => $newPassword
 					]
 				]);
@@ -243,7 +245,7 @@ class user extends common {
 				// Valeurs en sortie
 				$this->addOutput([
 					'notification' => ($sent === true ? 'Un mail vous a été envoyé afin de continuer la réinitialisation' : $sent),
-					'state' => true
+					'state' => ($sent === true ? true : null)
 				]);
 			}
 			// L'utilisateur n'existe pas
@@ -274,13 +276,13 @@ class user extends common {
 				$userFirstname . ' ' . $this->getData(['user', $userId, 'lastname']),
 				self::$groups[$this->getData(['user', $userId, 'group'])],
 				template::button('userEdit' . $userId, [
-					'value' => template::ico('pencil'),
-					'href' => helper::baseUrl() . 'user/edit/' . $userId . '/back'
+					'href' => helper::baseUrl() . 'user/edit/' . $userId . '/back',
+					'value' => template::ico('pencil')
 				]),
 				template::button('userDelete' . $userId, [
-					'value' => template::ico('cancel'),
+					'class' => 'userDelete buttonRed',
 					'href' => helper::baseUrl() . 'user/delete/' . $userId,
-					'class' => 'userDelete'
+					'value' => template::ico('cancel')
 				])
 			];
 		}

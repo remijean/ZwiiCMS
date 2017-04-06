@@ -54,13 +54,13 @@ class gallery extends common {
 					$gallery['config']['name'],
 					$gallery['config']['directory'],
 					template::button('galleryConfigEdit' . $galleryId, [
-						'value' => template::ico('pencil'),
-						'href' => helper::baseUrl() . $this->getUrl(0) . '/edit/' . $galleryId
+						'href' => helper::baseUrl() . $this->getUrl(0) . '/edit/' . $galleryId,
+						'value' => template::ico('pencil')
 					]),
 					template::button('galleryConfigDelete' . $galleryId, [
-						'value' => template::ico('cancel'),
+						'class' => 'galleryConfigDelete buttonRed',
 						'href' => helper::baseUrl() . $this->getUrl(0) . '/delete/' . $galleryId,
-						'class' => 'galleryConfigDelete'
+						'value' => template::ico('cancel')
 					])
 				];
 			}
@@ -138,11 +138,11 @@ class gallery extends common {
 		else {
 			// Soumission du formulaire
 			if($this->isPost()) {
-				$galleryId = $this->getInput('galleryEditName', helper::FILTER_ID);
 				// Si l'id a changée
-				if($galleryId !== $this->getUrl(2)) {
+				$id = $this->getInput('galleryEditName', helper::FILTER_ID, true);
+				if($id !== $this->getUrl(2)) {
 					// Incrémente la nouvelle id de la gallery pour éviter les doublons
-					$galleryId = helper::increment($galleryId, $this->getData(['module', $this->getUrl(0)]));
+					$id = helper::increment($id, $this->getData(['module', $this->getUrl(0)]));
 					// Supprime l'ancienne galerie
 					$this->deleteData(['module', $this->getUrl(0), $this->getUrl(2)]);
 				}
@@ -151,9 +151,9 @@ class gallery extends common {
 					$legends[$file] = helper::filter($legend, helper::FILTER_STRING_SHORT);
 				}
 
-				$this->setData(['module', $this->getUrl(0), $galleryId, [
+				$this->setData(['module', $this->getUrl(0), $id, [
 					'config' => [
-						'name' => $this->getInput('galleryEditName'),
+						'name' => $this->getInput('galleryEditName', helper::FILTER_STRING_SHORT, true),
 						'directory' => $this->getInput('galleryEditDirectory')
 					],
 					'legend' => $legends
@@ -218,6 +218,7 @@ class gallery extends common {
 					// Valeurs en sortie
 					$this->addOutput([
 						'editButton' => true,
+						'title' => $this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'config', 'name']),
 						'vendor' => [
 							'simplelightbox'
 						],

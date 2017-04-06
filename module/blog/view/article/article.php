@@ -62,12 +62,13 @@
 			<div class="row">
 				<div class="col2 offset8">
 					<?php echo template::button('blogArticleCommentHide', [
-						'class' => 'grey',
+						'class' => 'buttonGrey',
 						'value' => 'Annuler'
 					]); ?>
 				</div>
 				<div class="col2">
 					<?php echo template::submit('blogArticleSubmit', [
+						'ico' => '',
 						'value' => 'Envoyer'
 					]); ?>
 				</div>

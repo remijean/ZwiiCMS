@@ -1,5 +1,15 @@
 <form method="post">
 	<div class="row">
+		<div class="col2">
+			<?php echo template::button('galleryConfigBack', [
+				'class' => 'buttonGrey',
+				'href' => helper::baseUrl() . 'page/edit/' . $this->getUrl(0),
+				'ico' => 'left',
+				'value' => 'Retour'
+			]); ?>
+		</div>
+	</div>
+	<div class="row">
 		<div class="col12">
 			<div class="block">
 				<h4><?php echo helper::translate('Nouvelle galerie'); ?></h4>
@@ -10,16 +20,17 @@
 							'required' => true
 						]); ?>
 					</div>
-					<div class="col4">
+					<div class="col5">
 						<?php echo template::hidden('galleryConfigDirectoryOld'); ?>
 						<?php echo template::select('galleryConfigDirectory', [], [
 							'label' => 'Dossier cible',
 							'required' => true
 						]); ?>
 					</div>
-					<div class="col2 verticalAlignBottom">
+					<div class="col1 verticalAlignBottom">
 						<?php echo template::submit('galleryConfigSubmit', [
-							'value' => 'Créer'
+							'ico' => '',
+							'value' => template::ico('plus')
 						]); ?>
 					</div>
 				</div>
@@ -31,13 +42,4 @@
 	<?php else: ?>
 		<?php echo template::speech('Aucune galerie.'); ?>
 	<?php endif; ?>
-	<div class="row">
-		<div class="col2 offset10">
-			<?php echo template::button('galleryConfigBack', [
-				'class' => 'grey',
-				'href' => helper::baseUrl() . 'page/edit/' . $this->getUrl(0),
-				'value' => 'Retour'
-			]); ?>
-		</div>
-	</div>
 </form>

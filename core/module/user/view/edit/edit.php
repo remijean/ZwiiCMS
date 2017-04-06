@@ -1,5 +1,27 @@
 <form method="post">
 	<div class="row">
+		<div class="col2">
+			<?php if($this->getUrl(3)): ?>
+				<?php echo template::button('userEditBack', [
+					'class' => 'buttonGrey',
+					'href' => helper::baseUrl() . 'user',
+					'ico' => 'left',
+					'value' => 'Retour'
+				]); ?>
+			<?php else: ?>
+				<?php echo template::button('userEditBack', [
+					'class' => 'buttonGrey',
+					'href' => helper::baseUrl(false),
+					'ico' => 'home',
+					'value' => 'Accueil'
+				]); ?>
+			<?php endif; ?>
+		</div>
+		<div class="col2 offset8">
+			<?php echo template::submit('userEditSubmit'); ?>
+		</div>
+	</div>
+	<div class="row">
 		<div class="col6">
 			<div class="block">
 				<h4><?php echo helper::translate('Informations générales'); ?></h4>
@@ -8,7 +30,6 @@
 						<?php echo template::text('userEditFirstname', [
 							'autocomplete' => 'off',
 							'label' => 'Prénom',
-							'required' => true,
 							'value' => $this->getData(['user', $this->getUrl(2), 'firstname'])
 						]); ?>
 					</div>
@@ -16,7 +37,6 @@
 						<?php echo template::text('userEditLastname', [
 							'autocomplete' => 'off',
 							'label' => 'Nom',
-							'required' => true,
 							'value' => $this->getData(['user', $this->getUrl(2), 'lastname'])
 						]); ?>
 					</div>
@@ -24,7 +44,6 @@
 				<?php echo template::mail('userEditMail', [
 					'autocomplete' => 'off',
 					'label' => 'Adresse mail',
-					'required' => true,
 					'value' => $this->getData(['user', $this->getUrl(2), 'mail'])
 				]); ?>
 				<?php if($this->getUser('group') === self::GROUP_ADMIN): ?>
@@ -32,7 +51,6 @@
 						'disabled' => ($this->getUrl(2) === $this->getUser('id')),
 						'help' => ($this->getUrl(2) === $this->getUser('id') ? 'Impossible de modifier votre propre groupe.' : ''),
 						'label' => 'Groupe',
-						'required' => true,
 						'selected' => $this->getData(['user', $this->getUrl(2), 'group'])
 					]); ?>
 					<?php echo helper::translate('Autorisations :'); ?>
@@ -78,23 +96,6 @@
 					'label' => 'Confirmation'
 				]); ?>
 			</div>
-		</div>
-	</div>
-	<div class="row">
-		<?php if($this->getUrl(3)): ?>
-			<div class="col2 offset8">
-				<?php echo template::button('userEditBack', [
-					'class' => 'grey',
-					'href' => helper::baseUrl() . 'user',
-					'value' => 'Retour'
-
-				]); ?>
-			</div>
-			<div class="col2">
-		<?php else: ?>
-			<div class="col2 offset10">
-		<?php endif; ?>
-			<?php echo template::submit('userEditSubmit'); ?>
 		</div>
 	</div>
 </form>

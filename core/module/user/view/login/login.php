@@ -25,13 +25,15 @@
 	<div class="row">
 		<div class="col3 offset6">
 			<?php echo template::button('userLoginBack', [
-				'class' => 'grey',
+				'class' => 'buttonGrey',
 				'href' => helper::baseUrl() . str_replace('_', '/', str_replace('__', '#', $this->getUrl(2))),
+				'ico' => 'left',
 				'value' => 'Annuler'
 			]); ?>
 		</div>
 		<div class="col3">
 			<?php echo template::submit('userLoginSubmit', [
+				'ico' => '',
 				'value' => 'Connexion'
 			]); ?>
 		</div>

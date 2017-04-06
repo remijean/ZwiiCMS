@@ -1,4 +1,13 @@
-<h3><?php echo $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'config', 'name']); ?></h3>
+<div class="row">
+	<div class="col2 offset10">
+		<?php echo template::button('galleryGalleryBack', [
+			'class' => 'buttonGrey',
+			'href' => helper::baseUrl() . $this->getUrl(0),
+			'ico' => 'left',
+			'value' => 'Retour'
+		]); ?>
+	</div>
+</div>
 <?php $i = 1; ?>
 <?php $picturesNb = count($module::$pictures); ?>
 <?php foreach($module::$pictures as $picture => $legend): ?>
@@ -20,13 +29,3 @@
 	<?php endif; ?>
 	<?php $i++; ?>
 <?php endforeach; ?>
-<div class="row">
-	<div class="col2 offset10">
-		<?php echo template::button('galleryGalleryBack', [
-			'class' => 'grey',
-			'href' => helper::baseUrl() . $this->getUrl(0),
-			'value' => 'Retour'
-
-		]); ?>
-	</div>
-</div>

@@ -173,7 +173,7 @@ class theme extends common {
 		}
 		// Valeurs en sortie
 		$this->addOutput([
-			'title' => 'Personnalisation du thème',
+			'title' => 'Personnalisation de l\'arrière plan',
 			'vendor' => [
 				'tinycolorpicker'
 			],
@@ -207,7 +207,7 @@ class theme extends common {
 		}
 		// Valeurs en sortie
 		$this->addOutput([
-			'title' => 'Personnalisation du thème',
+			'title' => 'Personnalisation du pied de page',
 			'vendor' => [
 				'tinycolorpicker'
 			],
@@ -245,7 +245,7 @@ class theme extends common {
 		}
 		// Valeurs en sortie
 		$this->addOutput([
-			'title' => 'Personnalisation du thème',
+			'title' => 'Personnalisation de la bannière',
 			'vendor' => [
 				'tinycolorpicker'
 			],
@@ -289,7 +289,7 @@ class theme extends common {
 		}
 		// Valeurs en sortie
 		$this->addOutput([
-			'title' => 'Personnalisation du thème',
+			'title' => 'Personnalisation du menu',
 			'vendor' => [
 				'tinycolorpicker'
 			],
@@ -326,7 +326,7 @@ class theme extends common {
 		}
 		// Valeurs en sortie
 		$this->addOutput([
-			'title' => 'Personnalisation du thème',
+			'title' => 'Personnalisation du site',
 			'vendor' => [
 				'tinycolorpicker'
 			],

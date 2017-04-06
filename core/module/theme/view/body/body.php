@@ -1,5 +1,17 @@
-<h3><?php echo helper::translate('Options de l\'arrière plan'); ?></h3>
 <form method="post">
+	<div class="row">
+		<div class="col2">
+			<?php echo template::button('themeBodyBack', [
+				'class' => 'buttonGrey',
+				'href' => helper::baseUrl() . 'theme',
+				'ico' => 'left',
+				'value' => 'Retour'
+			]); ?>
+		</div>
+		<div class="col2 offset8">
+			<?php echo template::submit('themeBodySubmit'); ?>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col6">
 			<div class="block">
@@ -51,18 +63,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col2 offset8">
-			<?php echo template::button('themeBodyBack', [
-				'class' => 'grey',
-				'href' => helper::baseUrl() . 'theme',
-				'value' => 'Retour'
-			]); ?>
-		</div>
-		<div class="col2">
-			<?php echo template::submit('themeBodySubmit'); ?>
 		</div>
 	</div>
 </form>

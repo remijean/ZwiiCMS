@@ -160,6 +160,9 @@ td > .col12 {
 #notification.notificationError {
 	background: #F3674A;
 }
+#notification.notificationOther {
+	background: #F39C12;
+}
 @keyframes notificationBounce {
 	0% {
 		transform: translateX(-50%) translateY(-30px);
@@ -772,15 +775,25 @@ label {
 .button.disabled span {
 	color: #999 !important /* Icône de soumission unique */
 }
-.button.grey {
+.button.buttonGrey {
 	background: #E9E9E9;
 	color: #212223 !important;
 }
-.button.grey:hover {
+.button.buttonGrey:hover {
 	background: #E1E1E1;
 }
-.button.grey:active {
+.button.buttonGrey:active {
 	background: #D8D8D8;
+}
+.button.buttonRed {
+	background: #F3674A;
+	color: #FFF;
+}
+.button.buttonRed:hover {
+	background: #F25A3A;
+}
+.button.buttonRed:active {
+	background: #F14C2A;
 }
 
 /* Upload de fichiers */

@@ -24,37 +24,23 @@
 		</div>
 	</nav>
 <?php endif; ?>
-<?php if(
-	$this->getData(['theme', 'header', 'position']) === 'body'
-	// Affiche toujours la bannière pour l'édition du thème
-	OR (
-		$this->getData(['theme', 'header', 'position']) === 'hide'
-		AND $this->getUrl(0) === 'theme'
-	)
-): ?>
+<?php if($this->getData(['theme', 'header', 'position']) === 'body'): ?>
 	<!-- Bannière dans le fond du site -->
-	<header <?php if($this->getData(['theme', 'header', 'position']) === 'hide'): ?>class="displayNone"<?php endif; ?>>
+	<header>
 		<?php if(
 			$this->getData(['theme', 'header', 'textHide']) === false
 			// Affiche toujours le titre de la bannière pour l'édition du thème
 			OR ($this->getUrl(0) === 'theme' AND $this->getUrl(1) === 'header')
 		): ?>
-			<div class="container <?php if($this->getData(['theme', 'menu', 'textHide'])): ?>displayNone<?php endif; ?>">
+			<div class="container">
 				<span><?php echo $this->getData(['config', 'title']); ?></span>
 			</div>
 		<?php endif; ?>
 	</header>
 <?php endif; ?>
-<?php if(
-	$this->getData(['theme', 'menu', 'position']) === 'body-second'
-	// Affiche toujours le menu pour l'édition du thème
-	OR (
-		$this->getData(['theme', 'menu', 'position']) === 'hide'
-		AND $this->getUrl(0) === 'theme'
-	)
-): ?>
+<?php if($this->getData(['theme', 'menu', 'position']) === 'body-second'): ?>
 	<!-- Menu dans le fond du site après la bannière -->
-	<nav <?php if($this->getData(['theme', 'menu', 'position']) === 'hide'): ?>class="displayNone"<?php endif; ?>>
+	<nav>
 		<div id="toggle"><?php echo template::ico('menu'); ?></div>
 		<div id="menu" class="container">
 			<?php $layout->showMenu(); ?>
@@ -72,23 +58,37 @@
 			</div>
 		</nav>
 	<?php endif; ?>
-	<?php if($this->getData(['theme', 'header', 'position']) === 'site'): ?>
+	<?php if(
+		$this->getData(['theme', 'header', 'position']) === 'site'
+		// Affiche toujours la bannière pour l'édition du thème
+		OR (
+			$this->getData(['theme', 'header', 'position']) === 'hide'
+			AND $this->getUrl(0) === 'theme'
+		)
+	): ?>
 		<!-- Bannière dans le site -->
-		<header>
+		<header <?php if($this->getData(['theme', 'header', 'position']) === 'hide'): ?>class="displayNone"<?php endif; ?>>
 			<?php if(
 				$this->getData(['theme', 'header', 'textHide']) === false
 				// Affiche toujours le titre de la bannière pour l'édition du thème
 				OR ($this->getUrl(0) === 'theme' AND $this->getUrl(1) === 'header')
 			): ?>
-				<div class="container <?php if($this->getData(['theme', 'menu', 'textHide'])): ?>displayNone<?php endif; ?>">
+				<div class="container">
 					<span><?php echo $this->getData(['config', 'title']); ?></span>
 				</div>
 			<?php endif; ?>
 		</header>
 	<?php endif; ?>
-	<?php if($this->getData(['theme', 'menu', 'position']) === 'site-second'): ?>
+	<?php if(
+		$this->getData(['theme', 'menu', 'position']) === 'site-second'
+		// Affiche toujours le menu pour l'édition du thème
+		OR (
+			$this->getData(['theme', 'menu', 'position']) === 'hide'
+			AND $this->getUrl(0) === 'theme'
+		)
+	): ?>
 		<!-- Menu dans le site après la bannière -->
-		<nav>
+		<nav <?php if($this->getData(['theme', 'menu', 'position']) === 'hide'): ?>class="displayNone"<?php endif; ?>>
 			<div id="toggle"><?php echo template::ico('menu'); ?></div>
 			<div id="menu" class="container">
 				<?php $layout->showMenu(); ?>

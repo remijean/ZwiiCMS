@@ -108,7 +108,7 @@ class page extends common {
 		else {
 			// Soumission du formulaire
 			if($this->isPost()) {
-				$pageId = $this->getInput('pageEditTitle', helper::FILTER_ID);
+				$pageId = $this->getInput('pageEditTitle', helper::FILTER_ID, true);
 				// Si l'id a changée
 				if($pageId !== $this->getUrl(2)) {
 					// Incrémente la nouvelle id de la page pour éviter les doublons
@@ -164,7 +164,7 @@ class page extends common {
 						'position' => $position,
 						'group' => $this->getInput('pageEditGroup', helper::FILTER_INT),
 						'targetBlank' => $this->getInput('pageEditTargetBlank', helper::FILTER_BOOLEAN),
-						'title' => $this->getInput('pageEditTitle')
+						'title' => $this->getInput('pageEditTitle', helper::FILTER_STRING_SHORT, true)
 					]
 				]);
 				// Redirection vers la configuration

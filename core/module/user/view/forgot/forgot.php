@@ -6,10 +6,10 @@
 	<div class="row">
 		<div class="col3 offset6">
 			<?php echo template::button('userForgotBack', [
-				'class' => 'grey',
+				'class' => 'buttonGrey',
 				'href' => helper::baseUrl() . 'user/login/' . $this->getUrl(2),
+				'ico' => 'left',
 				'value' => 'Retour'
-
 			]); ?>
 		</div>
 		<div class="col3">

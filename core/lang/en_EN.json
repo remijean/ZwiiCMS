@@ -4,12 +4,10 @@
 	"Accès à toutes les pages privées": "Access to all private pages",
 	"Administrateur": "Administrator",
 	"Adresse mail": "Email address",
-	"Afficher les zones cachées": "Show the hidden areas",
 	"Afin d'éviter de bloquer votre site pensez à vérifier que le module de réécriture d'URL est bien actif sur votre serveur avant d'activer cette fonctionnalité.": "In order to avoid blocking your site please check that the URL rewrite module is active on your server before enabling this feature.",
 	"Ajout / Édition / Suppression d'utilisateurs": "Adding / editing / deleting users",
 	"Ajout / Édition / Suppression de fichiers": "Adding / editing / deleting files",
 	"Ajout / Édition / Suppression de pages": "Adding / editing / deleting pages",
-	"Ajouter": "Add",
 	"Alignement du contenu": "Alignment of content",
 	"Aligner la bannière avec le contenu": "Align the banner with the content",
 	"Aligner le bas de page avec le contenu": "Align the bottom of the page with the content",
@@ -219,6 +217,7 @@
 	"URL du site :": "Site URL",
 	"Un administrateur vous a créé un compte sur le site": "An administrator created you an account on the site",
 	"Un mail vous a été envoyé afin de continuer la réinitialisation": "An email was sent to continue the reset",
+	"Utilisateur": "User",
 	"Utilisateur créé": "User created",
 	"Utilisateur supprimé": "Deleted user",
 	"Valider": "Validate",
@@ -235,5 +234,6 @@
 	"À gauche": "Left",
 	"Êtes-vous sûr de vouloir supprimer cet utilisateur ?": "Are you sure you want to delete this user?",
 	"Êtes-vous sûr de vouloir supprimer cette page ?": "Are you sure you want to delete this page?",
-	"Mot de passe du compte :": "Account password:"
+	"Mot de passe du compte :": "Account password:",
+	"Zones": "Areas"
 }

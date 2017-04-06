@@ -1,25 +1,12 @@
 <?php if($this->getData(['module', $this->getUrl(0), 'input'])): ?>
 	<form method="post">
 		<?php foreach($this->getData(['module', $this->getUrl(0), 'input']) as $index => $input): ?>
-			<?php if($input['type'] === 'mail'): ?>
+			<?php if($input['type'] === $module::TYPE_MAIL): ?>
 				<?php echo template::mail('formInput[' . $index . ']', [
 					'id' => 'formInput_' . $index,
-					'label' => $input['name'],
-					'required' => $input['required']
+					'label' => $input['name']
 				]); ?>
-			<?php elseif($input['type'] === 'text'): ?>
-				<?php echo template::text('formInput[' . $index . ']', [
-					'id' => 'formInput_' . $index,
-					'label' => $input['name'],
-					'required' => $input['required']
-				]); ?>
-			<?php elseif($input['type'] === 'textarea'): ?>
-				<?php echo template::textarea('formInput[' . $index . ']', [
-					'id' => 'formInput_' . $index,
-					'label' => $input['name'],
-					'required' => $input['required']
-				]); ?>
-			<?php elseif($input['type'] === 'select'): ?>
+			<?php elseif($input['type'] === $module::TYPE_SELECT): ?>
 				<?php
 				$values = array_flip(explode(',', $input['values']));
 				foreach($values as $value => $key) {
@@ -28,8 +15,17 @@
 				?>
 				<?php echo template::select('formInput[' . $index . ']', $values, [
 					'id' => 'formInput_' . $index,
-					'label' => $input['name'],
-					'required' => $input['required']
+					'label' => $input['name']
+				]); ?>
+			<?php elseif($input['type'] === $module::TYPE_TEXT): ?>
+				<?php echo template::text('formInput[' . $index . ']', [
+					'id' => 'formInput_' . $index,
+					'label' => $input['name']
+				]); ?>
+			<?php elseif($input['type'] === $module::TYPE_TEXTAREA): ?>
+				<?php echo template::textarea('formInput[' . $index . ']', [
+					'id' => 'formInput_' . $index,
+					'label' => $input['name']
 				]); ?>
 			<?php endif; ?>
 		<?php endforeach; ?>
@@ -43,7 +39,8 @@
 		<div class="row">
 			<div class="col2 offset10">
 				<?php echo template::submit('formSubmit', [
-					'value' => $this->getData(['module', $this->getUrl(0), 'config', 'button']) ? $this->getData(['module', $this->getUrl(0), 'config', 'button']) : 'Enregistrer'
+					'ico' => '',
+					'value' => $this->getData(['module', $this->getUrl(0), 'config', 'button']) ? $this->getData(['module', $this->getUrl(0), 'config', 'button']) : 'Envoyer'
 				]); ?>
 			</div>
 		</div>

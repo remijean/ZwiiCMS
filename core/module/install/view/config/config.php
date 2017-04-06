@@ -2,51 +2,46 @@
 <form method="post">
 	<?php echo template::text('installConfigId', [
 		'autocomplete' => 'off',
-		'label' => 'Identifiant',
-		'required' => true
+		'label' => 'Identifiant'
 	]); ?>
 	<div class="row">
 		<div class="col6">
 			<?php echo template::password('installConfigPassword', [
 				'autocomplete' => 'off',
-				'label' => 'Mot de passe',
-				'required' => true
+				'label' => 'Mot de passe'
 			]); ?>
 		</div>
 		<div class="col6">
 			<?php echo template::password('installConfigConfirmPassword', [
 				'autocomplete' => 'off',
-				'label' => 'Confirmation',
-				'required' => true
+				'label' => 'Confirmation'
 			]); ?>
 		</div>
 	</div>
 	<?php echo template::mail('installConfigMail', [
 		'autocomplete' => 'off',
-		'label' => 'Adresse mail',
-		'required' => true
+		'label' => 'Adresse mail'
 	]); ?>
 	<div class="row">
 		<div class="col6">
 			<?php echo template::text('installConfigFirstname', [
 				'autocomplete' => 'off',
-				'label' => 'Prénom',
-				'required' => true
+				'label' => 'Prénom'
 			]); ?>
 		</div>
 		<div class="col6">
 			<?php echo template::text('installConfigLastname', [
 				'autocomplete' => 'off',
-				'label' => 'Nom',
-				'required' => true
+				'label' => 'Nom'
 			]); ?>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col3 offset6">
 			<?php echo template::button('installConfigBack', [
-				'class' => 'grey',
+				'class' => 'buttonGrey',
 				'href' => helper::baseUrl() . 'install',
+				'ico' => 'left',
 				'value' => 'Retour'
 			]); ?>
 		</div>

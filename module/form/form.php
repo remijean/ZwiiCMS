@@ -26,11 +26,16 @@ class form extends common {
 	
 	public static $pagination;
 
+	const TYPE_MAIL = 'mail';
+	const TYPE_SELECT = 'select';
+	const TYPE_TEXT = 'text';
+	const TYPE_TEXTAREA = 'textarea';
+
 	public static $types = [
-		'mail' => 'Champ mail',
-		'text' => 'Champ texte',
-		'textarea' => 'Grand champ texte',
-		'select' => 'Sélection'
+		self::TYPE_TEXT => 'Champ texte',
+		self::TYPE_TEXTAREA => 'Grand champ texte',
+		self::TYPE_MAIL => 'Champ mail',
+		self::TYPE_SELECT => 'Sélection'
 	];
 
 	/**
@@ -64,8 +69,6 @@ class form extends common {
 				];
 			}
 			$this->setData(['module', $this->getUrl(0), 'input', $inputs]);
-			// Vide les champs obligatoires
-			unset($_SESSION['ZWII_INPUT_REQUIRED']);
 			// Valeurs en sortie
 			$this->addOutput([
 				'notification' => 'Modifications enregistrées',
@@ -134,11 +137,19 @@ class form extends common {
 			// Préparation le contenu du mail
 			$data = [];
 			$content = '';
-			foreach($this->getInput('formInput', null) as $index => $value) {
+			foreach($this->getData(['module', $this->getUrl(0), 'input']) as $index => $input) {
 				// Filtre la valeur
-				$value = helper::filter($value, helper::FILTER_STRING_LONG);
-				// Erreur champ obligatoire
-				$this->addRequiredInputNotices('formInput[' . $index . ']');
+				switch($input['type']) {
+					case self::TYPE_MAIL:
+						$filter = helper::FILTER_MAIL;
+						break;
+					case self::TYPE_TEXTAREA:
+						$filter = helper::FILTER_STRING_SHORT;
+						break;
+					default:
+						$filter = helper::FILTER_STRING_LONG;
+				}
+				$value = $this->getInput('formInput[' . $index . ']', $filter, $input['required']);
 				// Préparation des données pour la création dans la base
 				$data[$this->getData(['module', $this->getUrl(0), 'input', $index, 'name'])] = $value;
 				// Préparation des données pour le mail
@@ -180,7 +191,7 @@ class form extends common {
 			$this->addOutput([
 				'notification' => ($sent === true ? 'Formulaire soumis' : $sent),
 				'redirect' => $redirect ? helper::baseUrl() . $redirect : '',
-				'state' => true
+				'state' => ($sent === true ? true : null)
 			]);
 		}
 		// Valeurs en sortie

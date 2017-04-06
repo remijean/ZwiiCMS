@@ -1,5 +1,17 @@
-<h3><?php echo helper::translate('Options du pied de page'); ?></h3>
 <form method="post">
+	<div class="row">
+		<div class="col2">
+			<?php echo template::button('themeFooterBack', [
+				'class' => 'buttonGrey',
+				'href' => helper::baseUrl() . 'theme',
+				'ico' => 'left',
+				'value' => 'Retour'
+			]); ?>
+		</div>
+		<div class="col2 offset8">
+			<?php echo template::submit('themeFooterSubmit'); ?>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col6">
 			<div class="block">
@@ -76,18 +88,6 @@
 					'help' => 'Visible seulement sur cette page et lorsque vous n\'êtes pas connecté.'
 				]); ?>
 			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col2 offset8">
-			<?php echo template::button('themeFooterBack', [
-				'class' => 'grey',
-				'href' => helper::baseUrl() . 'theme',
-				'value' => 'Retour'
-			]); ?>
-		</div>
-		<div class="col2">
-			<?php echo template::submit('themeFooterSubmit'); ?>
 		</div>
 	</div>
 </form>

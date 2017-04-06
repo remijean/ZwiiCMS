@@ -1,5 +1,18 @@
 <form method="post">
 	<div class="row">
+		<div class="col2">
+			<?php echo template::button('userAddBack', [
+				'class' => 'buttonGrey',
+				'href' => helper::baseUrl() . 'user',
+				'ico' => 'left',
+				'value' => 'Retour'
+			]); ?>
+		</div>
+		<div class="col2 offset8">
+			<?php echo template::submit('userAddSubmit'); ?>
+		</div>
+	</div>
+	<div class="row">
 		<div class="col6">
 			<div class="block">
 				<h4><?php echo helper::translate('Informations générales'); ?></h4>
@@ -7,26 +20,22 @@
 					<div class="col6">
 						<?php echo template::text('userAddFirstname', [
 							'autocomplete' => 'off',
-							'label' => 'Prénom',
-							'required' => true
+							'label' => 'Prénom'
 						]); ?>
 					</div>
 					<div class="col6">
 						<?php echo template::text('userAddLastname', [
 							'autocomplete' => 'off',
-							'label' => 'Nom',
-							'required' => true
+							'label' => 'Nom'
 						]); ?>
 					</div>
 				</div>
 				<?php echo template::mail('userAddMail', [
 					'autocomplete' => 'off',
-					'label' => 'Adresse mail',
-					'required' => true
+					'label' => 'Adresse mail'
 				]); ?>
 				<?php echo template::select('userAddGroup', self::$groupNews, [
 					'label' => 'Groupe',
-					'required' => true,
 					'selected' => self::GROUP_MEMBER
 				]); ?>
 				<?php echo helper::translate('Autorisations :'); ?>
@@ -54,32 +63,17 @@
 				<h4><?php echo helper::translate('Authentification'); ?></h4>
 				<?php echo template::text('userAddId', [
 					'autocomplete' => 'off',
-					'label' => 'Identifiant',
-					'required' => true
+					'label' => 'Identifiant'
 				]); ?>
 				<?php echo template::password('userAddPassword', [
 					'autocomplete' => 'off',
-					'label' => 'Mot de passe',
-					'required' => true
+					'label' => 'Mot de passe'
 				]); ?>
 				<?php echo template::password('userAddConfirmPassword', [
 					'autocomplete' => 'off',
-					'label' => 'Confirmation',
-					'required' => true
+					'label' => 'Confirmation'
 				]); ?>
 			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col2 offset8">
-			<?php echo template::button('userAddBack', [
-				'class' => 'grey',
-				'href' => helper::baseUrl() . 'user',
-				'value' => 'Retour'
-			]); ?>
-		</div>
-		<div class="col2">
-			<?php echo template::submit('userAddSubmit'); ?>
 		</div>
 	</div>
 </form>

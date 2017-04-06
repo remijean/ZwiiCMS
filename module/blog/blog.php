@@ -48,11 +48,11 @@ class blog extends common {
 				'comment' => [],
 				'content' => $this->getInput('blogAddContent', helper::FILTER_STRING_LONG),
 				'picture' => $this->getInput('blogAddPicture'),
-				'publishedOn' => $this->getInput('blogAddPublishedOn', helper::FILTER_DATETIME),
+				'publishedOn' => $this->getInput('blogAddPublishedOn', helper::FILTER_DATETIME, true),
 				'status' => $this->getInput('blogAddStatus', helper::FILTER_BOOLEAN),
 				'tag' => [],
 				'title' => $this->getInput('blogAddTitle'),
-				'userId' => $this->getInput('blogAddUserId')
+				'userId' => $this->getInput('blogAddUserId', helper::FILTER_ID, true)
 			]]);
 			// Valeurs en sortie
 			$this->addOutput([
@@ -97,13 +97,13 @@ class blog extends common {
 				date('d/m/Y H:i', $this->getData(['module', $this->getUrl(0), $articleIds[$i], 'publishedOn'])),
 				helper::translate(self::$statuss[$this->getData(['module', $this->getUrl(0), $articleIds[$i], 'status'])]),
 				template::button('blogConfigEdit' . $articleIds[$i], [
-					'value' => template::ico('pencil'),
-					'href' => helper::baseUrl() . $this->getUrl(0) . '/edit/' . $articleIds[$i]
+					'href' => helper::baseUrl() . $this->getUrl(0) . '/edit/' . $articleIds[$i],
+					'value' => template::ico('pencil')
 				]),
 				template::button('blogConfigDelete' . $articleIds[$i], [
-					'value' => template::ico('cancel'),
+					'class' => 'blogConfigDelete buttonRed',
 					'href' => helper::baseUrl() . $this->getUrl(0) . '/delete/' . $articleIds[$i],
-					'class' => 'blogConfigDelete'
+					'value' => template::ico('cancel')
 				])
 			];
 		}
@@ -163,25 +163,24 @@ class blog extends common {
 		else {
 			// Soumission du formulaire
 			if($this->isPost()) {
-				$articleComment = $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'comment']);
-				$articleId = $this->getInput('blogEditTitle', helper::FILTER_ID);
 				// Si l'id a changée
-				if($articleId !== $this->getUrl(2)) {
+				$id = $this->getInput('blogEditTitle', helper::FILTER_ID, true);
+				if($id !== $this->getUrl(2)) {
 					// Incrémente la nouvelle id de l'article pour éviter les doublons
-					$articleId = helper::increment($articleId, $this->getData(['module', $this->getUrl(0)]));
+					$articleId = helper::increment($id, $this->getData(['module', $this->getUrl(0)]));
 					// Supprime l'ancien article
 					$this->deleteData(['module', $this->getUrl(0), $this->getUrl(2)]);
 				}
-				$this->setData(['module', $this->getUrl(0), $articleId, [
+				$this->setData(['module', $this->getUrl(0), $id, [
 					'closeComment' => $this->getInput('blogEditCloseComment'),
-					'comment' => $articleComment,
+					'comment' => $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'comment']),
 					'content' => $this->getInput('blogEditContent', helper::FILTER_STRING_LONG),
-					'picture' => $this->getInput('blogEditPicture'),
-					'publishedOn' => $this->getInput('blogEditPublishedOn', helper::FILTER_DATETIME),
+					'picture' => $this->getInput('blogEditPicture', helper::FILTER_STRING_SHORT, true),
+					'publishedOn' => $this->getInput('blogEditPublishedOn', helper::FILTER_DATETIME, true),
 					'status' => $this->getInput('blogEditStatus', helper::FILTER_BOOLEAN),
 					'tag' => [],
-					'title' => $this->getInput('blogEditTitle'),
-					'userId' => $this->getInput('blogEditUserId')
+					'title' => $this->getInput('blogEditTitle', helper::FILTER_STRING_SHORT, true),
+					'userId' => $this->getInput('blogEditUserId', helper::FILTER_ID, true)
 				]]);
 				// Valeurs en sortie
 				$this->addOutput([

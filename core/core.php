@@ -54,8 +54,8 @@ class common {
 				'twitterId' => 'ZwiiCMS',
 				'youtubeId' => ''
 			],
-			'title' => 'Zwii, votre site en quelques clics !',
-			'timezone' => 'Europe/Paris'
+			'timezone' => 'Europe/Paris',
+			'title' => 'Zwii, votre site en quelques clics !'
 		],
 		'core' => [
 			'lastBackup' => 0,
@@ -335,7 +335,7 @@ class common {
 		'title' => null, // Null car un titre peut être vide
 		'redirect' => '',
 		'script' => '',
-		'state' => '',
+		'state' => false,
 		'style' => '',
 		// Trié par ordre d'exécution
 		'vendor' => [
@@ -479,20 +479,12 @@ class common {
 		if(preg_match('#\[(.*)\]#', $key, $secondKey)) {
 			$firstKey = explode('[', $key)[0];
 			$secondKey = $secondKey[1];
-			if(
-				empty($this->input['_POST'][$firstKey][$secondKey])
-				AND isset($_SESSION['ZWII_INPUT_REQUIRED'])
-				AND array_key_exists($firstKey . '_' . $secondKey . '-' . md5($_SERVER['QUERY_STRING']), $_SESSION['ZWII_INPUT_REQUIRED'])
-			) {
+			if(empty($this->input['_POST'][$firstKey][$secondKey])) {
 				common::$inputNotices[$firstKey . '_' . $secondKey] = 'Obligatoire';
 			}
 		}
 		// La clef est une chaine
-		elseif(
-			empty($this->input['_POST'][$key])
-			AND isset($_SESSION['ZWII_INPUT_REQUIRED'])
-			AND array_key_exists($key . '-' . md5($_SERVER['QUERY_STRING']), $_SESSION['ZWII_INPUT_REQUIRED'])
-		) {
+		elseif(empty($this->input['_POST'][$key])) {
 			common::$inputNotices[$key] = 'Obligatoire';
 		}
 	}
@@ -571,9 +563,10 @@ class common {
 	 * Accède à une valeur des variables http (ordre de recherche en l'absence de type : _COOKIE, _POST)
 	 * @param mixed $key Clé de la valeur
 	 * @param int $filter Filtre à appliquer à la valeur
+	 * @param bool $required Champ requis
 	 * @return mixed
 	 */
-	public function getInput($key, $filter = helper::FILTER_STRING_SHORT) {
+	public function getInput($key, $filter = helper::FILTER_STRING_SHORT, $required = false) {
 		// La clef est un tableau
 		if(preg_match('#\[(.*)\]#', $key, $secondKey)) {
 			$firstKey = explode('[', $key)[0];
@@ -581,7 +574,7 @@ class common {
 			foreach($this->input as $type => $values) {
 				if(array_key_exists($firstKey, $values)) {
 					// Champ obligatoire
-					if($type === '_POST') {
+					if($required) {
 						$this->addRequiredInputNotices($key);
 					}
 					// Retourne la valeur filtrée
@@ -600,7 +593,7 @@ class common {
 			foreach($this->input as $type => $values) {
 				if(array_key_exists($key, $values)) {
 					// Champ obligatoire
-					if($type === '_POST') {
+					if($required) {
 						$this->addRequiredInputNotices($key);
 					}
 					// Retourne la valeur filtrée
@@ -748,22 +741,6 @@ class common {
 			case 7:
 				$this->data[$keys[0]][$keys[1]][$keys[2]][$keys[3]][$keys[4]][$keys[5]] = $keys[6];
 				break;
-		}
-	}
-
-	/**
-	 * Insert un champ comme obligatoire
-	 * @param array $attributes Transmet les attributs à la méthode
-	 */
-	public static function setInputRequired($attributes) {
-		if(
-			$attributes['required']
-			AND (
-				empty($_SESSION['ZWII_INPUT_REQUIRED'])
-				OR array_key_exists($attributes['id'] . '-' . md5($_SERVER['QUERY_STRING']), $_SESSION['ZWII_INPUT_REQUIRED']) === false
-			)
-		) {
-			$_SESSION['ZWII_INPUT_REQUIRED'][$attributes['id'] . '-' . md5($_SERVER['QUERY_STRING'])] = true;
 		}
 	}
 
@@ -1035,7 +1012,7 @@ class core extends common {
 							foreach($_POST as $postId => $postValue) {
 								if(is_array($postValue)) {
 									foreach($postValue as $subPostId => $subPostValue) {
-										self::$inputBefore[$postId . '[' . $subPostId . ']'] = $subPostValue;
+										self::$inputBefore[$postId . '_' . $subPostId] = $subPostValue;
 									}
 								}
 								else {
@@ -1046,13 +1023,22 @@ class core extends common {
 						// Sinon traitement des données de sortie qui requiert qu'aucune notice ne soit présente
 						else {
 							// Enregistrement des données
-							if($output['state'] === true) {
+							if($output['state'] !== false) {
 								$this->setData([$module->getData()]);
 								$this->saveData();
 							}
 							// Notification
 							if($output['notification']) {
-								$_SESSION[$output['state'] ? 'ZWII_NOTIFICATION_SUCCESS' : 'ZWII_NOTIFICATION_ERROR'] = $output['notification'];
+								if($output['state'] === true) {
+									$notification = 'ZWII_NOTIFICATION_SUCCESS';
+								}
+								elseif($output['state'] === false) {
+									$notification = 'ZWII_NOTIFICATION_ERROR';
+								}
+								else {
+									$notification = 'ZWII_NOTIFICATION_OTHER';
+								}
+								$_SESSION[$notification] = $output['notification'];
 							}
 							// Redirection
 							if($output['redirect']) {
@@ -1488,15 +1474,12 @@ class helper {
 	 * @return string
 	 */
 	public static function sprintAttributes(array $array = [], array $exclude = []) {
-		// Required est exclu pour privilégier le système de champs requis du système
 		$exclude = array_merge(
 			[
 				'before',
 				'classWrapper',
 				'help',
-				'label',
-				'required',
-				'selected'
+				'label'
 			],
 			$exclude
 		);
@@ -1610,7 +1593,7 @@ class layout extends common {
 			)
 			OR $this->getUrl(0) === 'theme'
 		) {
-			$items .= '<span id="footerLoginLink" ' . ($this->getUrl(0) === 'theme' ? 'class="displayNone"' : '') . '> | <a href="' . helper::baseUrl() . 'user/login">' . helper::translate('Connexion') . '</a></span>';
+			$items .= '<span id="footerLoginLink" ' . ($this->getUrl(0) === 'theme' ? 'class="displayNone"' : '') . '> | <a href="' . helper::baseUrl() . 'user/login/' . str_replace('/', '_', $this->getUrl()) . '">' . helper::translate('Connexion') . '</a></span>';
 		}
 		$items .= '</div>';
 		echo $items;
@@ -1701,6 +1684,10 @@ class layout extends common {
 		elseif(empty($_SESSION['ZWII_NOTIFICATION_ERROR']) === false) {
 			echo '<div id="notification" class="notificationError">' . helper::translate($_SESSION['ZWII_NOTIFICATION_ERROR']) . '</div>';
 			unset($_SESSION['ZWII_NOTIFICATION_ERROR']);
+		}
+		elseif(empty($_SESSION['ZWII_NOTIFICATION_OTHER']) === false) {
+			echo '<div id="notification" class="notificationOther">' . helper::translate($_SESSION['ZWII_NOTIFICATION_OTHER']) . '</div>';
+			unset($_SESSION['ZWII_NOTIFICATION_OTHER']);
 		}
 	}
 
@@ -1872,6 +1859,7 @@ class template {
 			'class' => '',
 			'disabled' => false,
 			'href' => 'javascript:void(0);',
+			'ico' => '',
 			'id' => $nameId,
 			'name' => $nameId,
 			'target' => '',
@@ -1881,11 +1869,11 @@ class template {
 		// Retourne le html
 		return sprintf(
 			'<a %s class="button %s %s %s">%s</a>',
-			helper::sprintAttributes($attributes, ['value', 'class', 'disabled']),
+			helper::sprintAttributes($attributes, ['class', 'disabled', 'ico', 'value']),
 			$attributes['disabled'] ? 'disabled' : '',
 			$attributes['class'],
 			$attributes['uniqueSubmission'] ? 'uniqueSubmission' : '',
-			helper::translate($attributes['value'])
+			($attributes['ico'] ? template::ico($attributes['ico'], 'right') : '') . helper::translate($attributes['value'])
 		);
 	}
 
@@ -1903,11 +1891,8 @@ class template {
 			'help' => '',
 			'id' => $nameId,
 			'name' => $nameId,
-			'required' => true,
 			'value' => ''
 		], $attributes);
-		// Champ requis
-		common::setInputRequired($attributes);
 		// Génère deux nombres pour le capcha
 		$firstNumber = mt_rand(1, 15);
 		$secondNumber = mt_rand(1, 15);
@@ -1962,11 +1947,8 @@ class template {
 			'disabled' => false,
 			'help' => '',
 			'id' => $nameId,
-			'name' => $nameId,
-			'required' => false
+			'name' => $nameId
 		], $attributes);
-		// Champ requis
-		common::setInputRequired($attributes);
 		// Sauvegarde des données en cas d'erreur
 		if($attributes['before'] AND array_key_exists($attributes['id'], common::$inputBefore)) {
 			$attributes['checked'] = (bool) common::$inputBefore[$attributes['id']];
@@ -2016,11 +1998,8 @@ class template {
 			'name' => $nameId,
 			'placeholder' => '',
 			'readonly' => true,
-			'required' => false,
 			'value' => ''
 		], $attributes);
-		// Champ requis
-		common::setInputRequired($attributes);
 		// Sauvegarde des données en cas d'erreur
 		if($attributes['before'] AND array_key_exists($attributes['id'], common::$inputBefore)) {
 			$attributes['value'] = common::$inputBefore[$attributes['id']];
@@ -2042,11 +2021,10 @@ class template {
 		$html .= self::notice($attributes['id'], $notice);
 		// Date visible
 		$html .= sprintf(
-			'<input type="text" id="%s" class="datepicker %s" value="%s" %s>',
-			$attributes['id'],
+			'<input type="text" class="datepicker %s" value="%s" %s>',
 			$attributes['class'],
 			($attributes['value'] ? helper::filter($attributes['value'], helper::FILTER_TIMESTAMP) : ''),
-			helper::sprintAttributes($attributes, ['class', 'id', 'value'])
+			helper::sprintAttributes($attributes, ['class', 'value'])
 		);
 		// Fin du wrapper
 		$html .= '</div>';
@@ -2074,12 +2052,9 @@ class template {
 			'lang' => 'fr_FR',
 			'maxlength' => '500',
 			'name' => $nameId,
-			'required' => false,
 			'type' => 2,
 			'value' => ''
 		], $attributes);
-		// Champ requis
-		common::setInputRequired($attributes);
 		// Sauvegarde des données en cas d'erreur
 		if($attributes['before'] AND array_key_exists($attributes['id'], common::$inputBefore)) {
 			$attributes['value'] = common::$inputBefore[$attributes['id']];
@@ -2237,11 +2212,8 @@ class template {
 			'name' => $nameId,
 			'placeholder' => '',
 			'readonly' => false,
-			'required' => false,
 			'value' => ''
 		], $attributes);
-		// Champ requis
-		common::setInputRequired($attributes);
 		// Sauvegarde des données en cas d'erreur
 		if($attributes['before'] AND array_key_exists($attributes['id'], common::$inputBefore)) {
 			$attributes['value'] = common::$inputBefore[$attributes['id']];
@@ -2301,11 +2273,8 @@ class template {
 			'maxlength' => '500',
 			'name' => $nameId,
 			'placeholder' => '',
-			'readonly' => false,
-			'required' => false
+			'readonly' => false
 		], $attributes);
-		// Champ requis
-		common::setInputRequired($attributes);
 		// Début du wrapper
 		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="inputWrapper ' . $attributes['classWrapper'] . '">';
 		// Label
@@ -2350,11 +2319,8 @@ class template {
 			'id' => $nameId,
 			'label' => '',
 			'name' => $nameId,
-			'required' => false,
 			'selected' => ''
 		], $attributes);
-		// Champ requis
-		common::setInputRequired($attributes);
 		// Sauvegarde des données en cas d'erreur
 		if($attributes['before'] AND array_key_exists($attributes['id'], common::$inputBefore)) {
 			$attributes['selected'] = common::$inputBefore[$attributes['id']];
@@ -2415,6 +2381,7 @@ class template {
 		$attributes = array_merge([
 			'class' => '',
 			'disabled' => false,
+			'ico' => 'check',
 			'id' => $nameId,
 			'name' => $nameId,
 			'uniqueSubmission' => true,
@@ -2425,8 +2392,8 @@ class template {
 			'<button type="submit" class="%s %s" %s>%s</button>',
 			$attributes['class'],
 			$attributes['uniqueSubmission'] ? 'uniqueSubmission' : '',
-			helper::sprintAttributes($attributes, ['value', 'class']),
-			helper::translate($attributes['value'])
+			helper::sprintAttributes($attributes, ['class', 'ico', 'value']),
+			($attributes['ico'] ? template::ico($attributes['ico'], 'right') : '') . helper::translate($attributes['value'])
 		);
 	}
 
@@ -2503,11 +2470,8 @@ class template {
 			'name' => $nameId,
 			'placeholder' => '',
 			'readonly' => false,
-			'required' => false,
 			'value' => ''
 		], $attributes);
-		// Champ requis
-		common::setInputRequired($attributes);
 		// Sauvegarde des données en cas d'erreur
 		if($attributes['before'] AND array_key_exists($attributes['id'], common::$inputBefore)) {
 			$attributes['value'] = common::$inputBefore[$attributes['id']];
@@ -2557,11 +2521,8 @@ class template {
 			'maxlength' => '500000',
 			'name' => $nameId,
 			'readonly' => false,
-			'required' => false,
 			'value' => ''
 		], $attributes);
-		// Champ requis
-		common::setInputRequired($attributes);
 		// Sauvegarde des données en cas d'erreur
 		if($attributes['before'] AND array_key_exists($attributes['id'], common::$inputBefore)) {
 			$attributes['value'] = common::$inputBefore[$attributes['id']];
