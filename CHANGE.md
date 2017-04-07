@@ -6,6 +6,7 @@ Zwii 8 Changelog
 * Ajout du module de création de blog
 * Amélioration de l'interface
 * Correction d'une erreur qui bloquait l'option "Champ obligatoire" dans le module de génération de formulaire
+* Correction d'une erreur bloquant la désactivation du backup automatique
 * Correction d'une faille de sécurité au niveau des champs obligatoires
 * Optimisation des filtres afin de sécuriser davantage les données enregistrées dans le fichier data.json
 

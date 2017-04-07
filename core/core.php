@@ -773,7 +773,6 @@ class core extends common {
 		// Backup automatique des données
 		$lastBackup = mktime(0, 0, 0);
 		if(
-			true OR
 			$this->getData(['config', 'autoBackup'])
 			AND $lastBackup > $this->getData(['core', 'lastBackup']) + 86400
 			AND $this->getData(['user']) // Pas de backup pendant l'installation
