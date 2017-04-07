@@ -38,8 +38,7 @@ class user extends common {
 				self::$inputNotices['userAddId'] = 'Identifiant déjà utilisé';
 			}
 			// Double vérification pour le mot de passe
-			$password = $this->getInput('userAddPassword', helper::FILTER_PASSWORD, true);
-			if($password !== $this->getInput('userAddConfirmPassword', helper::FILTER_PASSWORD)) {
+			if($this->getInput('userAddPassword', helper::FILTER_STRING_SHORT, true) !== $this->getInput('userAddConfirmPassword', helper::FILTER_STRING_SHORT, true)) {
 				self::$inputNotices['userAddConfirmPassword'] = 'Incorrect';
 			}
 			// Crée l'utilisateur
@@ -55,7 +54,7 @@ class user extends common {
 					'group' => $this->getInput('userAddGroup', helper::FILTER_INT, true),
 					'lastname' => $lastname,
 					'mail' => $mail,
-					'password' => $password
+					'password' => $this->getInput('userAddPassword', helper::FILTER_PASSWORD, true)
 				]
 			]);
 			// Envoi le mail
@@ -156,7 +155,7 @@ class user extends common {
 					if(password_verify($this->getInput('userEditOldPassword'), $this->getData(['user', $this->getUrl(2), 'password']))) {
 						// La confirmation correspond au mot de passe
 						if($this->getInput('userEditNewPassword') === $this->getInput('userEditConfirmPassword')) {
-							$newPassword = $this->getInput('userEditNewPassword', helper::FILTER_PASSWORD);
+							$newPassword = $this->getInput('userEditNewPassword', helper::FILTER_PASSWORD, true);
 							// Déconnexion de l'utilisateur si il change le mot de passe de son propre compte
 							if($this->getUser('id') === $this->getUrl(2)) {
 								helper::deleteCookie('ZWII_USER_ID');
@@ -227,7 +226,7 @@ class user extends common {
 	public function forgot() {
 		// Soumission du formulaire
 		if($this->isPost()) {
-			$userId = $this->getInput('userForgotId', helper::FILTER_ID);
+			$userId = $this->getInput('userForgotId', helper::FILTER_ID, true);
 			if($this->getData(['user', $userId])) {
 				// Enregistre la date de la demande dans le compte utilisateur
 				$this->setData(['user', $userId, 'forgot', time()]);
@@ -299,10 +298,10 @@ class user extends common {
 	public function login() {
 		// Soumission du formulaire
 		if($this->isPost()) {
-			$userId = $this->getInput('userLoginId', helper::FILTER_ID);
+			$userId = $this->getInput('userLoginId', helper::FILTER_ID, true);
 			// Connexion si les informations sont correctes
 			if(
-				password_verify($this->getInput('userLoginPassword'), $this->getData(['user', $userId, 'password']))
+				password_verify($this->getInput('userLoginPassword', helper::FILTER_STRING_SHORT, true), $this->getData(['user', $userId, 'password']))
 				AND $this->getData(['user', $userId, 'group']) >= self::GROUP_MEMBER
 			) {
 				$expire = $this->getInput('userLoginLongTime') ? strtotime("+1 year") : 0;
@@ -369,11 +368,13 @@ class user extends common {
 			if($this->isPost()) {
 				// Double vérification pour le mot de passe
 				if($this->getInput('userResetNewPassword')) {
-					$newPassword = $this->getInput('userResetNewPassword', helper::FILTER_PASSWORD);
 					// La confirmation ne correspond pas au mot de passe
-					if($this->getInput('userResetNewPassword') !== $this->getInput('userResetConfirmPassword')) {
+					if($this->getInput('userResetNewPassword', helper::FILTER_STRING_SHORT, true) !== $this->getInput('userResetConfirmPassword', helper::FILTER_STRING_SHORT, true)) {
 						$newPassword = $this->getData(['user', $this->getUrl(2), 'password']);
 						self::$inputNotices['userResetConfirmPassword'] = 'Incorrect';
+					}
+					else {
+						$newPassword = $this->getInput('userResetNewPassword', helper::FILTER_PASSWORD, true);
 					}
 					// Modifie le mot de passe
 					$this->setData(['user', $this->getUrl(2), 'password', $newPassword]);

@@ -28,8 +28,7 @@
 							'value' => $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'config', 'directory'])
 						]); ?>
 						<?php echo template::select('galleryEditDirectory', [], [
-							'label' => 'Dossier cible',
-							'required' => true
+							'label' => 'Dossier cible'
 						]); ?>
 					</div>
 				</div>

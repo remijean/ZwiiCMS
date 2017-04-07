@@ -67,11 +67,11 @@ class gallery extends common {
 		}
 		// Soumission du formulaire
 		if($this->isPost()) {
-			$galleryId = helper::increment($this->getInput('galleryConfigName', helper::FILTER_ID), (array) $this->getData(['module', $this->getUrl(0)]));
+			$galleryId = helper::increment($this->getInput('galleryConfigName', helper::FILTER_ID, true), (array) $this->getData(['module', $this->getUrl(0)]));
 			$this->setData(['module', $this->getUrl(0), $galleryId, [
 				'config' => [
 					'name' => $this->getInput('galleryConfigName'),
-					'directory' => $this->getInput('galleryConfigDirectory')
+					'directory' => $this->getInput('galleryConfigDirectory', helper::FILTER_STRING_SHORT, true)
 				],
 				'legend' => []
 			]]);
@@ -154,7 +154,7 @@ class gallery extends common {
 				$this->setData(['module', $this->getUrl(0), $id, [
 					'config' => [
 						'name' => $this->getInput('galleryEditName', helper::FILTER_STRING_SHORT, true),
-						'directory' => $this->getInput('galleryEditDirectory')
+						'directory' => $this->getInput('galleryEditDirectory', helper::FILTER_STRING_SHORT, true)
 					],
 					'legend' => $legends
 				]]);

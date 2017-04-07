@@ -1,7 +1,6 @@
 <form method="post">
 	<?php echo template::text('userForgotId', [
-		'label' => 'Identifiant',
-		'required' => true
+		'label' => 'Identifiant'
 	]); ?>
 	<div class="row">
 		<div class="col3 offset6">

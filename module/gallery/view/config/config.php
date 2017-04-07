@@ -16,15 +16,13 @@
 				<div class="row">
 					<div class="col6">
 						<?php echo template::text('galleryConfigName', [
-							'label' => 'Nom',
-							'required' => true
+							'label' => 'Nom'
 						]); ?>
 					</div>
 					<div class="col5">
 						<?php echo template::hidden('galleryConfigDirectoryOld'); ?>
 						<?php echo template::select('galleryConfigDirectory', [], [
-							'label' => 'Dossier cible',
-							'required' => true
+							'label' => 'Dossier cible'
 						]); ?>
 					</div>
 					<div class="col1 verticalAlignBottom">

@@ -47,11 +47,11 @@ class blog extends common {
 				'closeComment' => $this->getInput('blogAddCloseComment', helper::FILTER_BOOLEAN),
 				'comment' => [],
 				'content' => $this->getInput('blogAddContent', helper::FILTER_STRING_LONG),
-				'picture' => $this->getInput('blogAddPicture'),
+				'picture' => $this->getInput('blogAddPicture', helper::FILTER_STRING_SHORT, true),
 				'publishedOn' => $this->getInput('blogAddPublishedOn', helper::FILTER_DATETIME, true),
 				'status' => $this->getInput('blogAddStatus', helper::FILTER_BOOLEAN),
 				'tag' => [],
-				'title' => $this->getInput('blogAddTitle'),
+				'title' => $this->getInput('blogAddTitle', helper::FILTER_STRING_SHORT, true),
 				'userId' => $this->getInput('blogAddUserId', helper::FILTER_ID, true)
 			]]);
 			// Valeurs en sortie
@@ -235,8 +235,8 @@ class blog extends common {
 					// Crée le commentaire
 					$commentId = helper::increment(uniqid(), $this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'comment']));
 					$this->setData(['module', $this->getUrl(0), $this->getUrl(1), 'comment', $commentId, [
-						'author' => $this->getInput('blogArticleAuthor'),
-						'content' =>  $this->getInput('blogArticleContent'),
+						'author' => $this->getInput('blogArticleAuthor', helper::FILTER_STRING_SHORT, true),
+						'content' =>  $this->getInput('blogArticleContent', helper::FILTER_STRING_SHORT, true),
 						'createdOn' => time(),
 						'userId' => $this->getInput('blogArticleUserId'),
 					]]);

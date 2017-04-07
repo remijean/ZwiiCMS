@@ -31,8 +31,7 @@
 				<div class="row">
 					<div class="col6">
 						<?php echo template::text('blogAddTitle', [
-							'label' => 'Titre',
-							'required' => true
+							'label' => 'Titre'
 						]); ?>
 					</div>
 					<div class="col6">
@@ -40,8 +39,7 @@
 							'help' => helper::translate('Taille optimale de l\'image de couverture :') . ' ' . ((int) substr($this->getData(['theme', 'site', 'width']), 0, -2) - (20 * 2)) . ' x 350 pixels.',
 							'label' => 'Image de couverture',
 							'lang' => $this->getData(['config', 'language']),
-							'type' => 1,
-							'required' => true
+							'type' => 1
 						]); ?>
 					</div>
 				</div>

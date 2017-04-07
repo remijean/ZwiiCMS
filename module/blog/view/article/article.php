@@ -32,8 +32,7 @@
 				<div class="row">
 					<div class="col9">
 						<?php echo template::text('blogArticleAuthor', [
-							'label' => 'Nom',
-							'required' => true
+							'label' => 'Nom'
 						]); ?>
 					</div>
 					<div class="col1 textAlignCenter verticalAlignBottom">
@@ -49,8 +48,7 @@
 			<?php endif; ?>
 			<?php echo template::textarea('blogArticleContent', [
 				'label' => 'Commentaire',
-				'maxlength' => '500',
-				'required' => true
+				'maxlength' => '500'
 			]); ?>
 			<?php if($this->getUser('password') !== $this->getInput('ZWII_USER_PASSWORD')): ?>
 				<div class="row">

@@ -2,14 +2,12 @@
 	<div class="row">
 		<div class="col6">
 			<?php echo template::text('userLoginId', [
-				'label' => 'Identifiant',
-				'required' => true
+				'label' => 'Identifiant'
 			]); ?>
 		</div>
 		<div class="col6">
 			<?php echo template::password('userLoginPassword', [
-				'label' => 'Mot de passe',
-				'required' => true
+				'label' => 'Mot de passe'
 			]); ?>
 		</div>
 	</div>
