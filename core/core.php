@@ -389,7 +389,18 @@ class common {
 		}
 		// Import des données
 		if($this->data === []) {
-			$this->setData([json_decode(file_get_contents('site/data/data.json'), true)]);
+			// Trois tentatives
+			for($i = 0; $i < 3; $i++) {
+				$this->setData([json_decode(file_get_contents('site/data/data.json'), true)]);
+				if($this->data) {
+					break;
+				}
+				elseif($i === 2) {
+					exit('Unable to read data file.');
+				}
+				// Pause de 10 millisecondes
+				usleep(10000);
+			}
 		}
 		// Mise à jour
 		$this->update();
@@ -676,7 +687,6 @@ class common {
 			// Pause de 10 millisecondes
 			usleep(10000);
 		}
-
 	}
 
 	/**
