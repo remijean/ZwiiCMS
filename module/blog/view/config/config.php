@@ -7,18 +7,17 @@
 			'value' => 'Retour'
 		]); ?>
 	</div>
-	<div class="col2 offset6">
+	<div class="col3 offset5">
 		<?php echo template::button('blogConfigComment', [
 			'href' => helper::baseUrl() . $this->getUrl(0) . '/comment',
-			'ico' => 'pencil',
-			'value' => 'Commentaires'
+			'value' => 'Gérer les commentaires'
 		]); ?>
 	</div>
 	<div class="col2">
 		<?php echo template::button('blogConfigAdd', [
 			'href' => helper::baseUrl() . $this->getUrl(0) . '/add',
 			'ico' => 'plus',
-			'value' => 'Article'
+			'value' => 'articles'
 		]); ?>
 	</div>
 </div>
@@ -26,5 +25,5 @@
 	<?php echo template::table([4, 4, 2, 1, 1], $module::$articles, ['Titre', 'Date de publication', 'Statut', '', '']); ?>
 	<?php echo $module::$pages; ?>
 <?php else: ?>
-	<?php echo template::speech('Aucun article.'); ?>
+	<?php echo template::speech('Aucun articles.'); ?>
 <?php endif; ?>

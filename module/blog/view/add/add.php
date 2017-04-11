@@ -8,11 +8,10 @@
 				'value' => 'Retour'
 			]); ?>
 		</div>
-		<div class="col2 offset6">
+		<div class="col3 offset5">
 			<?php echo template::button('blogAddDraft', [
-				'ico' => 'check',
 				'uniqueSubmission' => true,
-				'value' => 'Brouillon'
+				'value' => 'Enregistrer en brouillon'
 			]); ?>
 			<?php echo template::hidden('blogAddStatus', [
 				'value' => true
@@ -52,7 +51,7 @@
 	<div class="row">
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Options avancés'); ?></h4>
+				<h4><?php echo helper::translate('Options de publication'); ?></h4>
 				<?php echo template::select('blogAddUserId', $module::$users, [
 					'label' => 'Auteur',
 					'selected' => $this->getUser('id')

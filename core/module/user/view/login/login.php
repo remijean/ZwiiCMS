@@ -31,7 +31,6 @@
 		</div>
 		<div class="col3">
 			<?php echo template::submit('userLoginSubmit', [
-				'ico' => '',
 				'value' => 'Connexion'
 			]); ?>
 		</div>

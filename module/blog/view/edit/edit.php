@@ -8,14 +8,12 @@
 				'value' => 'Retour'
 			]); ?>
 		</div>
-		<div class="col2 offset6">
+		<div class="col3 offset5">
 			<?php echo template::button('blogEditDraft', [
-				'ico' => 'check',
 				'uniqueSubmission' => true,
-				'value' => 'Brouillon'
+				'value' => 'Enregistrer en brouillon'
 			]); ?>
 			<?php echo template::hidden('blogEditStatus', [
-				'uniqueSubmission' => true,
 				'value' => true
 			]); ?>
 		</div>
@@ -62,7 +60,7 @@
 					'selected' => $this->getUser('id')
 				]); ?>
 				<?php echo template::date('blogEditPublishedOn', [
-					'help' => 'L\'article n\'est pas visible lorsque la date de publication est dans le futur.',
+					'help' => 'L\'article est consultable à partir du moment ou la date de publication est passée.',
 					'label' => 'Date de publication',
 					'value' => $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'publishedOn'])
 				]); ?>

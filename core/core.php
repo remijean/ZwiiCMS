@@ -58,6 +58,7 @@ class common {
 			'title' => 'Zwii, votre site en quelques clics !'
 		],
 		'core' => [
+			'dataVersion' => 0,
 			'lastBackup' => 0,
 			'lastClearTmp' => 0
 		],
@@ -163,9 +164,6 @@ class common {
 					'picture' => 'gallery/meadow.jpg',
 					'publishedOn' => 1420903200,
 					'status' => true,
-					'tag' => [
-						'Actualités'
-					],
 					'title' => 'Mon premier article',
 					'userId' => '' // Géré au moment de l'installation
 				],
@@ -176,9 +174,6 @@ class common {
 					'picture' => 'gallery/desert.jpg',
 					'publishedOn' => 1421748000,
 					'status' => true,
-					'tag' => [
-						'Actualités'
-					],
 					'title' => 'Mon deuxième article',
 					'userId' => '' // Géré au moment de l'installation
 				],
@@ -189,9 +184,6 @@ class common {
 					'picture' => 'gallery/iceberg.jpg',
 					'publishedOn' => 1423154400,
 					'status' => true,
-					'tag' => [
-						'Autres'
-					],
 					'title' => 'Mon troisième article',
 					'userId' => '' // Géré au moment de l'installation
 				]
@@ -399,6 +391,8 @@ class common {
 		if($this->data === []) {
 			$this->setData([json_decode(file_get_contents('site/data/data.json'), true)]);
 		}
+		// Mise à jour
+		$this->update();
 		// Utilisateur connecté
 		if($this->user === []) {
 			$this->user = $this->getData(['user', $this->getInput('ZWII_USER_ID')]);
@@ -506,6 +500,15 @@ class common {
 				break;
 			case 4:
 				unset($this->data[$keys[0]][$keys[1]][$keys[2]][$keys[3]]);
+				break;
+			case 5:
+				unset($this->data[$keys[0]][$keys[1]][$keys[2]][$keys[3]][$keys[4]]);
+				break;
+			case 6:
+				unset($this->data[$keys[0]][$keys[1]][$keys[2]][$keys[3]][$keys[4]][$keys[5]]);
+				break;
+			case 7:
+				unset($this->data[$keys[0]][$keys[1]][$keys[2]][$keys[3]][$keys[4]][$keys[5]][$keys[6]]);
 				break;
 		}
 	}
@@ -741,6 +744,18 @@ class common {
 			case 7:
 				$this->data[$keys[0]][$keys[1]][$keys[2]][$keys[3]][$keys[4]][$keys[5]] = $keys[6];
 				break;
+		}
+	}
+
+	/**
+	 * Mises à jour
+	 */
+	private function update() {
+		// Version 8.1.0
+		if($this->getData(['core', 'dataVersion']) < 810) {
+			$this->setData(['config', 'timezone', 'Europe/Paris']);
+			$this->setData(['core', 'dataVersion', 810]);
+			$this->saveData();
 		}
 	}
 
@@ -991,7 +1006,18 @@ class core extends common {
 				/** @var common $module */
 				$module = new $moduleId;
 				// Check l'existence de l'action
-				$action = array_key_exists($this->getUrl(1), $module::$actions) ? $this->getUrl(1) : 'index';
+				$action = '';
+				$ignore = true;
+				foreach(explode('-', $this->getUrl(1)) as $actionPart) {
+					if($ignore) {
+						$action .= $actionPart;
+						$ignore = false;
+					}
+					else {
+						$action .= ucfirst($actionPart);
+					}
+				}
+				$action = array_key_exists($action, $module::$actions) ? $action : 'index';
 				if(array_key_exists($action, $module::$actions)) {
 					$module->$action();
 					$output = $module->output;
@@ -2380,7 +2406,7 @@ class template {
 		$attributes = array_merge([
 			'class' => '',
 			'disabled' => false,
-			'ico' => 'check',
+			'ico' => '',
 			'id' => $nameId,
 			'name' => $nameId,
 			'uniqueSubmission' => true,

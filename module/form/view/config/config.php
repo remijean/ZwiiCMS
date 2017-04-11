@@ -53,11 +53,10 @@
 				'value' => 'Retour'
 			]); ?>
 		</div>
-		<div class="col2 offset6">
+		<div class="col3 offset5">
 			<?php echo template::button('formConfigData', [
 				'href' => helper::baseUrl() . $this->getUrl(0) . '/data',
-				'ico' => 'eye',
-				'value' => 'Données'
+				'value' => 'Gérer les données'
 			]); ?>
 		</div>
 		<div class="col2">

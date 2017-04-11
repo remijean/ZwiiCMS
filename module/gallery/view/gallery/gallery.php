@@ -1,5 +1,5 @@
 <div class="row">
-	<div class="col2 offset10">
+	<div class="col2">
 		<?php echo template::button('galleryGalleryBack', [
 			'class' => 'buttonGrey',
 			'href' => helper::baseUrl() . $this->getUrl(0),

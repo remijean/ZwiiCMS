@@ -33,8 +33,8 @@ class user extends common {
 		// Soumission du formulaire
 		if($this->isPost()) {
 			// L'identifiant d'utilisateur est indisponible
-			$id = $this->getData(['user', $this->getInput('userAddId', helper::FILTER_ID, true)]);
-			if($id) {
+			$id = $this->getInput('userAddId', helper::FILTER_ID, true);
+			if($this->getData(['user', $id])) {
 				self::$inputNotices['userAddId'] = 'Identifiant déjà utilisé';
 			}
 			// Double vérification pour le mot de passe

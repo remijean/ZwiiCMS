@@ -16,6 +16,8 @@ class blog extends common {
 
 	public static $actions = [
 		'add' => self::GROUP_MODERATOR,
+		'comment' => self::GROUP_MODERATOR,
+		'commentDelete' => self::GROUP_MODERATOR,
 		'config' => self::GROUP_MODERATOR,
 		'delete' => self::GROUP_MODERATOR,
 		'edit' => self::GROUP_MODERATOR,
@@ -50,7 +52,6 @@ class blog extends common {
 				'picture' => $this->getInput('blogAddPicture', helper::FILTER_STRING_SHORT, true),
 				'publishedOn' => $this->getInput('blogAddPublishedOn', helper::FILTER_DATETIME, true),
 				'status' => $this->getInput('blogAddStatus', helper::FILTER_BOOLEAN),
-				'tag' => [],
 				'title' => $this->getInput('blogAddTitle', helper::FILTER_STRING_SHORT, true),
 				'userId' => $this->getInput('blogAddUserId', helper::FILTER_ID, true)
 			]]);
@@ -77,6 +78,69 @@ class blog extends common {
 			],
 			'view' => 'add'
 		]);
+	}
+
+	/**
+	 * Liste des commentaires
+	 */
+	public function comment() {
+		// Liste les commentaires
+		$comments = [];
+		foreach($this->getData(['module', $this->getUrl(0)]) as $articleId => $article) {
+			foreach($article['comment'] as &$comment) {
+				$comment['articleId'] = $articleId;
+			}
+			$comments += $article['comment'];
+		}
+		// Ids des commentaires par ordre de création
+		$commentIds = array_keys(helper::arrayCollumn($comments, 'createdOn', 'SORT_DESC'));
+		// Pagination
+		$pagination = helper::pagination($commentIds, $this->getUrl());
+		// Liste des pages
+		self::$pages = $pagination['pages'];
+		// Commentaires en fonction de la pagination
+		for($i = $pagination['first']; $i < $pagination['last']; $i++) {
+			// Met en forme le tableau
+			$comment = $comments[$commentIds[$i]];
+			self::$comments[] = [
+				date('d/m/Y H:i', $comment['createdOn']),
+				$comment['content'],
+				$comment['userId'] ? $this->getData(['user', $comment['userId'], 'firstname']) . ' ' . $this->getData(['user', $comment['userId'], 'lastname']) : $comment['author'],
+				template::button('blogCommentDelete' . $commentIds[$i], [
+					'class' => 'blogCommentDelete buttonRed',
+					'href' => helper::baseUrl() . $this->getUrl(0) . '/comment-delete/' . $comment['articleId'] . '/' . $commentIds[$i],
+					'value' => template::ico('cancel')
+				])
+			];
+		}
+		// Valeurs en sortie
+		$this->addOutput([
+			'title' => 'Gestion des commentaires',
+			'view' => 'comment'
+		]);
+	}
+
+	/**
+	 * Suppression de commentaire
+	 */
+	public function commentDelete() {
+		// Le commentaire n'existe pas
+		if($this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'comment', $this->getUrl(3)]) === null) {
+			// Valeurs en sortie
+			$this->addOutput([
+				'access' => false
+			]);
+		}
+		// Suppression
+		else {
+			$this->deleteData(['module', $this->getUrl(0), $this->getUrl(2), 'comment', $this->getUrl(3)]);
+			// Valeurs en sortie
+			$this->addOutput([
+				'redirect' => helper::baseUrl() . $this->getUrl(0) . '/comment',
+				'notification' => 'Commentaire supprimé',
+				'state' => true
+			]);
+		}
 	}
 
 	/**
@@ -138,17 +202,6 @@ class blog extends common {
 	}
 
 	/**
-	 * Liste des dossiers
-	 */
-	public function dirs() {
-		// Valeurs en sortie
-		$this->addOutput([
-			'display' => self::DISPLAY_JSON,
-			'content' => galleriesHelper::scanDir('site/file/source')
-		]);
-	}
-
-	/**
 	 * Édition
 	 */
 	public function edit() {
@@ -178,7 +231,6 @@ class blog extends common {
 					'picture' => $this->getInput('blogEditPicture', helper::FILTER_STRING_SHORT, true),
 					'publishedOn' => $this->getInput('blogEditPublishedOn', helper::FILTER_DATETIME, true),
 					'status' => $this->getInput('blogEditStatus', helper::FILTER_BOOLEAN),
-					'tag' => [],
 					'title' => $this->getInput('blogEditTitle', helper::FILTER_STRING_SHORT, true),
 					'userId' => $this->getInput('blogEditUserId', helper::FILTER_ID, true)
 				]]);
