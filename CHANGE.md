@@ -3,6 +3,7 @@ Zwii 8 Changelog
 
 ## 8.1.0
 * Ajout d'un message d'erreur en cas d'échec lors d'un envoi de mail
+* Ajout de la confirmation des lightboxs avec le bouton entrée
 * Ajout du module blog
 * Ajout du module news
 * Amélioration de l'interface

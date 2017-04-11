@@ -33,6 +33,12 @@ core.alert = function(text) {
 					)
 			)
 	}(jQuery));
+	// Validation de la lightbox avec le bouton entrée
+	$(document).on("keyup", function(event) {
+		if(event.keyCode === 13) {
+			lightbox.close();
+		}
+	});
 	return false;
 };
 
@@ -93,6 +99,15 @@ core.confirm = function(text, yesCallback, noCallback) {
 			&& typeof noCallback !== "undefined"
 		) {
 			noCallback();
+		}
+	});
+	// Validation de la lightbox avec le bouton entrée
+	$(document).on("keyup", function(event) {
+		if(event.keyCode === 13) {
+			lightbox.close();
+			if(typeof yesCallback !== "undefined") {
+				yesCallback();
+			}
 		}
 	});
 	return false;
