@@ -118,8 +118,6 @@ class page extends common {
 					foreach($this->getHierarchy($this->getUrl(2)) as $childrenPageId) {
 						$this->setData(['page', $childrenPageId, 'parentPageId', $pageId]);
 					}
-					// Supprime l'ancienne page
-					$this->deleteData(['page', $this->getUrl(2)]);
 					// Change l'id de page dans les données des modules
 					$this->setData(['module', $pageId, $this->getData(['module', $this->getUrl(2)])]);
 					$this->deleteData(['module', $this->getUrl(2)]);
@@ -129,8 +127,12 @@ class page extends common {
 					}
 				}
 				// Supprime les données du module en cas de changement
-				if($this->getInput('pageEditModuleId') !== $this->getData(['page', $pageId, 'moduleId'])) {
+				if($this->getInput('pageEditModuleId') !== $this->getData(['page', $this->getUrl(2), 'moduleId'])) {
 					$this->deleteData(['module', $pageId]);
+				}
+				// Supprime l'ancienne page si l'id a changée
+				if($pageId !== $this->getUrl(2)) {
+					$this->deleteData(['page', $this->getUrl(2)]);
 				}
 				// Si la page est une page enfant, actualise les positions des autres enfants du parent, sinon actualise les pages sans parents
 				$lastPosition = 1;
