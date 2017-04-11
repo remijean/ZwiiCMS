@@ -86,6 +86,15 @@
 					'label' => 'Groupe requis pour accéder à la page',
 					'selected' => $this->getData(['page', $this->getUrl(2), 'group'])
 				]); ?>
+				<?php echo template::text('pageEditMetaTitle', [
+					'label' => 'Méta-titre',
+					'value' => $this->getData(['page', $this->getUrl(2), 'metaTitle'])
+				]); ?>
+				<?php echo template::textarea('pageEditMetaDescription', [
+					'label' => 'Méta-description',
+					'maxlength' => '500',
+					'value' => $this->getData(['page', $this->getUrl(2), 'metaDescription'])
+				]); ?>
 				<?php echo template::checkbox('pageEditHideTitle', true, 'Cacher le titre', [
 					'checked' => $this->getData(['page', $this->getUrl(2), 'hideTitle'])
 				]); ?>
