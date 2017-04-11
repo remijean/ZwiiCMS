@@ -64,6 +64,7 @@
 	"Dans le site avant la bannière": "In the site before the banner",
 	"Description du site": "Site description",
 	"Déconnexion réussie": "Logout successful",
+	"Donnée supprimée": "Data deleted",
 	"En bas au centre": "Down to the center",
 	"En bas à droite": "Lower right",
 	"En bas à gauche": "Lower left",
@@ -233,6 +234,7 @@
 	"À droite": "Right",
 	"À gauche": "Left",
 	"Êtes-vous sûr de vouloir supprimer cet utilisateur ?": "Are you sure you want to delete this user?",
+	"Êtes-vous sûr de vouloir supprimer cette donnée ?": "Are you sure you want to delete this data?",
 	"Êtes-vous sûr de vouloir supprimer cette page ?": "Are you sure you want to delete this page?",
 	"Mot de passe du compte :": "Account password:",
 	"Zones": "Areas"

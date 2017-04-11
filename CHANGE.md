@@ -5,6 +5,7 @@ Zwii 8 Changelog
 * Ajout d'un message d'erreur en cas d'échec lors d'un envoi de mail
 * Ajout d'une vérification du fichier de données afin d'éviter une corruption
 * Ajout de la confirmation des lightboxs avec le bouton entrée
+* Ajout de la suppression des données dans le gestionnaire de formulaires
 * Ajout du module blog
 * Ajout du module news
 * Amélioration de l'interface

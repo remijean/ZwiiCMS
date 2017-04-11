@@ -17,6 +17,7 @@ class form extends common {
 	public static $actions = [
 		'config' => self::GROUP_MODERATOR,
 		'data' => self::GROUP_MODERATOR,
+		'delete' => self::GROUP_MODERATOR,
 		'index' => self::GROUP_VISITOR
 	];
 
@@ -104,6 +105,7 @@ class form extends common {
 			// Liste des pages
 			self::$pagination = $pagination['pages'];
 			// Inverse l'ordre du tableau
+			$dataIds = array_reverse(array_keys($data));
 			$data = array_reverse($data);
 			// Données en fonction de la pagination
 			for($i = $pagination['first']; $i < $pagination['last']; $i++) {
@@ -111,7 +113,14 @@ class form extends common {
 				foreach($data[$i] as $input => $value) {
 					$content .= $input . ' : ' . $value . '<br>';
 				}
-				self::$data[] = [$content];
+				self::$data[] = [
+					$content,
+					template::button('formDataDelete' . $dataIds[$i], [
+						'class' => 'formDataDelete buttonRed',
+						'href' => helper::baseUrl() . $this->getUrl(0) . '/delete/' . $dataIds[$i],
+						'value' => template::ico('cancel')
+					])
+				];
 			}
 		}
 		// Valeurs en sortie
@@ -119,6 +128,29 @@ class form extends common {
 			'title' => 'Données enregistrées',
 			'view' => 'data'
 		]);
+	}
+
+	/**
+	 * Suppression
+	 */
+	public function delete() {
+		// La donnée n'existe pas
+		if($this->getData(['module', $this->getUrl(0), 'data', $this->getUrl(2)]) === null) {
+			// Valeurs en sortie
+			$this->addOutput([
+				'access' => false
+			]);
+		}
+		// Suppression
+		else {
+			$this->deleteData(['module', $this->getUrl(0), 'data', $this->getUrl(2)]);
+			// Valeurs en sortie
+			$this->addOutput([
+				'redirect' => helper::baseUrl() . $this->getUrl(0) . '/data',
+				'notification' => 'Donnée supprimée',
+				'state' => true
+			]);
+		}
 	}
 
 	/**

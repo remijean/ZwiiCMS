@@ -8,5 +8,5 @@
 		]); ?>
 	</div>
 </div>
-<?php echo template::table([12], $module::$data); ?>
+<?php echo template::table([11, 1], $module::$data, ['Données', '']); ?>
 <?php echo $module::$pagination; ?>
