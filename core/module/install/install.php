@@ -43,31 +43,31 @@ class install extends common {
 					self::$inputNotices['installConfigConfirmPassword'] = 'Incorrect';
 				}
 				// Crée l'utilisateur
-				$firstname = $this->getInput('installConfigFirstname', helper::FILTER_STRING_SHORT, true);
-				$lastname = $this->getInput('installConfigLastname', helper::FILTER_STRING_SHORT, true);
-				$mail = $this->getInput('installConfigMail', helper::FILTER_MAIL, true);
-				$id = $this->getInput('installConfigId', helper::FILTER_ID, true);
+				$userFirstname = $this->getInput('installConfigFirstname', helper::FILTER_STRING_SHORT, true);
+				$userLastname = $this->getInput('installConfigLastname', helper::FILTER_STRING_SHORT, true);
+				$userMail = $this->getInput('installConfigMail', helper::FILTER_MAIL, true);
+				$userId = $this->getInput('installConfigId', helper::FILTER_ID, true);
 				$this->setData([
 					'user',
-					$id,
+					$userId,
 					[
-						'firstname' => $firstname,
+						'firstname' => $userFirstname,
 						'forgot' => 0,
 						'group' => self::GROUP_ADMIN,
-						'lastname' => $lastname,
-						'mail' => $mail,
+						'lastname' => $userLastname,
+						'mail' => $userMail,
 						'password' => $this->getInput('installConfigPassword', helper::FILTER_PASSWORD, true)
 					]
 				]);
 				// Configure certaines données par défaut
-				$this->setData(['module', 'blog', 'mon-premier-article', 'userId', $id]);
-				$this->setData(['module', 'blog', 'mon-deuxieme-article', 'userId', $id]);
-				$this->setData(['module', 'blog', 'mon-troisieme-article', 'userId', $id]);
+				$this->setData(['module', 'blog', 'mon-premier-article', 'userId', $userId]);
+				$this->setData(['module', 'blog', 'mon-deuxieme-article', 'userId', $userId]);
+				$this->setData(['module', 'blog', 'mon-troisieme-article', 'userId', $userId]);
 				// Envoi le mail
 				$sent = $this->sendMail(
-					$mail,
+					$userMail,
 					helper::translate('Installation de votre site'),
-					helper::translate('Bonjour') . ' <strong>' . $firstname . ' ' . $lastname . '</strong>,<br><br>' .
+					helper::translate('Bonjour') . ' <strong>' . $userFirstname . ' ' . $userLastname . '</strong>,<br><br>' .
 					helper::translate('Vous trouverez ci-dessous les détails de votre installation.') . '<br><br>' .
 					'<strong>' . helper::translate('URL du site :') . '</strong> <a href="' . helper::baseUrl(false) . '" target="_blank">' . helper::baseUrl(false) . '</a><br>' .
 					'<strong>' . helper::translate('Identifiant du compte :') . '</strong> ' . $this->getInput('installConfigId') . '<br>' .

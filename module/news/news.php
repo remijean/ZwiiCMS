@@ -149,14 +149,14 @@ class news extends common {
 			// Soumission du formulaire
 			if($this->isPost()) {
 				// Si l'id a changée
-				$id = $this->getInput('newsEditTitle', helper::FILTER_ID, true);
-				if($id !== $this->getUrl(2)) {
+				$newsId = $this->getInput('newsEditTitle', helper::FILTER_ID, true);
+				if($newsId !== $this->getUrl(2)) {
 					// Incrémente la nouvelle id de la news pour éviter les doublons
-					$newsId = helper::increment($id, $this->getData(['module', $this->getUrl(0)]));
+					$newsId = helper::increment($newsId, $this->getData(['module', $this->getUrl(0)]));
 					// Supprime l'ancien news
 					$this->deleteData(['module', $this->getUrl(0), $this->getUrl(2)]);
 				}
-				$this->setData(['module', $this->getUrl(0), $id, [
+				$this->setData(['module', $this->getUrl(0), $newsId, [
 					'content' => $this->getInput('newsEditContent', helper::FILTER_STRING_LONG),
 					'publishedOn' => $this->getInput('newsEditPublishedOn', helper::FILTER_DATETIME, true),
 					'status' => $this->getInput('newsEditStatus', helper::FILTER_BOOLEAN),

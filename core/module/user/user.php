@@ -33,8 +33,8 @@ class user extends common {
 		// Soumission du formulaire
 		if($this->isPost()) {
 			// L'identifiant d'utilisateur est indisponible
-			$id = $this->getInput('userAddId', helper::FILTER_ID, true);
-			if($this->getData(['user', $id])) {
+			$userId = $this->getInput('userAddId', helper::FILTER_ID, true);
+			if($this->getData(['user', $userId])) {
 				self::$inputNotices['userAddId'] = 'Identifiant déjà utilisé';
 			}
 			// Double vérification pour le mot de passe
@@ -42,18 +42,18 @@ class user extends common {
 				self::$inputNotices['userAddConfirmPassword'] = 'Incorrect';
 			}
 			// Crée l'utilisateur
-			$firstname = $this->getInput('userAddFirstname', helper::FILTER_STRING_SHORT, true);
-			$lastname = $this->getInput('userAddLastname', helper::FILTER_STRING_SHORT, true);
-			$mail = $this->getInput('userAddMail', helper::FILTER_MAIL, true);
+			$userFirstname = $this->getInput('userAddFirstname', helper::FILTER_STRING_SHORT, true);
+			$userLastname = $this->getInput('userAddLastname', helper::FILTER_STRING_SHORT, true);
+			$userMail = $this->getInput('userAddMail', helper::FILTER_MAIL, true);
 			$this->setData([
 				'user',
-				$id,
+				$userId,
 				[
-					'firstname' => $firstname,
+					'firstname' => $userFirstname,
 					'forgot' => 0,
 					'group' => $this->getInput('userAddGroup', helper::FILTER_INT, true),
-					'lastname' => $lastname,
-					'mail' => $mail,
+					'lastname' => $userLastname,
+					'mail' => $userMail,
 					'password' => $this->getInput('userAddPassword', helper::FILTER_PASSWORD, true)
 				]
 			]);
@@ -61,9 +61,9 @@ class user extends common {
 			$sent = true;
 			if($this->getInput('userAddSendMail', helper::FILTER_BOOLEAN)) {
 				$sent = $this->sendMail(
-					$mail,
+					$userMail,
 					helper::translate('Compte créé sur') . ' ' . $this->getData(['config', 'title']),
-					helper::translate('Bonjour') . ' <strong>' . $firstname . ' ' . $lastname . '</strong>,<br><br>' .
+					helper::translate('Bonjour') . ' <strong>' . $userFirstname . ' ' . $userLastname . '</strong>,<br><br>' .
 					helper::translate('Un administrateur vous a créé un compte sur le site') . $this->getData(['config', 'title']) . '. ' . helper::translate('Vous trouverez ci-dessous les détails de votre compte.') . '<br><br>' .
 					'<strong>' . helper::translate('Identifiant du compte :') . '</strong> ' . $this->getInput('userAddId') . '<br>' .
 					'<strong>' . helper::translate('Mot de passe du compte :') . '</strong> ' . $this->getInput('userAddPassword') . '<br><br>' .

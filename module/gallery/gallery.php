@@ -139,10 +139,10 @@ class gallery extends common {
 			// Soumission du formulaire
 			if($this->isPost()) {
 				// Si l'id a changée
-				$id = $this->getInput('galleryEditName', helper::FILTER_ID, true);
-				if($id !== $this->getUrl(2)) {
+				$galleryId = $this->getInput('galleryEditName', helper::FILTER_ID, true);
+				if($galleryId !== $this->getUrl(2)) {
 					// Incrémente la nouvelle id de la gallery pour éviter les doublons
-					$id = helper::increment($id, $this->getData(['module', $this->getUrl(0)]));
+					$galleryId = helper::increment($galleryId, $this->getData(['module', $this->getUrl(0)]));
 					// Supprime l'ancienne galerie
 					$this->deleteData(['module', $this->getUrl(0), $this->getUrl(2)]);
 				}
@@ -151,7 +151,7 @@ class gallery extends common {
 					$legends[$file] = helper::filter($legend, helper::FILTER_STRING_SHORT);
 				}
 
-				$this->setData(['module', $this->getUrl(0), $id, [
+				$this->setData(['module', $this->getUrl(0), $galleryId, [
 					'config' => [
 						'name' => $this->getInput('galleryEditName', helper::FILTER_STRING_SHORT, true),
 						'directory' => $this->getInput('galleryEditDirectory', helper::FILTER_STRING_SHORT, true)

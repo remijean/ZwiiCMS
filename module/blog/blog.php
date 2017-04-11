@@ -43,8 +43,10 @@ class blog extends common {
 	public function add() {
 		// Soumission du formulaire
 		if($this->isPost()) {
-			// Crée l'article
+			// Incrémente l'id de l'article pour éviter les doublons
 			$articleId = helper::increment($this->getInput('blogAddTitle', helper::FILTER_ID), (array) $this->getData(['module', $this->getUrl(0)]));
+			$articleId = helper::increment(helper::increment($articleId, $this->getData(['page'])), array_keys(self::$actions));
+			// Crée l'article
 			$this->setData(['module', $this->getUrl(0), $articleId, [
 				'closeComment' => $this->getInput('blogAddCloseComment', helper::FILTER_BOOLEAN),
 				'comment' => [],
@@ -86,7 +88,7 @@ class blog extends common {
 	public function comment() {
 		// Liste les commentaires
 		$comments = [];
-		foreach($this->getData(['module', $this->getUrl(0)]) as $articleId => $article) {
+		foreach((array) $this->getData(['module', $this->getUrl(0)]) as $articleId => $article) {
 			foreach($article['comment'] as &$comment) {
 				$comment['articleId'] = $articleId;
 			}
@@ -217,14 +219,15 @@ class blog extends common {
 			// Soumission du formulaire
 			if($this->isPost()) {
 				// Si l'id a changée
-				$id = $this->getInput('blogEditTitle', helper::FILTER_ID, true);
-				if($id !== $this->getUrl(2)) {
+				$articleId = $this->getInput('blogEditTitle', helper::FILTER_ID, true);
+				if($articleId !== $this->getUrl(2)) {
 					// Incrémente la nouvelle id de l'article pour éviter les doublons
-					$articleId = helper::increment($id, $this->getData(['module', $this->getUrl(0)]));
+					$articleId = helper::increment($articleId, $this->getData(['module', $this->getUrl(0)]));
+					$articleId = helper::increment(helper::increment($articleId, $this->getData(['page'])), array_keys(self::$actions));
 					// Supprime l'ancien article
 					$this->deleteData(['module', $this->getUrl(0), $this->getUrl(2)]);
 				}
-				$this->setData(['module', $this->getUrl(0), $id, [
+				$this->setData(['module', $this->getUrl(0), $articleId, [
 					'closeComment' => $this->getInput('blogEditCloseComment'),
 					'comment' => $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'comment']),
 					'content' => $this->getInput('blogEditContent', helper::FILTER_STRING_LONG),

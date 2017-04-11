@@ -3,9 +3,12 @@ Zwii 8 Changelog
 
 ## 8.1.0
 * Ajout d'un message d'erreur en cas d'échec lors d'un envoi de mail
-* Ajout du module de création de blog
+* Ajout du module blog
+* Ajout du module news
 * Amélioration de l'interface
+* Amélioration des messages en cas d'absence de contenu dans la galerie et le générateur de formulaires
 * Correction d'une erreur qui bloquait l'option "Champ obligatoire" dans le module de génération de formulaire
+* Correction d'une erreur qui supprimait le module lors du changement de titre d'une page
 * Correction d'une erreur bloquant la désactivation du backup automatique
 * Correction d'une faille de sécurité au niveau des champs obligatoires
 * Optimisation des filtres afin de sécuriser davantage les données enregistrées dans le fichier data.json

@@ -17,7 +17,7 @@
 		<?php echo template::button('blogConfigAdd', [
 			'href' => helper::baseUrl() . $this->getUrl(0) . '/add',
 			'ico' => 'plus',
-			'value' => 'articles'
+			'value' => 'Article'
 		]); ?>
 	</div>
 </div>
@@ -25,5 +25,5 @@
 	<?php echo template::table([4, 4, 2, 1, 1], $module::$articles, ['Titre', 'Date de publication', 'Statut', '', '']); ?>
 	<?php echo $module::$pages; ?>
 <?php else: ?>
-	<?php echo template::speech('Aucun articles.'); ?>
+	<?php echo template::speech('Aucun article.'); ?>
 <?php endif; ?>
