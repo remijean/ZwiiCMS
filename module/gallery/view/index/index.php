@@ -20,5 +20,5 @@
 		<?php $i++; ?>
 	<?php endforeach; ?>
 <?php else: ?>
-	<p><?php echo helper::translate('Aucune galerie.'); ?></p>
+	<?php echo template::speech('Aucune galerie.'); ?>
 <?php endif; ?>

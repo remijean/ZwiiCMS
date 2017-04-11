@@ -45,5 +45,5 @@
 		</div>
 	</form>
 <?php else: ?>
-	<p><?php echo helper::translate('Le formulaire ne contient aucun champ.'); ?></p>
+	<?php echo template::speech('Le formulaire ne contient aucun champ.'); ?>
 <?php endif; ?>
