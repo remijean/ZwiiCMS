@@ -1,2 +1,22 @@
 {
+	"Aucune news.": "No news.",
+	"Auteur": "Author",
+	"Brouillon": "Draft",
+	"Configuration du module": "Configuration of the module",
+	"Date de publication": "Date of publication",
+	"Enregistrer en brouillon": "Save as draft",
+	"Informations générales": "General information",
+	"La news est consultable à partir du moment ou la date de publication est passée.": "The news is available from the time or the date of publication.",
+	"Modifications enregistrées": "Saved changes",
+	"News": "News",
+	"News supprimée": "News removed",
+	"Nouvelle news": "New news",
+	"Nouvelle news créée": "New news created",
+	"Options de publication": "Publishing options",
+	"Publier": "Publish",
+	"Publié": "Published",
+	"Retour": "Return",
+	"Statut": "Status",
+	"Titre": "Title",
+	"Êtes-vous sûr de vouloir supprimer cette news ?": "Are you sure you want to delete this news?"
 }
