@@ -13,7 +13,7 @@
 				'uniqueSubmission' => true,
 				'value' => 'Enregistrer en brouillon'
 			]); ?>
-			<?php echo template::hidden('blogAddStatus', [
+			<?php echo template::hidden('blogAddState', [
 				'value' => true
 			]); ?>
 		</div>

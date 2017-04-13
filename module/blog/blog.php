@@ -30,7 +30,7 @@ class blog extends common {
 
 	public static $pages;
 
-	public static $statuss = [
+	public static $states = [
 		false => 'Brouillon',
 		true => 'Publié'
 	];
@@ -50,10 +50,10 @@ class blog extends common {
 			$this->setData(['module', $this->getUrl(0), $articleId, [
 				'closeComment' => $this->getInput('blogAddCloseComment', helper::FILTER_BOOLEAN),
 				'comment' => [],
-				'content' => $this->getInput('blogAddContent', helper::FILTER_STRING_LONG),
+				'content' => $this->getInput('blogAddContent', null),
 				'picture' => $this->getInput('blogAddPicture', helper::FILTER_STRING_SHORT, true),
 				'publishedOn' => $this->getInput('blogAddPublishedOn', helper::FILTER_DATETIME, true),
-				'status' => $this->getInput('blogAddStatus', helper::FILTER_BOOLEAN),
+				'state' => $this->getInput('blogAddState', helper::FILTER_BOOLEAN),
 				'title' => $this->getInput('blogAddTitle', helper::FILTER_STRING_SHORT, true),
 				'userId' => $this->getInput('blogAddUserId', helper::FILTER_ID, true)
 			]]);
@@ -161,7 +161,7 @@ class blog extends common {
 			self::$articles[] = [
 				$this->getData(['module', $this->getUrl(0), $articleIds[$i], 'title']),
 				date('d/m/Y H:i', $this->getData(['module', $this->getUrl(0), $articleIds[$i], 'publishedOn'])),
-				helper::translate(self::$statuss[$this->getData(['module', $this->getUrl(0), $articleIds[$i], 'status'])]),
+				helper::translate(self::$states[$this->getData(['module', $this->getUrl(0), $articleIds[$i], 'state'])]),
 				template::button('blogConfigEdit' . $articleIds[$i], [
 					'href' => helper::baseUrl() . $this->getUrl(0) . '/edit/' . $articleIds[$i],
 					'value' => template::ico('pencil')
@@ -230,10 +230,10 @@ class blog extends common {
 				$this->setData(['module', $this->getUrl(0), $articleId, [
 					'closeComment' => $this->getInput('blogEditCloseComment'),
 					'comment' => $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'comment']),
-					'content' => $this->getInput('blogEditContent', helper::FILTER_STRING_LONG),
+					'content' => $this->getInput('blogEditContent', null),
 					'picture' => $this->getInput('blogEditPicture', helper::FILTER_STRING_SHORT, true),
 					'publishedOn' => $this->getInput('blogEditPublishedOn', helper::FILTER_DATETIME, true),
-					'status' => $this->getInput('blogEditStatus', helper::FILTER_BOOLEAN),
+					'state' => $this->getInput('blogEditState', helper::FILTER_BOOLEAN),
 					'title' => $this->getInput('blogEditTitle', helper::FILTER_STRING_SHORT, true),
 					'userId' => $this->getInput('blogEditUserId', helper::FILTER_ID, true)
 				]]);
@@ -291,7 +291,7 @@ class blog extends common {
 					$commentId = helper::increment(uniqid(), $this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'comment']));
 					$this->setData(['module', $this->getUrl(0), $this->getUrl(1), 'comment', $commentId, [
 						'author' => $this->getInput('blogArticleAuthor', helper::FILTER_STRING_SHORT, true),
-						'content' =>  $this->getInput('blogArticleContent', helper::FILTER_STRING_SHORT, true),
+						'content' => $this->getInput('blogArticleContent', helper::FILTER_STRING_SHORT, true),
 						'createdOn' => time(),
 						'userId' => $this->getInput('blogArticleUserId'),
 					]]);
@@ -325,9 +325,10 @@ class blog extends common {
 		else {
 			// Ids des articles par ordre de publication
 			$articleIdsPublishedOns = helper::arrayCollumn($this->getData(['module', $this->getUrl(0)]), 'publishedOn', 'SORT_DESC');
+			$articleIdsStates = helper::arrayCollumn($this->getData(['module', $this->getUrl(0)]), 'state', 'SORT_DESC');
 			$articleIds = [];
 			foreach($articleIdsPublishedOns as $articleId => $articlePublishedOn) {
-				if($articlePublishedOn <= time()) {
+				if($articlePublishedOn <= time() AND $articleIdsStates[$articleId]) {
 					$articleIds[] = $articleId;
 				}
 			}

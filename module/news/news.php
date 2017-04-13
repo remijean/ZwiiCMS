@@ -28,7 +28,7 @@ class news extends common {
 
 	public static $pages;
 
-	public static $statuss = [
+	public static $states = [
 		false => 'Brouillon',
 		true => 'Publié'
 	];
@@ -44,9 +44,9 @@ class news extends common {
 			// Crée la news
 			$newsId = helper::increment($this->getInput('newsAddTitle', helper::FILTER_ID), (array) $this->getData(['module', $this->getUrl(0)]));
 			$this->setData(['module', $this->getUrl(0), $newsId, [
-				'content' => $this->getInput('newsAddContent', helper::FILTER_STRING_LONG),
+				'content' => $this->getInput('newsAddContent', null),
 				'publishedOn' => $this->getInput('newsAddPublishedOn', helper::FILTER_DATETIME, true),
-				'status' => $this->getInput('newsEditStatus', helper::FILTER_BOOLEAN),
+				'state' => $this->getInput('newsEditState', helper::FILTER_BOOLEAN),
 				'title' => $this->getInput('newsAddTitle', helper::FILTER_STRING_SHORT, true),
 				'userId' => $this->getInput('newsAddUserId', helper::FILTER_ID, true)
 			]]);
@@ -66,7 +66,7 @@ class news extends common {
 		unset($userFirstname);
 		// Valeurs en sortie
 		$this->addOutput([
-			'title' => 'Nouvel news',
+			'title' => 'Nouvelle news',
 			'vendor' => [
 				'flatpickr',
 				'tinymce'
@@ -91,7 +91,7 @@ class news extends common {
 			self::$news[] = [
 				$this->getData(['module', $this->getUrl(0), $newsIds[$i], 'title']),
 				date('d/m/Y H:i', $this->getData(['module', $this->getUrl(0), $newsIds[$i], 'publishedOn'])),
-				helper::translate(self::$statuss[$this->getData(['module', $this->getUrl(0), $newsIds[$i], 'status'])]),
+				helper::translate(self::$states[$this->getData(['module', $this->getUrl(0), $newsIds[$i], 'state'])]),
 				template::button('newsConfigEdit' . $newsIds[$i], [
 					'href' => helper::baseUrl() . $this->getUrl(0) . '/edit/' . $newsIds[$i],
 					'value' => template::ico('pencil')
@@ -157,9 +157,9 @@ class news extends common {
 					$this->deleteData(['module', $this->getUrl(0), $this->getUrl(2)]);
 				}
 				$this->setData(['module', $this->getUrl(0), $newsId, [
-					'content' => $this->getInput('newsEditContent', helper::FILTER_STRING_LONG),
+					'content' => $this->getInput('newsEditContent', null),
 					'publishedOn' => $this->getInput('newsEditPublishedOn', helper::FILTER_DATETIME, true),
-					'status' => $this->getInput('newsEditStatus', helper::FILTER_BOOLEAN),
+					'state' => $this->getInput('newsEditState', helper::FILTER_BOOLEAN),
 					'title' => $this->getInput('newsEditTitle', helper::FILTER_STRING_SHORT, true),
 					'userId' => $this->getInput('newsEditUserId', helper::FILTER_ID, true)
 				]]);
@@ -195,9 +195,10 @@ class news extends common {
 	public function index() {
 		// Ids des news par ordre de publication
 		$newsIdsPublishedOns = helper::arrayCollumn($this->getData(['module', $this->getUrl(0)]), 'publishedOn', 'SORT_DESC');
+		$newsIdsStates = helper::arrayCollumn($this->getData(['module', $this->getUrl(0)]), 'state', 'SORT_DESC');
 		$newsIds = [];
 		foreach($newsIdsPublishedOns as $newsId => $newsPublishedOn) {
-			if($newsPublishedOn <= time()) {
+			if($newsPublishedOn <= time() AND $newsIdsStates[$newsId]) {
 				$newsIds[] = $newsId;
 			}
 		}

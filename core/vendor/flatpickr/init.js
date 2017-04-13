@@ -3,7 +3,7 @@
  */
 $(function() {
 	// Langue
-	var local = "en";
+	var locale = "en";
 	var format = "m/d/Y H:i";
 	if(language === "fr_FR") {
 		locale = "fr";

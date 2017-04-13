@@ -22,7 +22,7 @@
 	</div>
 </div>
 <?php if($module::$articles): ?>
-	<?php echo template::table([4, 4, 2, 1, 1], $module::$articles, ['Titre', 'Date de publication', 'Statut', '', '']); ?>
+	<?php echo template::table([4, 4, 2, 1, 1], $module::$articles, ['Titre', 'Date de publication', 'État', '', '']); ?>
 	<?php echo $module::$pages; ?>
 <?php else: ?>
 	<?php echo template::speech('Aucun article.'); ?>

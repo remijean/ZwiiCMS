@@ -4,8 +4,8 @@
 			<?php foreach($module::$articles as $articleId => $article): ?>
 				<div class="block">
 					<h4>
-						Par <?php echo $this->getData(['user', $article['userId'], 'firstname']) . ' ' . $this->getData(['user', $article['userId'], 'lastname']); ?>
-						le <?php echo date('d/m/Y H:i', $article['publishedOn']); ?>
+						<?php echo $this->getData(['user', $article['userId'], 'firstname']) . ' ' . $this->getData(['user', $article['userId'], 'lastname']); ?>
+						<?php echo helper::translate('le'); ?> <?php echo date('d/m/Y H:i', $article['publishedOn']); ?>
 						<div class="blogComment">
 							<a href="<?php echo helper::baseUrl() . $this->getUrl() . '/' . $articleId; ?>#comment">
 								<?php echo count($article['comment']); ?>

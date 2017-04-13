@@ -1,9 +1,8 @@
 <div id="blogArticlePicture" style="background-image:url('<?php echo helper::baseUrl(false) . 'site/file/source/' . $this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'picture']); ?>');"></div>
 <h4 class="textAlignRight">
-	Par
 	<?php echo $this->getData(['user', $this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'userId']), 'firstname']); ?>
 	<?php echo $this->getData(['user', $this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'userId']), 'lastname']); ?>
-	le <?php echo date('d/m/Y H:i', $this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'publishedOn'])); ?>
+	<?php echo helper::translate('on'); ?> <?php echo date('d/m/Y H:i', $this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'publishedOn'])); ?>
 </h4>
 <?php echo $this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'content']); ?>
 <h2 id="comment">
@@ -83,7 +82,7 @@
 					<?php else: ?>
 						<?php echo $comment['author']; ?>
 					<?php endif; ?>
-					le <?php echo date('d/m/Y - H:i', $comment['createdOn']); ?>
+					<?php echo helper::translate('le'); ?> <?php echo date('d/m/Y - H:i', $comment['createdOn']); ?>
 				</h4>
 				<?php echo $comment['content']; ?>
 			</div>

@@ -14,6 +14,6 @@
  * Soumission du formulaire pour enregistrer en brouillon
  */
 $("#blogAddDraft").on("click", function() {
-	$("#blogAddStatus").val(0);
+	$("#blogAddState").val(0);
 	$("#blogAddForm").trigger("submit");
 });
