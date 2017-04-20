@@ -273,7 +273,7 @@ class user extends common {
 			self::$users[] = [
 				$userId,
 				$userFirstname . ' ' . $this->getData(['user', $userId, 'lastname']),
-				self::$groups[$this->getData(['user', $userId, 'group'])],
+				helper::translate(self::$groups[$this->getData(['user', $userId, 'group'])]),
 				template::button('userEdit' . $userId, [
 					'href' => helper::baseUrl() . 'user/edit/' . $userId . '/back',
 					'value' => template::ico('pencil')
