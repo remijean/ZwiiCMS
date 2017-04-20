@@ -204,7 +204,7 @@ core.start = function() {
 		if(document.cookie.indexOf("ZWII_COOKIE_CONSENT") === -1) {
 			$("body").append(
 				$("<div>").attr("id", "cookieConsent").append(
-					$("<span>").text("En poursuivant votre navigation sur ce site, vous acceptez l'utilisation de cookies."),
+					$("<span>").text("<?php echo helper::translate('En poursuivant votre navigation sur ce site, vous acceptez l\'utilisation de cookies.'); ?>"),
 					$("<span>")
 						.attr("id", "cookieConsentConfirm")
 						.text("OK")
