@@ -315,7 +315,8 @@ class theme extends common {
 			$this->setData(['theme', 'site', [
 				'radius' => $this->getInput('themeSiteRadius'),
 				'shadow' => $this->getInput('themeSiteShadow'),
-				'width' => $this->getInput('themeSiteWidth')
+				'width' => $this->getInput('themeSiteWidth'),
+				'backgroundColor' => $this->getInput('themeSiteBackgroundColor')
 			]]);
 			// Valeurs en sortie
 			$this->addOutput([

@@ -302,7 +302,8 @@ class common {
 				'textAlign' => 'left',
 				'textTransform' => 'none'
 			],
-			'site' => [
+            'site' => [
+                'backgroundColor' => 'rgba(253, 253, 253, 1)',
 				'width' => '960px'
 			],
 			'text' => [
@@ -847,11 +848,12 @@ class core extends common {
 			$colors = helper::colorVariants($this->getData(['theme', 'body', 'backgroundColor']));
 			$css .= 'body{background-color:' . $colors['normal'] . ';font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'text', 'font'])) . '",sans-serif}';
 			if($themeBodyImage = $this->getData(['theme', 'body', 'image'])) {
-				$css .= 'body{background-image:url("../file/source/' . $themeBodyImage . '");background-position:' . $this->getData(['theme', 'body', 'imagePosition']) . ';background-attachment:' . $this->getData(['theme', 'body', 'imageAttachment']) . ';background-size:' . $this->getData(['theme', 'body', 'imageSize']) . ';background-repeat:' . $this->getData(['theme', 'body', 'imageRepeat']) . '}';
+			$css .= 'body{background-image:url("../file/source/' . $themeBodyImage . '");background-position:' . $this->getData(['theme', 'body', 'imagePosition']) . ';background-attachment:' . $this->getData(['theme', 'body', 'imageAttachment']) . ';background-size:' . $this->getData(['theme', 'body', 'imageSize']) . ';background-repeat:' . $this->getData(['theme', 'body', 'imageRepeat']) . '}';
 			}
 			// Site
 			$css .= '.container{max-width:' . $this->getData(['theme', 'site', 'width']) . '}';
-			$css .= '#site{border-radius:' . $this->getData(['theme', 'site', 'radius']) . ';box-shadow:' . $this->getData(['theme', 'site', 'shadow']) . ' #212223}';
+            $colors = helper::colorVariants($this->getData(['theme', 'site', 'backgroundColor']));
+            $css .= '#site{background-color:' . $colors['normal'] . ';border-radius:' . $this->getData(['theme', 'site', 'radius']) . ';box-shadow:' . $this->getData(['theme', 'site', 'shadow']) . ' #212223}';
 			$colors = helper::colorVariants($this->getData(['theme', 'button', 'backgroundColor']));
 			$css .= '.speechBubble,.button,button[type=\'submit\'],.pagination a,input[type=\'checkbox\']:checked + label:before,input[type=\'radio\']:checked + label:before,.helpContent{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '!important}';
 			$css .= '.tabTitle.current,.helpButton span{color:' . $colors['normal'] . '}';
