@@ -12,17 +12,40 @@
 			<?php echo template::submit('themeMenuSubmit'); ?>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col6">
-			<div class="block">
-				<h4><?php echo helper::translate('Couleur'); ?></h4>
-				<?php echo template::text('themeMenuBackgroundColor', [
-					'class' => 'colorPicker',
-					'label' => 'Fond',
-					'value' => $this->getData(['theme', 'menu', 'backgroundColor'])
-				]); ?>
-			</div>
-		</div>
+    <div class="row">
+        <div class="col12">
+    		<div class="block">
+                <h4><?php echo helper::translate('Couleur'); ?></h4>
+            	<?php echo template::text('themeMenuBackgroundColor', [
+                    'class' => 'colorPicker',
+                    'label' => 'Fond',
+                    'value' => $this->getData(['theme', 'menu', 'backgroundColor'])
+                ]); ?>
+            </div>
+        </div>
+	</div>
+    <div class="row">
+        <div class="col6">
+            <div class="block">
+                <h4><?php echo helper::translate('Couleur du texte'); ?></h4>
+                <div class="row">
+                    <div class="col6">
+                        <?php echo template::text('themeMenuTextColor', [
+                            'class' => 'colorPicker',
+                            'label' => 'Texte',
+                            'value' => $this->getData(['theme', 'menu', 'textColor'])
+                        ]); ?> 
+                    </div>
+                    <div class="col6">
+                        <?php echo template::text('themeMenuTextColorHover', [
+                            'class' => 'colorPicker',
+                            'label' => 'Surbrillance',
+                            'value' => $this->getData(['theme', 'menu', 'textColorHover'])
+                        ]); ?> 
+                    </div>
+                </div>
+            </div>
+        </div>
 		<div class="col6">
 			<div class="block">
 				<h4><?php echo helper::translate('Mise en forme du texte'); ?></h4>

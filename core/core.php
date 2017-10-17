@@ -292,8 +292,10 @@ class common {
 			'link' => [
 				'textColor' => 'rgba(71, 123, 184, 1)'
 			],
-			'menu' => [
-				'backgroundColor' => 'rgba(62, 107, 159, 1)',
+            'menu' => [
+                'backgroundColor' => 'rgba(62, 107, 159, 1)',
+                'textColor' => 'rgba(253, 253, 253, 1)',
+                'textColorHover' => 'rgba(253, 253, 253, 1)',
 				'fontWeight' => 'normal',
 				'height' => '15px 10px',
 				'loginLink' => true,
@@ -885,11 +887,13 @@ class core extends common {
 			$colors = helper::colorVariants($this->getData(['theme', 'header', 'textColor']));
 			$css .= 'header span{color:' . $colors['normal'] . ';font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'header', 'font'])) . '",sans-serif;font-weight:' . $this->getData(['theme', 'header', 'fontWeight']) . ';text-transform:' . $this->getData(['theme', 'header', 'textTransform']) . '}';
 			// Menu
-			$colors = helper::colorVariants($this->getData(['theme', 'menu', 'backgroundColor']));
+            $colors = helper::colorVariants($this->getData(['theme', 'menu', 'backgroundColor']));
 			$css .= 'nav, nav li > a{background-color:' . $colors['normal'] . '}';
-			$css .= 'nav a,#toggle span{color:' . $colors['text'] . '!important}';
-			$css .= 'nav a:hover{background-color:' . $colors['darken'] . '}';
-			$css .= 'nav a.target,nav a.active{background-color:' . $colors['veryDarken'] . '}';
+            $colorText = helper::colorVariants($this->getData(['theme', 'menu', 'textColor']));
+			$css .= 'nav a,#toggle span{color:' . $colorText['normal'] . '!important}';
+            $colorText = helper::colorVariants($this->getData(['theme', 'menu', 'textColorHover']));
+			$css .= 'nav a:hover{background-color:' . $colors['darken'] . ';color:' . $colorText['normal'] . '!important}';
+			$css .= 'nav a.target,nav a.active{background-color:' . $colors['veryDarken'] . ';color:' . $colorText['normal'] . '!important}';
 			$css .= '#menu{text-align:' . $this->getData(['theme', 'menu', 'textAlign']) . '}';
 			if($this->getData(['theme', 'menu', 'margin'])) {
 				if(
