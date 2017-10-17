@@ -32,14 +32,15 @@ $("input, select").on("change", function() {
 	css += "a{color:" + colors.normal + "}";
 	css += "a:hover{color:" + colors.darken + "}";
 	css += "a:active{color:" + colors.veryDarken + "}";
-	// Couleur, polices, épaisseur et capitalisation de caractères des titres
+    // Couleur, polices, épaisseur et capitalisation de caractères des titres
 	css += "h1,h2,h3,h4,h5,h6{color:" + $("#themeTitleTextColor").val() + ";font-family:'" + titleFont.replace("+", " ") + "',sans-serif;font-weight:" + $("#themeTitleFontWeight").val() + ";text-transform:" + $("#themeTitleTextTransform").val() + "}";
 	// Police de caractères du texte
 	css += "body{font-family:'" + textFont.replace("+", " ") + "',sans-serif}";
 	// Largeur du site
 	css += ".container{max-width:" + $("#themeSiteWidth").val() + "}";
-	// Arrondi sur les coins du site et ombre sur les bords du site
-	css += "#site{border-radius:" + $("#themeSiteRadius").val() + ";box-shadow:" + $("#themeSiteShadow").val() + " #212223}";
+    // Arrondi sur les coins du site et ombre sur les bords du site et couleur de fond
+    colors = core.colorVariants($("#themeSiteBackgroundColor").val());
+    css += "#site{background-color:" + colors.normal + ";border-radius:" + $("#themeSiteRadius").val() + ";box-shadow:" + $("#themeSiteShadow").val() + " #212223}";
 	// Ajout du css au DOM
 	$("#themePreview").remove();
 	$("<style>")
