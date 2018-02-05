@@ -1,6 +1,15 @@
 Zwii 8 Changelog
 ================
 
+## 8.1.1
+* Correction d'une faille de sécurité
+* Correction d'une erreur d'orthographe
+* Correction d'un bug ne publiant pas les news lors de la création
+* Correction d'un bug n'affichant pas la pagination pour les modules blog et news
+* Correction d'un bug bloquant à 500 le nombre de caractères max des textareas du générateur de formulaires
+* Correction d'un bug lors de l'ajout d'un "/" dans le titre d'une page
+* Nouvelle méthode de traduction
+
 ## 8.1.0
 * Ajout d'un message d'erreur en cas d'échec lors d'un envoi de mail
 * Ajout d'une vérification du fichier de données afin d'éviter une corruption
