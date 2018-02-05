@@ -120,7 +120,7 @@
 					'label' => 'Fuseau horaire',
 					'selected' => $this->getData(['config', 'timezone'])
 				]); ?>
-				<?php echo template::checkbox('configAutoBackup', true, 'Sauvegarder automatique des données', [
+				<?php echo template::checkbox('configAutoBackup', true, 'Sauvegarde automatique des données', [
 					'checked' => $this->getData(['config', 'autoBackup']),
 					'help' => 'Sauvegarde une fois par jour le fichier de données dans le dossier site/backup/. La sauvegarde est conservée 30 jours.'
 				]); ?>
