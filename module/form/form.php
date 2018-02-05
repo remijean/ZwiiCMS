@@ -176,10 +176,10 @@ class form extends common {
 						$filter = helper::FILTER_MAIL;
 						break;
 					case self::TYPE_TEXTAREA:
-						$filter = helper::FILTER_STRING_SHORT;
+						$filter = helper::FILTER_STRING_LONG;
 						break;
 					default:
-						$filter = helper::FILTER_STRING_LONG;
+						$filter = helper::FILTER_STRING_SHORT;
 				}
 				$value = $this->getInput('formInput[' . $index . ']', $filter, $input['required']);
 				// Préparation des données pour la création dans la base
