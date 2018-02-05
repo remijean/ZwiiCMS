@@ -1,5 +1,5 @@
 <p><?php echo helper::i18n('Veuillez saisir les champs ci-dessous afin de terminer l\'installation.'); ?></p>
-<form method="post">
+<?php echo template::formOpen('installConfigForm'); ?>
 	<?php echo template::text('installConfigId', [
 		'autocomplete' => 'off',
 		'label' => 'Identifiant'
@@ -51,4 +51,4 @@
 			]); ?>
 		</div>
 	</div>
-</form>
+<?php echo template::formClose(); ?>

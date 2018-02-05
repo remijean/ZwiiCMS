@@ -1,4 +1,4 @@
-<form id="newsEditForm" method="post">
+<?php echo template::formOpen('newsEditForm'); ?>
 	<div class="row">
 		<div class="col2">
 			<?php echo template::button('newsEditBack', [
@@ -60,4 +60,4 @@
 			</div>
 		</div>
 	</div>
-</form>
+<?php echo template::formClose(); ?>

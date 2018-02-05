@@ -1,4 +1,4 @@
-<form method="post">
+<?php echo template::formOpen('userLoginForm'); ?>
 	<div class="row">
 		<div class="col6">
 			<?php echo template::text('userLoginId', [
@@ -35,4 +35,4 @@
 			]); ?>
 		</div>
 	</div>
-</form>
+<?php echo template::formClose(); ?>

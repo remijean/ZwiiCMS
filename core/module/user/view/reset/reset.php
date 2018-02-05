@@ -1,4 +1,4 @@
-<form method="post">
+<?php echo template::formOpen('userResetForm'); ?>
 	<div class="row">
 		<div class="col6">
 			<?php echo template::password('userResetNewPassword', [
@@ -18,4 +18,4 @@
 			]); ?>
 		</div>
 	</div>
-</form>
+<?php echo template::formClose(); ?>

@@ -1,4 +1,4 @@
-<form method="post">
+<?php echo template::formOpen('galleryEditForm'); ?>
 	<div class="row">
 		<div class="col2">
 			<?php echo template::button('galleryEditBack', [
@@ -38,4 +38,4 @@
 	<?php if($module::$pictures): ?>
 		<?php echo template::table([4, 8], $module::$pictures, ['Image', 'Légende']); ?>
 	<?php endif; ?>
-</form>
+<?php echo template::formClose(); ?>

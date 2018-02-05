@@ -1,4 +1,4 @@
-<form method="post">
+<?php echo template::formOpen('themeMenuForm'); ?>
 	<div class="row">
 		<div class="col2">
 			<?php echo template::button('themeMenuBack', [
@@ -86,4 +86,4 @@
 			</div>
 		</div>
 	</div>
-</form>
+<?php echo template::formClose(); ?>

@@ -506,6 +506,13 @@ class common {
 	}
 
 	/**
+	 * Check du token CSRF (true = bo
+	 */
+	public function checkCSRF() {
+		return ((empty($_POST['csrf']) OR hash_equals($_SESSION['csrf'], $_POST['csrf']) === false) === false);
+	}
+
+	/**
 	 * Supprime des données
 	 * @param array $keys Clé(s) des données
 	 */
@@ -679,7 +686,7 @@ class common {
 	 * @return bool
 	 */
 	public function isPost() {
-		return $this->input['_POST'] !== [];
+		return ($this->checkCSRF() AND $this->input['_POST'] !== []);
 	}
 
 	/**
@@ -785,6 +792,10 @@ class core extends common {
 	 */
 	public function __construct() {
 		parent::__construct();
+		// Token CSRF
+		if(empty($_SESSION['csrf'])) {
+			$_SESSION['csrf'] = bin2hex(openssl_random_pseudo_bytes(32));
+		}
 		// Fuseau horaire
 		self::$timezone = $this->getData(['config', 'timezone']); // Utile pour transmettre le timezone à la classe helper
 		date_default_timezone_set(self::$timezone);
@@ -2156,6 +2167,32 @@ class template {
 		// Retourne le html
 		return $html;
 	}
+
+	/**
+	 * Ferme une formulaire
+	 * @return string
+	 */
+	public static function formClose() {
+		return '</form>';
+	}
+
+	/**
+	 * Ouvre un formulaire protégé par CSRF
+	 * @param string $id Id du formulaire
+	 * @return string
+	 */
+	public static function formOpen($id) {
+		// Ouverture formulaire
+		$html = '<form id="' . $id . '" method="post">';
+		// Stock le token CSRF
+		$html .= self::hidden('csrf', array(
+			'value' => $_SESSION['csrf']
+		));
+		// Retourne le html
+		return $html;
+	}
+
+
 
 	/**
 	 * Crée une aide qui s'affiche au survole

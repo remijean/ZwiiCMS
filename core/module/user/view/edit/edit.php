@@ -1,4 +1,4 @@
-<form method="post">
+<?php echo template::formOpen('userEditForm'); ?>
 	<div class="row">
 		<div class="col2">
 			<?php if($this->getUrl(3)): ?>
@@ -98,4 +98,4 @@
 			</div>
 		</div>
 	</div>
-</form>
+<?php echo template::formClose(); ?>

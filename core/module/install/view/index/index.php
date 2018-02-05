@@ -1,5 +1,5 @@
 <p><?php echo helper::i18n('Veuillez choisir la langue de votre site, vous pourrez la changer plus tard.'); ?></p>
-<form method="post">
+<?php echo template::formOpen('installForm'); ?>
 	<?php echo template::select('installLanguage', $module::$languages, [
 		'label' => 'Langue de l\'interface',
 		'selected' => $this->getData(['config', 'language'])
@@ -11,4 +11,4 @@
 			]); ?>
 		</div>
 	</div>
-</form>
+<?php echo template::formClose(); ?>

@@ -1,4 +1,4 @@
-<form method="post">
+<?php echo template::formOpen('themeBodyForm'); ?>
 	<div class="row">
 		<div class="col2">
 			<?php echo template::button('themeBodyBack', [
@@ -65,4 +65,4 @@
 			</div>
 		</div>
 	</div>
-</form>
+<?php echo template::formClose(); ?>

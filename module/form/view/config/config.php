@@ -43,7 +43,7 @@
 		</div>
 	</div>
 </div>
-<form method="post">
+<?php echo template::formOpen('formConfigForm'); ?>
 	<div class="row">
 		<div class="col2">
 			<?php echo template::button('formConfigBack', [
@@ -120,4 +120,4 @@
 			</div>
 		</div>
 	</div>
-</form>
+<?php echo template::formClose(); ?>

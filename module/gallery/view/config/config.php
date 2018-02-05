@@ -1,4 +1,4 @@
-<form method="post">
+<?php echo template::formOpen('galleryConfigForm'); ?>
 	<div class="row">
 		<div class="col2">
 			<?php echo template::button('galleryConfigBack', [
@@ -40,4 +40,4 @@
 	<?php else: ?>
 		<?php echo template::speech('Aucune galerie.'); ?>
 	<?php endif; ?>
-</form>
+<?php echo template::formClose(); ?>

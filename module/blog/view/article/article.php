@@ -12,7 +12,7 @@
 <?php if($this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'closeComment'])): ?>
 	<p><?php echo helper::i18n('Les commentaires sont fermés pour cet article.'); ?></p>
 <?php else: ?>
-	<form id="blogArticleForm" method="post">
+	<?php echo template::formOpen('blogArticleForm'); ?>
 		<?php echo template::text('blogArticleCommentShow', [
 			'placeholder' => 'Rédiger un commentaire...',
 			'readonly' => true
@@ -70,7 +70,7 @@
 				</div>
 			</div>
 		</div>
-	</form>
+	<?php echo template::formClose(); ?>
 <?php endif;?>
 <div class="row">
 	<div class="col12">

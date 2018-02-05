@@ -1,4 +1,4 @@
-<form id="blogAddForm" method="post">
+<?php echo template::formOpen('blogAddForm'); ?>
 	<div class="row">
 		<div class="col2">
 			<?php echo template::button('blogAddBack', [
@@ -70,4 +70,4 @@
 			</div>
 		</div>
 	</div>
-</form>
+<?php echo template::formClose(); ?>

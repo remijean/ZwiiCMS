@@ -15,8 +15,8 @@
 /**
  * Vérification de la version de PHP
  */
-if(version_compare(PHP_VERSION, '5.5.0', '<')) {
-	exit('PHP 5.5+ required.');
+if(version_compare(PHP_VERSION, '5.6.0', '<')) {
+	exit('PHP 5.6+ required.');
 }
 
 /**

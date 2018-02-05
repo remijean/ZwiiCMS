@@ -1,5 +1,5 @@
 <?php if($this->getData(['module', $this->getUrl(0), 'input'])): ?>
-	<form method="post">
+	<?php echo template::formOpen('formForm'); ?>
 		<?php foreach($this->getData(['module', $this->getUrl(0), 'input']) as $index => $input): ?>
 			<?php if($input['type'] === $module::TYPE_MAIL): ?>
 				<?php echo template::mail('formInput[' . $index . ']', [
@@ -43,7 +43,7 @@
 				]); ?>
 			</div>
 		</div>
-	</form>
+	<?php echo template::formClose(); ?>
 <?php else: ?>
 	<?php echo template::speech('Le formulaire ne contient aucun champ.'); ?>
 <?php endif; ?>
