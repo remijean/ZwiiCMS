@@ -15,7 +15,7 @@
  */
 $("#pageEditDelete").on("click", function() {
 	var _this = $(this);
-	return core.confirm("<?php echo helper::translate('Êtes-vous sûr de vouloir supprimer cette page ?'); ?>", function() {
+	return core.confirm("<?php echo helper::i18n('Êtes-vous sûr de vouloir supprimer cette page ?'); ?>", function() {
 		$(location).attr("href", _this.attr("href"));
 	});
 });
@@ -51,8 +51,8 @@ var pages = <?php echo json_encode($this->getData(['page'])); ?>;
 $("#pageEditParentPageId").on("change", function() {
 	var positionDOM = $("#pageEditPosition");
 	positionDOM.empty().append(
-		$("<option>").val(0).text("<?php echo helper::translate('Ne pas afficher'); ?>"),
-		$("<option>").val(1).text("<?php echo helper::translate('Au début'); ?>")
+		$("<option>").val(0).text("<?php echo helper::i18n('Ne pas afficher'); ?>"),
+		$("<option>").val(1).text("<?php echo helper::i18n('Au début'); ?>")
 	);
 	var parentSelected = $(this).val();
 	var positionSelected = 0;
@@ -72,7 +72,7 @@ $("#pageEditParentPageId").on("change", function() {
 					positionPrevious++;
 					// Ajout à la liste
 					positionDOM.append(
-						$("<option>").val(positionPrevious).text("<?php echo helper::translate('Après'); ?> \"" + pages[key].title + "\"")
+						$("<option>").val(positionPrevious).text("<?php echo helper::i18n('Après'); ?> \"" + pages[key].title + "\"")
 					);
 				}
 			}
@@ -92,7 +92,7 @@ $("#pageEditParentPageId").on("change", function() {
 				positionPrevious++;
 				// Ajout à la liste
 				positionDOM.append(
-					$("<option>").val(positionPrevious).text("<?php echo helper::translate('Après'); ?> \"" + pages[hierarchy[parentSelected][i]].title + "\"")
+					$("<option>").val(positionPrevious).text("<?php echo helper::i18n('Après'); ?> \"" + pages[hierarchy[parentSelected][i]].title + "\"")
 				);
 			}
 		}

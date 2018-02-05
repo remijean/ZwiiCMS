@@ -192,65 +192,65 @@ td > .col12 {
 	margin: auto;
 }
 
-/* Panneau */
-#panel {
+/* Barre de membre */
+#bar {
 	background: #212223;
 	padding-left: 5px; /* Pour éviter que le select touche le bord lorsque la fenêtre est redimensionnée */
 	margin: 0 -10px;
 	text-align: right;
 }
-#panel:after {
+#bar:after {
 	content: " ";
 	clear: both;
 	display: block;
 }
-#panel ul {
+#bar ul {
 	padding: 0;
 	margin: 0;
 	list-style: none;
 	height: 45px;
 	line-height: 45px;
 }
-#panel #panelLeft {
+#bar #barLeft {
 	float: left;
 }
-#panel #panelRight {
+#bar #barRight {
 	float: right;
 	font-size: .8em;
 }
-#panel li {
+#bar li {
 	display: inline;
 }
-#panel a {
+#bar a {
 	display: inline-block;
 	padding: 0 12px;
 	color: #FFF;
 }
-#panel a:hover {
+#bar a:hover {
 	background: #191A1A;
 	text-decoration: none;
 }
-#panel a:active {
+#bar a:active {
 	background: #111112;
 }
-#panel select {
+#bar select {
 	width: 250px;
 	border: 0;
 	padding: 5px;
 }
 @media (max-width: 768px) {
-	#panel {
+	#bar {
 		text-align: center;
 		padding: 0;
 	}
-	#panel #panelLeft {
+	#bar #barLeft {
 		padding: 5px;
 	}
-	#panel ul {
+	#bar ul {
 		float: none !important;
 		height: auto;
 	}
-	#panel select {
+	#bar select {
 		width: 100%;
 		display: block;
 	}

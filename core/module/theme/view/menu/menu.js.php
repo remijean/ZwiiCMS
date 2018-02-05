@@ -63,14 +63,14 @@ $("input, select").on("change", function() {
 			}
 			break;
 		case 'body-first':
-			$("nav").show().insertAfter("#panel");
+			$("nav").show().insertAfter("#bar");
 			break;
 		case 'body-second':
 			if(<?php echo json_encode($this->getData(['theme', 'header', 'position']) === 'body'); ?>) {
 				$("nav").show().insertAfter("header");
 			}
 			else {
-				$("nav").show().insertAfter("#panel");
+				$("nav").show().insertAfter("#bar");
 			}
 			break;
 	}

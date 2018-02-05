@@ -2,15 +2,15 @@
 <h4 class="textAlignRight">
 	<?php echo $this->getData(['user', $this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'userId']), 'firstname']); ?>
 	<?php echo $this->getData(['user', $this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'userId']), 'lastname']); ?>
-	<?php echo helper::translate('on'); ?> <?php echo date('d/m/Y H:i', $this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'publishedOn'])); ?>
+	<?php echo helper::i18n('on'); ?> <?php echo date('d/m/Y H:i', $this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'publishedOn'])); ?>
 </h4>
 <?php echo $this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'content']); ?>
 <h2 id="comment">
 	<?php $commentsNb = count($this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'comment'])); ?>
-	<?php echo $commentsNb . ' ' . helper::translate($commentsNb > 1 ? 'commentaires' : 'commentaire'); ?>
+	<?php echo $commentsNb . ' ' . helper::i18n($commentsNb > 1 ? 'commentaires' : 'commentaire'); ?>
 </h2>
 <?php if($this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'closeComment'])): ?>
-	<p><?php echo helper::translate('Les commentaires sont fermés pour cet article.'); ?></p>
+	<p><?php echo helper::i18n('Les commentaires sont fermés pour cet article.'); ?></p>
 <?php else: ?>
 	<form id="blogArticleForm" method="post">
 		<?php echo template::text('blogArticleCommentShow', [
@@ -82,7 +82,7 @@
 					<?php else: ?>
 						<?php echo $comment['author']; ?>
 					<?php endif; ?>
-					<?php echo helper::translate('le'); ?> <?php echo date('d/m/Y - H:i', $comment['createdOn']); ?>
+					<?php echo helper::i18n('le'); ?> <?php echo date('d/m/Y - H:i', $comment['createdOn']); ?>
 				</h4>
 				<?php echo $comment['content']; ?>
 			</div>

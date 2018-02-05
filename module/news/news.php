@@ -91,7 +91,7 @@ class news extends common {
 			self::$news[] = [
 				$this->getData(['module', $this->getUrl(0), $newsIds[$i], 'title']),
 				date('d/m/Y H:i', $this->getData(['module', $this->getUrl(0), $newsIds[$i], 'publishedOn'])),
-				helper::translate(self::$states[$this->getData(['module', $this->getUrl(0), $newsIds[$i], 'state'])]),
+				helper::i18n(self::$states[$this->getData(['module', $this->getUrl(0), $newsIds[$i], 'state'])]),
 				template::button('newsConfigEdit' . $newsIds[$i], [
 					'href' => helper::baseUrl() . $this->getUrl(0) . '/edit/' . $newsIds[$i],
 					'value' => template::ico('pencil')
@@ -212,8 +212,8 @@ class news extends common {
 		}
 		// Valeurs en sortie
 		$this->addOutput([
-			'editButton' => true,
-			'pageContent' => true,
+			'showBarEditButton' => true,
+			'showPageContent' => true,
 			'view' => 'index'
 		]);
 	}

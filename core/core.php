@@ -27,7 +27,6 @@ class common {
 	const ZWII_VERSION = '8.1.0';
 
 	public static $actions = [];
-	public static $language = [];
 	public static $coreModuleIds = [
 		'config',
 		'install',
@@ -330,16 +329,16 @@ class common {
 		'access' => true,
 		'content' => '',
 		'display' => self::DISPLAY_LAYOUT_MAIN,
-		'editButton' => false,
 		'metaDescription' => '',
 		'metaTitle' => '',
 		'notification' => '',
-		'pageContent' => false,
-		'title' => null, // Null car un titre peut être vide
 		'redirect' => '',
 		'script' => '',
+		'showBarEditButton' => false,
+		'showPageContent' => false,
 		'state' => false,
 		'style' => '',
+		'title' => null, // Null car un titre peut être vide
 		// Trié par ordre d'exécution
 		'vendor' => [
 			'jquery',
@@ -377,6 +376,7 @@ class common {
 		self::GROUP_MODERATOR => 'Modérateur',
 		self::GROUP_ADMIN => 'Administrateur'
 	];
+	public static $i18n = [];
 	public static $timezone;
 	private $url = '';
 	private $user = [];
@@ -586,7 +586,7 @@ class common {
 
 	/**
 	 * Accède à une valeur des variables http (ordre de recherche en l'absence de type : _COOKIE, _POST)
-	 * @param mixed $key Clé de la valeur
+	 * @param string $key Clé de la valeur
 	 * @param int $filter Filtre à appliquer à la valeur
 	 * @param bool $required Champ requis
 	 * @return mixed
@@ -635,10 +635,6 @@ class common {
 
 		// Sinon retourne null
 		return helper::filter(null, $filter);
-	}
-
-	public function getOutput($output) {
-		return $this->output[$output];
 	}
 
 	/**
@@ -915,19 +911,10 @@ class core extends common {
 			// Enregistre la personnalisation
 			file_put_contents('site/data/theme.css', $css);
 		}
-		// Importe les fichiers de langue
-		// Coeur
-		$language = 'core/lang/' . $this->getData(['config', 'language']) . '.json';
-		if(is_file($language)) {
-			self::$language = json_decode(file_get_contents($language), true);
-		}
-		// Module
-		$language = 'module/' . $this->getData(['page', $this->getUrl(0), 'moduleId']) . '/lang/' . $this->getData(['config', 'language']) . '.json';
-		if(
-			in_array($this->getData(['page', $this->getUrl(0), 'module']), self::$coreModuleIds) === false
-			AND is_file($language)
-		) {
-			self::$language = array_merge(self::$language, json_decode(file_get_contents($language), true));
+		// Importe le fichier de langue
+		$i18n = 'i18n/' . $this->getData(['config', 'language']) . '.json';
+		if(is_file($i18n)) {
+			self::$i18n = json_decode(file_get_contents($i18n), true);
 		}
 	}
 
@@ -1132,7 +1119,7 @@ class core extends common {
 								ob_start();
 								include $viewPath;
 								$this->addOutput([
-									'content' => ($output['pageContent'] ? $pageContent : '') . ob_get_clean()
+									'content' => ($output['showPageContent'] ? $pageContent : '') . ob_get_clean()
 								]);
 							}
 						}
@@ -1144,13 +1131,13 @@ class core extends common {
 						}
 						if($output['title'] !== null) {
 							$this->addOutput([
-								'title' => (($moduleId === 'page' AND $action === 'edit') ? $output['title'] : helper::translate($output['title']))
+								'title' => (($moduleId === 'page' AND $action === 'edit') ? $output['title'] : helper::i18n($output['title']))
 							]);
 						}
-						// Bouton d'édition de la page
-						if($output['editButton']) {
+						// Affiche le bouton d'édition de la page dans la barre de membre
+						if($output['showBarEditButton']) {
 							$this->addOutput([
-								'editButton' => $output['editButton']
+								'showBarEditButton' => $output['showBarEditButton']
 							]);
 						}
 					}
@@ -1170,14 +1157,14 @@ class core extends common {
 		if($access === false) {
 			http_response_code(403);
 			$this->addOutput([
-				'title' => helper::translate('Erreur 403'),
+				'title' => helper::i18n('Erreur 403'),
 				'content' => template::speech('Vous n\'êtes pas autorisé à accéder à cette page...')
 			]);
 		}
 		elseif($this->output['content'] === '') {
 			http_response_code(404);
 			$this->addOutput([
-				'title' => helper::translate('Erreur 404'),
+				'title' => helper::i18n('Erreur 404'),
 				'content' => template::speech('Oups ! La page demandée est introuvable...')
 			]);
 		}
@@ -1421,6 +1408,18 @@ class helper {
 	}
 
 	/**
+	 * Traduit les textes
+	 * @param string $text Texte à traduire
+	 * @return string
+	 */
+	public static function i18n($text) {
+		if(array_key_exists($text, core::$i18n)) {
+			$text = core::$i18n[$text];
+		}
+		return $text;
+	}
+
+	/**
 	 * Minimise du css
 	 * @param string $css Css à minimiser
 	 * @return string
@@ -1534,7 +1533,7 @@ class helper {
 			if(($value OR $value === 0) AND in_array($key, $exclude) === false) {
 				// Champs à traduire
 				if(in_array($key, ['placeholder'])) {
-					$attributes[] = sprintf('%s="%s"', $key, helper::translate($value));
+					$attributes[] = sprintf('%s="%s"', $key, helper::i18n($value));
 				}
 				// Disabled
 				// Readonly
@@ -1562,19 +1561,6 @@ class helper {
 		if(strlen($text) > $length) {
 			$text = mb_substr($text, $start, $length);
 			$text = mb_substr($text, 0, min(mb_strlen($text), mb_strrpos($text, ' ')));
-		}
-		return $text;
-	}
-
-	/**
-	 * Traduit les textes
-	 * @param string $text Texte à traduire
-	 * @return string
-	 */
-	public static function translate($text) {
-		// Traduit le texte en cherchant dans le tableau de langue (ajout d'un filtre au cas ou un $key est vide)
-		if(array_key_exists($text, core::$language)) {
-			$text = core::$language[$text];
 		}
 		return $text;
 	}
@@ -1630,8 +1616,8 @@ class layout extends common {
 	 */
 	public function showCopyright() {
 		$items = '<div id="footerCopyright">';
-		$items .= helper::translate('Motorisé par') . ' <a href="http://zwiicms.com/" target="_blank">Zwii</a>';
-		$items .= ' | <a href="' . helper::baseUrl() . 'sitemap">' . helper::translate('Plan du site') . '</a>';
+		$items .= helper::i18n('Motorisé par') . ' <a href="http://zwiicms.com/" target="_blank">Zwii</a>';
+		$items .= ' | <a href="' . helper::baseUrl() . 'sitemap">' . helper::i18n('Plan du site') . '</a>';
 		if(
 			(
 				$this->getData(['theme', 'footer', 'loginLink'])
@@ -1639,7 +1625,7 @@ class layout extends common {
 			)
 			OR $this->getUrl(0) === 'theme'
 		) {
-			$items .= '<span id="footerLoginLink" ' . ($this->getUrl(0) === 'theme' ? 'class="displayNone"' : '') . '> | <a href="' . helper::baseUrl() . 'user/login/' . str_replace('/', '_', $this->getUrl()) . '">' . helper::translate('Connexion') . '</a></span>';
+			$items .= '<span id="footerLoginLink" ' . ($this->getUrl(0) === 'theme' ? 'class="displayNone"' : '') . '> | <a href="' . helper::baseUrl() . 'user/login/' . str_replace('/', '_', $this->getUrl()) . '">' . helper::i18n('Connexion') . '</a></span>';
 		}
 		$items .= '</div>';
 		echo $items;
@@ -1696,7 +1682,7 @@ class layout extends common {
 			)
 			OR $this->getUrl(0) === 'theme'
 		) {
-			$items .= '<li id="menuLoginLink" ' . ($this->getUrl(0) === 'theme' ? 'class="displayNone"' : '') . '><a href="' . helper::baseUrl() . 'user/login/' . str_replace('/', '_', $this->getUrl()) . '">' . helper::translate('Connexion') . '</a>';
+			$items .= '<li id="menuLoginLink" ' . ($this->getUrl(0) === 'theme' ? 'class="displayNone"' : '') . '><a href="' . helper::baseUrl() . 'user/login/' . str_replace('/', '_', $this->getUrl()) . '">' . helper::i18n('Connexion') . '</a>';
 		}
 		// Retourne les items du menu
 		echo '<ul>' . $items . '</ul>';
@@ -1721,32 +1707,32 @@ class layout extends common {
 	 */
 	public function showNotification() {
 		if(common::$inputNotices) {
-			echo '<div id="notification" class="notificationError">' . helper::translate('Impossible de soumettre le formulaire, car il contient des erreurs') . '</div>';
+			echo '<div id="notification" class="notificationError">' . helper::i18n('Impossible de soumettre le formulaire, car il contient des erreurs') . '</div>';
 		}
 		elseif(empty($_SESSION['ZWII_NOTIFICATION_SUCCESS']) === false) {
-			echo '<div id="notification" class="notificationSuccess">' . helper::translate($_SESSION['ZWII_NOTIFICATION_SUCCESS']) . '</div>';
+			echo '<div id="notification" class="notificationSuccess">' . helper::i18n($_SESSION['ZWII_NOTIFICATION_SUCCESS']) . '</div>';
 			unset($_SESSION['ZWII_NOTIFICATION_SUCCESS']);
 		}
 		elseif(empty($_SESSION['ZWII_NOTIFICATION_ERROR']) === false) {
-			echo '<div id="notification" class="notificationError">' . helper::translate($_SESSION['ZWII_NOTIFICATION_ERROR']) . '</div>';
+			echo '<div id="notification" class="notificationError">' . helper::i18n($_SESSION['ZWII_NOTIFICATION_ERROR']) . '</div>';
 			unset($_SESSION['ZWII_NOTIFICATION_ERROR']);
 		}
 		elseif(empty($_SESSION['ZWII_NOTIFICATION_OTHER']) === false) {
-			echo '<div id="notification" class="notificationOther">' . helper::translate($_SESSION['ZWII_NOTIFICATION_OTHER']) . '</div>';
+			echo '<div id="notification" class="notificationOther">' . helper::i18n($_SESSION['ZWII_NOTIFICATION_OTHER']) . '</div>';
 			unset($_SESSION['ZWII_NOTIFICATION_OTHER']);
 		}
 	}
 
 	/**
-	 * Affiche le panneau d'administration
+	 * Affiche la barre de membre
 	 */
-	public function showPanel() {
+	public function showBar() {
 		if($this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')) {
 			// Items de gauche
 			$leftItems = '';
 			if($this->getUser('group') >= self::GROUP_MODERATOR) {
-				$leftItems .= '<li><select id="panelSelectPage">';
-				$leftItems .= '<option value="">' . helper::translate('Choisissez une page') . '</option>';
+				$leftItems .= '<li><select id="barSelectPage">';
+				$leftItems .= '<option value="">' . helper::i18n('Choisissez une page') . '</option>';
 				$currentPageId = $this->getData(['page', $this->getUrl(0)]) ? $this->getUrl(0) : $this->getUrl(2);
 				foreach($this->getHierarchy(null, false) as $parentPageId => $childrenPageIds) {
 					$leftItems .= '<option value="' . helper::baseUrl() . $parentPageId . '"' . ($parentPageId === $currentPageId ? ' selected' : false) . '>' . $this->getData(['page', $parentPageId, 'title']) . '</option>';
@@ -1761,26 +1747,26 @@ class layout extends common {
 			if($this->getUser('group') >= self::GROUP_MODERATOR) {
 				if(
 					// Sur un module de page qui autorise le bouton de modification de la page
-					$this->core->output['editButton']
+					$this->core->output['showBarEditButton']
 					// Sur une page sans module
 					OR $this->getData(['page', $this->getUrl(0), 'moduleId']) === ''
 					// Sur une page d'accueil
 					OR $this->getUrl(0) === ''
 				) {
-					$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/edit/' . $this->getUrl(0) . '" title="' . helper::translate('Modifier la page') . '">' . template::ico('pencil') . '</a></li>';
+					$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/edit/' . $this->getUrl(0) . '" title="' . helper::i18n('Modifier la page') . '">' . template::ico('pencil') . '</a></li>';
 				}
-				$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/add" title="' . helper::translate('Créer une page') . '">' . template::ico('plus') . '</a></li>';
-				$rightItems .= '<li><a href="' . helper::baseUrl(false) . 'core/vendor/filemanager/dialog.php?type=0&akey=' . md5_file('site/data/data.json') .'&lang=' . $this->getData(['config', 'language']) . '" title="' . helper::translate('Gérer les fichiers') . '" data-lity>' . template::ico('folder') . '</a></li>';
+				$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/add" title="' . helper::i18n('Créer une page') . '">' . template::ico('plus') . '</a></li>';
+				$rightItems .= '<li><a href="' . helper::baseUrl(false) . 'core/vendor/filemanager/dialog.php?type=0&akey=' . md5_file('site/data/data.json') .'&lang=' . $this->getData(['config', 'language']) . '" title="' . helper::i18n('Gérer les fichiers') . '" data-lity>' . template::ico('folder') . '</a></li>';
 			}
 			if($this->getUser('group') >= self::GROUP_ADMIN) {
-				$rightItems .= '<li><a href="' . helper::baseUrl() . 'user" title="' . helper::translate('Configurer les utilisateurs') . '">' . template::ico('users') . '</a></li>';
-				$rightItems .= '<li><a href="' . helper::baseUrl() . 'theme" title="' . helper::translate('Personnaliser le thème') . '">' . template::ico('brush') . '</a></li>';
-				$rightItems .= '<li><a href="' . helper::baseUrl() . 'config" title="' . helper::translate('Configurer le site') . '">' . template::ico('gear') . '</a></li>';
+				$rightItems .= '<li><a href="' . helper::baseUrl() . 'user" title="' . helper::i18n('Configurer les utilisateurs') . '">' . template::ico('users') . '</a></li>';
+				$rightItems .= '<li><a href="' . helper::baseUrl() . 'theme" title="' . helper::i18n('Personnaliser le thème') . '">' . template::ico('brush') . '</a></li>';
+				$rightItems .= '<li><a href="' . helper::baseUrl() . 'config" title="' . helper::i18n('Configurer le site') . '">' . template::ico('gear') . '</a></li>';
 			}
-			$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/edit/' . $this->getUser('id') . '" title="' . helper::translate('Configurer mon compte') . '">' . template::ico('user', 'right') . $this->getUser('firstname') . ' ' . $this->getUser('lastname') . '</a></li>';
-			$rightItems .= '<li><a id="panelLogout" href="' . helper::baseUrl() . 'user/logout" title="' . helper::translate('Se déconnecter') . '">' . template::ico('logout') . '</a></li>';
-			// Panneau
-			echo '<div id="panel"><div class="container"><ul id="panelLeft">' . $leftItems . '</ul><ul id="panelRight">' . $rightItems . '</ul></div></div>';
+			$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/edit/' . $this->getUser('id') . '" title="' . helper::i18n('Configurer mon compte') . '">' . template::ico('user', 'right') . $this->getUser('firstname') . ' ' . $this->getUser('lastname') . '</a></li>';
+			$rightItems .= '<li><a id="barLogout" href="' . helper::baseUrl() . 'user/logout" title="' . helper::i18n('Se déconnecter') . '">' . template::ico('logout') . '</a></li>';
+			// Barre de membre
+			echo '<div id="bar"><div class="container"><ul id="barLeft">' . $leftItems . '</ul><ul id="barRight">' . $rightItems . '</ul></div></div>';
 		}
 	}
 
@@ -1919,7 +1905,7 @@ class template {
 			$attributes['disabled'] ? 'disabled' : '',
 			$attributes['class'],
 			$attributes['uniqueSubmission'] ? 'uniqueSubmission' : '',
-			($attributes['ico'] ? template::ico($attributes['ico'], 'right') : '') . helper::translate($attributes['value'])
+			($attributes['ico'] ? template::ico($attributes['ico'], 'right') : '') . helper::i18n($attributes['value'])
 		);
 	}
 
@@ -1945,7 +1931,7 @@ class template {
 		// Début du wrapper
 		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="inputWrapper ' . $attributes['classWrapper'] . '">';
 		// Label
-		$html .= self::label($attributes['id'], helper::translate('Combien font') . ' ' . $firstNumber . ' + ' . $secondNumber . ' ?', [
+		$html .= self::label($attributes['id'], helper::i18n('Combien font') . ' ' . $firstNumber . ' + ' . $secondNumber . ' ?', [
 			'help' => $attributes['help']
 		]);
 		// Notice
@@ -2015,7 +2001,7 @@ class template {
 			helper::sprintAttributes($attributes)
 		);
 		// Label
-		$html .= self::label($attributes['id'], '<span>' . helper::translate($label) . '</span>', [
+		$html .= self::label($attributes['id'], '<span>' . helper::i18n($label) . '</span>', [
 			'help' => $attributes['help']
 		]);
 		// Fin du wrapper
@@ -2171,7 +2157,7 @@ class template {
 	 * @return string
 	 */
 	public static function help($text) {
-		return '<span class="helpButton">' . self::ico('help') . '<div class="helpContent">' . helper::translate($text) . '</div></span>';
+		return '<span class="helpButton">' . self::ico('help') . '<div class="helpContent">' . helper::i18n($text) . '</div></span>';
 	}
 
 	/**
@@ -2227,7 +2213,7 @@ class template {
 			'help' => ''
 		], $attributes);
 		// Traduit le text
-		$text = helper::translate($text);
+		$text = helper::i18n($text);
 		// Ajout d'une aide
 		if($attributes['help'] !== '') {
 			$text = $text . self::help($attributes['help']);
@@ -2300,7 +2286,7 @@ class template {
 	 * @return string
 	 */
 	public static function notice($id, $notice) {
-		return ' <span id="' . $id . 'Notice" class="notice ' . ($notice ? '' : 'displayNone') . '">' . helper::translate($notice) . '</span>';
+		return ' <span id="' . $id . 'Notice" class="notice ' . ($notice ? '' : 'displayNone') . '">' . helper::i18n($notice) . '</span>';
 	}
 
 	/**
@@ -2399,7 +2385,7 @@ class template {
 				'<option value="%s"%s>%s</option>',
 				$value,
 				$attributes['selected'] == $value ? ' selected' : '', // Double == pour ignorer le type de variable car $_POST change les types en string
-				helper::translate($text)
+				helper::i18n($text)
 			);
 		}
 		// Fin sélection
@@ -2416,7 +2402,7 @@ class template {
 	 * @return string
 	 */
 	public static function speech($text) {
-		return '<div class="speech"><div class="speechBubble">' . helper::translate($text) . '</div>' . template::ico('mimi speechMimi', '', false, '7em') . '</div>';
+		return '<div class="speech"><div class="speechBubble">' . helper::i18n($text) . '</div>' . template::ico('mimi speechMimi', '', false, '7em') . '</div>';
 	}
 
 	/**
@@ -2442,7 +2428,7 @@ class template {
 			$attributes['class'],
 			$attributes['uniqueSubmission'] ? 'uniqueSubmission' : '',
 			helper::sprintAttributes($attributes, ['class', 'ico', 'value']),
-			($attributes['ico'] ? template::ico($attributes['ico'], 'right') : '') . helper::translate($attributes['value'])
+			($attributes['ico'] ? template::ico($attributes['ico'], 'right') : '') . helper::i18n($attributes['value'])
 		);
 	}
 
@@ -2472,7 +2458,7 @@ class template {
 			$html .= '<tr>';
 			$i = 0;
 			foreach($head as $th) {
-				$html .= '<th class="col' . $cols[$i++] . '">' . helper::translate($th) . '</th>';
+				$html .= '<th class="col' . $cols[$i++] . '">' . helper::i18n($th) . '</th>';
 			}
 			// Fin des entêtes
 			$html .= '</tr>';

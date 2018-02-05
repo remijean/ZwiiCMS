@@ -69,7 +69,7 @@ $("input, select").on("change", function() {
 				$("header").show().insertAfter("nav");
 			}
 			else {
-				$("header").show().insertAfter("#panel");
+				$("header").show().insertAfter("#bar");
 			}
 			break;
 	}

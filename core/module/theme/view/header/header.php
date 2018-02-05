@@ -15,7 +15,7 @@
 	<div class="row">
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Couleurs'); ?></h4>
+				<h4><?php echo helper::i18n('Couleurs'); ?></h4>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::text('themeHeaderBackgroundColor', [
@@ -34,7 +34,7 @@
 				</div>
 			</div>
 			<div class="block">
-				<h4><?php echo helper::translate('Mise en forme du texte'); ?></h4>
+				<h4><?php echo helper::i18n('Mise en forme du texte'); ?></h4>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::select('themeHeaderTextTransform', $module::$textTransforms, [
@@ -53,7 +53,7 @@
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Image'); ?></h4>
+				<h4><?php echo helper::i18n('Image'); ?></h4>
 				<?php echo template::file('themeHeaderImage', [
 					'label' => 'Fond',
 					'lang' => $this->getData(['config', 'language']),
@@ -81,7 +81,7 @@
 				</div>
 			</div>
 			<div class="block">
-				<h4><?php echo helper::translate('Police de caractères'); ?></h4>
+				<h4><?php echo helper::i18n('Police de caractères'); ?></h4>
 				<?php echo template::select('themeHeaderFont', $module::$fonts, [
 					'label' => 'Titre',
 					'selected' => $this->getData(['theme', 'header', 'font'])
@@ -92,7 +92,7 @@
 	<div class="row">
 		<div class="col12">
 			<div class="block">
-				<h4><?php echo helper::translate('Configuration'); ?></h4>
+				<h4><?php echo helper::i18n('Configuration'); ?></h4>
 				<div class="row">
 					<div class="col4">
 						<?php echo template::select('themeHeaderPosition', $module::$headerPositions, [

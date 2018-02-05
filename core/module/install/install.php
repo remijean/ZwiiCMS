@@ -66,12 +66,12 @@ class install extends common {
 				// Envoi le mail
 				$sent = $this->sendMail(
 					$userMail,
-					helper::translate('Installation de votre site'),
-					helper::translate('Bonjour') . ' <strong>' . $userFirstname . ' ' . $userLastname . '</strong>,<br><br>' .
-					helper::translate('Vous trouverez ci-dessous les détails de votre installation.') . '<br><br>' .
-					'<strong>' . helper::translate('URL du site :') . '</strong> <a href="' . helper::baseUrl(false) . '" target="_blank">' . helper::baseUrl(false) . '</a><br>' .
-					'<strong>' . helper::translate('Identifiant du compte :') . '</strong> ' . $this->getInput('installConfigId') . '<br>' .
-					'<strong>' . helper::translate('Mot de passe du compte :') . '</strong> ' . $this->getInput('installConfigPassword')
+					helper::i18n('Installation de votre site'),
+					helper::i18n('Bonjour') . ' <strong>' . $userFirstname . ' ' . $userLastname . '</strong>,<br><br>' .
+					helper::i18n('Vous trouverez ci-dessous les détails de votre installation.') . '<br><br>' .
+					'<strong>' . helper::i18n('URL du site :') . '</strong> <a href="' . helper::baseUrl(false) . '" target="_blank">' . helper::baseUrl(false) . '</a><br>' .
+					'<strong>' . helper::i18n('Identifiant du compte :') . '</strong> ' . $this->getInput('installConfigId') . '<br>' .
+					'<strong>' . helper::i18n('Mot de passe du compte :') . '</strong> ' . $this->getInput('installConfigPassword')
 				);
 				// Valeurs en sortie
 				$this->addOutput([
@@ -112,9 +112,9 @@ class install extends common {
 				]);
 			}
 			// Liste des langues
-			$iterator = new DirectoryIterator('core/lang/');
+			$iterator = new DirectoryIterator('i18n/');
 			foreach($iterator as $fileInfos) {
-				if($fileInfos->isFile()) {
+				if($fileInfos->isFile() AND $fileInfos->getBasename() !== 'template.json') {
 					self::$languages[$fileInfos->getBasename('.json')] = $fileInfos->getBasename('.json');
 				}
 			}

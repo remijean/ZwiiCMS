@@ -15,7 +15,7 @@
 	<div class="row">
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Couleur'); ?></h4>
+				<h4><?php echo helper::i18n('Couleur'); ?></h4>
 				<?php echo template::text('themeMenuBackgroundColor', [
 					'class' => 'colorPicker',
 					'label' => 'Fond',
@@ -25,7 +25,7 @@
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Mise en forme du texte'); ?></h4>
+				<h4><?php echo helper::i18n('Mise en forme du texte'); ?></h4>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::select('themeMenuTextTransform', $module::$textTransforms, [
@@ -46,7 +46,7 @@
 	<div class="row">
 		<div class="col12">
 			<div class="block">
-				<h4><?php echo helper::translate('Configuration'); ?></h4>
+				<h4><?php echo helper::i18n('Configuration'); ?></h4>
 				<div class="row">
 					<div class="col4">
 						<?php echo template::select('themeMenuPosition', $module::$menuPositions, [
@@ -78,7 +78,7 @@
 	<div class="row">
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Contenu'); ?></h4>
+				<h4><?php echo helper::i18n('Contenu'); ?></h4>
 				<?php echo template::checkbox('themeMenuLoginLink', true, 'Lien de connexion', [
 					'checked' => $this->getData(['theme', 'menu', 'loginLink']),
 					'help' => 'Visible seulement sur cette page et lorsque vous n\'êtes pas connecté.'

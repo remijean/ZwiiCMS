@@ -15,7 +15,7 @@
  */
 $(".newsConfigDelete").on("click", function() {
 	var _this = $(this);
-	return core.confirm("<?php echo helper::translate('Êtes-vous sûr de vouloir supprimer cette news ?'); ?>", function() {
+	return core.confirm("<?php echo helper::i18n('Êtes-vous sûr de vouloir supprimer cette news ?'); ?>", function() {
 		$(location).attr("href", _this.attr("href"));
 	});
 });

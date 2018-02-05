@@ -168,9 +168,9 @@ class config extends common {
 	 */
 	public function index() {
 		// Liste des langues
-		$iterator = new DirectoryIterator('core/lang/');
+		$iterator = new DirectoryIterator('i18n/');
 		foreach($iterator as $fileInfos) {
-			if($fileInfos->isFile()) {
+			if($fileInfos->isFile() AND $fileInfos->getBasename() !== 'template.json') {
 				self::$languages[$fileInfos->getBasename('.json')] = $fileInfos->getBasename('.json');
 			}
 		}

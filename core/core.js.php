@@ -26,7 +26,7 @@ core.alert = function(text) {
 					.append(
 						$("<a>")
 							.addClass("button")
-							.text("<?php echo helper::translate('Ok'); ?>")
+							.text("<?php echo helper::i18n('Ok'); ?>")
 							.on("click", function() {
 								lightbox.close();
 							})
@@ -70,7 +70,7 @@ core.confirm = function(text, yesCallback, noCallback) {
 					.append(
 						$("<a>")
 							.addClass("button grey")
-							.text("<?php echo helper::translate('Non'); ?>")
+							.text("<?php echo helper::i18n('Non'); ?>")
 							.on("click", function() {
 								lightbox.options('button', true);
 								lightbox.close();
@@ -80,7 +80,7 @@ core.confirm = function(text, yesCallback, noCallback) {
 						}),
 						$("<a>")
 							.addClass("button")
-							.text("<?php echo helper::translate('Oui'); ?>")
+							.text("<?php echo helper::i18n('Oui'); ?>")
 							.on("click", function() {
 								lightbox.options('button', true);
 								lightbox.close();
@@ -128,7 +128,7 @@ core.end = function() {
 	});
 	$(window).on("beforeunload", function() {
 		if(formDOM.length && formDOM.serialize() !== formDOM.data("serialize") && keysNb > 2) {
-			return "<?php echo helper::translate('Les modifications que vous avez apportées ne seront peut-être pas enregistrées.'); ?>";
+			return "<?php echo helper::i18n('Les modifications que vous avez apportées ne seront peut-être pas enregistrées.'); ?>";
 		}
 	});
 	formDOM.submit(function() {
@@ -204,7 +204,7 @@ core.start = function() {
 		if(document.cookie.indexOf("ZWII_COOKIE_CONSENT") === -1) {
 			$("body").append(
 				$("<div>").attr("id", "cookieConsent").append(
-					$("<span>").text("En poursuivant votre navigation sur ce site, vous acceptez l'utilisation de cookies."),
+					$("<span>").text("<?php echo helper::i18n('En poursuivant votre navigation sur ce site, vous acceptez l\'utilisation de cookies.'); ?>"),
 					$("<span>")
 						.attr("id", "cookieConsentConfirm")
 						.text("OK")
@@ -222,9 +222,9 @@ core.start = function() {
 		}
 	}
 	/**
-	 * Choix de page dans le panneau d'administration
+	 * Choix de page dans la barre de membre
 	 */
-	$("#panelSelectPage").on("change", function() {
+	$("#barSelectPage").on("change", function() {
 		var pageUrl = $(this).val();
 		if(pageUrl) {
 			$(location).attr("href", pageUrl);
@@ -238,7 +238,7 @@ core.start = function() {
 		var inputFileHiddenDOM = $(this);
 		var fileName = inputFileHiddenDOM.val();
 		if(fileName === "") {
-			fileName = "<?php echo helper::translate('Choisissez un fichier'); ?>";
+			fileName = "<?php echo helper::i18n('Choisissez un fichier'); ?>";
 			$(".inputFileDelete").addClass("disabled");
 		}
 		else {
@@ -251,9 +251,9 @@ core.start = function() {
 		$(this).parents(".inputWrapper").find(".inputFileHidden").val("").trigger("change");
 	});
 	// Confirmation déconnexion
-	$("#panelLogout").on("click", function() {
-		return core.confirm("<?php echo helper::translate('Se déconnecter ?'); ?>", function() {
-			$(location).attr("href", $("#panelLogout").attr("href"));
+	$("#barLogout").on("click", function() {
+		return core.confirm("<?php echo helper::i18n('Se déconnecter ?'); ?>", function() {
+			$(location).attr("href", $("#barLogout").attr("href"));
 		});
 	});
 	/**
@@ -278,7 +278,7 @@ core.start = function() {
 			core.noticeRemove(_this.attr("id"));
 		}
 		else {
-			core.noticeAdd(_this.attr("id"), "<?php echo helper::translate('Format incorrect'); ?>");
+			core.noticeAdd(_this.attr("id"), "<?php echo helper::i18n('Format incorrect'); ?>");
 		}
 	});
 };

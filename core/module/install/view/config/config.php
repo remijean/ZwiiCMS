@@ -1,4 +1,4 @@
-<p><?php echo helper::translate('Veuillez saisir les champs ci-dessous afin de terminer l\'installation.'); ?></p>
+<p><?php echo helper::i18n('Veuillez saisir les champs ci-dessous afin de terminer l\'installation.'); ?></p>
 <form method="post">
 	<?php echo template::text('installConfigId', [
 		'autocomplete' => 'off',

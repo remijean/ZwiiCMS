@@ -206,13 +206,13 @@ class form extends common {
 					// Sujet du mail
 					$subject = $this->getData(['module', $this->getUrl(0), 'config', 'subject']);
 					if($subject === '') {
-						$subject = helper::translate('Nouveau message en provenance de votre site');
+						$subject = helper::i18n('Nouveau message en provenance de votre site');
 					}
 					// Envoi le mail
 					$sent = $this->sendMail(
 						$to,
 						$subject,
-						helper::translate('Nouveau message en provenance de la page') . ' "' . $this->getData(['page', $this->getUrl(0), 'title']) . '" :<br><br>' .
+						helper::i18n('Nouveau message en provenance de la page') . ' "' . $this->getData(['page', $this->getUrl(0), 'title']) . '" :<br><br>' .
 						$content
 					);
 				}
@@ -228,8 +228,8 @@ class form extends common {
 		}
 		// Valeurs en sortie
 		$this->addOutput([
-			'editButton' => true,
-			'pageContent' => true,
+			'showBarEditButton' => true,
+			'showPageContent' => true,
 			'view' => 'index'
 		]);
 	}

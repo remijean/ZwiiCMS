@@ -26,7 +26,7 @@
 	<div class="row">
 		<div class="col12">
 			<div class="block">
-				<h4><?php echo helper::translate('Informations générales'); ?></h4>
+				<h4><?php echo helper::i18n('Informations générales'); ?></h4>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::text('blogEditTitle', [
@@ -36,7 +36,7 @@
 					</div>
 					<div class="col6">
 						<?php echo template::file('blogEditPicture', [
-							'help' => helper::translate('Taille optimale de l\'image de couverture :') . ' ' . ((int) substr($this->getData(['theme', 'site', 'width']), 0, -2) - (20 * 2)) . ' x 350 pixels.',
+							'help' => helper::i18n('Taille optimale de l\'image de couverture :') . ' ' . ((int) substr($this->getData(['theme', 'site', 'width']), 0, -2) - (20 * 2)) . ' x 350 pixels.',
 							'label' => 'Image de couverture',
 							'lang' => $this->getData(['config', 'language']),
 							'type' => 1,
@@ -54,7 +54,7 @@
 	<div class="row">
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Options de publication'); ?></h4>
+				<h4><?php echo helper::i18n('Options de publication'); ?></h4>
 				<?php echo template::select('blogEditUserId', $module::$users, [
 					'label' => 'Auteur',
 					'selected' => $this->getUser('id')
@@ -68,7 +68,7 @@
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Options avancés'); ?></h4>
+				<h4><?php echo helper::i18n('Options avancés'); ?></h4>
 				<?php echo template::checkbox('blogEditCloseComment', true, 'Fermer les commentaires', [
 					'checked' => $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'closeComment'])
 				]); ?>

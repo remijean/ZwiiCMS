@@ -15,7 +15,7 @@
 	<div class="row">
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Couleur'); ?></h4>
+				<h4><?php echo helper::i18n('Couleur'); ?></h4>
 				<?php echo template::text('themeBodyBackgroundColor', [
 					'class' => 'colorPicker',
 					'label' => 'Fond',
@@ -25,7 +25,7 @@
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Image'); ?></h4>
+				<h4><?php echo helper::i18n('Image'); ?></h4>
 				<?php echo template::file('themeBodyImage', [
 					'label' => 'Fond',
 					'lang' => $this->getData(['config', 'language']),

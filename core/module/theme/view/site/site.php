@@ -15,7 +15,7 @@
 	<div class="row">
 		<div class="col12">
 			<div class="block">
-				<h4><?php echo helper::translate('Couleurs'); ?></h4>
+				<h4><?php echo helper::i18n('Couleurs'); ?></h4>
 				<div class="row">
 					<div class="col4">
 						<?php echo template::text('themeTitleTextColor', [
@@ -45,7 +45,7 @@
 	<div class="row">
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Polices'); ?></h4>
+				<h4><?php echo helper::i18n('Polices'); ?></h4>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::select('themeTitleFont', $module::$fonts, [
@@ -64,7 +64,7 @@
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Mise en forme des titres'); ?></h4>
+				<h4><?php echo helper::i18n('Mise en forme des titres'); ?></h4>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::select('themeTitleTextTransform', $module::$textTransforms, [
@@ -85,7 +85,7 @@
 	<div class="row">
 		<div class="col12">
 			<div class="block">
-				<h4><?php echo helper::translate('Apparence'); ?></h4>
+				<h4><?php echo helper::i18n('Apparence'); ?></h4>
 				<div class="row">
 					<div class="col4">
 						<?php echo template::select('themeSiteWidth', $module::$widths, [

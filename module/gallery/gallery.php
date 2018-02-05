@@ -42,12 +42,12 @@ class gallery extends common {
 				// Erreur dossier vide
 				if(is_dir($gallery['config']['directory'])) {
 					if(count(scandir($gallery['config']['directory'])) === 2) {
-						$gallery['config']['directory'] = '<span class="galleryConfigError">' . $gallery['config']['directory'] . ' (' . helper::translate('dossier vide') . ')</span>';
+						$gallery['config']['directory'] = '<span class="galleryConfigError">' . $gallery['config']['directory'] . ' (' . helper::i18n('dossier vide') . ')</span>';
 					}
 				}
 				// Erreur dossier supprimé
 				else {
-					$gallery['config']['directory'] = '<span class="galleryConfigError">' . $gallery['config']['directory'] . ' (' . helper::translate('dossier introuvable') . ')</span>';
+					$gallery['config']['directory'] = '<span class="galleryConfigError">' . $gallery['config']['directory'] . ' (' . helper::i18n('dossier introuvable') . ')</span>';
 				}
 				// Met en forme le tableau
 				self::$galleries[] = [
@@ -217,7 +217,7 @@ class gallery extends common {
 				if(self::$pictures) {
 					// Valeurs en sortie
 					$this->addOutput([
-						'editButton' => true,
+						'showBarEditButton' => true,
 						'title' => $this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'config', 'name']),
 						'vendor' => [
 							'simplelightbox'
@@ -252,8 +252,8 @@ class gallery extends common {
 			}
 			// Valeurs en sortie
 			$this->addOutput([
-				'editButton' => true,
-				'pageContent' => true,
+				'showBarEditButton' => true,
+				'showPageContent' => true,
 				'view' => 'index'
 			]);
 		}

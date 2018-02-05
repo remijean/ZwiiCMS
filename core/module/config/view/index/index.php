@@ -15,7 +15,7 @@
 	<div class="row">
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Informations générales'); ?></h4>
+				<h4><?php echo helper::i18n('Informations générales'); ?></h4>
 				<?php echo template::text('configTitle', [
 					'label' => 'Titre du site',
 					'value' => $this->getData(['config', 'title'])
@@ -30,7 +30,7 @@
 				]); ?>
 			</div>
 			<div class="block">
-				<h4><?php echo helper::translate('Options avancées'); ?></h4>
+				<h4><?php echo helper::i18n('Options avancées'); ?></h4>
 				<?php echo template::file('configFavicon', [
 					'extensions' => 'ico',
 					'help' => 'Seule une image de format .ico est acceptée. Pensez à supprimer le cache de votre navigateur si la favicon ne change pas.',
@@ -55,7 +55,7 @@
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Réseaux sociaux'); ?></h4>
+				<h4><?php echo helper::i18n('Réseaux sociaux'); ?></h4>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::text('configSocialFacebookId', [
@@ -106,7 +106,7 @@
 				</div>
 			</div>
 			<div class="block">
-				<h4><?php echo helper::translate('Système'); ?></h4>
+				<h4><?php echo helper::i18n('Système'); ?></h4>
 				<?php echo template::text('configVersion', [
 					'label' => 'Version de Zwii',
 					'readonly' => true,

@@ -144,7 +144,7 @@ class theme extends common {
 		'uppercase' => 'Majuscules'
 	];
 	public static $widths = [
-		'750px' => 'Petite (750 pixels)',
+		'720px' => 'Petite (720 pixels)',
 		'960px' => 'Moyenne (960 pixels)',
 		'1170px' => 'Grande (1170 pixels)',
 		'100%' => 'Fluide (100%)'

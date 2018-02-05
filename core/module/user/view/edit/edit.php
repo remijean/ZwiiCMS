@@ -24,7 +24,7 @@
 	<div class="row">
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Informations générales'); ?></h4>
+				<h4><?php echo helper::i18n('Informations générales'); ?></h4>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::text('userEditFirstname', [
@@ -53,29 +53,29 @@
 						'label' => 'Groupe',
 						'selected' => $this->getData(['user', $this->getUrl(2), 'group'])
 					]); ?>
-					<?php echo helper::translate('Autorisations :'); ?>
+					<?php echo helper::i18n('Autorisations :'); ?>
 					<ul id="userEditGroupDescription<?php echo self::GROUP_MEMBER; ?>" class="userEditGroupDescription displayNone">
-						<li><?php echo helper::translate('Accès aux pages privées membres'); ?></li>
+						<li><?php echo helper::i18n('Accès aux pages privées membres'); ?></li>
 					</ul>
 					<ul id="userEditGroupDescription<?php echo self::GROUP_MODERATOR; ?>" class="userEditGroupDescription displayNone">
-						<li><?php echo helper::translate('Accès aux pages privées membres et modérateurs'); ?></li>
-						<li><?php echo helper::translate('Ajout / Édition / Suppression de pages'); ?></li>
-						<li><?php echo helper::translate('Ajout / Édition / Suppression de fichiers'); ?></li>
+						<li><?php echo helper::i18n('Accès aux pages privées membres et modérateurs'); ?></li>
+						<li><?php echo helper::i18n('Ajout / Édition / Suppression de pages'); ?></li>
+						<li><?php echo helper::i18n('Ajout / Édition / Suppression de fichiers'); ?></li>
 					</ul>
 					<ul id="userEditGroupDescription<?php echo self::GROUP_ADMIN; ?>" class="userEditGroupDescription displayNone">
-						<li><?php echo helper::translate('Accès à toutes les pages privées'); ?></li>
-						<li><?php echo helper::translate('Ajout / Édition / Suppression de pages'); ?></li>
-						<li><?php echo helper::translate('Ajout / Édition / Suppression de fichiers'); ?></li>
-						<li><?php echo helper::translate('Ajout / Édition / Suppression d\'utilisateurs'); ?></li>
-						<li><?php echo helper::translate('Configuration du site'); ?></li>
-						<li><?php echo helper::translate('Personnalisation du thème'); ?></li>
+						<li><?php echo helper::i18n('Accès à toutes les pages privées'); ?></li>
+						<li><?php echo helper::i18n('Ajout / Édition / Suppression de pages'); ?></li>
+						<li><?php echo helper::i18n('Ajout / Édition / Suppression de fichiers'); ?></li>
+						<li><?php echo helper::i18n('Ajout / Édition / Suppression d\'utilisateurs'); ?></li>
+						<li><?php echo helper::i18n('Configuration du site'); ?></li>
+						<li><?php echo helper::i18n('Personnalisation du thème'); ?></li>
 					</ul>
 				<?php endif; ?>
 			</div>
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Authentification'); ?></h4>
+				<h4><?php echo helper::i18n('Authentification'); ?></h4>
 				<?php echo template::text('userEditId', [
 					'autocomplete' => 'off',
 					'help' => 'L\'identifiant est défini lors de la création du compte, il ne peut pas être modifié.',

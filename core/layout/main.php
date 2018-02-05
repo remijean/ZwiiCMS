@@ -13,7 +13,7 @@
 </head>
 <body>
 <?php $layout->showStyle(); ?>
-<?php $layout->showPanel(); ?>
+<?php $layout->showBar(); ?>
 <?php $layout->showNotification(); ?>
 <?php if($this->getData(['theme', 'menu', 'position']) === 'body-first'): ?>
 	<!-- Menu dans le fond du site avant la bannière -->

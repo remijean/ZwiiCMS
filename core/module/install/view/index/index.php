@@ -1,4 +1,4 @@
-<p><?php echo helper::translate('Veuillez choisir la langue de votre site, vous pourrez la changer plus tard.'); ?></p>
+<p><?php echo helper::i18n('Veuillez choisir la langue de votre site, vous pourrez la changer plus tard.'); ?></p>
 <form method="post">
 	<?php echo template::select('installLanguage', $module::$languages, [
 		'label' => 'Langue de l\'interface',

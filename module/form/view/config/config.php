@@ -66,7 +66,7 @@
 	<div class="row">
 		<div class="col12">
 			<div class="block">
-				<h4><?php echo helper::translate('Configuration'); ?></h4>
+				<h4><?php echo helper::i18n('Configuration'); ?></h4>
 				<?php echo template::text('formConfigButton', [
 					'help' => 'Laissez vide afin de conserver le texte par défaut.',
 					'label' => 'Texte du bouton de soumission',
@@ -105,7 +105,7 @@
 				]); ?>
 			</div>
 			<div class="block">
-				<h4><?php echo helper::translate('Liste des champs'); ?></h4>
+				<h4><?php echo helper::i18n('Liste des champs'); ?></h4>
 				<div id="formConfigNoInput">
 					<?php echo template::speech('Le formulaire ne contient aucun champ.'); ?>
 				</div>

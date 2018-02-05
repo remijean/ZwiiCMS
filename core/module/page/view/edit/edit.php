@@ -22,7 +22,7 @@
 	<div class="row">
 		<div class="col12">
 			<div class="block">
-				<h4><?php echo helper::translate('Informations générales'); ?></h4>
+				<h4><?php echo helper::i18n('Informations générales'); ?></h4>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::text('pageEditTitle', [
@@ -60,7 +60,7 @@
 	<div class="row">
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Menu'); ?></h4>
+				<h4><?php echo helper::i18n('Menu'); ?></h4>
 				<?php if($this->getHierarchy($this->getUrl(2), false)): ?>
 					<?php echo template::hidden('pageEditParentPageId', [
 						'value' => $this->getData(['page', $this->getUrl(2), 'parentPageId'])
@@ -81,7 +81,7 @@
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::translate('Options avancées'); ?></h4>
+				<h4><?php echo helper::i18n('Options avancées'); ?></h4>
 				<?php echo template::select('pageEditGroup', self::$groupPublics, [
 					'label' => 'Groupe requis pour accéder à la page',
 					'selected' => $this->getData(['page', $this->getUrl(2), 'group'])

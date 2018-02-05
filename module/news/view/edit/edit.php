@@ -26,7 +26,7 @@
 	<div class="row">
 		<div class="col12">
 			<div class="block">
-				<h4><?php echo helper::translate('Informations générales'); ?></h4>
+				<h4><?php echo helper::i18n('Informations générales'); ?></h4>
 				<?php echo template::text('newsEditTitle', [
 					'label' => 'Titre',
 					'value' => $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'title'])
@@ -41,7 +41,7 @@
 	<div class="row">
 		<div class="col12">
 			<div class="block">
-				<h4><?php echo helper::translate('Options de publication'); ?></h4>
+				<h4><?php echo helper::i18n('Options de publication'); ?></h4>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::select('newsEditUserId', $module::$users, [
