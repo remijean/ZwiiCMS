@@ -29,6 +29,7 @@
 			<?php endforeach; ?>
 		</div>
 	</div>
+	<?php echo $module::$pages; ?>
 <?php else: ?>
-²	<?php echo template::speech('Aucun article.'); ?>
+	<?php echo template::speech('Aucun article.'); ?>
 <?php endif; ?>

@@ -268,7 +268,11 @@ class blog extends common {
 	 */
 	public function index() {
 		// Affichage d'un article
-		if($this->getUrl(1)) {
+		if(
+			$this->getUrl(1)
+			// Protection pour la pagination, un ID ne peut pas être un entier, une page oui
+			AND intval($this->getUrl(1)) === 0
+		) {
 			// L'article n'existe pas
 			if($this->getData(['module', $this->getUrl(0), $this->getUrl(1)]) === null) {
 				// Valeurs en sortie

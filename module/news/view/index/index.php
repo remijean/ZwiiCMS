@@ -13,6 +13,7 @@
 			<?php endforeach; ?>
 		</div>
 	</div>
+	<?php echo $module::$pages; ?>
 <?php else: ?>
 	<?php echo template::speech('Aucune news.'); ?>
 <?php endif; ?>

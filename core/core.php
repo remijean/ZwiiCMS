@@ -1347,7 +1347,13 @@ class helper {
 				$text = (float) $text;
 				break;
 			case self::FILTER_ID:
-				$text = preg_replace('/([^a-z0-9!#$%&\'*+-=?^`{|}~@.\[\]])/', '', str_replace(explode(',', $search), explode(',', $replace), mb_strtolower($text, 'UTF-8')));
+				$text = mb_strtolower($text, 'UTF-8');
+				$text = str_replace(explode(',', $search), explode(',', $replace), $text);
+				$text = preg_replace('/([^a-z0-9!#$%&\'*+-=?^`{|}~@.\[\]])/', '', $text);
+				// Un ID ne peut pas être un entier, pour éviter les conflits avec le système de pagination
+				if(intval($text) !== 0) {
+					$text = 'i' . $text;
+				}
 				break;
 			case self::FILTER_INT:
 				$text = (int) filter_var($text, FILTER_SANITIZE_NUMBER_INT);
