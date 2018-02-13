@@ -47,7 +47,7 @@ class redirection extends common {
 		// Message si l'utilisateur peut éditer la page
 		if(
 			$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
-			AND $this->getUser('group') >= $this->getData(['page', self::GROUP_MODERATOR, 'group'])
+			AND $this->getUser('group') >= self::GROUP_MODERATOR
 			AND $this->getUrl(1) !== 'force'
 		) {
 			// Valeurs en sortie
