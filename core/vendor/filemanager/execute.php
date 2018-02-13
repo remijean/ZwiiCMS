@@ -171,6 +171,10 @@ if (isset($_GET['action']))
 			break;
 		case 'rename_folder':
 			if ($rename_folders){
+                if(!is_dir($path)) {
+                    response(trans('wrong path'))->send();
+                    exit;
+                }
 				$name=fix_filename($name,$config);
 				$name=str_replace('.','',$name);
 
@@ -230,10 +234,10 @@ if (isset($_GET['action']))
 			$content = $_POST['new_content'];
 
 			if($ftp){
-				$tmp = time().$name;
-				file_put_contents($tmp, $content);
-				$ftp->put("/".$path.$name, $tmp, FTP_BINARY);
-				unlink($tmp);
+				$temp = tempnam('/tmp','RF');
+				file_put_contents($temp, $content);
+				$ftp->put("/".$path.$name, $temp, FTP_BINARY);
+				unlink($temp);
 				response(trans('File_Save_OK'))->send();
 			}else{
 				if (!checkresultingsize(strlen($content))) {
