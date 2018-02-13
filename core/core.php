@@ -1340,8 +1340,6 @@ class helper {
 	 * @return string
 	 */
 	public static function filter($text, $filter) {
-		$search = 'á,à,â,ä,ã,å,ç,é,è,ê,ë,í,ì,î,ï,ñ,ó,ò,ô,ö,õ,ú,ù,û,ü,ý,ÿ,\',",/, ';
-		$replace = 'a,a,a,a,a,a,c,e,e,e,e,i,i,i,i,n,o,o,o,o,o,u,u,u,u,y,y,-,-,-,-';
 		$text = trim($text);
 		switch($filter) {
 			case self::FILTER_BOOLEAN:
@@ -1359,8 +1357,12 @@ class helper {
 				break;
 			case self::FILTER_ID:
 				$text = mb_strtolower($text, 'UTF-8');
-				$text = str_replace(explode(',', $search), explode(',', $replace), $text);
-				$text = preg_replace('/([^a-z0-9!#$%&\'*+-=?^`{|}~@.\[\]])/', '', $text);
+				$text = str_replace(
+					explode(',', 'á,à,â,ä,ã,å,ç,é,è,ê,ë,í,ì,î,ï,ñ,ó,ò,ô,ö,õ,ú,ù,û,ü,ý,ÿ,\',", '),
+					explode(',', 'a,a,a,a,a,a,c,e,e,e,e,i,i,i,i,n,o,o,o,o,o,u,u,u,u,y,y,-,-,-'),
+					$text
+				);
+				$text = preg_replace('/([^a-z0-9-])/', '', $text);
 				// Un ID ne peut pas être un entier, pour éviter les conflits avec le système de pagination
 				if(intval($text) !== 0) {
 					$text = 'i' . $text;
@@ -1385,7 +1387,7 @@ class helper {
 				$text = date('Y-m-d H:i:s', $text);
 				break;
 			case self::FILTER_URL:
-				$text = filter_var(str_replace(explode(',', $search), explode(',', $replace), $text), FILTER_SANITIZE_URL);
+				$text = filter_var($text, FILTER_SANITIZE_URL);
 				break;
 		}
 		return get_magic_quotes_gpc() ? stripslashes($text) : $text;

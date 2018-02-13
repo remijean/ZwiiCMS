@@ -30,7 +30,7 @@ $("#installConfigId").on("change keydown keyup", function(event) {
 		userId = userId.replace(/[áàâäãåçéèêëíìîïñóòôöõúùûüýÿ'" ]/ig, function(match) {
 			return searchReplace[match];
 		});
-		userId = userId.replace(/[^a-z0-9!#$%&'*+-=?^`{|}~@.\[\]]/ig, "");
+		userId = userId.replace(/[^a-z0-9-]/ig, "");
 		$(this).val(userId);
 	}
 });
