@@ -1,6 +1,11 @@
 Zwii 8 Changelog
 ================
 
+## 8.1.2
+* Correction d'un bug affichant la popup d'édition du module de redirection pour les membres
+* Correction d'un bug avec l'enregistrement des ids et des urls
+* Mise à jour du gestionnaire de fichiers
+
 ## 8.1.1
 * Correction d'une faille de sécurité
 * Correction d'une erreur d'orthographe
