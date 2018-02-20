@@ -159,6 +159,14 @@ td > .col12 {
 #notification.notificationOther {
 	background: #F39C12;
 }
+#notificationClose {
+	cursor: pointer;
+	float: right;
+	opacity: .8;
+}
+#notificationClose:hover {
+	opacity: 1;
+}
 @keyframes notificationBounce {
 	0% {
 		transform: translateX(-50%) translateY(-30px);

@@ -178,13 +178,16 @@ core.start = function() {
 		}
 	});
 	/**
-	 * Affiche / Cache les notifications
+	 * Cache les notifications
 	 */
 	if($("#notification").length) {
 		setTimeout(function() {
 			$("#notification").fadeOut();
 		}, 5000);
 	}
+	$("#notificationClose").on("click", function() {
+		$("#notification").fadeOut();
+	});
 	/**
 	 * Affiche / Cache le menu en mode responsive
 	 */

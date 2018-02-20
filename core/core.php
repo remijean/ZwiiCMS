@@ -1732,19 +1732,26 @@ class layout extends common {
 	 */
 	public function showNotification() {
 		if(common::$inputNotices) {
-			echo '<div id="notification" class="notificationError">' . helper::i18n('Impossible de soumettre le formulaire, car il contient des erreurs') . '</div>';
+			$notification = 'Impossible de soumettre le formulaire, car il contient des erreurs';
+			$notificationClass = 'notificationError';
 		}
 		elseif(empty($_SESSION['ZWII_NOTIFICATION_SUCCESS']) === false) {
-			echo '<div id="notification" class="notificationSuccess">' . helper::i18n($_SESSION['ZWII_NOTIFICATION_SUCCESS']) . '</div>';
+			$notification = $_SESSION['ZWII_NOTIFICATION_SUCCESS'];
+			$notificationClass = 'notificationSuccess';
 			unset($_SESSION['ZWII_NOTIFICATION_SUCCESS']);
 		}
 		elseif(empty($_SESSION['ZWII_NOTIFICATION_ERROR']) === false) {
-			echo '<div id="notification" class="notificationError">' . helper::i18n($_SESSION['ZWII_NOTIFICATION_ERROR']) . '</div>';
+			$notification = $_SESSION['ZWII_NOTIFICATION_ERROR'];
+			$notificationClass = 'notificationError';
 			unset($_SESSION['ZWII_NOTIFICATION_ERROR']);
 		}
 		elseif(empty($_SESSION['ZWII_NOTIFICATION_OTHER']) === false) {
-			echo '<div id="notification" class="notificationOther">' . helper::i18n($_SESSION['ZWII_NOTIFICATION_OTHER']) . '</div>';
+			$notification = $_SESSION['ZWII_NOTIFICATION_OTHER'];
+			$notificationClass = 'notificationOther';
 			unset($_SESSION['ZWII_NOTIFICATION_OTHER']);
+		}
+		if(isset($notification) AND isset($notificationClass)) {
+			echo '<div id="notification" class="' . $notificationClass . '">' . helper::i18n($notification) . '<span id="notificationClose">' . template::ico('cancel') . '</span></div>';
 		}
 	}
 
