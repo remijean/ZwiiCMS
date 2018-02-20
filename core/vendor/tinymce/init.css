@@ -1,0 +1,18 @@
+body.editorWysiwyg {
+	font-size: 14px !important;
+	background: #FFF !important;
+}
+.mce-tinymce,
+.mce-edit-area,
+.mce-statusbar,
+.mce-toolbar .mce-btn:hover {
+	border-color: #DDD !important;
+}
+.mce-statusbar,
+.mce-toolbar,
+.mce-toolbar .mce-btn {
+	background: #F5F5F5 !important;
+}
+.mce-toolbar .mce-btn:hover {
+	background: #EEE !important;
+}

@@ -34,7 +34,7 @@
 		</div>
 	</div>
 	<?php echo template::textarea('newsAddContent', [
-		'class' => 'editor'
+		'class' => 'editorWysiwyg'
 	]); ?>
 	<div class="row">
 		<div class="col12">

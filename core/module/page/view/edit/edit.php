@@ -54,7 +54,7 @@
 		</div>
 	</div>
 	<?php echo template::textarea('pageEditContent', [
-		'class' => 'editor',
+		'class' => 'editorWysiwyg',
 		'value' => $this->getData(['page', $this->getUrl(2), 'content'])
 	]); ?>
 	<div class="row">

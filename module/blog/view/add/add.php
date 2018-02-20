@@ -46,7 +46,7 @@
 		</div>
 	</div>
 	<?php echo template::textarea('blogAddContent', [
-		'class' => 'editor'
+		'class' => 'editorWysiwyg'
 	]); ?>
 	<div class="row">
 		<div class="col6">

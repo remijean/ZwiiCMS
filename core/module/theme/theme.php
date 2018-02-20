@@ -15,6 +15,7 @@
 class theme extends common {
 
 	public static $actions = [
+		'advanced' => self::GROUP_ADMIN,
 		'body' => self::GROUP_ADMIN,
 		'footer' => self::GROUP_ADMIN,
 		'header' => self::GROUP_ADMIN,
@@ -149,6 +150,31 @@ class theme extends common {
 		'1170px' => 'Grande (1170 pixels)',
 		'100%' => 'Fluide (100%)'
 	];
+
+	/**
+	 * Mode avancé
+	 */
+	public function advanced() {
+		// Soumission du formulaire
+		if($this->isPost()) {
+			// Enregistre le CSS
+			file_put_contents('site/data/custom.css', $this->getInput('themeAdvancedCss', null));
+			// Valeurs en sortie
+			$this->addOutput([
+				'notification' => 'Modifications enregistrées',
+				'redirect' => helper::baseUrl() . 'theme/advanced',
+				'state' => true
+			]);
+		}
+		// Valeurs en sortie
+		$this->addOutput([
+			'title' => 'Mode avancé',
+			'vendor' => [
+				'codemirror'
+			],
+			'view' => 'advanced'
+		]);
+	}
 
 	/**
 	 * Options de l'arrière plan

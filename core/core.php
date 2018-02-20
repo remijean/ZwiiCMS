@@ -348,6 +348,7 @@ class common {
 			// 'flatpickr', Désactivé par défaut
 			// 'tinycolorpicker', Désactivé par défaut
 			// 'tinymce', Désactivé par défaut
+			// 'codemirror', // Désactivé par défaut
 			'zwiico'
 		],
 		'view' => ''
@@ -837,6 +838,11 @@ class core extends common {
 					@unlink($fileInfos->getPathname());
 				}
 			}
+		}
+		// Crée le fichier de personnalisation custom
+		if(file_exists('site/data/custom.css') === false) {
+			file_put_contents('site/data/custom.css', '');
+			chmod('site/data/custom.css', 0644);
 		}
 		// Crée le fichier de personnalisation
 		if(file_exists('site/data/theme.css') === false) {
@@ -2592,7 +2598,7 @@ class template {
 		// Attributs par défaut
 		$attributes = array_merge([
 			'before' => true,
-			'class' => '',
+			'class' => '', // editorWysiwyg et editorCss possible pour utiliser le éditeurs (il faut également instancier les librairies)
 			'classWrapper' => '',
 			'disabled' => false,
 			'help' => '',

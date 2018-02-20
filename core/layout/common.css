@@ -23,10 +23,6 @@ body {
 	margin: 0 10px;
 	font-size: 14px;
 }
-body.editor {
-	font-size: 14px !important;
-	background: #FFF !important;
-}
 
 /**
  * Éléments spécifiques
@@ -418,123 +414,6 @@ footer #footerSocials .zwiico-youtube {
 }
 footer #footerSocials .zwiico-youtube:hover {
 	background: #AF1B1B;
-}
-
-/* Icônes (ne respect pas le format des classe de Zwii car surcouche de Zwiico) */
-[class^="zwiico-"],
-[class*=" zwiico-"] {
-	line-height: 0;
-}
-[class^="zwiico-"]:before,
-[class*=" zwiico-"]:before {
-	margin: 0;
-}
-.zwiico-margin-left:before {
-	margin-left: .4em;
-}
-.zwiico-margin-right:before {
-	margin-right: .4em;
-}
-.zwiico-margin-all:before {
-	margin: 0 .4em;
-}
-.animate-spin {
-	-moz-animation: spin 2s infinite linear;
-	-o-animation: spin 2s infinite linear;
-	-webkit-animation: spin 2s infinite linear;
-	animation: spin 2s infinite linear;
-	display: inline-block;
-}
-@-moz-keyframes spin {
-	0% {
-		-moz-transform: rotate(0deg);
-		-o-transform: rotate(0deg);
-		-webkit-transform: rotate(0deg);
-		transform: rotate(0deg);
-	}
-
-	100% {
-		-moz-transform: rotate(359deg);
-		-o-transform: rotate(359deg);
-		-webkit-transform: rotate(359deg);
-		transform: rotate(359deg);
-	}
-}
-@-webkit-keyframes spin {
-	0% {
-		-moz-transform: rotate(0deg);
-		-o-transform: rotate(0deg);
-		-webkit-transform: rotate(0deg);
-		transform: rotate(0deg);
-	}
-
-	100% {
-		-moz-transform: rotate(359deg);
-		-o-transform: rotate(359deg);
-		-webkit-transform: rotate(359deg);
-		transform: rotate(359deg);
-	}
-}
-@-o-keyframes spin {
-	0% {
-		-moz-transform: rotate(0deg);
-		-o-transform: rotate(0deg);
-		-webkit-transform: rotate(0deg);
-		transform: rotate(0deg);
-	}
-
-	100% {
-		-moz-transform: rotate(359deg);
-		-o-transform: rotate(359deg);
-		-webkit-transform: rotate(359deg);
-		transform: rotate(359deg);
-	}
-}
-@-ms-keyframes spin {
-	0% {
-		-moz-transform: rotate(0deg);
-		-o-transform: rotate(0deg);
-		-webkit-transform: rotate(0deg);
-		transform: rotate(0deg);
-	}
-
-	100% {
-		-moz-transform: rotate(359deg);
-		-o-transform: rotate(359deg);
-		-webkit-transform: rotate(359deg);
-		transform: rotate(359deg);
-	}
-}
-@keyframes spin {
-	0% {
-		-moz-transform: rotate(0deg);
-		-o-transform: rotate(0deg);
-		-webkit-transform: rotate(0deg);
-		transform: rotate(0deg);
-	}
-
-	100% {
-		-moz-transform: rotate(359deg);
-		-o-transform: rotate(359deg);
-		-webkit-transform: rotate(359deg);
-		transform: rotate(359deg);
-	}
-}
-
-/* Éditeur de texte (ne respect pas le format des classe de Zwii car surcouche de TinyMCE) */
-.mce-tinymce,
-.mce-edit-area,
-.mce-statusbar,
-.mce-toolbar .mce-btn:hover {
-	border-color: #DDD !important;
-}
-.mce-statusbar,
-.mce-toolbar,
-.mce-toolbar .mce-btn {
-	background: #F5F5F5 !important;
-}
-.mce-toolbar .mce-btn:hover {
-	background: #EEE !important;
 }
 
 /* Bulle de dialogue */

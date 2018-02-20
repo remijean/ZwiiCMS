@@ -2,11 +2,11 @@
  * Initialisation de TinyMCE
  */
 tinymce.init({
-	selector: ".editor",
+	selector: ".editorWysiwyg",
 	language: language,
 	plugins: "advlist anchor autolink autoresize code colorpicker contextmenu fullscreen hr image imagetools legacyoutput link lists media paste preview searchreplace tabfocus table textcolor textpattern wordcount",
 	toolbar: "insertfile undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media",
-	body_class: "editor",
+	body_class: "editorWysiwyg",
 	extended_valid_elements: "script[language|type|src]",
 	content_css: [
 		baseUrl + "core/layout/common.css",

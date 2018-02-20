@@ -1,0 +1,7 @@
+[
+	"codemirror.min.css",
+	"codemirror.min.js",
+	"mode/css.min.js",
+	"init.js",
+	"init.css"
+]

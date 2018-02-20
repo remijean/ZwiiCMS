@@ -23,12 +23,18 @@
 <?php else: ?>
 	<?php echo template::speech('Cliquez sur une zone afin d\'accéder à ses options de personnalisation.'); ?>
 	<div class="row">
-		<div class="col2 offset5">
+		<div class="col2 offset4">
 			<?php echo template::button('themeBack', [
 				'class' => 'buttonGrey',
 				'href' => helper::baseUrl(false),
 				'ico' => 'home',
 				'value' => 'Accueil'
+			]); ?>
+		</div>
+		<div class="col2">
+			<?php echo template::button('themeAdvanced', [
+				'href' => helper::baseUrl() . $this->getUrl(0) . '/advanced',
+				'value' => 'Mode avancé'
 			]); ?>
 		</div>
 	</div>

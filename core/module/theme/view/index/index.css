@@ -20,7 +20,8 @@ footer {
 	z-index: 10;
 }
 #themeShowAll,
-#themeBack {
+#themeBack,
+#themeAdvanced {
 	position: relative;
 	z-index: 11;
 }

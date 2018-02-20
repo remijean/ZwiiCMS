@@ -35,7 +35,7 @@
 		</div>
 	</div>
 	<?php echo template::textarea('newsEditContent', [
-		'class' => 'editor',
+		'class' => 'editorWysiwyg',
 		'value' => $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'content'])
 	]); ?>
 	<div class="row">
