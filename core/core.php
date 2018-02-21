@@ -1732,7 +1732,7 @@ class layout extends common {
 			unset($_SESSION['ZWII_NOTIFICATION_OTHER']);
 		}
 		if(isset($notification) AND isset($notificationClass)) {
-			echo '<div id="notification" class="' . $notificationClass . '">' . $notification . '<span id="notificationClose">' . template::ico('cancel') . '</span></div>';
+			echo '<div id="notification" class="' . $notificationClass . '">' . $notification . '<span id="notificationClose">' . template::ico('cancel') . '</span><div id="notificationProgress"></div></div>';
 		}
 	}
 

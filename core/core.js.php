@@ -180,13 +180,37 @@ core.start = function() {
 	/**
 	 * Cache les notifications
 	 */
-	if($("#notification").length) {
-		setTimeout(function() {
-			$("#notification").fadeOut();
-		}, 5000);
-	}
+	var notificationTimer;
+	var notificationProgressTimer;
+	var notificationProgressWidth = 100;
+	$("#notification")
+		.on("mouseenter", function() {
+			clearTimeout(notificationTimer);
+			clearInterval(notificationProgressTimer);
+			$("#notificationProgress").width("100%")
+		})
+		.on("mouseleave", function() {
+			// Disparition de la notification
+			notificationTimer = setTimeout(function() {
+				$("#notification").fadeOut();
+			}, 4000);
+			// Barre de progression
+			notificationProgressWidth = 100;
+			notificationProgressTimer = setInterval(function() {
+				if (notificationProgressWidth <= 0) {
+					clearInterval(notificationProgressTimer);
+				}
+				else {
+					notificationProgressWidth--;
+					$("#notificationProgress").width(notificationProgressWidth + "%");
+				}
+			}, 40); // 4000 / 100
+		})
+		.trigger("mouseleave");
 	$("#notificationClose").on("click", function() {
 		$("#notification").fadeOut();
+		clearTimeout(notificationTimer);
+		clearInterval(notificationProgressTimer);
 	});
 	/**
 	 * Affiche / Cache le menu en mode responsive

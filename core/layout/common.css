@@ -164,6 +164,14 @@ td > .col12 {
 	float: right;
 	opacity: .8;
 }
+#notificationProgress {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	background: #5FB86A;
+	width: 100%;
+	height: 5px;
+}
 #notificationClose:hover {
 	opacity: 1;
 }
