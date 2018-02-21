@@ -181,13 +181,12 @@ core.start = function() {
 	 * Cache les notifications
 	 */
 	var notificationTimer;
-	var notificationProgressTimer;
-	var notificationProgressWidth = 100;
 	$("#notification")
 		.on("mouseenter", function() {
 			clearTimeout(notificationTimer);
-			clearInterval(notificationProgressTimer);
-			$("#notificationProgress").width("100%")
+			$("#notificationProgress")
+				.stop()
+				.width("100%");
 		})
 		.on("mouseleave", function() {
 			// Disparition de la notification
@@ -195,22 +194,15 @@ core.start = function() {
 				$("#notification").fadeOut();
 			}, 4000);
 			// Barre de progression
-			notificationProgressWidth = 100;
-			notificationProgressTimer = setInterval(function() {
-				if (notificationProgressWidth <= 0) {
-					clearInterval(notificationProgressTimer);
-				}
-				else {
-					notificationProgressWidth--;
-					$("#notificationProgress").width(notificationProgressWidth + "%");
-				}
-			}, 40); // 4000 / 100
+			$("#notificationProgress").animate({
+				"width": "0%"
+			}, 4000, "linear");
 		})
 		.trigger("mouseleave");
 	$("#notificationClose").on("click", function() {
-		$("#notification").fadeOut();
 		clearTimeout(notificationTimer);
-		clearInterval(notificationProgressTimer);
+		$("#notification").fadeOut();
+		$("#notificationProgress").stop();
 	});
 	/**
 	 * Affiche / Cache le menu en mode responsive

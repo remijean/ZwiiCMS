@@ -168,9 +168,9 @@ td > .col12 {
 	position: absolute;
 	left: 0;
 	bottom: 0;
-	background: #5FB86A;
+	background: #60BB6B;
 	width: 100%;
-	height: 5px;
+	height: 6px;
 }
 #notificationClose:hover {
 	opacity: 1;
