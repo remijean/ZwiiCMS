@@ -26,7 +26,7 @@ core.alert = function(text) {
 					.append(
 						$("<a>")
 							.addClass("button")
-							.text("<?php echo helper::i18n('Ok'); ?>")
+							.text("Ok")
 							.on("click", function() {
 								lightbox.close();
 							})
@@ -70,7 +70,7 @@ core.confirm = function(text, yesCallback, noCallback) {
 					.append(
 						$("<a>")
 							.addClass("button grey")
-							.text("<?php echo helper::i18n('Non'); ?>")
+							.text("Non")
 							.on("click", function() {
 								lightbox.options('button', true);
 								lightbox.close();
@@ -80,7 +80,7 @@ core.confirm = function(text, yesCallback, noCallback) {
 						}),
 						$("<a>")
 							.addClass("button")
-							.text("<?php echo helper::i18n('Oui'); ?>")
+							.text("Oui")
 							.on("click", function() {
 								lightbox.options('button', true);
 								lightbox.close();
@@ -128,7 +128,7 @@ core.end = function() {
 	});
 	$(window).on("beforeunload", function() {
 		if(formDOM.length && formDOM.serialize() !== formDOM.data("serialize") && keysNb > 2) {
-			return "<?php echo helper::i18n('Les modifications que vous avez apportées ne seront peut-être pas enregistrées.'); ?>";
+			return "Les modifications que vous avez apportées ne seront peut-être pas enregistrées.";
 		}
 	});
 	formDOM.submit(function() {
@@ -207,7 +207,7 @@ core.start = function() {
 		if(document.cookie.indexOf("ZWII_COOKIE_CONSENT") === -1) {
 			$("body").append(
 				$("<div>").attr("id", "cookieConsent").append(
-					$("<span>").text("<?php echo helper::i18n('En poursuivant votre navigation sur ce site, vous acceptez l\'utilisation de cookies.'); ?>"),
+					$("<span>").text("En poursuivant votre navigation sur ce site, vous acceptez l'utilisation de cookies."),
 					$("<span>")
 						.attr("id", "cookieConsentConfirm")
 						.text("OK")
@@ -241,7 +241,7 @@ core.start = function() {
 		var inputFileHiddenDOM = $(this);
 		var fileName = inputFileHiddenDOM.val();
 		if(fileName === "") {
-			fileName = "<?php echo helper::i18n('Choisissez un fichier'); ?>";
+			fileName = "Choisissez un fichier";
 			$(".inputFileDelete").addClass("disabled");
 		}
 		else {
@@ -255,7 +255,7 @@ core.start = function() {
 	});
 	// Confirmation déconnexion
 	$("#barLogout").on("click", function() {
-		return core.confirm("<?php echo helper::i18n('Se déconnecter ?'); ?>", function() {
+		return core.confirm("Se déconnecter ?", function() {
 			$(location).attr("href", $("#barLogout").attr("href"));
 		});
 	});
@@ -281,7 +281,7 @@ core.start = function() {
 			core.noticeRemove(_this.attr("id"));
 		}
 		else {
-			core.noticeAdd(_this.attr("id"), "<?php echo helper::i18n('Format incorrect'); ?>");
+			core.noticeAdd(_this.attr("id"), "Format incorrect");
 		}
 	});
 };

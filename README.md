@@ -13,11 +13,6 @@ Zwii est un CMS sans base de données (Flat-File) qui permet à ses utilisateurs
 
 Décompressez l'archive de Zwii sur votre serveur et c'est tout !
 
-## Traduction (i18n)
-
-Vous pouvez télécharger ou proposer de nouvelles langues pour Zwii depuis [ce lien](https://github.com/remijean/ZwiiCMS-i18n).  
-You can download or suggest new languages ​​for Zwii from [this link](https://github.com/remijean/ZwiiCMS-i18n).
-
 ## Procédure de mise à jour de Zwii
 
 * Sauvegardez le dossier "site" de votre serveur
@@ -39,7 +34,6 @@ You can download or suggest new languages ​​for Zwii from [this link](https:
   [D] vendor               Contient les librairies
   [F] core.js.php          Coeur JavaScript de Zwii
   [F] core.php             Coeur PHP de Zwii
-[D] i18n                   Contient les fichiers de traduction
 [D] module                 Contient les modules de page
 [D] site                   Contient données du site
   [D] backup               Contient les 30 dernière sauvegardes automatiques du fichier data.json
@@ -61,7 +55,6 @@ You can download or suggest new languages ​​for Zwii from [this link](https:
     "cookieConsent": true,      // Message de consentement pour les cookies
     "favicon": "",              // Favicon
     "homePageId": "",           // ID de la page d'acceuil
-    "language": "",             // Langue de l'interface
     "metaDescription": "",      // Méta-description
     "social": {                 // Contient les IDs des réseaux sociaux
       "facebookId": "",         // ID Facebook

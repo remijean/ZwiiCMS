@@ -62,12 +62,12 @@ class user extends common {
 			if($this->getInput('userAddSendMail', helper::FILTER_BOOLEAN)) {
 				$sent = $this->sendMail(
 					$userMail,
-					helper::i18n('Compte créé sur') . ' ' . $this->getData(['config', 'title']),
-					helper::i18n('Bonjour') . ' <strong>' . $userFirstname . ' ' . $userLastname . '</strong>,<br><br>' .
-					helper::i18n('Un administrateur vous a créé un compte sur le site') . $this->getData(['config', 'title']) . '. ' . helper::i18n('Vous trouverez ci-dessous les détails de votre compte.') . '<br><br>' .
-					'<strong>' . helper::i18n('Identifiant du compte :') . '</strong> ' . $this->getInput('userAddId') . '<br>' .
-					'<strong>' . helper::i18n('Mot de passe du compte :') . '</strong> ' . $this->getInput('userAddPassword') . '<br><br>' .
-					'<small>' . helper::i18n('Nous ne conservons pas les mots de passe, par conséquence nous vous conseillons de garder ce mail tant que vous ne vous êtes pas connecté. Vous pourrez modifier votre mot de passe après votre première connexion.') . '</small>'
+					'Compte créé sur ' . $this->getData(['config', 'title']),
+					'Bonjour <strong>' . $userFirstname . ' ' . $userLastname . '</strong>,<br><br>' .
+					'Un administrateur vous a créé un compte sur le site ' . $this->getData(['config', 'title']) . '. Vous trouverez ci-dessous les détails de votre compte.<br><br>' .
+					'<strong>Identifiant du compte :</strong> ' . $this->getInput('userAddId') . '<br>' .
+					'<strong>Mot de passe du compte :</strong> ' . $this->getInput('userAddPassword') . '<br><br>' .
+					'<small>Nous ne conservons pas les mots de passe, par conséquence nous vous conseillons de garder ce mail tant que vous ne vous êtes pas connecté. Vous pourrez modifier votre mot de passe après votre première connexion.</small>'
 				);
 			}
 			// Valeurs en sortie
@@ -235,11 +235,11 @@ class user extends common {
 				// Envoi le mail
 				$sent = $this->sendMail(
 					$this->getData(['user', $userId, 'mail']),
-					helper::i18n('Réinitialisation de votre mot de passe'),
-					helper::i18n('Bonjour') . ' <strong>' . $this->getData(['user', $userId, 'firstname']) . ' ' . $this->getData(['user', $userId, 'lastname']) . '</strong>,<br><br>' .
-					helper::i18n('Vous avez demandé à changer le mot de passe lié à votre compte. Vous trouverez ci-dessous un lien vous permettant de modifier celui-ci.') . '<br><br>' .
+					'Réinitialisation de votre mot de passe',
+					'Bonjour <strong>' . $this->getData(['user', $userId, 'firstname']) . ' ' . $this->getData(['user', $userId, 'lastname']) . '</strong>,<br><br>' .
+					'Vous avez demandé à changer le mot de passe lié à votre compte. Vous trouverez ci-dessous un lien vous permettant de modifier celui-ci.<br><br>' .
 					'<a href="' . helper::baseUrl() . 'user/reset/' . $userId . '/' . $uniqId . '" target="_blank">' . helper::baseUrl() . 'user/reset/' . $userId . '/' . $uniqId . '</a><br><br>' .
-					'<small>' . helper::i18n('Si nous n\'avez pas demandé à réinitialiser votre mot de passe, veuillez ignorer ce mail.') . '</small>'
+					'<small>Si nous n\'avez pas demandé à réinitialiser votre mot de passe, veuillez ignorer ce mail.</small>'
 				);
 				// Valeurs en sortie
 				$this->addOutput([
@@ -273,7 +273,7 @@ class user extends common {
 			self::$users[] = [
 				$userId,
 				$userFirstname . ' ' . $this->getData(['user', $userId, 'lastname']),
-				helper::i18n(self::$groups[$this->getData(['user', $userId, 'group'])]),
+				self::$groups[$this->getData(['user', $userId, 'group'])],
 				template::button('userEdit' . $userId, [
 					'href' => helper::baseUrl() . 'user/edit/' . $userId . '/back',
 					'value' => template::ico('pencil')

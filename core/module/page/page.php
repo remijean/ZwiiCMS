@@ -28,13 +28,13 @@ class page extends common {
 	 * Création
 	 */
 	public function add() {
-		$pageTitle = helper::i18n('Nouvelle page');
+		$pageTitle = 'Nouvelle page';
 		$pageId = helper::increment(helper::filter($pageTitle, helper::FILTER_ID), $this->getData(['page']));
 		$this->setData([
 			'page',
 			$pageId,
 			[
-				'content' => helper::i18n('Contenu de votre nouvelle page.'),
+				'content' => 'Contenu de votre nouvelle page.',
 				'hideTitle' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',

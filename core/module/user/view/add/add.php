@@ -15,7 +15,7 @@
 	<div class="row">
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::i18n('Informations générales'); ?></h4>
+				<h4>Informations générales</h4>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::text('userAddFirstname', [
@@ -38,29 +38,29 @@
 					'label' => 'Groupe',
 					'selected' => self::GROUP_MEMBER
 				]); ?>
-				<?php echo helper::i18n('Autorisations :'); ?>
+				Autorisations :
 				<ul id="userAddGroupDescription<?php echo self::GROUP_MEMBER; ?>" class="userAddGroupDescription displayNone">
-					<li><?php echo helper::i18n('Accès aux pages privées membres'); ?></li>
+					<li>Accès aux pages privées membres</li>
 				</ul>
 				<ul id="userAddGroupDescription<?php echo self::GROUP_MODERATOR; ?>" class="userAddGroupDescription displayNone">
-					<li><?php echo helper::i18n('Accès aux pages privées membres et modérateurs'); ?></li>
-					<li><?php echo helper::i18n('Ajout / Édition / Suppression de pages'); ?></li>
-					<li><?php echo helper::i18n('Ajout / Édition / Suppression de fichiers'); ?></li>
+					<li>Accès aux pages privées membres et modérateurs</li>
+					<li>Ajout / Édition / Suppression de pages</li>
+					<li>Ajout / Édition / Suppression de fichiers</li>
 				</ul>
 				<ul id="userAddGroupDescription<?php echo self::GROUP_ADMIN; ?>" class="userAddGroupDescription displayNone">
-					<li><?php echo helper::i18n('Accès à toutes les pages privées'); ?></li>
-					<li><?php echo helper::i18n('Ajout / Édition / Suppression de pages'); ?></li>
-					<li><?php echo helper::i18n('Ajout / Édition / Suppression de fichiers'); ?></li>
-					<li><?php echo helper::i18n('Ajout / Édition / Suppression d\'utilisateurs'); ?></li>
-					<li><?php echo helper::i18n('Configuration du site'); ?></li>
-					<li><?php echo helper::i18n('Personnalisation du thème'); ?></li>
+					<li>Accès à toutes les pages privées</li>
+					<li>Ajout / Édition / Suppression de pages</li>
+					<li>Ajout / Édition / Suppression de fichiers</li>
+					<li>Ajout / Édition / Suppression d'utilisateurs</li>
+					<li>Configuration du site</li>
+					<li>Personnalisation du thème</li>
 				</ul>
 				<?php echo template::checkbox('userAddSendMail', true, 'Prévenir l\'utilisateur par mail'); ?>
 			</div>
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::i18n('Authentification'); ?></h4>
+				<h4>Authentification</h4>
 				<?php echo template::text('userAddId', [
 					'autocomplete' => 'off',
 					'label' => 'Identifiant'

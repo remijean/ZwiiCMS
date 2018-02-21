@@ -5,7 +5,7 @@
 				<div class="block">
 					<h4>
 						<?php echo $this->getData(['user', $article['userId'], 'firstname']) . ' ' . $this->getData(['user', $article['userId'], 'lastname']); ?>
-						<?php echo helper::i18n('le'); ?> <?php echo date('d/m/Y H:i', $article['publishedOn']); ?>
+						le <?php echo date('d/m/Y H:i', $article['publishedOn']); ?>
 						<div class="blogComment">
 							<a href="<?php echo helper::baseUrl() . $this->getUrl() . '/' . $articleId; ?>#comment">
 								<?php echo count($article['comment']); ?>
@@ -23,7 +23,7 @@
 					</h2>
 					<p class="blogContent">
 						<?php echo helper::subword(strip_tags($article['content']), 0, 150); ?>...
-						<a href="<?php echo helper::baseUrl() . $this->getUrl() . '/' . $articleId; ?>"><?php echo helper::i18n('Lire la suite'); ?></a>
+						<a href="<?php echo helper::baseUrl() . $this->getUrl() . '/' . $articleId; ?>">Lire la suite</a>
 					</p>
 				</div>
 			<?php endforeach; ?>

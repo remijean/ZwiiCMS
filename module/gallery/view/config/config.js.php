@@ -15,7 +15,7 @@
  */
 $(".galleryConfigDelete").on("click", function() {
 	var _this = $(this);
-	return core.confirm("<?php echo helper::i18n('Êtes-vous sûr de vouloir supprimer cette galerie ?'); ?>", function() {
+	return core.confirm("Êtes-vous sûr de vouloir supprimer cette galerie ?", function() {
 		$(location).attr("href", _this.attr("href"));
 	});
 });

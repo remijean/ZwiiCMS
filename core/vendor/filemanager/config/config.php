@@ -9,7 +9,7 @@ mb_language('uni');
 mb_regex_encoding('UTF-8');
 ob_start('mb_output_handler');
 date_default_timezone_set('Europe/Rome');
-setlocale(LC_CTYPE, 'en_US'); //correct transliteration
+setlocale(LC_CTYPE, 'fr_FR'); //correct transliteration
 
 /*
 |--------------------------------------------------------------------------
@@ -173,7 +173,7 @@ $config = array(
 	| in Megabytes
 	|
 	*/
-	'MaxSizeUpload' => 10000,
+	'MaxSizeUpload' => 20000,
 
 	/*
 	|--------------------------------------------------------------------------
@@ -190,7 +190,7 @@ $config = array(
 	| default language file name
 	|--------------------------------------------------------------------------
 	*/
-	'default_language' => "en_EN",
+	'default_language' => "fr_FR",
 
 	/*
 	|--------------------------------------------------------------------------
@@ -349,7 +349,7 @@ $config = array(
 	*******************/
 	'aviary_active'                           => true,
 	'aviary_apiKey'                           => "2444282ef4344e3dacdedc7a78f8877d",
-	'aviary_language'                         => "en",
+	'aviary_language'                         => "fr",
 	'aviary_theme'                            => "light",
 	'aviary_tools'                            => "all",
 	'aviary_maxSize'                          => "1400",

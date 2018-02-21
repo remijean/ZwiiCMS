@@ -15,7 +15,7 @@
 	<div class="row">
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::i18n('Couleur'); ?></h4>
+				<h4>Couleur</h4>
 				<?php echo template::text('themeFooterBackgroundColor', [
 					'class' => 'colorPicker',
 					'label' => 'Fond',
@@ -25,7 +25,7 @@
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::i18n('Configuration'); ?></h4>
+				<h4>Configuration</h4>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::select('themeFooterPosition', $module::$footerPositions, [
@@ -51,7 +51,7 @@
 	<div class="row">
 		<div class="col12">
 			<div class="block">
-				<h4><?php echo helper::i18n('Alignement du contenu'); ?></h4>
+				<h4>Alignement du contenu</h4>
 				<div class="row">
 					<div class="col4">
 						<?php echo template::select('themeFooterSocialsAlign', $module::$aligns, [
@@ -78,7 +78,7 @@
 	<div class="row">
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::i18n('Contenu'); ?></h4>
+				<h4>Contenu</h4>
 				<?php echo template::textarea('themeFooterText', [
 					'label' => 'Texte du pied de page',
 					'value' => $this->getData(['theme', 'footer', 'text'])

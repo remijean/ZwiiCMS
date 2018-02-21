@@ -15,7 +15,7 @@
 	<div class="row">
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::i18n('Redirection'); ?></h4>
+				<h4>Redirection</h4>
 				<?php echo template::text('redirectionConfigUrl', [
 					'label' => 'Lien de redirection',
 					'placeholder' => 'http://',
@@ -25,7 +25,7 @@
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::i18n('Statistiques'); ?></h4>
+				<h4>Statistiques</h4>
 				<?php echo template::text('redirectionConfigCount', [
 					'disabled' => true,
 					'label' => 'Nombre de redirection',

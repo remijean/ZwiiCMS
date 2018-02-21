@@ -17,7 +17,7 @@
 
 		</div>
 		<div class="col6 textAlignRight">
-			<a href="<?php echo helper::baseUrl(); ?>user/forgot/<?php echo $this->getUrl(2); ?>"><?php echo helper::i18n('Mot de passe perdu ?'); ?></a>
+			<a href="<?php echo helper::baseUrl(); ?>user/forgot/<?php echo $this->getUrl(2); ?>">Mot de passe perdu ?</a>
 		</div>
 	</div>
 	<div class="row">

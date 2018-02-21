@@ -5,7 +5,7 @@
 				<div class="block">
 					<h4>
 						<?php echo $this->getData(['user', $news['userId'], 'firstname']) . ' ' . $this->getData(['user', $news['userId'], 'lastname']); ?>
-						<?php echo helper::i18n('le'); ?> <?php echo date('d/m/Y H:i', $news['publishedOn']); ?>
+						le <?php echo date('d/m/Y H:i', $news['publishedOn']); ?>
 					</h4>
 					<h2><?php echo $news['title']; ?></h2>
 					<?php echo $news['content']; ?>

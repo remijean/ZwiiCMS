@@ -15,7 +15,7 @@
  */
 $(".blogConfigDelete").on("click", function() {
 	var _this = $(this);
-	return core.confirm("<?php echo helper::i18n('Êtes-vous sûr de vouloir supprimer cet article ?'); ?>", function() {
+	return core.confirm("Êtes-vous sûr de vouloir supprimer cet article ?", function() {
 		$(location).attr("href", _this.attr("href"));
 	});
 });

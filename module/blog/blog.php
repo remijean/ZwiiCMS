@@ -161,7 +161,7 @@ class blog extends common {
 			self::$articles[] = [
 				$this->getData(['module', $this->getUrl(0), $articleIds[$i], 'title']),
 				date('d/m/Y H:i', $this->getData(['module', $this->getUrl(0), $articleIds[$i], 'publishedOn'])),
-				helper::i18n(self::$states[$this->getData(['module', $this->getUrl(0), $articleIds[$i], 'state'])]),
+				self::$states[$this->getData(['module', $this->getUrl(0), $articleIds[$i], 'state'])],
 				template::button('blogConfigEdit' . $articleIds[$i], [
 					'href' => helper::baseUrl() . $this->getUrl(0) . '/edit/' . $articleIds[$i],
 					'value' => template::ico('pencil')

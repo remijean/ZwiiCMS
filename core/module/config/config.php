@@ -18,10 +18,6 @@ class config extends common {
 		'backup' => self::GROUP_ADMIN,
 		'index' => self::GROUP_ADMIN
 	];
-
-	public static $languages = [
-		'fr_FR' => 'fr_FR'
-	];
 	
 	public static $timezones = [
 		'Pacific/Midway'		=> '(GMT-11:00) Midway Island',
@@ -167,14 +163,6 @@ class config extends common {
 	 * Configuration
 	 */
 	public function index() {
-		// Liste des langues
-		$iterator = new DirectoryIterator('i18n/');
-		foreach($iterator as $fileInfos) {
-			if($fileInfos->isFile() AND $fileInfos->getBasename() !== 'template.json') {
-				self::$languages[$fileInfos->getBasename('.json')] = $fileInfos->getBasename('.json');
-			}
-		}
-		asort(self::$languages);
 		// Soumission du formulaire
 		if($this->isPost()) {
 			$this->setData([
@@ -185,7 +173,6 @@ class config extends common {
 					'cookieConsent' => $this->getInput('configCookieConsent', helper::FILTER_BOOLEAN),
 					'favicon' => $this->getInput('configFavicon'),
 					'homePageId' => $this->getInput('configHomePageId', helper::FILTER_ID, true),
-					'language' => $this->getInput('configLanguage', helper::FILTER_STRING_SHORT, true),
 					'metaDescription' => $this->getInput('configMetaDescription', helper::FILTER_STRING_LONG, true),
 					'social' => [
 						'facebookId' => $this->getInput('configSocialFacebookId'),
@@ -202,7 +189,7 @@ class config extends common {
 			if(self::$inputNotices === []) {
 				// Active l'URL rewriting
 				if(substr(sprintf('%o', fileperms('.htaccess')), -4) !== '0644') {
-					chmod('.htaccess', 0644);
+					chmod('.htaccess', 0755);
 				}
 				$htaccess = file_get_contents('.htaccess');
 				$rewriteRule = explode('# URL rewriting', $htaccess);

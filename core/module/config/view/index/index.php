@@ -15,7 +15,7 @@
 	<div class="row">
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::i18n('Informations générales'); ?></h4>
+				<h4>Informations générales</h4>
 				<?php echo template::text('configTitle', [
 					'label' => 'Titre du site',
 					'value' => $this->getData(['config', 'title'])
@@ -30,12 +30,11 @@
 				]); ?>
 			</div>
 			<div class="block">
-				<h4><?php echo helper::i18n('Options avancées'); ?></h4>
+				<h4>Options avancées</h4>
 				<?php echo template::file('configFavicon', [
 					'extensions' => 'ico',
 					'help' => 'Seule une image de format .ico est acceptée. Pensez à supprimer le cache de votre navigateur si la favicon ne change pas.',
 					'label' => 'Favicon',
-					'lang' => $this->getData(['config', 'language']),
 					'value' => $this->getData(['config', 'favicon'])
 				]); ?>
 				<?php echo template::text('configAnalyticsId', [
@@ -55,7 +54,7 @@
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4><?php echo helper::i18n('Réseaux sociaux'); ?></h4>
+				<h4>Réseaux sociaux</h4>
 				<div class="row">
 					<div class="col6">
 						<?php echo template::text('configSocialFacebookId', [
@@ -106,15 +105,11 @@
 				</div>
 			</div>
 			<div class="block">
-				<h4><?php echo helper::i18n('Système'); ?></h4>
+				<h4>Système</h4>
 				<?php echo template::text('configVersion', [
 					'label' => 'Version de Zwii',
 					'readonly' => true,
 					'value' => self::ZWII_VERSION
-				]); ?>
-				<?php echo template::select('configLanguage', $module::$languages, [
-					'label' => 'Langue de l\'interface',
-					'selected' => $this->getData(['config', 'language'])
 				]); ?>
 				<?php echo template::select('configTimezone', $module::$timezones, [
 					'label' => 'Fuseau horaire',
