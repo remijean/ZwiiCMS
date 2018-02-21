@@ -1,75 +1,66 @@
 /**
+ * Voici une feuille de style type, bien entendu vous pouvez ajouter
+ * ou supprimer des propriétés CSS en fonction de vos besoins.
+ */
+
+/**
  * Éléments principaux
  */
 
 /* Fond du site */
 body {
-	/* Votre CSS ici... */
 }
 
 /* Site */
 #site {
-	/* Votre CSS ici... */
 }
 
 /* Bannière */
 header {
-	/* Votre CSS ici... */
 }
 
 /* Titre dans la bannière */
 header span {
-	/* Votre CSS ici... */
 }
 
 /* Menu */
 nav {
-	/* Votre CSS ici... */
 }
 
 /* Items du menu */
 nav a {
-	/* Votre CSS ici... */
 }
 
 /* Items du menu au survol */
 nav a:hover {
-	/* Votre CSS ici... */
 }
 
 /* Items du menu courant */
 nav a.active {
-	/* Votre CSS ici... */
 }
 
 /* Icône burger du menu en mode mobile */
 #toggle span {
-	/* Votre CSS ici... */
 }
 
 /* Bas de page */
 footer {
-	/* Votre CSS ici... */
 }
 
 /* Liens du bas de page */
 footer a {
-	/* Votre CSS ici... */
 }
 
 /* Zone contenant les réseaux sociaux dans le bas de page */
 #footerSocials {
-	/* Votre CSS ici... */
 }
 
 /* Zone contenant le texte libre dans le bas de page */
 #footerText {
-	/* Votre CSS ici... */
 }
 
 /* Zone contenant le copyright dans le bas de page */
 #footerCopyright {
-	/* Votre CSS ici... */
 }
 
 /**
@@ -83,54 +74,45 @@ h3,
 h4,
 h5,
 h6 {
-	/* Votre CSS ici... */
 }
 
 /* Liens */
 a {
-	/* Votre CSS ici... */
 }
 
 /* Liens au survol */
 a:hover {
-	/* Votre CSS ici... */
 }
 
 /* Liens au clic */
 a:active {
-	/* Votre CSS ici... */
 }
 
 /* Boutons */
 .button,
 button[type='submit'],
 .pagination a {
-	/* Votre CSS ici... */
 }
 
 /* Boutons au survol */
 .button:hover,
 button[type='submit']:hover,
 .pagination a:hover {
-	/* Votre CSS ici... */
 }
 
 /* Boutons au clic */
 .button:active,
 button[type='submit']:active,
 .pagination a:active {
-	/* Votre CSS ici... */
 }
 
 /* Cases à cocher */
 input[type='checkbox']:checked + label:before {
-	/* Votre CSS ici... */
 }
 
 /* Cases à cocher au survol */
 input[type='checkbox']:not(:active):checked:hover + label:before,
 input[type='checkbox']:active + label:before {
-	/* Votre CSS ici... */
 }
 
 /* Champs de formulaire */
@@ -139,7 +121,6 @@ input[type='password'],
 .inputFile,
 select,
 textarea {
-	/* Votre CSS ici... */
 }
 
 /* Champs de formulaire au survol */
@@ -148,7 +129,6 @@ input[type='password']:hover,
 .inputFile:hover,
 select:hover,
 textarea:hover {
-	/* Votre CSS ici... */
 }
 
 /**
@@ -157,25 +137,20 @@ textarea:hover {
 
 /* Bulles de discussion (Ex. : dans la page d'erreur 404) */
 .speechBubble {
-	/* Votre CSS ici... */
 }
 
 /* Flêche des bulles de discussion */
 .speechBubble:before {
-	/* Votre CSS ici... */
 }
 
 /* Icônes d'aide */
 .helpButton span {
-	/* Votre CSS ici... */
 }
 
 /* Icônes d'aide au survol */
 .helpButton span:hover {
-	/* Votre CSS ici... */
 }
 
 /* Popups d'aide */
 .helpContent {
-	/* Votre CSS ici... */
 }
