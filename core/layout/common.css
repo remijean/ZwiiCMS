@@ -168,9 +168,17 @@ td > .col12 {
 	position: absolute;
 	left: 0;
 	bottom: 0;
-	background: #60BB6B;
 	width: 100%;
 	height: 6px;
+}
+#notification.notificationSuccess #notificationProgress {
+	background: #60BB6B;
+}
+#notification.notificationError #notificationProgress {
+	background: #D55F43;
+}
+#notification.notificationOther #notificationProgress {
+	background: #E18F12;
 }
 #notificationClose:hover {
 	opacity: 1;
