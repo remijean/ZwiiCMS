@@ -26,17 +26,17 @@ tinymce.init({
 		{
 			title: "Deux colonnes",
 			url: baseUrl + "core/vendor/tinymce/templates/col6.html",
-			description: "Grille de deux colonnes adaptatives, en mode mobile elles passent les unes en dessous des autres."
+			description: "Grille adaptative, en mode mobile elles passent les unes en dessous des autres."
 		},
 		{
 			title: "Trois colonnes",
 			url: baseUrl + "core/vendor/tinymce/templates/col4.html",
-			description: "Grille de trois colonnes adaptatives, en mode mobile elles passent les unes en dessous des autres."
+			description: "Grille adaptative, en mode mobile elles passent les unes en dessous des autres."
 		},
 		{
 			title: "Quatre colonnes",
 			url: baseUrl + "core/vendor/tinymce/templates/col3.html",
-			description: "Grille de quatre colonnes adaptatives, en mode mobile elles passent les unes en dessous des autres."
+			description: "Grille adaptative, en mode mobile elles passent les unes en dessous des autres."
 		}
 	],
 	// Permet de détecter un changement dans la textearea, utile pour le message des modifications non enregistrées du formulaire
