@@ -5,7 +5,7 @@
  * file that was distributed with this source code.
  *
  * @author Rémi Jean <remi.jean@outlook.com>
- * @copyright Copyright (C) 2008-2017, Rémi Jean
+ * @copyright Copyright (C) 2008-2018, Rémi Jean
  * @license GNU General Public License, version 3
  * @link http://zwiicms.com/
  */
@@ -20,11 +20,11 @@ $("input, select").on("change", function() {
 	var css = "@import url('https://fonts.googleapis.com/css?family=" + titleFont + "|" + textFont + "');";
 	// Couleurs des boutons
 	var colors = core.colorVariants($("#themeButtonBackgroundColor").val());
-	css += ".speechBubble,.button,button[type='submit'],.pagination a,input[type='checkbox']:checked + label:before,input[type='radio']:checked + label:before,.helpContent{background-color:" + colors.normal + ";color:" + colors.text + "!important}";
-	css += ".tabTitle.current,.helpButton span{color:" + colors.normal + "}";
+	css += ".speechBubble,.button,button[type='submit'],.pagination a,input[type='checkbox']:checked + label:before,.helpContent{background-color:" + colors.normal + ";color:" + colors.text + "!important}";
+	css += ".helpButton span{color:" + colors.normal + "}";
 	css += "input[type='text']:hover,input[type='password']:hover,.inputFile:hover,select:hover,textarea:hover{border-color:" + colors.normal + "}";
 	css += ".speechBubble:before{border-color:" + colors.normal + " transparent transparent transparent}";
-	css += ".button:hover,button[type='submit']:hover,.pagination a:hover,input[type='checkbox']:not(:active):checked:hover + label:before,input[type='checkbox']:active + label:before,input[type='radio']:checked:hover + label:before,input[type='radio']:not(:checked):active + label:before{background-color:" + colors.darken + "}";
+	css += ".button:hover,button[type='submit']:hover,.pagination a:hover,input[type='checkbox']:not(:active):checked:hover + label:before,input[type='checkbox']:active + label:before}";
 	css += ".helpButton span:hover{color:" + colors.darken + "}";
 	css += ".button:active,button[type='submit']:active,.pagination a:active{background-color:" + colors.veryDarken + "}";
 	// Couleurs des liens

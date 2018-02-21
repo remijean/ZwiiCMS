@@ -5,7 +5,7 @@
  * file that was distributed with this source code.
  *
  * @author Rémi Jean <remi.jean@outlook.com>
- * @copyright Copyright (C) 2008-2017, Rémi Jean
+ * @copyright Copyright (C) 2008-2018, Rémi Jean
  * @license GNU General Public License, version 3
  * @link http://zwiicms.com/
  */
@@ -16,10 +16,10 @@
 $("input, select").on("change", function() {
 	// Couleurs du menu
 	var colors = core.colorVariants($("#themeMenuBackgroundColor").val());
-	var css = "nav, nav li > a{background-color:" + colors.normal + "}";
+	var css = "nav,nav a{background-color:" + colors.normal + "}";
 	css += "nav a,#toggle span{color:" + colors.text + "!important}";
 	css += "nav a:hover{background-color:" + colors.darken + "}";
-	css += "nav a.target, nav a.active{background-color:" + colors.veryDarken + "}";
+	css += "nav a.active{background-color:" + colors.veryDarken + "}";
 	// Hauteur, épaisseur et capitalisation de caractères du menu
 	css += "#toggle span,#menu a{padding:" + $("#themeMenuHeight").val() + ";font-weight:" + $("#themeMenuFontWeight").val() + ";text-transform:" + $("#themeMenuTextTransform").val() + "}";
 	// Alignement du menu

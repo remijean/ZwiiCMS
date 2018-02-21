@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  *
  * @author Rémi Jean <remi.jean@outlook.com>
- * @copyright Copyright (C) 2008-2017, Rémi Jean
+ * @copyright Copyright (C) 2008-2018, Rémi Jean
  * @license GNU General Public License, version 3
  * @link http://zwiicms.com/
  */
@@ -168,7 +168,7 @@ class theme extends common {
 		}
 		// Valeurs en sortie
 		$this->addOutput([
-			'title' => 'Mode avancé',
+			'title' => 'Personnalisation avancée',
 			'vendor' => [
 				'codemirror'
 			],

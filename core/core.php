@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  *
  * @author Rémi Jean <remi.jean@outlook.com>
- * @copyright Copyright (C) 2008-2017, Rémi Jean
+ * @copyright Copyright (C) 2008-2018, Rémi Jean
  * @license GNU General Public License, version 3
  * @link http://zwiicms.com/
  */
@@ -837,9 +837,9 @@ class core extends common {
 				}
 			}
 		}
-		// Crée le fichier de personnalisation custom
+		// Crée le fichier de personnalisation avancée
 		if(file_exists('site/data/custom.css') === false) {
-			file_put_contents('site/data/custom.css', '');
+			file_put_contents('site/data/custom.css', file_get_contents('core/module/theme/resource/custom.css'));
 			chmod('site/data/custom.css', 0755);
 		}
 		// Crée le fichier de personnalisation
@@ -865,7 +865,7 @@ class core extends common {
 			$css .= '#site{border-radius:' . $this->getData(['theme', 'site', 'radius']) . ';box-shadow:' . $this->getData(['theme', 'site', 'shadow']) . ' #212223}';
 			$colors = helper::colorVariants($this->getData(['theme', 'button', 'backgroundColor']));
 			$css .= '.speechBubble,.button,button[type=\'submit\'],.pagination a,input[type=\'checkbox\']:checked + label:before,input[type=\'radio\']:checked + label:before,.helpContent{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '!important}';
-			$css .= '.tabTitle.current,.helpButton span{color:' . $colors['normal'] . '}';
+			$css .= '.helpButton span{color:' . $colors['normal'] . '}';
 			$css .= 'input[type=\'text\']:hover,input[type=\'password\']:hover,.inputFile:hover,select:hover,textarea:hover{border-color:' . $colors['normal'] . '}';
 			$css .= '.speechBubble:before{border-color:' . $colors['normal'] . ' transparent transparent transparent}';
 			$css .= '.button:hover,button[type=\'submit\']:hover,.pagination a:hover,input[type=\'checkbox\']:not(:active):checked:hover + label:before,input[type=\'checkbox\']:active + label:before,input[type=\'radio\']:checked:hover + label:before,input[type=\'radio\']:not(:checked):active + label:before{background-color:' . $colors['darken'] . '}';
@@ -895,10 +895,10 @@ class core extends common {
 			$css .= 'header span{color:' . $colors['normal'] . ';font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'header', 'font'])) . '",sans-serif;font-weight:' . $this->getData(['theme', 'header', 'fontWeight']) . ';text-transform:' . $this->getData(['theme', 'header', 'textTransform']) . '}';
 			// Menu
 			$colors = helper::colorVariants($this->getData(['theme', 'menu', 'backgroundColor']));
-			$css .= 'nav, nav li > a{background-color:' . $colors['normal'] . '}';
+			$css .= 'nav,nav a{background-color:' . $colors['normal'] . '}';
 			$css .= 'nav a,#toggle span{color:' . $colors['text'] . '!important}';
 			$css .= 'nav a:hover{background-color:' . $colors['darken'] . '}';
-			$css .= 'nav a.target,nav a.active{background-color:' . $colors['veryDarken'] . '}';
+			$css .= 'nav a.active{background-color:' . $colors['veryDarken'] . '}';
 			$css .= '#menu{text-align:' . $this->getData(['theme', 'menu', 'textAlign']) . '}';
 			if($this->getData(['theme', 'menu', 'margin'])) {
 				if(
