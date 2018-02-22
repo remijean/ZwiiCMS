@@ -348,6 +348,7 @@ class common {
 			// 'tinycolorpicker', Désactivé par défaut
 			// 'tinymce', Désactivé par défaut
 			// 'codemirror', // Désactivé par défaut
+			'tippy',
 			'zwiico'
 		],
 		'view' => ''
@@ -2193,7 +2194,7 @@ class template {
 	 * @return string
 	 */
 	public static function help($text) {
-		return '<span class="helpButton">' . self::ico('help') . '<div class="helpContent">' . $text . '</div></span>';
+		return '<span class="helpButton" title="' . $text . '">' . self::ico('help') . '</span>';
 	}
 
 	/**

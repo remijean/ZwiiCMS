@@ -1,4 +1,6 @@
-// Initialisation de CodeMirror
+/**
+ * Initialisation de CodeMirror
+ */
 $(function() {
 	$(".editorCss").each(function() {
 		var _this = this;

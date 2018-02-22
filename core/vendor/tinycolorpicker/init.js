@@ -1,4 +1,6 @@
-// Initialisation de la palette de couleurs
+/**
+ * Initialisation de la palette de couleurs
+ */
 $(function() {
 	var colorPickerDOM = $(".colorPicker");
 	colorPickerDOM.colorPicker({

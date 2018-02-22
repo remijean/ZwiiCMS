@@ -536,21 +536,6 @@ footer #footerSocials .zwiico-youtube:hover {
 .helpButton {
 	cursor: help;
 	margin: 0 5px;
-}
-.helpButton:hover .helpContent {
-	display: inline;
-}
-.helpContent {
-	display: none;
-	position: absolute;
-	margin: 30px 0 0 -30px;
-	text-align: left;
-	padding: 10px;
-	z-index: 10;
-	max-width: 600px;
-}
-.helpButton,
-.helpContent {
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;

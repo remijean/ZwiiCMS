@@ -1,5 +1,5 @@
 /**
- * Sélecteur de date
+ * Initialisation du sélecteur de date
  */
 $(function() {
 	// Langue
