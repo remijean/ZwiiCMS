@@ -8,14 +8,6 @@
 .mce-toolbar .mce-btn:hover {
 	border-color: #DDD !important;
 }
-.mce-statusbar,
-.mce-toolbar,
-.mce-toolbar .mce-btn {
-	background: #F5F5F5 !important;
-}
-.mce-toolbar .mce-btn:hover {
-	background: #EEE !important;
-}
 /* Désactive le responsive des cols*/
 .col1 {
 	width: 8.33333333%;

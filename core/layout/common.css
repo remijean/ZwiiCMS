@@ -795,6 +795,13 @@ input[type='checkbox']:disabled + label:before{
 	margin: 0 -10px;
 	font-size: 0; /* Hack whitespace */
 }
+/* Supprime les margins du premier et du dernier élément d'un col, utile pour les cols générés depuis l'éditeur de texte. (Ne s'applique pas aux rows pour ne pas supprimer les margins négatifs) */
+.row > div > :first-child:not(.row) {
+	margin-top: 0;
+}
+.row > div > :last-child:not(.row) {
+	margin-bottom: 0;
+}
 .col1,
 .col2,
 .col3,
