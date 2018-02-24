@@ -12,7 +12,8 @@
 			<?php echo template::button('pageEditDelete', [
 				'class' => 'buttonRed',
 				'href' => helper::baseUrl() . 'page/delete/' . $this->getUrl(2),
-				'value' => 'Supprimer'
+				'value' => 'Supprimer',
+				'ico' => 'cancel'
 			]); ?>
 		</div>
 		<div class="col2">

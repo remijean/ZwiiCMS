@@ -6,7 +6,7 @@
 		<div class="row">
 			<div class="col1">
 				<?php echo template::button('formConfigMove[]', [
-					'value' => template::ico('up-down'),
+					'value' => template::ico('sort'),
 					'class' => 'formConfigMove'
 				]); ?>
 			</div>

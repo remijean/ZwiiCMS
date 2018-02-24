@@ -1669,7 +1669,12 @@ class layout extends common {
 			$targetBlank = $this->getData(['page', $parentPageId, 'targetBlank']) ? ' target="_blank"' : '';
 			// Mise en page de l'item
 			$items .= '<li>';
-			$items .= '<a href="' . helper::baseUrl() . $parentPageId . '"' . $active . $targetBlank . '>' . $this->getData(['page', $parentPageId, 'title']) . '</a>';
+			$items .= '<a href="' . helper::baseUrl() . $parentPageId . '"' . $active . $targetBlank . '>';
+			$items .= $this->getData(['page', $parentPageId, 'title']);
+			if($childrenPageIds) {
+				$items .= template::ico('down', 'left');
+			}
+			$items .= '</a>';
 			$items .= '<ul>';
 			foreach($childrenPageIds as $childKey) {
 				// Propriétés de l'item
@@ -2451,7 +2456,7 @@ class template {
 		$attributes = array_merge([
 			'class' => '',
 			'disabled' => false,
-			'ico' => '',
+			'ico' => 'check',
 			'id' => $nameId,
 			'name' => $nameId,
 			'uniqueSubmission' => true,
