@@ -85,15 +85,21 @@ ol {
 }
 
 /* Image */
-img {
-	max-width: 100%;
-	height: auto;
-}
 img[align='left'] {
 	margin-right: 10px;
 }
 img[align='right'] {
 	margin-left: 10px;
+}
+
+/* Comportement responsive de différents éléments */
+img,
+iframe,
+video,
+object,
+embed {
+	max-width: 100%;
+	height: auto;
 }
 
 /* Tableau */
