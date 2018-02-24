@@ -196,17 +196,17 @@ class common {
 						'desert.jpg' => 'Un désert',
 						'iceberg.jpg' => 'Un iceberg',
 						'meadow.jpg' => 'Une prairie'
+					]
+				],
+				'espace' => [
+					'config' => [
+						'name' => 'Espace',
+						'directory' => 'site/file/source/gallery/space'
 					],
-					'espace' => [
-						'config' => [
-							'name' => 'Espace',
-							'directory' => 'site/file/source/gallery/space'
-						],
-						'legend' => [
-							'earth.jpg' => 'La Terre et la Lune',
-							'cosmos.jpg' => 'Le cosmos',
-							'nebula.jpg' => 'Une nébuleuse'
-						]
+					'legend' => [
+						'earth.jpg' => 'La Terre et la Lune',
+						'cosmos.jpg' => 'Le cosmos',
+						'nebula.jpg' => 'Une nébuleuse'
 					]
 				]
 			],
