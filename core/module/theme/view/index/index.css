@@ -37,6 +37,7 @@ footer {
 	cursor: pointer;
 	content: " ";
 	display: block;
+	background: transparent;
 }
 .themeOverlay:not(.themeOverlayHideBackground):hover,
 .themeOverlayTriggerHover {
