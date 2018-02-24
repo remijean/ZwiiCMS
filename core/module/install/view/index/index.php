@@ -37,15 +37,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col3 offset6">
-			<?php echo template::button('installBack', [
-				'class' => 'buttonGrey',
-				'href' => helper::baseUrl() . 'install',
-				'ico' => 'left',
-				'value' => 'Retour'
-			]); ?>
-		</div>
-		<div class="col3">
+		<div class="col3 offset9">
 			<?php echo template::submit('installSubmit', [
 				'value' => 'Installer'
 			]); ?>
