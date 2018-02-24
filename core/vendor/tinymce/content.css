@@ -1,14 +1,13 @@
+/**
+ * Fichier utilisé uniquement dans l'iframe de TinyMCE, il est appelé depuis init.js et non inc.json.
+ */
+
+/* Fix les problèmes de couleurs et de taille de police */
 .editorWysiwyg {
 	font-size: 14px !important;
 	background: #FFF !important;
 }
-.mce-tinymce,
-.mce-edit-area,
-.mce-statusbar,
-.mce-toolbar .mce-btn:hover {
-	border-color: #DDD !important;
-}
-/* Désactive le responsive des cols*/
+/* Désactive le responsive des cols sinon les cols passent les uns en dessous des autres car la largeur de l'iframe est < au media query utilisé pour le responsive */
 .col1 {
 	width: 8.33333333%;
 }

@@ -10,7 +10,7 @@ tinymce.init({
 	extended_valid_elements: "script[language|type|src]",
 	content_css: [
 		baseUrl + "core/layout/common.css",
-		baseUrl + "core/vendor/tinymce/init.css",
+		baseUrl + "core/vendor/tinymce/content.css",
 		baseUrl + "site/data/theme.css",
 		baseUrl + "site/data/custom.css"
 	],
