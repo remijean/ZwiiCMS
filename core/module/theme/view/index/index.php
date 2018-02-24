@@ -22,7 +22,8 @@
 		<div class="col2">
 			<?php echo template::button('themeAdvanced', [
 				'href' => helper::baseUrl() . $this->getUrl(0) . '/advanced',
-				'value' => 'Mode avancé'
+				'value' => 'Mode avancé',
+				'ico' => 'code'
 			]); ?>
 		</div>
 	</div>
@@ -40,7 +41,8 @@
 		<div class="col2">
 			<?php echo template::button('themeAdvanced', [
 				'href' => helper::baseUrl() . $this->getUrl(0) . '/advanced',
-				'value' => 'Mode avancé'
+				'value' => 'Mode avancé',
+				'ico' => 'code'
 			]); ?>
 		</div>
 	</div>
