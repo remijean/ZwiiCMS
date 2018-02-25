@@ -6,7 +6,7 @@ Zwii est un CMS sans base de données (Flat-File) qui permet à ses utilisateurs
 
 ## Configuration recommandée
 
-* PHP 5.5 ou plus
+* PHP 5.6 ou plus
 * Support du .htaccess
 
 ## Installation
