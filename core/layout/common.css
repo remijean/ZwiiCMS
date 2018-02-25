@@ -19,9 +19,7 @@ body {
 	min-height: 100%;
 }
 body {
-	color: #212223;
 	margin: 0 10px;
-	font-size: 14px;
 }
 
 /**
@@ -289,7 +287,6 @@ td > .col12 {
 /* Site */
 #site {
 	margin: 20px auto;
-	background: #FFF;
 	overflow: hidden;
 }
 
@@ -305,7 +302,6 @@ header span {
 	vertical-align: middle;
 	line-height: 1.2;
 	margin: 0 10px;
-	font-size: 2em;
 }
 header .container {
 	overflow: hidden;
@@ -356,7 +352,6 @@ nav li:hover ul {
 }
 nav a {
 	display: inherit;
-	color: #212223;
 	-webkit-transition: background .3s ease-out;
 	transition: background .3s ease-out;
 }
@@ -408,7 +403,7 @@ body > footer {
 }
 footer {
 	text-align: center;
-	font-size: 0.8em;
+	font-size: .8em;
 	padding: 10px 20px;
 }
 footer #footerSocials {
@@ -555,7 +550,6 @@ footer #footerSocials .zwiico-youtube:hover {
 	margin: -20px -20px 10px -20px;
 	padding: 10px;
 	background: #ECEFF1;
-	color: #212223;
 }
 
 /* Aides */
@@ -599,7 +593,6 @@ textarea {
 	padding: 10px; /* -1px à cause des bordures */
 	border: 1px solid #D8DFE3;
 	width: 100%;
-	color: #212223;
 	border-radius: 2px;
 	font-family: inherit;
 	-webkit-transition: border .3s ease-out;
@@ -641,7 +634,7 @@ textarea:disabled {
 	color: #94A5B0 !important;
 }
 button:disabled .zwiico-spin {
-	color: #50616c !important /* Icône de soumission unique */
+	color: #50616C !important /* Icône de soumission unique */
 }
 button {
 	width: 100%;
@@ -694,12 +687,8 @@ label {
 	background: #F6F7F8 !important;
 	color: #94A5B0 !important;
 }
-.button:disabled .zwiico-spin {
-	color: #50616c !important /* Icône de soumission unique */
-}
 .button.buttonGrey {
 	background: #ECEFF1;
-	color: #212223 !important;
 }
 .button.buttonGrey:hover {
 	background: #E2E7EA;
@@ -722,7 +711,6 @@ label {
 .inputFile {
 	margin: 0;
 	display: inline-block;
-	color: #212223;
 	width: 88%;
 }
 .inputFileDelete {
@@ -854,7 +842,6 @@ input[type='checkbox']:disabled + label:before{
 	width: 100%;
 	min-height: 1px;
 	display: inline-block;
-	font-size: 14px; /* Hack whitespace */
 }
 @media (min-width: 992px) {
 	.col1 {

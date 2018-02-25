@@ -22,3 +22,13 @@ $("#themeAdvancedCss").on("change keydown keyup", function() {
 		.text($(this).val())
 		.appendTo("head");
 });
+
+/**
+ * Confirmation de réinitialisation
+ */
+$("#themeAdvancedReset").on("click", function() {
+	var _this = $(this);
+	return core.confirm("Êtes-vous sûr de vouloir réinitialiser à son état d'origine la personnalisation avancée ?", function() {
+		$(location).attr("href", _this.attr("href"));
+	});
+});

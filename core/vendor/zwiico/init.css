@@ -22,6 +22,10 @@
 	animation: spin 2s infinite linear;
 	display: inline-block;
 }
+/* Icône de soumission unique toujours gris foncé (car seulement appelé lors de la validation d'un formulaire) */
+.zwiico-spin {
+	color: #50616c !important
+}
 @-moz-keyframes spin {
 	0% {
 		-moz-transform: rotate(0deg);

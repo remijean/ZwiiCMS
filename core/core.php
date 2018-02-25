@@ -270,11 +270,13 @@ class common {
 				'position' => 'site',
 				'socialsAlign' => 'center',
 				'text' => '',
-				'textAlign' => 'center'
+				'textAlign' => 'center',
+				'textColor' => 'rgba(33, 34, 35, 1)'
 			],
 			'header' => [
 				'backgroundColor' => 'rgba(255, 255, 255, 1)',
 				'font' => 'Oswald',
+				'fontSize' => '2em',
 				'fontWeight' => 'normal',
 				'height' => '150px',
 				'image' => '',
@@ -292,19 +294,26 @@ class common {
 			],
 			'menu' => [
 				'backgroundColor' => 'rgba(74, 105, 189, 1)',
+				'fontSize' => '1em',
 				'fontWeight' => 'normal',
 				'height' => '15px 10px',
 				'loginLink' => true,
 				'margin' => false,
 				'position' => 'site-second',
 				'textAlign' => 'left',
+				'textColor' => 'rgba(255, 255, 255, 1)',
 				'textTransform' => 'none'
 			],
 			'site' => [
+				'backgroundColor' => 'rgba(255, 255, 255, 1)',
+				'radius' => '0',
+				'shadow' => '0',
 				'width' => '1170px'
 			],
 			'text' => [
-				'font' => 'Open+Sans'
+				'font' => 'Open+Sans',
+				'fontSize' => '14px',
+				'textColor' => 'rgba(33, 34, 35, 1)'
 			],
 			'title' => [
 				'font' => 'Oswald',
@@ -862,16 +871,18 @@ class core extends common {
 				$css .= 'body{background-image:url("../file/source/' . $themeBodyImage . '");background-position:' . $this->getData(['theme', 'body', 'imagePosition']) . ';background-attachment:' . $this->getData(['theme', 'body', 'imageAttachment']) . ';background-size:' . $this->getData(['theme', 'body', 'imageSize']) . ';background-repeat:' . $this->getData(['theme', 'body', 'imageRepeat']) . '}';
 			}
 			// Site
+			$css .= 'body,.row > div{font-size:' . $this->getData(['theme', 'text', 'fontSize']) . '}';
+			$css .= 'body,.block h4,input[type=\'email\'],input[type=\'text\'],input[type=\'password\'],.inputFile,select,textarea,.inputFile,.button.buttonGrey{color:' . $this->getData(['theme', 'text', 'textColor']) . '}';
 			$css .= '.container{max-width:' . $this->getData(['theme', 'site', 'width']) . '}';
-			$css .= '#site{border-radius:' . $this->getData(['theme', 'site', 'radius']) . ';box-shadow:' . $this->getData(['theme', 'site', 'shadow']) . ' #212223}';
+			$css .= '#site{background-color:' . $this->getData(['theme', 'site', 'backgroundColor']) . ';border-radius:' . $this->getData(['theme', 'site', 'radius']) . ';box-shadow:' . $this->getData(['theme', 'site', 'shadow']) . ' #212223}';
 			$colors = helper::colorVariants($this->getData(['theme', 'button', 'backgroundColor']));
-			$css .= '.speechBubble,.button,button[type=\'submit\'],.pagination a,input[type=\'checkbox\']:checked + label:before,input[type=\'radio\']:checked + label:before,.helpContent{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '!important}';
+			$css .= '.speechBubble,.button:not(.buttonGrey):not(.buttonRed),button[type=\'submit\'],.pagination a,input[type=\'checkbox\']:checked + label:before,input[type=\'radio\']:checked + label:before,.helpContent{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '!important}';
 			$css .= '.helpButton span{color:' . $colors['normal'] . '}';
 			$css .= 'input[type=\'text\']:hover,input[type=\'password\']:hover,.inputFile:hover,select:hover,textarea:hover{border-color:' . $colors['normal'] . '}';
 			$css .= '.speechBubble:before{border-color:' . $colors['normal'] . ' transparent transparent transparent}';
-			$css .= '.button:hover,button[type=\'submit\']:hover,.pagination a:hover,input[type=\'checkbox\']:not(:active):checked:hover + label:before,input[type=\'checkbox\']:active + label:before,input[type=\'radio\']:checked:hover + label:before,input[type=\'radio\']:not(:checked):active + label:before{background-color:' . $colors['darken'] . '}';
+			$css .= '.button:not(.buttonGrey):not(.buttonRed):hover,button[type=\'submit\']:hover,.pagination a:hover,input[type=\'checkbox\']:not(:active):checked:hover + label:before,input[type=\'checkbox\']:active + label:before,input[type=\'radio\']:checked:hover + label:before,input[type=\'radio\']:not(:checked):active + label:before{background-color:' . $colors['darken'] . '}';
 			$css .= '.helpButton span:hover{color:' . $colors['darken'] . '}';
-			$css .= '.button:active,button[type=\'submit\']:active,.pagination a:active{background-color:' . $colors['veryDarken'] . '}';
+			$css .= '.button:not(.buttonGrey):not(.buttonRed):active,button[type=\'submit\']:active,.pagination a:active{background-color:' . $colors['veryDarken'] . '}';
 			$colors = helper::colorVariants($this->getData(['theme', 'link', 'textColor']));
 			$css .= 'a{color:' . $colors['normal'] . '}';
 			$css .= 'a:hover{color:' . $colors['darken'] . '}';
@@ -893,11 +904,11 @@ class core extends common {
 				$css .= 'header{background-image:url("../file/source/' . $themeHeaderImage . '");background-position:' . $this->getData(['theme', 'header', 'imagePosition']) . ';background-repeat:' . $this->getData(['theme', 'header', 'imageRepeat']) . '}';
 			}
 			$colors = helper::colorVariants($this->getData(['theme', 'header', 'textColor']));
-			$css .= 'header span{color:' . $colors['normal'] . ';font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'header', 'font'])) . '",sans-serif;font-weight:' . $this->getData(['theme', 'header', 'fontWeight']) . ';text-transform:' . $this->getData(['theme', 'header', 'textTransform']) . '}';
+			$css .= 'header span{color:' . $colors['normal'] . ';font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'header', 'font'])) . '",sans-serif;font-weight:' . $this->getData(['theme', 'header', 'fontWeight']) . ';font-size:' . $this->getData(['theme', 'header', 'fontSize']) . ';text-transform:' . $this->getData(['theme', 'header', 'textTransform']) . '}';
 			// Menu
 			$colors = helper::colorVariants($this->getData(['theme', 'menu', 'backgroundColor']));
 			$css .= 'nav,nav a{background-color:' . $colors['normal'] . '}';
-			$css .= 'nav a,#toggle span{color:' . $colors['text'] . '!important}';
+			$css .= 'nav a,#toggle span{color:' . $this->getData(['theme', 'menu', 'textColor']) . '!important}';
 			$css .= 'nav a:hover{background-color:' . $colors['darken'] . '}';
 			$css .= 'nav a.active{background-color:' . $colors['veryDarken'] . '}';
 			$css .= '#menu{text-align:' . $this->getData(['theme', 'menu', 'textAlign']) . '}';
@@ -912,14 +923,14 @@ class core extends common {
 					$css .= 'nav{margin:0 20px 0}';
 				}
 			}
-			$css .= '#toggle span,#menu a{padding:' . $this->getData(['theme', 'menu', 'height']) . ';font-weight:' . $this->getData(['theme', 'menu', 'fontWeight']) . ';text-transform:' . $this->getData(['theme', 'menu', 'textTransform']) . '}';
+			$css .= '#toggle span,#menu a{padding:' . $this->getData(['theme', 'menu', 'height']) . ';font-weight:' . $this->getData(['theme', 'menu', 'fontWeight']) . ';font-size:' . $this->getData(['theme', 'menu', 'fontSize']) . ';text-transform:' . $this->getData(['theme', 'menu', 'textTransform']) . '}';
 			// Pied de page
 			$colors = helper::colorVariants($this->getData(['theme', 'footer', 'backgroundColor']));
 			if($this->getData(['theme', 'footer', 'margin'])) {
 				$css .= 'footer{margin:0 20px 20px}';
 			}
-			$css .= 'footer{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '}';
-			$css .= 'footer a{color:' . $colors['text'] . '!important}';
+			$css .= 'footer{background-color:' . $colors['normal'] . ';color:' . $this->getData(['theme', 'footer', 'textColor']) . '}';
+			$css .= 'footer a{color:' . $this->getData(['theme', 'footer', 'textColor']) . '!important}';
 			$css .= 'footer .container > div{margin:' . $this->getData(['theme', 'footer', 'height']) . ' 0}';
 			$css .= '#footerSocials{text-align:' . $this->getData(['theme', 'footer', 'socialsAlign']) . '}';
 			$css .= '#footerText{text-align:' . $this->getData(['theme', 'footer', 'textAlign']) . '}';
@@ -2169,7 +2180,7 @@ class template {
 	}
 
 	/**
-	 * Ferme une formulaire
+	 * Ferme un formulaire
 	 * @return string
 	 */
 	public static function formClose() {
@@ -2185,9 +2196,9 @@ class template {
 		// Ouverture formulaire
 		$html = '<form id="' . $id . '" method="post">';
 		// Stock le token CSRF
-		$html .= self::hidden('csrf', array(
+		$html .= self::hidden('csrf', [
 			'value' => $_SESSION['csrf']
-		));
+		]);
 		// Retourne le html
 		return $html;
 	}

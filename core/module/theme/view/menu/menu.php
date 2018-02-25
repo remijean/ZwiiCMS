@@ -16,27 +16,44 @@
 		<div class="col6">
 			<div class="block">
 				<h4>Couleur</h4>
-				<?php echo template::text('themeMenuBackgroundColor', [
-					'class' => 'colorPicker',
-					'label' => 'Fond',
-					'value' => $this->getData(['theme', 'menu', 'backgroundColor'])
-				]); ?>
+				<div class="row">
+					<div class="col6">
+						<?php echo template::text('themeMenuBackgroundColor', [
+							'class' => 'colorPicker',
+							'label' => 'Fond',
+							'value' => $this->getData(['theme', 'menu', 'backgroundColor'])
+						]); ?>
+					</div>
+					<div class="col6">
+						<?php echo template::text('themeMenuTextColor', [
+							'class' => 'colorPicker',
+							'label' => 'Texte',
+							'value' => $this->getData(['theme', 'menu', 'textColor'])
+						]); ?>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="col6">
 			<div class="block">
 				<h4>Mise en forme du texte</h4>
 				<div class="row">
-					<div class="col6">
+					<div class="col4">
 						<?php echo template::select('themeMenuTextTransform', $module::$textTransforms, [
 							'label' => 'Caractères',
 							'selected' => $this->getData(['theme', 'menu', 'textTransform'])
 						]); ?>
 					</div>
-					<div class="col6">
+					<div class="col4">
 						<?php echo template::select('themeMenuFontWeight', $module::$fontWeights, [
 							'label' => 'Style',
 							'selected' => $this->getData(['theme', 'menu', 'fontWeight'])
+						]); ?>
+					</div>
+					<div class="col4">
+						<?php echo template::select('themeMenuFontSize', $module::$menuFontSizes, [
+							'label' => 'Taille',
+							'selected' => $this->getData(['theme', 'menu', 'fontSize'])
 						]); ?>
 					</div>
 				</div>

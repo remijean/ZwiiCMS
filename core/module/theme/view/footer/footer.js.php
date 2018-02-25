@@ -16,8 +16,9 @@
 $("input, select").on("change", function() {
 	// Couleurs du pied de page
 	var colors = core.colorVariants($("#themeFooterBackgroundColor").val());
-	var css = "footer{background-color:" + colors.normal + ";color:" + colors.text + "}";
-	css += "footer a{color:" + colors.text + "!important}";
+	var textColor = $("#themeFooterTextColor").val();
+	var css = "footer{background-color:" + colors.normal + ";color:" + textColor + "}";
+	css += "footer a{color:" + textColor + "!important}";
 	// Hauteur du pied de page
 	css += "footer .container > div{margin:" + $("#themeFooterHeight").val() + " 0}";
 	// Alignement du contenu

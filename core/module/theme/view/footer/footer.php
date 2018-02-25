@@ -16,11 +16,22 @@
 		<div class="col6">
 			<div class="block">
 				<h4>Couleur</h4>
-				<?php echo template::text('themeFooterBackgroundColor', [
-					'class' => 'colorPicker',
-					'label' => 'Fond',
-					'value' => $this->getData(['theme', 'footer', 'backgroundColor'])
-				]); ?>
+				<div class="row">
+					<div class="col6">
+						<?php echo template::text('themeFooterBackgroundColor', [
+							'class' => 'colorPicker',
+							'label' => 'Fond',
+							'value' => $this->getData(['theme', 'footer', 'backgroundColor'])
+						]); ?>
+					</div>
+					<div class="col6">
+						<?php echo template::text('themeFooterTextColor', [
+							'class' => 'colorPicker',
+							'label' => 'Texte',
+							'value' => $this->getData(['theme', 'footer', 'textColor'])
+						]); ?>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="col6">

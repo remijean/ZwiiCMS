@@ -8,7 +8,15 @@
 				'value' => 'Retour'
 			]); ?>
 		</div>
-		<div class="col2 offset8">
+		<div class="col2 offset6">
+			<?php echo template::button('themeAdvancedReset', [
+				'href' => helper::baseUrl() . 'theme/reset',
+				'class' => 'buttonRed',
+				'ico' => 'cancel',
+				'value' => 'Réinitialiser'
+			]); ?>
+		</div>
+		<div class="col2">
 			<?php echo template::submit('themeAdvancedSubmit'); ?>
 		</div>
 	</div>

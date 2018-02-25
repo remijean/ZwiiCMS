@@ -33,23 +33,6 @@
 					</div>
 				</div>
 			</div>
-			<div class="block">
-				<h4>Mise en forme du texte</h4>
-				<div class="row">
-					<div class="col6">
-						<?php echo template::select('themeHeaderTextTransform', $module::$textTransforms, [
-							'label' => 'Caractères',
-							'selected' => $this->getData(['theme', 'header', 'textTransform'])
-						]); ?>
-					</div>
-					<div class="col6">
-						<?php echo template::select('themeHeaderFontWeight', $module::$fontWeights, [
-							'label' => 'Style',
-							'selected' => $this->getData(['theme', 'header', 'fontWeight'])
-						]); ?>
-					</div>
-				</div>
-			</div>
 		</div>
 		<div class="col6">
 			<div class="block">
@@ -79,12 +62,38 @@
 					]); ?>
 				</div>
 			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col12">
 			<div class="block">
-				<h4>Police de caractères</h4>
-				<?php echo template::select('themeHeaderFont', $module::$fonts, [
-					'label' => 'Titre',
-					'selected' => $this->getData(['theme', 'header', 'font'])
-				]); ?>
+				<h4>Mise en forme du texte</h4>
+				<div class="row">
+					<div class="col3">
+						<?php echo template::select('themeHeaderTextTransform', $module::$textTransforms, [
+							'label' => 'Caractères',
+							'selected' => $this->getData(['theme', 'header', 'textTransform'])
+						]); ?>
+					</div>
+					<div class="col3">
+						<?php echo template::select('themeHeaderFontWeight', $module::$fontWeights, [
+							'label' => 'Style',
+							'selected' => $this->getData(['theme', 'header', 'fontWeight'])
+						]); ?>
+					</div>
+					<div class="col3">
+						<?php echo template::select('themeHeaderFontSize', $module::$headerFontSizes, [
+							'label' => 'Taille',
+							'selected' => $this->getData(['theme', 'header', 'fontSize'])
+						]); ?>
+					</div>
+					<div class="col3">
+						<?php echo template::select('themeHeaderFont', $module::$fonts, [
+							'label' => 'Police',
+							'selected' => $this->getData(['theme', 'header', 'font'])
+						]); ?>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

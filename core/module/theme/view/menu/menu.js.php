@@ -17,11 +17,11 @@ $("input, select").on("change", function() {
 	// Couleurs du menu
 	var colors = core.colorVariants($("#themeMenuBackgroundColor").val());
 	var css = "nav,nav a{background-color:" + colors.normal + "}";
-	css += "nav a,#toggle span{color:" + colors.text + "!important}";
+	css += "nav a,#toggle span{color:" + $("#themeMenuTextColor").val() + "!important}";
 	css += "nav a:hover{background-color:" + colors.darken + "}";
 	css += "nav a.active{background-color:" + colors.veryDarken + "}";
-	// Hauteur, épaisseur et capitalisation de caractères du menu
-	css += "#toggle span,#menu a{padding:" + $("#themeMenuHeight").val() + ";font-weight:" + $("#themeMenuFontWeight").val() + ";text-transform:" + $("#themeMenuTextTransform").val() + "}";
+	// Taille, hauteur, épaisseur et capitalisation de caractères du menu
+	css += "#toggle span,#menu a{padding:" + $("#themeMenuHeight").val() + ";font-weight:" + $("#themeMenuFontWeight").val() + ";font-size:" + $("#themeMenuFontSize").val() + ";text-transform:" + $("#themeMenuTextTransform").val() + "}";
 	// Alignement du menu
 	css += "#menu{text-align:" + $("#themeMenuTextAlign").val() + "}";
 	// Marge

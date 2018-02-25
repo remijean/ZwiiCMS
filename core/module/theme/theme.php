@@ -21,6 +21,7 @@ class theme extends common {
 		'header' => self::GROUP_ADMIN,
 		'index' => self::GROUP_ADMIN,
 		'menu' => self::GROUP_ADMIN,
+		'reset' => self::GROUP_ADMIN,
 		'site' => self::GROUP_ADMIN
 	];
 	public static $aligns = [
@@ -77,6 +78,13 @@ class theme extends common {
 		'site' => 'Dans le site',
 		'body' => 'En dessous du site'
 	];
+	public static $headerFontSizes = [
+		'1.6em' => 'Très petite',
+		'1.8em' => 'Petite',
+		'2em' => 'Moyenne',
+		'2.2em' => 'Grande',
+		'2.4em' => 'Très grande'
+	];
 	public static $headerHeights = [
 		'100px' => 'Très petite (100 pixels)',
 		'150px' => 'Petite (150 pixels)',
@@ -99,6 +107,14 @@ class theme extends common {
 		'bottom left' => 'En bas à gauche',
 		'bottom center' => 'En bas au centre',
 		'bottom right' => 'En bas à droite'
+	];
+	public static $menuFontSizes = [
+		'.8em' => 'Très petite',
+		'.9em' => 'Petite',
+		'1em' => 'Normale',
+		'1.1em' => 'Moyenne',
+		'1.2em' => 'Grande',
+		'1.3em' => 'Très grande'
 	];
 	public static $menuHeights = [
 		'5px 10px' => 'Très petite',
@@ -135,6 +151,13 @@ class theme extends common {
 		'1px 1px 15px' => 'Moyenne',
 		'1px 1px 25px' => 'Importante',
 		'1px 1px 50px' => 'Très importante'
+	];
+	public static $siteFontSizes = [
+		'12px' => '12',
+		'13px' => '13',
+		'14px' => '14',
+		'15px' => '15',
+		'16px' => '16'
 	];
 	public static $sizes = [
 		'auto' => 'Automatique',
@@ -222,7 +245,8 @@ class theme extends common {
 				'position' => $this->getInput('themeFooterPosition'),
 				'socialsAlign' => $this->getInput('themeFooterSocialsAlign'),
 				'text' => $this->getInput('themeFooterText', null),
-				'textAlign' => $this->getInput('themeFooterTextAlign')
+				'textAlign' => $this->getInput('themeFooterTextAlign'),
+				'textColor' => $this->getInput('themeFooterTextColor')
 			]]);
 			// Valeurs en sortie
 			$this->addOutput([
@@ -250,6 +274,7 @@ class theme extends common {
 			$this->setData(['theme', 'header', [
 				'backgroundColor' => $this->getInput('themeHeaderBackgroundColor'),
 				'font' => $this->getInput('themeHeaderFont'),
+				'fontSize' => $this->getInput('themeHeaderFontSize'),
 				'fontWeight' => $this->getInput('themeHeaderFontWeight'),
 				'height' => $this->getInput('themeHeaderHeight'),
 				'image' => $this->getInput('themeHeaderImage'),
@@ -298,12 +323,14 @@ class theme extends common {
 		if($this->isPost()) {
 			$this->setData(['theme', 'menu', [
 				'backgroundColor' => $this->getInput('themeMenuBackgroundColor'),
+				'fontSize' => $this->getInput('themeMenuFontSize'),
 				'fontWeight' => $this->getInput('themeMenuFontWeight'),
 				'height' => $this->getInput('themeMenuHeight'),
 				'loginLink' => $this->getInput('themeMenuLoginLink'),
 				'margin' => $this->getInput('themeMenuMargin', helper::FILTER_BOOLEAN),
 				'position' => $this->getInput('themeMenuPosition'),
 				'textAlign' => $this->getInput('themeMenuTextAlign'),
+				'textColor' => $this->getInput('themeMenuTextColor'),
 				'textTransform' => $this->getInput('themeMenuTextTransform')
 			]]);
 			// Valeurs en sortie
@@ -324,6 +351,20 @@ class theme extends common {
 	}
 
 	/**
+	 * Réinitialisation de la personnalisation avancée
+	 */
+	public function reset() {
+		// Supprime le fichier de personnalisation avancée
+		unlink('site/data/custom.css');
+		// Valeurs en sortie
+		$this->addOutput([
+			'notification' => 'Personnalisation avancée réinitialisée',
+			'redirect' => helper::baseUrl() . 'theme/advanced',
+			'state' => true
+		]);
+	}
+
+	/**
 	 * Options du site
 	 */
 	public function site() {
@@ -337,8 +378,13 @@ class theme extends common {
 			]]);
 			$this->setData(['theme', 'button', 'backgroundColor', $this->getInput('themeButtonBackgroundColor')]);
 			$this->setData(['theme', 'link', 'textColor', $this->getInput('themeLinkTextColor')]);
-			$this->setData(['theme', 'text', 'font', $this->getInput('themeTextFont')]);
+			$this->setData(['theme', 'text', [
+				'font' => $this->getInput('themeTextFont'),
+				'fontSize' => $this->getInput('themeTextFontSize'),
+				'textColor' => $this->getInput('themeTextTextColor'),
+			]]);
 			$this->setData(['theme', 'site', [
+				'backgroundColor' => $this->getInput('themeSiteBackgroundColor'),
 				'radius' => $this->getInput('themeSiteRadius'),
 				'shadow' => $this->getInput('themeSiteShadow'),
 				'width' => $this->getInput('themeSiteWidth')

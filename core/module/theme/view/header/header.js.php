@@ -26,8 +26,8 @@ $("input, select").on("change", function() {
 	else {
 		css += "header{background-image:none}";
 	}
-	// Couleur, épaisseur et capitalisation du titre de la bannière
-	css += "header span{color:" + $("#themeHeaderTextColor").val() + ";font-family:'" + headerFont.replace("+", " ") + "',sans-serif;font-weight:" + $("#themeHeaderFontWeight").val() + ";text-transform:" + $("#themeHeaderTextTransform").val() + "}";
+	// Taille, couleur, épaisseur et capitalisation du titre de la bannière
+	css += "header span{color:" + $("#themeHeaderTextColor").val() + ";font-family:'" + headerFont.replace("+", " ") + "',sans-serif;font-weight:" + $("#themeHeaderFontWeight").val() + ";font-size:" + $("#themeHeaderFontSize").val() + ";text-transform:" + $("#themeHeaderTextTransform").val() + "}";
 	// Cache le titre de la bannière
 	if($("#themeHeaderTextHide").is(":checked")) {
 		$("header .container").hide();
