@@ -1,6 +1,24 @@
 Zwii 8 Changelog
 ================
 
+## 8.2.0
+* Ajout d'un bouton pour fermer les notifications
+* Ajout d'une flèche pour les items du menu avec sous-menus
+* Ajout d'une barre de progression dans les notifications
+* Ajout de la personnalisation avancée
+* Ajout de nouveaux options de personnalisation
+* Ajout de nouvelles tooltips
+* Ajout des vidéos et iframes responsives
+* Ajout du plugin template afin de créer des colonnes adaptatives dans TinyMCE
+* Correction d'un bug cachant l'une des galeries par défaut
+* Divers correctifs mineures
+* Mise à jour de Flatpickr en 4.3.2
+* Mise à jour de jQuery en 3.3.1
+* Mise à jour de Lity en version 2.3.0
+* Mise à jour de Normalize en 8.0.0
+* Mise à jour de TinyMCE en 4.7.7
+* Suppression du support multilingue
+
 ## 8.1.2
 * Correction d'un bug affichant la popup d'édition du module de redirection pour les membres
 * Correction d'un bug avec l'enregistrement des ids et des urls
