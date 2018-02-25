@@ -18,7 +18,7 @@ $("input, select").on("change", function() {
 	var colors = core.colorVariants($("#themeFooterBackgroundColor").val());
 	var textColor = $("#themeFooterTextColor").val();
 	var css = "footer{background-color:" + colors.normal + ";color:" + textColor + "}";
-	css += "footer a{color:" + textColor + "!important}";
+	css += "footer a{color:" + textColor + "}";
 	// Hauteur du pied de page
 	css += "footer .container > div{margin:" + $("#themeFooterHeight").val() + " 0}";
 	// Alignement du contenu
