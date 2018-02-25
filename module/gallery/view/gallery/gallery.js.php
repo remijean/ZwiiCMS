@@ -14,5 +14,7 @@
  * Galerie d'image
  */
 $(".galleryGalleryPicture").simpleLightbox({
-	captionSelector: "self"
+	captionSelector: "self",
+	captionType: "data",
+	captionsData: "caption"
 });

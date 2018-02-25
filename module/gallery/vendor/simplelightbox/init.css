@@ -1,0 +1,9 @@
+.sl-overlay {
+	background: rgba(0, 0, 0, .9);
+	opacity: 1;
+}
+.sl-wrapper .sl-close,
+.sl-wrapper .sl-counter,
+.sl-wrapper .sl-navigation button {
+	color: #FFF;
+}

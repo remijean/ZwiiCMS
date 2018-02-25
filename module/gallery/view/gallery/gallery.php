@@ -19,7 +19,7 @@
 				href="<?php echo helper::baseUrl(false) . $picture; ?>"
 				class="galleryGalleryPicture"
 				style="background-image:url('<?php echo helper::baseUrl(false) . $picture; ?>')"
-				title="<?php echo $legend; ?>"
+				data-caption="<?php echo $legend; ?>"
 			>
 				<div class="galleryGalleryName"><?php echo $legend; ?></div>
 			</a>
