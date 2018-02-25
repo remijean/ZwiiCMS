@@ -510,7 +510,7 @@ footer #footerSocials .zwiico-youtube:hover {
 	bottom: 0;
 	left: 0;
 	color: #FFF;
-	padding: 8px;
+	padding: 10px;
 	z-index: 20;
 	text-align: center;
 	font-size: .9em;
@@ -521,6 +521,8 @@ footer #footerSocials .zwiico-youtube:hover {
 	background: #666;
 	padding: 4px 8px;
 	display: inline-block;
+	-webkit-transition: background.3s ease-out;
+	transition: background .3s ease-out;
 }
 #cookieConsentConfirm:hover {
 	background: #777;
@@ -585,6 +587,7 @@ input[type='password'],
 select,
 textarea {
 	padding: 10px; /* -1px à cause des bordures */
+	background: #FFF;
 	border: 1px solid #D8DFE3;
 	width: 100%;
 	border-radius: 2px;
