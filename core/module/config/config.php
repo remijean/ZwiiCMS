@@ -170,6 +170,7 @@ class config extends common {
 				[
 					'analyticsId' => $this->getInput('configAnalyticsId'),
 					'autoBackup' => $this->getInput('configAutoBackup', helper::FILTER_BOOLEAN),
+					'maintenance' => $this->getInput('configMaintenance', helper::FILTER_BOOLEAN),
 					'cookieConsent' => $this->getInput('configCookieConsent', helper::FILTER_BOOLEAN),
 					'favicon' => $this->getInput('configFavicon'),
 					'homePageId' => $this->getInput('configHomePageId', helper::FILTER_ID, true),

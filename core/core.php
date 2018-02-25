@@ -30,6 +30,7 @@ class common {
 	public static $coreModuleIds = [
 		'config',
 		'install',
+		'maintenance',
 		'page',
 		'sitemap',
 		'theme',
@@ -43,6 +44,7 @@ class common {
 			'cookieConsent' => true,
 			'favicon' => 'favicon.ico',
 			'homePageId' => 'accueil',
+			'maintenance' => false,
 			'metaDescription' => 'Zwii est un CMS sans base de données qui permet à ses utilisateurs de créer et gérer facilement un site web sans aucune connaissance en programmation.',
 			'social' => [
 				'facebookId' => 'ZwiiCMS',
@@ -804,6 +806,12 @@ class common {
 			$this->setData(['core', 'dataVersion', 820]);
 			$this->saveData();
 		}
+		// Version 8.2.2
+		if($this->getData(['core', 'dataVersion']) < 822) {
+			$this->setData(['config', 'maintenance', false]);
+			$this->setData(['core', 'dataVersion', 822]);
+			$this->saveData();
+		}
 	}
 
 }
@@ -993,6 +1001,27 @@ class core extends common {
 		) {
 			$user = new user;
 			$user->logout();
+		}
+		// Mode maintenance
+		if(
+			$this->getData(['config', 'maintenance'])
+			AND in_array($this->getUrl(0), ['maintenance', 'user']) === false
+			AND $this->getUrl(1) !== 'login'
+			AND (
+				$this->getUser('password') !== $this->getInput('ZWII_USER_PASSWORD')
+				OR (
+					$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
+					AND $this->getUser('group') < self::GROUP_ADMIN
+				)
+			)
+		) {
+			// Déconnexion
+			$user = new user;
+			$user->logout();
+			// Rédirection
+			http_response_code(302);
+			header('Location:' . helper::baseUrl() . 'maintenance');
+			exit();
 		}
 		// Check l'accès à la page
 		$access = null;

@@ -1007,6 +1007,9 @@ th.col12 {
 .verticalAlignBottom {
 	vertical-align: bottom;
 }
+.verticalAlignMiddle {
+	vertical-align: middle;
+}
 .clearBoth {
 	clear: both;
 }

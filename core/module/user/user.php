@@ -307,12 +307,25 @@ class user extends common {
 				$expire = $this->getInput('userLoginLongTime') ? strtotime("+1 year") : 0;
 				setcookie('ZWII_USER_ID', $userId, $expire, helper::baseUrl(false, false));
 				setcookie('ZWII_USER_PASSWORD', $this->getData(['user', $userId, 'password']), $expire, helper::baseUrl(false, false));
-				// Valeurs en sortie
-				$this->addOutput([
-					'notification' => 'Connexion réussie',
-					'redirect' => helper::baseUrl() . str_replace('_', '/', str_replace('__', '#', $this->getUrl(2))),
-					'state' => true
-				]);
+				// Valeurs en sortie lorsque le site est en maintenance et que l'utilisateur n'est pas administrateur
+				if(
+					$this->getData(['config', 'maintenance'])
+					AND $this->getData(['user', $userId, 'group']) < self::GROUP_ADMIN
+				) {
+					$this->addOutput([
+						'notification' => 'Seul un administrateur peur se connecter lors d\'une maintenance',
+						'redirect' => helper::baseUrl(),
+						'state' => false
+					]);
+				}
+				// Valeurs en sortie en cas de réussite
+				else {
+					$this->addOutput([
+						'notification' => 'Connexion réussie',
+						'redirect' => helper::baseUrl() . str_replace('_', '/', str_replace('__', '#', $this->getUrl(2))),
+						'state' => true
+					]);
+				}
 			}
 			// Sinon notification d'échec
 			else {
