@@ -117,7 +117,7 @@
 				]); ?>
 				<?php echo template::checkbox('configMaintenance', true, 'Site en maintenance', [
 					'checked' => $this->getData(['config', 'maintenance']),
-					'help' => 'Le site devient inaccessible sauf pour les administrareurs.'
+					'help' => 'Le site devient inaccessible sauf pour les administrateurs.'
 				]); ?>
 				<?php echo template::checkbox('configAutoBackup', true, 'Sauvegarde automatique des données', [
 					'checked' => $this->getData(['config', 'autoBackup']),
