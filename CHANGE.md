@@ -11,7 +11,7 @@ Zwii 8 Changelog
 * Ajout des vidéos et iframes responsives
 * Ajout du plugin template afin de créer des colonnes adaptatives dans TinyMCE
 * Correction d'un bug cachant l'une des galeries par défaut
-* Divers correctifs mineures
+* Divers correctifs mineurs
 * Mise à jour de Flatpickr en 4.3.2
 * Mise à jour de jQuery en 3.3.1
 * Mise à jour de Lity en version 2.3.0
