@@ -9,6 +9,7 @@
 					</h4>
 					<h2><?php echo $news['title']; ?></h2>
 					<?php echo $news['content']; ?>
+					<div class="clearBoth"></div>
 				</div>
 			<?php endforeach; ?>
 		</div>

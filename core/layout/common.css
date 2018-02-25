@@ -1007,3 +1007,6 @@ th.col12 {
 .verticalAlignBottom {
 	vertical-align: bottom;
 }
+.clearBoth {
+	clear: both;
+}
