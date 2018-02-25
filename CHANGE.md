@@ -1,6 +1,18 @@
 Zwii 8 Changelog
 ================
 
+## 8.2.2
+* Ajout d'options avancés lors de l'ajout d'une image dans TinyMCE
+* Ajout d'un effet de transition lors du passage de la souris sur les galeries photos
+* Ajout d'un mode maintenance activable depuis la page de configuration
+* Ajout d'une bordure à l'éditeur CSS de la personnalisation avancée
+* Amélioration du design du message de consentement pour les cookies
+* Correction d'un problème d'affichage lorsque des images sont en float dans le blog et les news
+* Correction d'une erreur dans la largeur petite du site
+* Correction d'une erreur dans le script de mise à jour de la version 8.2.0
+* Correction du bug avec les vidéos reponsives
+* Mise à jour de Simplelightbox en 1.11.1 et correction d'un bug cachant les légendes de la galerie
+
 ## 8.2.1
 * Correction d'un bug critique qui cachait le texte des boutons et du menu
 
