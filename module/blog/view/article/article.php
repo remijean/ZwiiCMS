@@ -65,7 +65,8 @@
 				</div>
 				<div class="col2">
 					<?php echo template::submit('blogArticleSubmit', [
-						'value' => 'Envoyer'
+						'value' => 'Envoyer',
+						'ico' => ''
 					]); ?>
 				</div>
 			</div>

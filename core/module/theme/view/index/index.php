@@ -14,16 +14,16 @@
 			]); ?>
 		</div>
 		<div class="col2">
-			<?php echo template::button('themeShowAll', [
-				'ico' => 'eye',
-				'value' => 'Zones'
-			]); ?>
-		</div>
-		<div class="col2">
 			<?php echo template::button('themeAdvanced', [
 				'href' => helper::baseUrl() . $this->getUrl(0) . '/advanced',
 				'value' => 'Mode avancé',
 				'ico' => 'code'
+			]); ?>
+		</div>
+		<div class="col2">
+			<?php echo template::button('themeShowAll', [
+				'ico' => 'eye',
+				'value' => 'Zones cachées'
 			]); ?>
 		</div>
 	</div>

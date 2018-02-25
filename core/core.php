@@ -251,7 +251,7 @@ class common {
 		'user' => [],
 		'theme' => [
 			'body' => [
-				'backgroundColor' => 'rgba(235, 238, 242, 1)',
+				'backgroundColor' => 'rgba(236, 239, 241, 1)',
 				'image' => '',
 				'imageAttachment' => 'scroll',
 				'imageRepeat' => 'no-repeat',
@@ -259,7 +259,7 @@ class common {
 				'imageSize' => 'auto'
 			],
 			'button' => [
-				'backgroundColor' => 'rgba(71, 123, 184, 1)'
+				'backgroundColor' => 'rgba(74, 105, 189, 1)'
 			],
 			'footer' => [
 				'backgroundColor' => 'rgba(255, 255, 255, 1)',
@@ -288,10 +288,10 @@ class common {
 				'textTransform' => 'none'
 			],
 			'link' => [
-				'textColor' => 'rgba(71, 123, 184, 1)'
+				'textColor' => 'rgba(74, 105, 189, 1)'
 			],
 			'menu' => [
-				'backgroundColor' => 'rgba(62, 107, 159, 1)',
+				'backgroundColor' => 'rgba(74, 105, 189, 1)',
 				'fontWeight' => 'normal',
 				'height' => '15px 10px',
 				'loginLink' => true,
@@ -301,7 +301,7 @@ class common {
 				'textTransform' => 'none'
 			],
 			'site' => [
-				'width' => '960px'
+				'width' => '1170px'
 			],
 			'text' => [
 				'font' => 'Open+Sans'
@@ -309,7 +309,7 @@ class common {
 			'title' => [
 				'font' => 'Oswald',
 				'fontWeight' => 'normal',
-				'textColor' => 'rgba(71, 123, 184, 1)',
+				'textColor' => 'rgba(74, 105, 189, 1)',
 				'textTransform' => 'none'
 			]
 		]
@@ -1760,10 +1760,7 @@ class layout extends common {
 					}
 				}
 				$leftItems .= '</select></li>';
-			}
-			// Items de droite
-			$rightItems = '';
-			if($this->getUser('group') >= self::GROUP_MODERATOR) {
+				$leftItems .= '<li><a href="' . helper::baseUrl() . 'page/add" title="Créer une page">' . template::ico('plus') . '</a></li>';
 				if(
 					// Sur un module de page qui autorise le bouton de modification de la page
 					$this->core->output['showBarEditButton']
@@ -1772,9 +1769,13 @@ class layout extends common {
 					// Sur une page d'accueil
 					OR $this->getUrl(0) === ''
 				) {
-					$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/edit/' . $this->getUrl(0) . '" title="Modifier la page">' . template::ico('pencil') . '</a></li>';
+					$leftItems .= '<li><a href="' . helper::baseUrl() . 'page/edit/' . $this->getUrl(0) . '" title="Modifier la page">' . template::ico('pencil') . '</a></li>';
 				}
-				$rightItems .= '<li><a href="' . helper::baseUrl() . 'page/add" title="Créer une page">' . template::ico('plus') . '</a></li>';
+			}
+			// Items de droite
+			$rightItems = '';
+			if($this->getUser('group') >= self::GROUP_MODERATOR) {
+
 				$rightItems .= '<li><a href="' . helper::baseUrl(false) . 'core/vendor/filemanager/dialog.php?type=0&akey=' . md5_file('site/data/data.json') .'" title="Gérer les fichiers" data-lity>' . template::ico('folder') . '</a></li>';
 			}
 			if($this->getUser('group') >= self::GROUP_ADMIN) {

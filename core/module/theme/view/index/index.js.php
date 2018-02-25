@@ -60,10 +60,7 @@ $("<a>")
  * Affiche les zones cachées
  */
 $("#themeShowAll").on("click", function() {
-	$("header.displayNone, nav.displayNone, footer.displayNone").slideDown();
-	$(this)
-		.addClass("disabled")
-		.css("z-index", 0);
+	$("header.displayNone, nav.displayNone, footer.displayNone").slideToggle();
 });
 
 /**

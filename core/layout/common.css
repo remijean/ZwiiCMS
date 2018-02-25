@@ -117,10 +117,15 @@ embed {
 	text-align: left;
 }
 .table tbody tr {
-	background: #F5F5F5;
+	background: #F6F7F8;
+	-webkit-transition: background .3s ease-out;
+	transition: background .3s ease-out;
 }
 .table tbody tr:nth-child(2n + 2) {
-	background: #E9E9E9;
+	background: #ECEFF1;
+}
+.table tbody tr:hover {
+	background: #FCF2E8;
 }
 .table th {
 	font-weight: normal;
@@ -155,12 +160,13 @@ td > .col12 {
 	text-align: center;
 	animation: notificationBounce .5s;
 	top: 30px;
+	border-radius: 2px;
 }
 #notification.notificationSuccess {
-	background: #67C672;
+	background: #27AE60;
 }
 #notification.notificationError {
-	background: #F3674A;
+	background: #E74C3C;
 }
 #notification.notificationOther {
 	background: #F39C12;
@@ -176,15 +182,16 @@ td > .col12 {
 	bottom: 0;
 	width: 100%;
 	height: 6px;
+	border-radius: 2px;
 }
 #notification.notificationSuccess #notificationProgress {
-	background: #60BB6B;
+	background: #219251;
 }
 #notification.notificationError #notificationProgress {
-	background: #D55F43;
+	background: #D62C1A;
 }
 #notification.notificationOther #notificationProgress {
-	background: #E18F12;
+	background: #D8890B;
 }
 #notificationClose:hover {
 	opacity: 1;
@@ -210,7 +217,7 @@ td > .col12 {
 /* Notice */
 .notice {
 	display: inline-block;
-	color: #F3674A;
+	color: #E74C3C;
 }
 
 /* Container */
@@ -251,6 +258,8 @@ td > .col12 {
 	display: inline-block;
 	padding: 0 12px;
 	color: #FFF;
+	-webkit-transition: background .3s ease-out;
+	transition: background .3s ease-out;
 }
 #bar a:hover {
 	background: #191A1A;
@@ -262,23 +271,18 @@ td > .col12 {
 #bar select {
 	width: 250px;
 	border: 0;
-	padding: 5px;
 }
 @media (max-width: 768px) {
 	#bar {
 		text-align: center;
 		padding: 0;
 	}
-	#bar #barLeft {
-		padding: 5px;
-	}
 	#bar ul {
 		float: none !important;
 		height: auto;
 	}
 	#bar select {
-		width: 100%;
-		display: block;
+		width: 70%;
 	}
 }
 
@@ -334,21 +338,27 @@ nav li {
 	position: relative;
 }
 nav li ul {
-	display: none;
+	display: block;
 	position: absolute;
 	width: 200px;
-	z-index: 20;
+	z-index: -1;
+	opacity: 0;
+	-webkit-transition: .3s ease-out;
+	transition: .3s ease-out;
 }
 nav li ul li {
 	display: block;
 	text-align: left;
 }
 nav li:hover ul {
-	display: block;
+	z-index: 1;
+	opacity: 1;
 }
 nav a {
 	display: inherit;
 	color: #212223;
+	-webkit-transition: background .3s ease-out;
+	transition: background .3s ease-out;
 }
 nav a:hover {
 	text-decoration: none;
@@ -365,7 +375,8 @@ nav a:hover {
 		display: block;
 	}
 	nav li ul {
-		display: block;
+		z-index: 1;
+		opacity: 1;
 		position: static;
 		min-width: inherit;
 		width: auto;
@@ -405,9 +416,12 @@ footer #footerSocials {
 }
 footer #footerSocials span {
 	color: #FFF;
-	padding: 6px;
-	margin: 0 4px;
+	padding: 9px;
+	margin: 0 5px;
 	display: inline-block;
+	border-radius: 2px;
+	-webkit-transition: background .3s ease-out;
+	transition: background .3s ease-out;
 }
 footer #footerSocials .zwiico-facebook {
 	background: #3B5999;
@@ -463,6 +477,9 @@ footer #footerSocials .zwiico-youtube:hover {
 	width: 100%;
 	margin: 16px auto;
 	text-align: left;
+	border-radius: 2px;
+	-webkit-transition: background .3s ease-out;
+	transition: background .3s ease-out;
 }
 .speechBubble:before {
 	content: " ";
@@ -475,22 +492,24 @@ footer #footerSocials .zwiico-youtube:hover {
 
 /* Remonter en haut */
 #backToTop {
-	opacity: .8;
 	position: fixed;
 	z-index: 30;
 	right: 30px;
 	bottom: 50px;
-	padding: 10px;
-	background: #212223;
+	padding: 13px 16px 16px;
+	background: rgba(33, 34, 35, .8);
 	color: #FFF;
 	cursor: pointer;
 	display: none;
+	border-radius: 50%;
+	-webkit-transition: background.3s ease-out;
+	transition: background .3s ease-out;
 }
 #backToTop:hover {
-	opacity: .9;
+	background: rgba(33, 34, 35, .9);
 }
 #backToTop:active {
-	opacity: 1;
+	background: rgba(33, 34, 35, 1);
 }
 
 /* Message sur les cookies */
@@ -520,10 +539,11 @@ footer #footerSocials .zwiico-youtube:hover {
 
 /* Bloc */
 .block {
-	border: 1px solid #DDD;
+	border: 1px solid #D8DFE3;
 	padding: 20px 20px 10px;
 	margin: 20px 0;
 	word-wrap: break-word;
+	border-radius: 2px;
 }
 .block:first-of-type {
 	margin-top: 0;
@@ -534,7 +554,7 @@ footer #footerSocials .zwiico-youtube:hover {
 .block h4 {
 	margin: -20px -20px 10px -20px;
 	padding: 10px;
-	background: #F5F5F5;
+	background: #ECEFF1;
 	color: #212223;
 }
 
@@ -576,12 +596,14 @@ input[type='password'],
 .inputFile,
 select,
 textarea {
-	padding: 9px; /* -1px à cause des bordures */
-	background: #FDFDFD;
-	border: 1px solid #DDD;
+	padding: 10px; /* -1px à cause des bordures */
+	border: 1px solid #D8DFE3;
 	width: 100%;
 	color: #212223;
+	border-radius: 2px;
 	font-family: inherit;
+	-webkit-transition: border .3s ease-out;
+	transition: border .3s ease-out;
 }
 select {
 	padding: 7px;
@@ -600,8 +622,8 @@ input[type='password'].notice,
 .inputFile.notice,
 select.notice,
 textarea.notice {
-	border: 1px solid #F3674A;
-	background: #FEEDE9;
+	border: 1px solid #E74C3C;
+	background: #FAD7D3;
 }
 input[type='email'].notice:hover,
 input[type='text'].notice:hover,
@@ -609,24 +631,27 @@ input[type='password'].notice:hover,
 .inputFile.notice:hover,
 select.notice:hover,
 textarea.notice:hover {
-	border: 1px solid #CA2E0D;
+	border: 1px solid #A82315;
 }
 button:disabled,
 input:disabled,
 select:disabled,
 textarea:disabled {
-	background: #F5F5F5 !important;
-	color: #999 !important;
+	background: #F6F7F8 !important;
+	color: #94A5B0 !important;
 }
-button:disabled span {
-	color: #999 !important /* Icône de soumission unique */
+button:disabled .zwiico-spin {
+	color: #50616c !important /* Icône de soumission unique */
 }
 button {
 	width: 100%;
-	padding: 10px;
+	padding: 11px;
 	border: 0;
 	cursor: pointer;
 	font-family: inherit;
+	border-radius: 2px;
+	-webkit-transition: background .3s ease-out;
+	transition: background .3s ease-out;
 }
 textarea {
 	height: 100px;
@@ -634,7 +659,7 @@ textarea {
 }
 label {
 	display: inline-block;
-	margin-bottom: 2px;
+	margin-bottom: 4px;
 }
 /* Simule le padding des cols pour les inputs en dehors des cols */
 :not([class^="col"]) > .inputWrapper {
@@ -649,13 +674,16 @@ label {
 .button {
 	width: 100%;
 	display: inline-block;
-	padding: 10px;
+	padding: 11px;
 	text-align: center;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
 	cursor: pointer;
+	border-radius: 2px;
+	-webkit-transition: background .3s ease-out;
+	transition: background .3s ease-out;
 }
 .button:hover {
 	text-decoration: none;
@@ -663,31 +691,31 @@ label {
 .button.disabled {
 	pointer-events: none;
 	cursor: default;
-	background: #F5F5F5 !important;
-	color: #999 !important;
+	background: #F6F7F8 !important;
+	color: #94A5B0 !important;
 }
-.button.disabled span {
-	color: #999 !important /* Icône de soumission unique */
+.button:disabled .zwiico-spin {
+	color: #50616c !important /* Icône de soumission unique */
 }
 .button.buttonGrey {
-	background: #E9E9E9;
+	background: #ECEFF1;
 	color: #212223 !important;
 }
 .button.buttonGrey:hover {
-	background: #E1E1E1;
+	background: #E2E7EA;
 }
 .button.buttonGrey:active {
-	background: #D8D8D8;
+	background: #D8DFE3;
 }
 .button.buttonRed {
-	background: #F3674A;
+	background: #E74C3C;
 	color: #FFF;
 }
 .button.buttonRed:hover {
-	background: #F25A3A;
+	background: #E53E2D;
 }
 .button.buttonRed:active {
-	background: #F14C2A;
+	background: #E3301E;
 }
 
 /* Upload de fichiers */
@@ -725,8 +753,8 @@ label {
 .pagination a.disabled {
 	pointer-events: none;
 	cursor: default;
-	background: #F5F5F5 !important;
-	color: #CCC !important;
+	background: #F6F7F8 !important;
+	color: #94A5B0 !important;
 }
 .pagination a:first-child {
 	margin-left: 0;
@@ -764,18 +792,19 @@ input[type='checkbox'] + label:before {
 	font-size: 10px;
 	font-weight: bold;
 	background: #FDFDFD;
-	border: 1px solid #DDD;
+	border: 1px solid #D8DFE3;
 	vertical-align: top;
+	border-radius: 2px;
 }
 input[type='checkbox'].notice + label:before {
-	background: #F3674A;
+	background: #E74C3C;
 }
 input[type='checkbox']:hover + label:before,
 input[type='checkbox']:checked:active + label:before {
-	background: #EEE;
+	background: #ECEFF1;
 }
 input[type='checkbox']:disabled + label:before{
-	background: #F5F5F5 !important;
+	background: #F6F7F8 !important;
 }
 
 /* Sélecteur de date */

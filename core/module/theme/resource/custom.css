@@ -130,23 +130,3 @@ input[type='password']:hover,
 select:hover,
 textarea:hover {
 }
-
-/**
- * Éléments secondaires
- */
-
-/* Bulles de discussion (Ex. : dans la page d'erreur 404) */
-.speechBubble {
-}
-
-/* Flêche des bulles de discussion */
-.speechBubble:before {
-}
-
-/* Icônes d'aide */
-.helpButton span {
-}
-
-/* Icônes d'aide au survol */
-.helpButton span:hover {
-}

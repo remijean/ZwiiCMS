@@ -39,7 +39,8 @@
 		<div class="row">
 			<div class="col2 offset10">
 				<?php echo template::submit('formSubmit', [
-					'value' => $this->getData(['module', $this->getUrl(0), 'config', 'button']) ? $this->getData(['module', $this->getUrl(0), 'config', 'button']) : 'Envoyer'
+					'value' => $this->getData(['module', $this->getUrl(0), 'config', 'button']) ? $this->getData(['module', $this->getUrl(0), 'config', 'button']) : 'Envoyer',
+					'ico' => ''
 				]); ?>
 			</div>
 		</div>

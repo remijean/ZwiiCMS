@@ -41,7 +41,7 @@ footer {
 }
 .themeOverlay:not(.themeOverlayHideBackground):hover,
 .themeOverlayTriggerHover {
-	background: rgba(103, 198, 114, .7);
+	background: rgba(39, 174, 96, .5);
 }
 #themeOverlayBody {
 	position: fixed; /* Sinon l'overlay s'arrête à la hauteur de la fenêtre et non de la page*/
