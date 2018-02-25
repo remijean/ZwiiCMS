@@ -800,7 +800,7 @@ class common {
 			$this->setData(['theme', 'text', 'fontSize', '14px']);
 			$this->setData(['theme', 'text', 'textColor', 'rgba(33, 34, 35, 1)']);
 			$this->setData(['theme', 'menu', 'fontSize', '1em']);
-			$this->setData(['theme', 'header', 'textColor', 'rgba(33, 34, 35, 1)']);
+			$this->setData(['theme', 'menu', 'textColor', 'rgba(255, 255, 255, 1)']);
 			$this->setData(['theme', 'header', 'fontSize', '2em']);
 			$this->setData(['theme', 'footer', 'textColor', 'rgba(33, 34, 35, 1)']);
 			$this->setData(['core', 'dataVersion', 820]);
