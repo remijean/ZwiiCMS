@@ -24,7 +24,7 @@ class common {
 	const GROUP_MEMBER = 1;
 	const GROUP_MODERATOR = 2;
 	const GROUP_ADMIN = 3;
-	const ZWII_VERSION = '8.2.0';
+	const ZWII_VERSION = '8.2.1';
 
 	public static $actions = [];
 	public static $coreModuleIds = [
@@ -884,22 +884,21 @@ class core extends common {
 				$css .= 'body{background-image:url("../file/source/' . $themeBodyImage . '");background-position:' . $this->getData(['theme', 'body', 'imagePosition']) . ';background-attachment:' . $this->getData(['theme', 'body', 'imageAttachment']) . ';background-size:' . $this->getData(['theme', 'body', 'imageSize']) . ';background-repeat:' . $this->getData(['theme', 'body', 'imageRepeat']) . '}';
 			}
 			// Site
+			$colors = helper::colorVariants($this->getData(['theme', 'link', 'textColor']));
+			$css .= 'a{color:' . $colors['normal'] . '}';
+			$css .= 'a:hover{color:' . $colors['darken'] . '}';
 			$css .= 'body,.row > div{font-size:' . $this->getData(['theme', 'text', 'fontSize']) . '}';
-			$css .= 'body,.block h4,input[type=\'email\'],input[type=\'text\'],input[type=\'password\'],.inputFile,select,textarea,.inputFile,.button.buttonGrey{color:' . $this->getData(['theme', 'text', 'textColor']) . '}';
+			$css .= 'body,.block h4,input[type=\'email\'],input[type=\'text\'],input[type=\'password\'],.inputFile,select,textarea,.inputFile,.button.buttonGrey,.button.buttonGrey:hover{color:' . $this->getData(['theme', 'text', 'textColor']) . '}';
 			$css .= '.container{max-width:' . $this->getData(['theme', 'site', 'width']) . '}';
 			$css .= '#site{background-color:' . $this->getData(['theme', 'site', 'backgroundColor']) . ';border-radius:' . $this->getData(['theme', 'site', 'radius']) . ';box-shadow:' . $this->getData(['theme', 'site', 'shadow']) . ' #212223}';
 			$colors = helper::colorVariants($this->getData(['theme', 'button', 'backgroundColor']));
-			$css .= '.speechBubble,.button,button[type=\'submit\'],.pagination a,input[type=\'checkbox\']:checked + label:before,input[type=\'radio\']:checked + label:before,.helpContent{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '}';
+			$css .= '.speechBubble,.button,.button:hover,button[type=\'submit\'],.pagination a,.pagination a:hover,input[type=\'checkbox\']:checked + label:before,input[type=\'radio\']:checked + label:before,.helpContent{background-color:' . $colors['normal'] . ';color:' . $colors['text'] . '}';
 			$css .= '.helpButton span{color:' . $colors['normal'] . '}';
 			$css .= 'input[type=\'text\']:hover,input[type=\'password\']:hover,.inputFile:hover,select:hover,textarea:hover{border-color:' . $colors['normal'] . '}';
 			$css .= '.speechBubble:before{border-color:' . $colors['normal'] . ' transparent transparent transparent}';
 			$css .= '.button:hover,button[type=\'submit\']:hover,.pagination a:hover,input[type=\'checkbox\']:not(:active):checked:hover + label:before,input[type=\'checkbox\']:active + label:before,input[type=\'radio\']:checked:hover + label:before,input[type=\'radio\']:not(:checked):active + label:before{background-color:' . $colors['darken'] . '}';
 			$css .= '.helpButton span:hover{color:' . $colors['darken'] . '}';
 			$css .= '.button:active,button[type=\'submit\']:active,.pagination a:active{background-color:' . $colors['veryDarken'] . '}';
-			$colors = helper::colorVariants($this->getData(['theme', 'link', 'textColor']));
-			$css .= 'a{color:' . $colors['normal'] . '}';
-			$css .= 'a:hover{color:' . $colors['darken'] . '}';
-			$css .= 'a:active{color:' . $colors['veryDarken'] . '}';
 			$colors = helper::colorVariants($this->getData(['theme', 'title', 'textColor']));
 			$css .= 'h1,h2,h3,h4,h5,h6{color:' . $colors['normal'] . ';font-family:"' . str_replace('+', ' ', $this->getData(['theme', 'title', 'font'])) . '",sans-serif;font-weight:' . $this->getData(['theme', 'title', 'fontWeight']) . ';text-transform:' . $this->getData(['theme', 'title', 'textTransform']) . '}';
 			// Bannière
@@ -921,7 +920,7 @@ class core extends common {
 			// Menu
 			$colors = helper::colorVariants($this->getData(['theme', 'menu', 'backgroundColor']));
 			$css .= 'nav,nav a{background-color:' . $colors['normal'] . '}';
-			$css .= 'nav a,#toggle span{color:' . $this->getData(['theme', 'menu', 'textColor']) . '}';
+			$css .= 'nav a,#toggle span,nav a:hover{color:' . $this->getData(['theme', 'menu', 'textColor']) . '}';
 			$css .= 'nav a:hover{background-color:' . $colors['darken'] . '}';
 			$css .= 'nav a.active{background-color:' . $colors['veryDarken'] . '}';
 			$css .= '#menu{text-align:' . $this->getData(['theme', 'menu', 'textAlign']) . '}';

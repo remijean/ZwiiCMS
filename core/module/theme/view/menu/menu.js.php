@@ -17,7 +17,7 @@ $("input, select").on("change", function() {
 	// Couleurs du menu
 	var colors = core.colorVariants($("#themeMenuBackgroundColor").val());
 	var css = "nav,nav a{background-color:" + colors.normal + "}";
-	css += "nav a,#toggle span{color:" + $("#themeMenuTextColor").val() + "}";
+	css += "nav a,#toggle span,nav a:hover{color:" + $("#themeMenuTextColor").val() + "}";
 	css += "nav a:hover{background-color:" + colors.darken + "}";
 	css += "nav a.active{background-color:" + colors.veryDarken + "}";
 	// Taille, hauteur, épaisseur et capitalisation de caractères du menu

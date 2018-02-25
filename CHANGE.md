@@ -1,6 +1,9 @@
 Zwii 8 Changelog
 ================
 
+## 8.2.1
+* Correction d'un bug critique qui cachait le texte des boutons et du menu
+
 ## 8.2.0
 * Ajout d'un bouton pour fermer les notifications
 * Ajout d'une flèche pour les items du menu avec sous-menus
