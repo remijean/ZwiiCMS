@@ -77,3 +77,9 @@
 .offset11 {
 	margin-left: 91.66666667%;
 }
+/* Simulation du responsive des vidéos dans l'éditeur */
+.mce-preview-object,
+.mce-preview-object > * {
+	width: 100% !important;
+	height: 600px !important;
+}

@@ -14,6 +14,7 @@ tinymce.init({
 		baseUrl + "site/data/theme.css",
 		baseUrl + "site/data/custom.css"
 	],
+	media_dimensions: false,
 	relative_urls: false,
 	document_base_url: baseUrl,
 	filemanager_access_key: privateKey,

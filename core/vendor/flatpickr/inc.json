@@ -1,6 +1,5 @@
 [
-	"flatpickr.min.css",
-	"flatpickr.min.js",
-	"l10n/fr.js",
+	"tippy.min.css",
+	"tippy.min.js",
 	"init.js"
 ]
