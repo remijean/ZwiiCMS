@@ -790,6 +790,19 @@ class common {
 			$this->setData(['core', 'dataVersion', 810]);
 			$this->saveData();
 		}
+		// Version 8.2.0
+		if($this->getData(['core', 'dataVersion']) < 820) {
+			$this->setData(['theme', 'body', 'backgroundColor', 'rgba(236, 239, 241, 1)']);
+			$this->setData(['theme', 'site', 'backgroundColor', 'rgba(255, 255, 255, 1)']);
+			$this->setData(['theme', 'text', 'fontSize', '14px']);
+			$this->setData(['theme', 'text', 'textColor', 'rgba(33, 34, 35, 1)']);
+			$this->setData(['theme', 'menu', 'fontSize', '1em']);
+			$this->setData(['theme', 'header', 'textColor', 'rgba(33, 34, 35, 1)']);
+			$this->setData(['theme', 'header', 'fontSize', '2em']);
+			$this->setData(['theme', 'footer', 'textColor', 'rgba(33, 34, 35, 1)']);
+			$this->setData(['core', 'dataVersion', 820]);
+			$this->saveData();
+		}
 	}
 
 }
