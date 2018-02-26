@@ -14,8 +14,8 @@
 #mce-modal-block {
 	background: #000 !important;
 }
-#mce-modal-block.mce-in {
-	opacity: .9 !important;
+.mce-window {
+	box-shadow: none !important;
 }
 .mce-toolbar-grp {
 	background: #ECEFF1 !important;
