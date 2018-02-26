@@ -47,11 +47,11 @@ class common {
 			'maintenance' => false,
 			'metaDescription' => 'Zwii est un CMS sans base de données qui permet à ses utilisateurs de créer et gérer facilement un site web sans aucune connaissance en programmation.',
 			'social' => [
-				'facebookId' => 'ZwiiCMS',
+				'facebookId' => '',
 				'googleplusId' => '',
 				'instagramId' => '',
 				'pinterestId' => '',
-				'twitterId' => 'ZwiiCMS',
+				'twitterId' => '',
 				'youtubeId' => ''
 			],
 			'timezone' => 'Europe/Paris',
@@ -64,7 +64,7 @@ class common {
 		],
 		'page' => [
 			'accueil' => [
-				'content' => "<p><h3>Bienvenue sur votre nouveau site Zwii !</h3></p>\r\n<p><strong>Un mail contenant un récapitulatif de votre installation vient de vous être envoyé.</strong></strong></p>\r\n<p>Connectez-vous dès maintenant à votre espace membre afin de créer un site à votre image ! Vous allez pouvoir personnaliser le thème, créer des pages, ajouter des utilisateurs et bien plus encore !</p>\r\n<p>Si vous avez besoin d'aide ou si vous voulez des informations sur Zwii, n'hésitez pas à jeter un œil à notre <a title='Forum' href='http://forum.zwiicms.com/'>forum</a> et à nous suivre sur <a title='Facebook' href='https://www.facebook.com/ZwiiCMS/'>Facebook</a> et <a title='Twiiter' href='https://twitter.com/ZwiiCMS'>Twiiter</a>.</p>",
+				'content' => "<p><h3>Bienvenue sur votre nouveau site Zwii !</h3></p>\r\n<p><strong>Un mail contenant un récapitulatif de votre installation vient de vous être envoyé.</strong></strong></p>\r\n<p>Connectez-vous dès maintenant à votre espace membre afin de créer un site à votre image ! Vous allez pouvoir personnaliser le thème, créer des pages, ajouter des utilisateurs et bien plus encore !</p>\r\n<p>Si vous avez besoin d'aide ou si vous voulez des informations sur Zwii, n'hésitez pas à jeter un œil à notre <a title='Forum' href='http://forum.zwiicms.com/'>forum</a>.</p>",
 				'hideTitle' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
