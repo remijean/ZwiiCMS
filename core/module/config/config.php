@@ -142,7 +142,7 @@ class config extends common {
 		// Creation du ZIP
 		$fileName = date('Y-m-d-h-i-s', time()) . '.zip';
 		$zip = new ZipArchive();
-		if($zip->open('core/tmp/' . $fileName, ZipArchive::CREATE) === TRUE){
+		if($zip->open('site/tmp/' . $fileName, ZipArchive::CREATE) === TRUE){
 			foreach(configHelper::scanDir('site/') as $file) {
 				$zip->addFile($file);
 			}
@@ -151,8 +151,8 @@ class config extends common {
 		// Téléchargement du ZIP
 		header('Content-Transfer-Encoding: binary');
 		header('Content-Disposition: attachment; filename="' . $fileName . '"');
-		header('Content-Length: ' . filesize('core/tmp/' . $fileName));
-		readfile('core/tmp/' . $fileName);
+		header('Content-Length: ' . filesize('site/tmp/' . $fileName));
+		readfile('site/tmp/' . $fileName);
 		// Valeurs en sortie
 		$this->addOutput([
 			'display' => self::DISPLAY_RAW

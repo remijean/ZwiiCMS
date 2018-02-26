@@ -25,7 +25,7 @@ class install extends common {
 	 */
 	public function download() {
 		// Téléchargement du fichier
-		$fileName = 'core/tmp/update_' . time() . '_' . uniqid() . '.tar.gz';
+		$fileName = 'site/tmp/update_' . time() . '_' . uniqid() . '.tar.gz';
 		file_put_contents($fileName, file_get_contents('https://zwiicms.com/update.tar.gz'));
 		// Décompression
 		$pharData = new PharData($fileName);

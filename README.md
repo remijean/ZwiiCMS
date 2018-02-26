@@ -37,7 +37,6 @@ Décompressez l'archive de Zwii sur votre serveur et c'est tout !
 [D] core                   Contient le coeur de Zwii
   [D] layout               Contient les différentes structure de thème
   [D] module               Contient les modules du coeur
-  [D] tmp                  Contient les fichiers temporaire
   [D] vendor               Contient les librairies
   [F] core.js.php          Coeur JavaScript de Zwii
   [F] core.php             Coeur PHP de Zwii
@@ -48,8 +47,9 @@ Décompressez l'archive de Zwii sur votre serveur et c'est tout !
     [F] data.json          Fichier de données
     [F] custom.css         Feuille de style de la personnalisation avancée
     [F] theme.css          Thème stocké dans le fichier data.json compilé en CSS
-    [D] file               Contient les fichiers envoyés sur le serveur depuis le gestionnaire de fichiers
-      [D] source           Contient les fichiers
-      [D] thumb            Contient les miniatures des fichiers de type image
+  [D] file                 Contient les fichiers envoyés sur le serveur depuis le gestionnaire de fichiers
+    [D] source             Contient les fichiers
+    [D] thumb              Contient les miniatures des fichiers de type image
+  [D] tmp                  Contient les fichiers temporaire
 [F] index.php              Fichier d'initialisation de Zwii
 ```

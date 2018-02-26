@@ -833,7 +833,7 @@ class core extends common {
 		// Supprime les fichiers temporaires
 		$lastClearTmp = mktime(0, 0, 0);
 		if($lastClearTmp > $this->getData(['core', 'lastClearTmp']) + 86400) {
-			$iterator = new DirectoryIterator('core/tmp/');
+			$iterator = new DirectoryIterator('site/tmp/');
 			foreach($iterator as $fileInfos) {
 				if($fileInfos->isFile() AND $fileInfos->getBasename() !== '.gitkeep') {
 					@unlink($fileInfos->getPathname());
