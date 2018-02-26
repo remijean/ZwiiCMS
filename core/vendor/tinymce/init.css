@@ -1,0 +1,45 @@
+/**
+ * Personnalisation de TinyMCE aux couleurs de Zwii
+ */
+.mce-panel {
+	border: 0 !important;
+}
+.mce-top-part::before,
+.mce-tinymce {
+	box-shadow: none !important;
+}
+.mce-tinymce {
+	border: 1px solid #D8DFE3 !important;
+ }
+#mce-modal-block {
+	background: #000 !important;
+}
+#mce-modal-block.mce-in {
+	opacity: .9 !important;
+}
+.mce-toolbar-grp {
+	background: #ECEFF1 !important;
+}
+.mce-toolbar-grp .mce-btn {
+	border: 0 !important;
+	background: transparent !important;
+}
+.mce-toolbar-grp .mce-btn button {
+	padding: 10px 6px !important
+}
+.mce-toolbar-grp .mce-btn:hover,
+.mce-toolbar-grp .mce-active {
+	background: #FFF !important;
+}
+.mce-toolbar-grp .mce-caret {
+	border-top-color: #B5BCC2 !important;
+}
+.mce-toolbar-grp .mce-active * {
+	color: #595959 !important;
+}
+.mce-toolbar-grp .mce-btn-group {
+	padding: 0 !important;
+}
+.mce-toolbar-grp .mce-open {
+	border: 0 !important;
+}
