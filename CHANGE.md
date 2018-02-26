@@ -1,6 +1,12 @@
 Zwii 8 Changelog
 ================
 
+## 8.2.3
+* Ajout d'un système de mise à jour automatique
+* Ajout d'une surcouche à TinyMCE
+* Ajout d'un module pour enregistrer et rétablir le contenunon enregistré de TinyMCE en cas de fermeture de page
+* Divers correctifs mineurs
+
 ## 8.2.2
 * Ajout d'options avancés lors de l'ajout d'une image dans TinyMCE
 * Ajout d'un effet de transition lors du passage de la souris sur les galeries photos
