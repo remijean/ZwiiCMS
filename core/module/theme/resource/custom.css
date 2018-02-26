@@ -19,7 +19,7 @@ body {
 header {
 }
 
-/* Titre dans la bannière */
+/* Titre de la bannière */
 header span {
 }
 
@@ -31,16 +31,12 @@ nav {
 nav a {
 }
 
-/* Items du menu au survol */
+/* Items au survol du menu */
 nav a:hover {
 }
 
-/* Items du menu courant */
+/* Item courant du menu */
 nav a.active {
-}
-
-/* Icône burger du menu en mode mobile */
-#toggle span {
 }
 
 /* Bas de page */
@@ -51,20 +47,20 @@ footer {
 footer a {
 }
 
-/* Zone contenant les réseaux sociaux dans le bas de page */
+/* Réseaux sociaux dans le bas de page */
 #footerSocials {
 }
 
-/* Zone contenant le texte libre dans le bas de page */
+/* Texte libre dans le bas de page */
 #footerText {
 }
 
-/* Zone contenant le copyright dans le bas de page */
+/* Copyright dans le bas de page */
 #footerCopyright {
 }
 
 /**
- * Élément de contenu
+ * Éléments de contenu
  */
 
 /* Titres */
