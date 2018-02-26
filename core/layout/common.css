@@ -1008,3 +1008,12 @@ th.col12 {
 .clearBoth {
 	clear: both;
 }
+.colorGreen {
+	color: #27AE60;
+}
+.colorRed {
+	color: #E74C3C;
+}
+.colorOrange {
+	color: #F39C12;
+}

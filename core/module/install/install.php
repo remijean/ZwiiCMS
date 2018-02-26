@@ -15,8 +15,29 @@
 class install extends common {
 
 	public static $actions = [
-		'index' => self::GROUP_VISITOR
+		'download' => self::GROUP_ADMIN,
+		'index' => self::GROUP_VISITOR,
+		'update' => self::GROUP_ADMIN
 	];
+
+	/**
+	 * Téléchargement de la mise à jour
+	 */
+	public function download() {
+		// Téléchargement du fichier
+		$fileName = 'core/tmp/update_' . time() . '_' . uniqid() . '.tar.gz';
+		file_put_contents($fileName, file_get_contents('https://zwiicms.com/update.tar.gz'));
+		// Décompression
+		$pharData = new PharData($fileName);
+		$pharData->decompress();
+		// Extraction
+		$pharData->extractTo(__DIR__ . '/../../../', null, true);
+		// Valeurs en sortie
+		$this->addOutput([
+			'display' => self::DISPLAY_JSON,
+			'content' => true
+		]);
+	}
 
 	/**
 	 * Installation
@@ -82,6 +103,18 @@ class install extends common {
 				'view' => 'index'
 			]);
 		}
+	}
+
+	/**
+	 * Mise à jour
+	 */
+	public function update() {
+		// Valeurs en sortie
+		$this->addOutput([
+			'display' => self::DISPLAY_LAYOUT_LIGHT,
+			'title' => 'Mise à jour',
+			'view' => 'update'
+		]);
 	}
 
 }

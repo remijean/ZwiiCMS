@@ -15,12 +15,19 @@ Décompressez l'archive de Zwii sur votre serveur et c'est tout !
 
 ## Procédure de mise à jour de Zwii
 
-* Sauvegardez le dossier "site" de votre serveur
-* Supprimez les dossiers et fichiers restants sur votre serveur
-* Décompressez la nouvelle version sur votre serveur
-* Écrasez le dossier "site" de la nouvelle version par celui sauvegardé
-
 **Note : La réécriture des URLS est automatiquement désactivée après une mise à jour. À vous de la réactiver depuis l'interface de configuration du site.**
+
+### Mise à jour automatique
+
+* Connectez vous à votre site,
+* Allez dans l'interface de configuration,
+* Cliquez sur le bouton "Mettre à jour".
+
+### Mise à jour manuelle
+
+* Sauvegardez le dossier "site" de votre serveur,
+* Décompressez la nouvelle version sur votre serveur,
+* Remplacez le dossier "site" de la nouvelle version par le votre.
 
 ## Arborescence générale
 

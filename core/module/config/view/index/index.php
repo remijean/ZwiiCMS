@@ -134,8 +134,8 @@
 						<div class="col6">
 							<?php echo template::button('configNewVersion', [
 								'class' => 'buttonRed',
-								'href' => 'http://zwiicms.com/',
-								'value' => 'Mise à jour disponible'
+								'href' => helper::baseUrl() . 'install/update',
+								'value' => 'Mettre à jour'
 							]); ?>
 						</div>
 					<?php endif; ?>
