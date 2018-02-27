@@ -130,15 +130,6 @@
 							'value' => 'Exporter les données'
 						]); ?>
 					</div>
-					<?php if(helper::checkNewVersion()): ?>
-						<div class="col6">
-							<?php echo template::button('configNewVersion', [
-								'class' => 'buttonRed',
-								'href' => helper::baseUrl() . 'install/update',
-								'value' => 'Mettre à jour'
-							]); ?>
-						</div>
-					<?php endif; ?>
 				</div>
 			</div>
 		</div>

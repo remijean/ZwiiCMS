@@ -15,29 +15,12 @@
 class install extends common {
 
 	public static $actions = [
-		'download' => self::GROUP_ADMIN,
 		'index' => self::GROUP_VISITOR,
+		'steps' => self::GROUP_ADMIN,
 		'update' => self::GROUP_ADMIN
 	];
 
-	/**
-	 * Téléchargement de la mise à jour
-	 */
-	public function download() {
-		// Téléchargement du fichier
-		$fileName = 'site/tmp/update_' . time() . '_' . uniqid() . '.tar.gz';
-		file_put_contents($fileName, file_get_contents('https://zwiicms.com/update.tar.gz'));
-		// Décompression
-		$pharData = new PharData($fileName);
-		$pharData->decompress();
-		// Extraction
-		$pharData->extractTo(__DIR__ . '/../../../', null, true);
-		// Valeurs en sortie
-		$this->addOutput([
-			'display' => self::DISPLAY_JSON,
-			'content' => true
-		]);
-	}
+	public static $newVersion;
 
 	/**
 	 * Installation
@@ -106,9 +89,102 @@ class install extends common {
 	}
 
 	/**
+	 * Étapes de mise à jour
+	 */
+	public function steps() {
+		switch($this->getInput('step', FILTER_SANITIZE_NUMBER_INT)) {
+			// Préparation
+			case 1:
+				$success = true;
+				// Nettoyage des fichiers temporaires
+				if(file_exists('site/tmp/update.tar.gz')) {
+					$success = unlink('site/tmp/update.tar.gz');
+				}
+				if(file_exists('site/tmp/update.tar')) {
+					$success = unlink('site/tmp/update.tar');
+				}
+				// Valeurs en sortie
+				$this->addOutput([
+					'display' => self::DISPLAY_JSON,
+					'content' => [
+						'success' => $success,
+						'data' => null
+					]
+				]);
+				break;
+			// Téléchargement
+			case 2:
+				// Téléchargement depuis le serveur de Zwii
+				$success = (file_put_contents('site/tmp/update.tar.gz', file_get_contents('https://zwiicms.com/update.tar.gz')) !== false);
+				// Valeurs en sortie
+				$this->addOutput([
+					'display' => self::DISPLAY_JSON,
+					'content' => [
+						'success' => $success,
+						'data' => null
+					]
+				]);
+				break;
+			// Installation
+			case 3:
+				$success = true;
+				// Check la réécriture d'URL avant d'écraser les fichiers
+				$rewrite = helper::checkRewrite();
+				// Décompression et installation
+				try {
+					// Décompression dans le dossier de fichier temporaires
+					$pharData = new PharData('site/tmp/update.tar.gz');
+					$pharData->decompress();
+					// Installation
+					$pharData->extractTo(__DIR__ . '/../../../', null, true);
+				} catch (Exception $e) {
+					$success = $e->getMessage();
+				}
+				// Valeurs en sortie
+				$this->addOutput([
+					'display' => self::DISPLAY_JSON,
+					'content' => [
+						'success' => $success,
+						'data' => $rewrite
+					]
+				]);
+				break;
+			// Configuration
+			case 4:
+				$success = true;
+				// Réécriture d'URL
+				if($this->getInput('data')) {
+					$success = (file_put_contents(
+						'.htaccess',
+						PHP_EOL .
+						'<ifModule mod_rewrite.c>' . PHP_EOL .
+						"\tRewriteEngine on" . PHP_EOL .
+						"\tRewriteBase " . helper::baseUrl(false, false) . PHP_EOL .
+						"\tRewriteCond %{REQUEST_FILENAME} !-f" . PHP_EOL .
+						"\tRewriteCond %{REQUEST_FILENAME} !-d" . PHP_EOL .
+						"\tRewriteRule ^(.*)$ index.php?$1 [L]" . PHP_EOL .
+						'</ifModule>',
+						FILE_APPEND
+					) !== false);
+				}
+				// Valeurs en sortie
+				$this->addOutput([
+					'display' => self::DISPLAY_JSON,
+					'content' => [
+						'success' => $success,
+						'data' => null
+					]
+				]);
+				break;
+		}
+	}
+
+	/**
 	 * Mise à jour
 	 */
 	public function update() {
+		// Nouvelle version
+		self::$newVersion = file_get_contents('http://zwiicms.com/version');
 		// Valeurs en sortie
 		$this->addOutput([
 			'display' => self::DISPLAY_LAYOUT_LIGHT,

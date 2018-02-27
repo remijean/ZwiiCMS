@@ -1280,8 +1280,8 @@ class core extends common {
 
 class helper {
 
-	/** Statut de l'URL rewriting (pour éviter de lire le contenu du fichier .htaccess à chaque self::baseUrl()) */
-	private static $rewriteStatus = null;
+	/** Statut de la réécriture d'URL (pour éviter de lire le contenu du fichier .htaccess à chaque self::baseUrl()) */
+	public static $rewriteStatus = null;
 
 	/** Filtres personnalisés */
 	const FILTER_BOOLEAN = 1;
@@ -1328,10 +1328,30 @@ class helper {
 	 * @return string
 	 */
 	public static function baseUrl($queryString = true, $host = true) {
+		// Protocol
+		if(
+			(empty($_SERVER['HTTPS']) === false AND $_SERVER['HTTPS'] !== 'off')
+			OR $_SERVER['SERVER_PORT'] === 443
+		) {
+			$protocol = 'https://';
+		}
+		else {
+			$protocol = 'http://';
+		}
+		// Host
+		if($host) {
+			$host = $protocol . $_SERVER['HTTP_HOST'];
+		}
+		// Pathinfo
 		$pathInfo = pathinfo($_SERVER['PHP_SELF']);
-		$hostName = $_SERVER['HTTP_HOST'];
-		$protocol = ((empty($_SERVER['HTTPS']) === false AND $_SERVER['HTTPS'] !== 'off') OR $_SERVER['SERVER_PORT'] === 443) ? 'https://' : 'http://';
-		return ($host ? $protocol . $hostName : '') . rtrim($pathInfo['dirname'], ' /') . '/' . (($queryString AND helper::checkRewrite() === false) ? '?' : '');
+		// Querystring
+		if($queryString AND helper::checkRewrite() === false) {
+			$queryString = '?';
+		}
+		else {
+			$queryString = '';
+		}
+		return $host . rtrim($pathInfo['dirname'], ' /') . '/' . $queryString;
 	}
 
 	/**
@@ -1343,7 +1363,7 @@ class helper {
 			// Ouvre et scinde le fichier .htaccess
 			$htaccess = explode('# URL rewriting', file_get_contents('.htaccess'));
 			// Retourne un boolean en fonction du contenu de la partie réservée à l'URL rewriting
-			self::$rewriteStatus = empty($htaccess[1]) === false;
+			self::$rewriteStatus = (empty($htaccess[1]) === false);
 		}
 		return self::$rewriteStatus;
 	}
@@ -1354,7 +1374,7 @@ class helper {
 	 */
 	public static function checkNewVersion() {
 		if($version = @file_get_contents('http://zwiicms.com/version')) {
-			return trim($version) !== common::ZWII_VERSION;
+			return (trim($version) !== common::ZWII_VERSION);
 		}
 		else {
 			return false;
@@ -1835,6 +1855,9 @@ class layout extends common {
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'user" title="Configurer les utilisateurs">' . template::ico('users') . '</a></li>';
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'theme" title="Personnaliser le thème">' . template::ico('brush') . '</a></li>';
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'config" title="Configurer le site">' . template::ico('gear') . '</a></li>';
+				if(helper::checkNewVersion()) {
+					$rightItems .= '<li><a href="' . helper::baseUrl() . 'install/update" title="Mettre à jour Zwii">' . template::ico('update colorRed') . '</a></li>';
+				}
 			}
 			$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/edit/' . $this->getUser('id') . '" title="Configurer mon compte">' . template::ico('user', 'right') . $this->getUser('firstname') . ' ' . $this->getUser('lastname') . '</a></li>';
 			$rightItems .= '<li><a id="barLogout" href="' . helper::baseUrl() . 'user/logout" title="Se déconnecter">' . template::ico('logout') . '</a></li>';

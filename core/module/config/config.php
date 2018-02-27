@@ -188,29 +188,34 @@ class config extends common {
 				]
 			]);
 			if(self::$inputNotices === []) {
-				// Active l'URL rewriting
-				if(substr(sprintf('%o', fileperms('.htaccess')), -4) !== '0644') {
-					chmod('.htaccess', 0755);
+				// Active la réécriture d'URL
+				if(
+					$this->getInput('rewrite', helper::FILTER_BOOLEAN)
+					AND helper::checkRewrite() === false
+				) {
+					// Ajout des lignes dans le .htaccess
+					file_put_contents(
+						'.htaccess',
+						PHP_EOL .
+						'<ifModule mod_rewrite.c>' . PHP_EOL .
+						"\tRewriteEngine on" . PHP_EOL .
+						"\tRewriteBase " . helper::baseUrl(false, false) . PHP_EOL .
+						"\tRewriteCond %{REQUEST_FILENAME} !-f" . PHP_EOL .
+						"\tRewriteCond %{REQUEST_FILENAME} !-d" . PHP_EOL .
+						"\tRewriteRule ^(.*)$ index.php?$1 [L]" . PHP_EOL .
+						'</ifModule>',
+						FILE_APPEND
+					);
+					// Change le statut de la réécriture d'URL (pour le helper::baseUrl() de la redirection)
+					helper::$rewriteStatus = true;
 				}
-				$htaccess = file_get_contents('.htaccess');
-				$rewriteRule = explode('# URL rewriting', $htaccess);
-				if($this->getInput('rewrite', helper::FILTER_BOOLEAN)) {
-					if(empty($rewriteRule[1])) {
-						file_put_contents('.htaccess',
-							$htaccess . PHP_EOL .
-							'<ifModule mod_rewrite.c>' . PHP_EOL .
-							"\tRewriteEngine on" . PHP_EOL .
-							"\tRewriteBase " . helper::baseUrl(false, false) . PHP_EOL .
-							"\tRewriteCond %{REQUEST_FILENAME} !-f" . PHP_EOL .
-							"\tRewriteCond %{REQUEST_FILENAME} !-d" . PHP_EOL .
-							"\tRewriteRule ^(.*)$ index.php?$1 [L]" . PHP_EOL .
-							'</ifModule>'
-						);
-					}
-				}
-				// Désactive l'URL rewriting
-				elseif(empty($rewriteRule[1]) === false) {
-					file_put_contents('.htaccess', $rewriteRule[0] . '# URL rewriting');
+				// Désactive la réécriture d'URL
+				elseif(helper::checkRewrite()) {
+					// Suppression des lignes dans le .htaccess
+					$htaccess = explode('# URL rewriting', file_get_contents('.htaccess'));
+					file_put_contents('.htaccess', $htaccess[0] . '# URL rewriting');
+					// Change le statut de la réécriture d'URL (pour le helper::baseUrl() de la redirection)
+					helper::$rewriteStatus = false;
 				}
 			}
 			// Valeurs en sortie
