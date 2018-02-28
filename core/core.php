@@ -1856,7 +1856,7 @@ class layout extends common {
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'theme" title="Personnaliser le thème">' . template::ico('brush') . '</a></li>';
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'config" title="Configurer le site">' . template::ico('gear') . '</a></li>';
 				if(helper::checkNewVersion()) {
-					$rightItems .= '<li><a href="' . helper::baseUrl() . 'install/update" title="Mettre à jour Zwii">' . template::ico('update colorRed') . '</a></li>';
+					$rightItems .= '<li><a id="barUpdate" href="' . helper::baseUrl() . 'install/update" title="Mettre à jour Zwii">' . template::ico('update colorRed') . '</a></li>';
 				}
 			}
 			$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/edit/' . $this->getUser('id') . '" title="Configurer mon compte">' . template::ico('user', 'right') . $this->getUser('firstname') . ' ' . $this->getUser('lastname') . '</a></li>';

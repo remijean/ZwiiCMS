@@ -269,7 +269,13 @@ core.start = function() {
 	$(".inputFileDelete").on("click", function() {
 		$(this).parents(".inputWrapper").find(".inputFileHidden").val("").trigger("change");
 	});
-	// Confirmation déconnexion
+	// Confirmation de mise à jour
+	$("#barUpdate").on("click", function() {
+		return core.confirm("Effectuer la mise à jour ?", function() {
+			$(location).attr("href", $("#barUpdate").attr("href"));
+		});
+	});
+	// Confirmation de déconnexion
 	$("#barLogout").on("click", function() {
 		return core.confirm("Se déconnecter ?", function() {
 			$(location).attr("href", $("#barLogout").attr("href"));
