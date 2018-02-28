@@ -1,92 +1,100 @@
 Zwii 8 Changelog
 ================
 
+## 8.2.4
+* Ajout : bouton de mise à jour dans la barre utilisateur
+* Ajout : mode mobile pour TinyMCE
+* Amélioration : rétablissement de la réécriture d'URL après une mise à jour
+* Amélioration : affichage des différentes étapes de mise à jour
+* Correction : résultat d'une recherche caché par l'overlay de TinyMCE
+* Correction : suppression des commentaires d'un article lors du changement de titre
+* Mise à jour : TinyMCE en 4.7.8
+
 ## 8.2.3
-* Ajout d'un système de mise à jour automatique
-* Ajout d'une surcouche à TinyMCE
-* Ajout d'un module pour enregistrer et rétablir le contenunon enregistré de TinyMCE en cas de fermeture de page
-* Divers correctifs mineurs
+* Ajout : mise à jour automatique de Zwii
+* Ajout : surcouche de TinyMCE aux couleurs de Zwii
+* Ajout : module pour rétablir le contenu non enregistré dans TinyMCE
+* Correction : divers bugs mineurs
 
 ## 8.2.2
-* Ajout d'options avancés lors de l'ajout d'une image dans TinyMCE
-* Ajout d'un effet de transition lors du passage de la souris sur les galeries photos
-* Ajout d'un mode maintenance activable depuis la page de configuration
-* Ajout d'une bordure à l'éditeur CSS de la personnalisation avancée
-* Amélioration du design du message de consentement pour les cookies
-* Correction d'un problème d'affichage lorsque des images sont en float dans le blog et les news
-* Correction d'une erreur dans la largeur petite du site
-* Correction d'une erreur dans le script de mise à jour de la version 8.2.0
-* Correction du bug avec les vidéos reponsives
-* Mise à jour de Simplelightbox en 1.11.1 et correction d'un bug cachant les légendes de la galerie
+* Ajout : options avancés des images dans TinyMCE
+* Ajout : effet de transition au survol des galeries photos
+* Ajout : mode maintenance activable depuis la page de configuration
+* Ajout : bordure autour de l'éditeur CSS dans la personnalisation avancée
+* Amélioration : optimisation du message de consentement pour les cookies
+* Correction : affichage cassé lors de l'ajout d'une image en fin d'article ou news
+* Correction : incohérence dans la petite largeur du site
+* Correction : erreur dans le script de mise à jour 8.2.0
+* Correction : vidéos reponsives non fonctionnelles
+* Correction : légendes des photos de la galerie invisibles
+* Mise à jour : Simplelightbox version 1.11.1
 
 ## 8.2.1
-* Correction d'un bug critique qui cachait le texte des boutons et du menu
+* Correction : texte des boutons et des items du menu invisible
 
 ## 8.2.0
-* Ajout d'un bouton pour fermer les notifications
-* Ajout d'une flèche pour les items du menu avec sous-menus
-* Ajout d'une barre de progression dans les notifications
-* Ajout de la personnalisation avancée
-* Ajout de nouveaux options de personnalisation
-* Ajout de nouvelles tooltips
-* Ajout des vidéos et iframes responsives
-* Ajout du plugin template afin de créer des colonnes adaptatives dans TinyMCE
-* Correction d'un bug cachant l'une des galeries par défaut
-* Divers correctifs mineurs
-* Mise à jour de Flatpickr en 4.3.2
-* Mise à jour de jQuery en 3.3.1
-* Mise à jour de Lity en version 2.3.0
-* Mise à jour de Normalize en 8.0.0
-* Mise à jour de TinyMCE en 4.7.7
-* Suppression du support multilingue
+* Ajout : bouton pour fermer les notifications
+* Ajout : barre de progression dans les notifications
+* Ajout : flèche pour les items du menu avec sous-menus
+* Ajout : personnalisation avancée
+* Ajout : nouveaux options de personnalisation
+* Ajout : nouvelles tooltips
+* Ajout : vidéos et iframes responsives
+* Ajout : plugin template afin de créer des colonnes adaptatives dans TinyMCE
+* Correction : divers correctifs mineurs
+* Mise à jour : Flatpickr version 4.3.2
+* Mise à jour : jQuery version 3.3.1
+* Mise à jour : Lity version 2.3.0
+* Mise à jour : Normalize version 8.0.0
+* Mise à jour : TinyMCE version 4.7.7
+* Suppression : support multilingue
 
 ## 8.1.2
-* Correction d'un bug affichant la popup d'édition du module de redirection pour les membres
-* Correction d'un bug avec l'enregistrement des ids et des urls
-* Mise à jour du gestionnaire de fichiers
+* Correction : popup d'édition du module de redirection visible pour les membres
+* Correction : enregistrement des ids et des urls impossible avec des caractères spéciaux
+* Mise à jour : ResponsiveFilemanager version 9.12.2
 
 ## 8.1.1
-* Correction d'une faille de sécurité
-* Correction d'une erreur d'orthographe
-* Correction d'un bug ne publiant pas les news lors de la création
-* Correction d'un bug n'affichant pas la pagination pour les modules blog et news
-* Correction d'un bug bloquant à 500 le nombre de caractères max des textareas du générateur de formulaires
-* Correction d'un bug lors de l'ajout d'un "/" dans le titre d'une page
-* Nouvelle méthode de traduction
+* Amélioration : nouvelle méthode de traduction
+* Correction : faille de sécurité
+* Correction : faute d'orthographe
+* Correction : news non publiée lors de la création
+* Correction : pas de pagination pour les modules blog et news
+* Correction : nombre de caractères max des textareas du générateur de formulaires bloqué à 500
+* Correction : impossible d'ajouter un slash dans le titre d'une page
 
 ## 8.1.0
-* Ajout d'un message d'erreur en cas d'échec lors d'un envoi de mail
-* Ajout d'une vérification du fichier de données afin d'éviter une corruption
-* Ajout de l'édition des métas des pages
-* Ajout de la confirmation des lightboxs avec le bouton entrée
-* Ajout de la suppression des données dans le gestionnaire de formulaires
-* Ajout du module blog
-* Ajout du module news
-* Amélioration de l'interface
-* Amélioration des messages en cas d'absence de contenu dans la galerie et le générateur de formulaires
-* Correction d'une erreur qui bloquait l'option "Champ obligatoire" dans le module de génération de formulaire
-* Correction d'une erreur qui supprimait le module lors du changement de titre d'une page
-* Correction d'une erreur bloquant la désactivation du backup automatique
-* Correction d'une faille de sécurité au niveau des champs obligatoires
-* Optimisation des filtres afin de sécuriser davantage les données enregistrées dans le fichier data.json
+* Ajout : message d'erreur en cas d'échec lors d'un envoi d'email
+* Ajout : vérification du fichier de données afin d'éviter une corruption
+* Ajout : édition des métas des pages
+* Ajout : confirmation des lightboxs avec le bouton "Entrée"
+* Ajout : suppression des données dans le générateur de formulaires
+* Ajout : module blog
+* Ajout : module news
+* Amélioration : refonte de l'interface
+* Amélioration : messages en cas d'absence de contenu dans la galerie et le générateur de formulaires
+* Amélioration : optimisation des filtres afin de sécuriser davantage les données enregistrées
+* Correction : "Champ obligatoire" dans le module de génération de formulaire invisible
+* Correction : changer le titre d'une page supprime le module rattaché
+* Correction : impossible de désactiver la sauvegarde automatique des données
+* Correction : faille de sécurité au niveau des champs obligatoires
 
 ## 8.0.1
-* Ajout du mot de passe dans le mail d'installation
-* Ajout d'une redirection vers l'interface de connexion si la page d'accueil est privée
-* Ajout d'une suppression automatique des backups de plus de 30 jours
-* Correction d'un mauvais comportement avec les images flottante en fin de page (image coupée)
-* Correction d'une erreur dans l'adresse mail utilisée par le serveur pour envoyer des mails (www. en trop)
-* Correction d'une erreur qui affichait les pages parents privées dans le menu lorsqu'un enfant n'était pas privé
-* Correction d'une erreur qui affichait toujours le bouton de mise à jour avec certaines configurations de PHP
-* Correction d'une erreur qui affichait toujours le titre du site même lorsqu'il était masqué
-* Correction d'une erreur qui n'affichait pas la page active dans le menu lors de son édition
-* Correction d'une erreur qui n'affichait pas le texte personnalisé du bouton dans le module formulaire
-* Correction d'une incohérence de casse entre l'identifiant saisi à l'inscription / création de compte et celui envoyé par mail
-* Mise à jour de jQuery en version 3.2.0
-* Mise à jour de la version de PHP requise pour le bon fonctionnement de Zwii
-* Mise à jour de PHPMailer en version 5.5.23
-* Mise à jour de ResponsiveFilemanager en version 9.11.3
-* Suppression de la balise <h1> du haut de page afin d'optimiser le référencement des sites
+* Ajout : mot de passe dans l'email d'installation
+* Ajout : redirection vers l'interface de connexion si la page d'accueil est privée
+* Ajout : suppression automatique des backups de plus de 30 jours
+* Amélioration : suppression de la balise h1 du haut de page afin d'optimiser le référencement des sites
+* Correction : mauvais comportement avec les images flottante en fin de page (image coupée)
+* Correction : le serveur utilise une adresse email incorrecte pour envoyer des emails (www. en trop)
+* Correction : les pages parents cachées s'affichent dans le menu lorsqu'un enfant n'est pas caché
+* Correction : bouton de mise à jour toujours visible avec certaines configurations de PHP
+* Correction : titre du site toujours visible même lorsqu'il doit être masqué
+* Correction : page courante non mise en avant dans le menu lors de son édition
+* Correction : texte personnalisé du bouton dans le module formulaire non visible
+* Correction : incohérence de casse entre l'identifiant saisi à l'inscription / création de compte et celui envoyé par email
+* Mise à jour : jQuery version 3.2.0
+* Mise à jour : PHPMailer version 5.5.23
+* Mise à jour : ResponsiveFilemanager version 9.11.3
 
 ## 8.0.0
 Nouvelle version majeure de Zwii.
