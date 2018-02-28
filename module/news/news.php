@@ -151,7 +151,7 @@ class news extends common {
 				// Si l'id a changée
 				$newsId = $this->getInput('newsEditTitle', helper::FILTER_ID, true);
 				if($newsId !== $this->getUrl(2)) {
-					// Incrémente la nouvelle id de la news pour éviter les doublons
+					// Incrémente le nouvel id de la news
 					$newsId = helper::increment($newsId, $this->getData(['module', $this->getUrl(0)]));
 					// Supprime l'ancien news
 					$this->deleteData(['module', $this->getUrl(0), $this->getUrl(2)]);

@@ -141,7 +141,7 @@ class gallery extends common {
 				// Si l'id a changée
 				$galleryId = $this->getInput('galleryEditName', helper::FILTER_ID, true);
 				if($galleryId !== $this->getUrl(2)) {
-					// Incrémente la nouvelle id de la gallery pour éviter les doublons
+					// Incrémente le nouvel id de la galerie
 					$galleryId = helper::increment($galleryId, $this->getData(['module', $this->getUrl(0)]));
 					// Supprime l'ancienne galerie
 					$this->deleteData(['module', $this->getUrl(0), $this->getUrl(2)]);

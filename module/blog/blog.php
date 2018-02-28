@@ -43,9 +43,10 @@ class blog extends common {
 	public function add() {
 		// Soumission du formulaire
 		if($this->isPost()) {
-			// Incrémente l'id de l'article pour éviter les doublons
-			$articleId = helper::increment($this->getInput('blogAddTitle', helper::FILTER_ID), (array) $this->getData(['module', $this->getUrl(0)]));
-			$articleId = helper::increment(helper::increment($articleId, $this->getData(['page'])), array_keys(self::$actions));
+			// Incrémente l'id de l'article
+			$articleId = helper::increment($this->getInput('blogAddTitle', helper::FILTER_ID), $this->getData(['page']));
+			$articleId = helper::increment($articleId, (array) $this->getData(['module', $this->getUrl(0)]));
+			$articleId = helper::increment($articleId, array_keys(self::$actions));
 			// Crée l'article
 			$this->setData(['module', $this->getUrl(0), $articleId, [
 				'closeComment' => $this->getInput('blogAddCloseComment', helper::FILTER_BOOLEAN),
@@ -218,14 +219,12 @@ class blog extends common {
 		else {
 			// Soumission du formulaire
 			if($this->isPost()) {
-				// Si l'id a changée
 				$articleId = $this->getInput('blogEditTitle', helper::FILTER_ID, true);
+				// Incrémente le nouvel id de l'article
 				if($articleId !== $this->getUrl(2)) {
-					// Incrémente la nouvelle id de l'article pour éviter les doublons
+					$articleId = helper::increment($articleId, $this->getData(['page']));
 					$articleId = helper::increment($articleId, $this->getData(['module', $this->getUrl(0)]));
-					$articleId = helper::increment(helper::increment($articleId, $this->getData(['page'])), array_keys(self::$actions));
-					// Supprime l'ancien article
-					$this->deleteData(['module', $this->getUrl(0), $this->getUrl(2)]);
+					$articleId = helper::increment($articleId, array_keys(self::$actions));
 				}
 				$this->setData(['module', $this->getUrl(0), $articleId, [
 					'closeComment' => $this->getInput('blogEditCloseComment'),
@@ -237,6 +236,10 @@ class blog extends common {
 					'title' => $this->getInput('blogEditTitle', helper::FILTER_STRING_SHORT, true),
 					'userId' => $this->getInput('blogEditUserId', helper::FILTER_ID, true)
 				]]);
+				// Supprime l'ancien article
+				if($articleId !== $this->getUrl(2)) {
+					$this->deleteData(['module', $this->getUrl(0), $this->getUrl(2)]);
+				}
 				// Valeurs en sortie
 				$this->addOutput([
 					'redirect' => helper::baseUrl() . $this->getUrl(0) . '/config',

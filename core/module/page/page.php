@@ -111,9 +111,10 @@ class page extends common {
 				$pageId = $this->getInput('pageEditTitle', helper::FILTER_ID, true);
 				// Si l'id a changée
 				if($pageId !== $this->getUrl(2)) {
-					// Incrémente la nouvelle id de la page pour éviter les doublons
-					$pageId = helper::increment(helper::increment($pageId, $this->getData(['page'])), self::$coreModuleIds);
-					$pageId = helper::increment(helper::increment($pageId, $this->getData(['page'])), self::$moduleIds);
+					// Incrémente le nouvel id de la page
+					$pageId = helper::increment($pageId, $this->getData(['page']));
+					$pageId = helper::increment($pageId, self::$coreModuleIds);
+					$pageId = helper::increment($pageId, self::$moduleIds);
 					// Met à jour les enfants
 					foreach($this->getHierarchy($this->getUrl(2)) as $childrenPageId) {
 						$this->setData(['page', $childrenPageId, 'parentPageId', $pageId]);
@@ -126,7 +127,7 @@ class page extends common {
 						$this->setData(['config', 'homePageId', $pageId]);
 					}
 				}
-				// Supprime les données du module en cas de changement
+				// Supprime les données du module en cas de changement de module
 				if($this->getInput('pageEditModuleId') !== $this->getData(['page', $this->getUrl(2), 'moduleId'])) {
 					$this->deleteData(['module', $pageId]);
 				}
