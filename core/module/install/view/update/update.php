@@ -11,7 +11,7 @@
 		</div>
 		<div id="installUpdateError" class="colorRed displayNone">
 			<?php echo template::ico('cancel', ''); ?>
-			Impossible d'effectuer la mise à jour (Code d'erreur : #<span id="installUpdateErrorStep"></span>).
+			Une erreur est survenue lors de l'étape <span id="installUpdateErrorStep"></span>.
 		</div>
 		<div id="installUpdateSuccess" class="colorGreen displayNone">
 			<?php echo template::ico('check', ''); ?>

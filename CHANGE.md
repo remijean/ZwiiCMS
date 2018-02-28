@@ -3,6 +3,7 @@ Zwii 8 Changelog
 
 ## 8.2.5
 * Ajout : message de confirmation avant la mise à jour
+* Amélioration : modification du message d'erreur lors d'une mise à jour
 * Correction : message d'erreur lors d'une mise à jour avec la réécriture d'URL activée
 
 ## 8.2.4
