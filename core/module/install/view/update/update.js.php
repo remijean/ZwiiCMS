@@ -8,7 +8,7 @@ function step(i, data) {
 	// Requête ajax
 	$.ajax({
 		type: "POST",
-		url: "<?php echo helper::baseUrl(); ?>install/steps",
+		url: "<?php echo helper::baseUrl(false); ?>?install/steps", // Ignore la réécriture d'URL
 		data: {
 			step: i,
 			data: data

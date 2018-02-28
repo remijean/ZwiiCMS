@@ -92,7 +92,7 @@ class install extends common {
 	 * Étapes de mise à jour
 	 */
 	public function steps() {
-		switch($this->getInput('step', FILTER_SANITIZE_NUMBER_INT)) {
+		switch($this->getInput('step', helper::FILTER_INT)) {
 			// Préparation
 			case 1:
 				$success = true;
@@ -153,7 +153,7 @@ class install extends common {
 			case 4:
 				$success = true;
 				// Réécriture d'URL
-				if($this->getInput('data')) {
+				if($this->getInput('data', helper::FILTER_BOOLEAN)) {
 					$success = (file_put_contents(
 						'.htaccess',
 						PHP_EOL .

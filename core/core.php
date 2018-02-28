@@ -24,7 +24,7 @@ class common {
 	const GROUP_MEMBER = 1;
 	const GROUP_MODERATOR = 2;
 	const GROUP_ADMIN = 3;
-	const ZWII_VERSION = '8.2.4';
+	const ZWII_VERSION = '8.2.5';
 
 	public static $actions = [];
 	public static $coreModuleIds = [

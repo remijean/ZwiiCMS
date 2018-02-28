@@ -1,6 +1,9 @@
 Zwii 8 Changelog
 ================
 
+## 8.2.5
+* Correction : message d'erreur lors d'une mise à jour avec la réécriture d'URL activée
+
 ## 8.2.4
 * Ajout : bouton de mise à jour dans la barre utilisateur
 * Ajout : mode mobile pour TinyMCE
