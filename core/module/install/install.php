@@ -92,93 +92,14 @@ class install extends common {
 	 * Étapes de mise à jour
 	 */
 	public function steps() {
-		switch($this->getInput('step', helper::FILTER_INT)) {
-			// Préparation
-			case 1:
-				$success = true;
-				// Copie du fichier de données
-				copy('site/data/data.json', 'site/backup/' . date('Y-m-d', time()) . '-update.json');
-				// Nettoyage des fichiers temporaires
-				if(file_exists('site/tmp/update.tar.gz')) {
-					$success = unlink('site/tmp/update.tar.gz');
-				}
-				if(file_exists('site/tmp/update.tar')) {
-					$success = unlink('site/tmp/update.tar');
-				}
-				// Valeurs en sortie
-				$this->addOutput([
-					'display' => self::DISPLAY_JSON,
-					'content' => [
-						'success' => $success,
-						'data' => null
-					]
-				]);
-				break;
-			// Téléchargement
-			case 2:
-				// Téléchargement depuis le serveur de Zwii
-				$success = (file_put_contents('site/tmp/update.tar.gz', file_get_contents('https://zwiicms.com/update.tar.gz')) !== false);
-				// Valeurs en sortie
-				$this->addOutput([
-					'display' => self::DISPLAY_JSON,
-					'content' => [
-						'success' => $success,
-						'data' => null
-					]
-				]);
-				break;
-			// Installation
-			case 3:
-				$success = true;
-				// Check la réécriture d'URL avant d'écraser les fichiers
-				$rewrite = helper::checkRewrite();
-				// Décompression et installation
-				try {
-					// Décompression dans le dossier de fichier temporaires
-					$pharData = new PharData('site/tmp/update.tar.gz');
-					$pharData->decompress();
-					// Installation
-					$pharData->extractTo(__DIR__ . '/../../../', null, true);
-				} catch (Exception $e) {
-					$success = $e->getMessage();
-				}
-				// Valeurs en sortie
-				$this->addOutput([
-					'display' => self::DISPLAY_JSON,
-					'content' => [
-						'success' => $success,
-						'data' => $rewrite
-					]
-				]);
-				break;
-			// Configuration
-			case 4:
-				$success = true;
-				// Réécriture d'URL
-				if($this->getInput('data', helper::FILTER_BOOLEAN)) {
-					$success = (file_put_contents(
-						'.htaccess',
-						PHP_EOL .
-						'<ifModule mod_rewrite.c>' . PHP_EOL .
-						"\tRewriteEngine on" . PHP_EOL .
-						"\tRewriteBase " . helper::baseUrl(false, false) . PHP_EOL .
-						"\tRewriteCond %{REQUEST_FILENAME} !-f" . PHP_EOL .
-						"\tRewriteCond %{REQUEST_FILENAME} !-d" . PHP_EOL .
-						"\tRewriteRule ^(.*)$ index.php?$1 [L]" . PHP_EOL .
-						'</ifModule>',
-						FILE_APPEND
-					) !== false);
-				}
-				// Valeurs en sortie
-				$this->addOutput([
-					'display' => self::DISPLAY_JSON,
-					'content' => [
-						'success' => $success,
-						'data' => null
-					]
-				]);
-				break;
-		}
+		// Valeurs en sortie
+		$this->addOutput([
+			'display' => self::DISPLAY_JSON,
+			'content' => [
+				'success' => true,
+				'data' => null
+			]
+		]);
 	}
 
 	/**

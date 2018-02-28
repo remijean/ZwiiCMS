@@ -1122,23 +1122,30 @@ class core extends common {
 						}
 						// Sinon traitement des données de sortie qui requiert qu'aucune notice ne soit présente
 						else {
-							// Enregistrement des données
-							if($output['state'] !== false) {
-								$this->setData([$module->getData()]);
-								$this->saveData();
-							}
+							// TODO Démo
 							// Notification
 							if($output['notification']) {
-								if($output['state'] === true) {
-									$notification = 'ZWII_NOTIFICATION_SUCCESS';
-								}
-								elseif($output['state'] === false) {
-									$notification = 'ZWII_NOTIFICATION_ERROR';
+								if(
+									$output['state'] === false
+									OR (
+										$this->getUrl(0) === 'user'
+										AND in_array($this->getUrl(1), ['login', 'logout'])
+									)
+								) {
+									if($output['state'] === true) {
+										$notification = 'ZWII_NOTIFICATION_SUCCESS';
+									}
+									elseif($output['state'] === false) {
+										$notification = 'ZWII_NOTIFICATION_ERROR';
+									}
+									else {
+										$notification = 'ZWII_NOTIFICATION_OTHER';
+									}
+									$_SESSION[$notification] = $output['notification'];
 								}
 								else {
-									$notification = 'ZWII_NOTIFICATION_OTHER';
+									$_SESSION['ZWII_NOTIFICATION_ERROR'] = 'Enregistrement impossible dans la version de démonstration';
 								}
-								$_SESSION[$notification] = $output['notification'];
 							}
 							// Redirection
 							if($output['redirect']) {

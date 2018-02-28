@@ -1,3 +1,6 @@
+<!-- TODO Démo -->
+<p><strong>L'identifiant de démonstration est "Admin" et le mot de passe est "password".</strong></p>
+<p>Pour les besoins de la démonstration, les données ne sont pas enregistrées et le gestionnaire de fichiers n'est pas disponible.</p>
 <?php echo template::formOpen('userLoginForm'); ?>
 	<div class="row">
 		<div class="col6">

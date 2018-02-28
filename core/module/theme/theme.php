@@ -181,7 +181,7 @@ class theme extends common {
 		// Soumission du formulaire
 		if($this->isPost()) {
 			// Enregistre le CSS
-			file_put_contents('site/data/custom.css', $this->getInput('themeAdvancedCss', null));
+			// TODO Démo
 			// Valeurs en sortie
 			$this->addOutput([
 				'notification' => 'Modifications enregistrées',
