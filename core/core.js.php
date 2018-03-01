@@ -120,14 +120,22 @@ core.end = function() {
 	/**
 	 * Modifications non enregistrées du formulaire
 	 */
-	var keysNb = 0;
+	var keydown = false;
 	var formDOM = $("form");
 	formDOM.data("serialize", formDOM.serialize());
 	$(document).on("keydown", function() {
-		keysNb++;
+		if(keydown === false) {
+			keydown = true;
+		}
 	});
 	$(window).on("beforeunload", function() {
-		if(formDOM.length && formDOM.serialize() !== formDOM.data("serialize") && keysNb > 2) {
+		if(
+			formDOM.length
+			&& (
+				formDOM.serialize() !== formDOM.data("serialize")
+				|| keydown
+			)
+		) {
 			return "Les modifications que vous avez apportées ne seront peut-être pas enregistrées.";
 		}
 	});
