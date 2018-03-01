@@ -7,7 +7,7 @@ tinymce.init({
 	// Langue
 	language: "fr_FR",
 	// Plugins
-	plugins: "advlist anchor autolink autoresize autosave code colorpicker contextmenu fullscreen hr image imagetools link lists media paste searchreplace tabfocus table template textcolor",
+	plugins: "advlist anchor autolink autoresize autosave code colorpicker contextmenu fullscreen hr image imagetools link lists media paste searchreplace stickytoolbar tabfocus table template textcolor",
 	// Contenu de la barre d'outils
 	toolbar: "restoredraft | undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | insert | code fullscreen",
 	// Contenu du menu contextuel
