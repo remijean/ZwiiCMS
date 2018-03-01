@@ -7,6 +7,7 @@ Zwii 8 Changelog
 * Ajout : copier / coller avec un clic droit dans TinyMCE
 * Ajout : plugin stickytoolbar afin de fixer la barre d'outils dans TinyMCE lors du défilement de la page
 * Amélioration : modification du message d'erreur lors d'une mise à jour
+* Amélioration : nouveaux textes par défaut à l'installation
 * Correction : message de confirmation avant de quitter une page sans enregistrer ne s'affiche pas
 * Correction : suppression du plugin legacyoutput qui génère du vieux code à la place du HTML5 dans TinyMCE
 * Correction : message d'erreur lors d'une mise à jour avec la réécriture d'URL activée
