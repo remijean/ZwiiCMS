@@ -9,7 +9,9 @@ tinymce.init({
 	// Plugins
 	plugins: "advlist anchor autolink autoresize autosave code colorpicker contextmenu fullscreen hr image imagetools link lists media paste searchreplace tabfocus table template textcolor",
 	// Contenu de la barre d'outils
-	toolbar: "restoredraft | undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | insert | code searchreplace fullscreen",
+	toolbar: "restoredraft | undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | insert | code fullscreen",
+	// Contenu du menu contextuel
+	contextmenu: "cut copy paste pastetext | selectall searchreplace",
 	// Fichiers CSS à intégrer à l'éditeur
 	content_css: [
 		baseUrl + "core/layout/common.css",

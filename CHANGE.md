@@ -4,6 +4,7 @@ Zwii 8 Changelog
 ## 8.2.5
 * Ajout : message de confirmation avant la mise à jour
 * Ajout : sauvegarde du fichier de données avant une mise à jour
+* Ajout : copier / coller avec un clic droit dans TinyMCE
 * Amélioration : modification du message d'erreur lors d'une mise à jour
 * Correction : message de confirmation avant de quitter une page sans enregistrer ne s'affiche pas
 * Correction : suppression du plugin legacyoutput qui génère du vieux code à la place du HTML5 dans TinyMCE
