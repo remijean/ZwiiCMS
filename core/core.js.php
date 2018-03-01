@@ -120,22 +120,11 @@ core.end = function() {
 	/**
 	 * Modifications non enregistrées du formulaire
 	 */
-	var keydown = false;
 	var formDOM = $("form");
-	formDOM.data("serialize", formDOM.serialize());
-	$(document).on("keydown", function() {
-		if(keydown === false) {
-			keydown = true;
-		}
-	});
+	var inputsDOM = formDOM.find("input, select, textarea:not(.editorWysiwyg)"); // Ignore TinyMCE car il gère lui même le message
+	var inputSerialize = inputsDOM.serialize();
 	$(window).on("beforeunload", function() {
-		if(
-			formDOM.length
-			&& (
-				formDOM.serialize() !== formDOM.data("serialize")
-				|| keydown
-			)
-		) {
+		if(inputsDOM.serialize() !== inputSerialize) {
 			return "Les modifications que vous avez apportées ne seront peut-être pas enregistrées.";
 		}
 	});
@@ -260,7 +249,7 @@ core.start = function() {
 	/**
 	 * Champs d'upload de fichiers
 	 */
-	// Mise à jour de l'affichage ds champs d'upload
+	// Mise à jour de l'affichage des champs d'upload
 	$(".inputFileHidden").on("change", function() {
 		var inputFileHiddenDOM = $(this);
 		var fileName = inputFileHiddenDOM.val();
