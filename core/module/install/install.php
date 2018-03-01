@@ -96,6 +96,8 @@ class install extends common {
 			// Préparation
 			case 1:
 				$success = true;
+				// Copie du fichier de données
+				copy('site/data/data.json', 'site/backup/' . date('Y-m-d', time()) . '-update.json');
 				// Nettoyage des fichiers temporaires
 				if(file_exists('site/tmp/update.tar.gz')) {
 					$success = unlink('site/tmp/update.tar.gz');
