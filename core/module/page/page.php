@@ -84,6 +84,7 @@ class page extends common {
 		// Suppression
 		else {
 			$this->deleteData(['page', $this->getUrl(2)]);
+			$this->deleteData(['module', $this->getUrl(2)]);
 			// Valeurs en sortie
 			$this->addOutput([
 				'redirect' => helper::baseUrl(false),
