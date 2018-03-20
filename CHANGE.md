@@ -2,6 +2,7 @@ Zwii 8 Changelog
 ================
 
 ## 8.2.6
+* Correction : impossible de modifier un lien ou un tableau dans TinyMCE
 * Correction : champ de sélection de date non fonctionnel
 * Correction : images non triées par ordre alphabétique dans le module galerie
 * Correction : articles après la première page du module blog non accessibles

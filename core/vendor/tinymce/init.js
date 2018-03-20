@@ -11,7 +11,9 @@ tinymce.init({
 	// Contenu de la barre d'outils
 	toolbar: "restoredraft | undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | insert | code fullscreen",
 	// Contenu du menu contextuel
-	contextmenu: "cut copy paste pastetext | selectall searchreplace",
+	contextmenu: "cut copy paste pastetext | selectall searchreplace | link image inserttable | cell row column deletetable",
+	// Menu contextuel pour modifier un lien
+	link_context_toolbar: true,
 	// Fichiers CSS à intégrer à l'éditeur
 	content_css: [
 		baseUrl + "core/layout/common.css",
