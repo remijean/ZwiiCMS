@@ -7,23 +7,23 @@
 						<?php echo $this->getData(['user', $article['userId'], 'firstname']) . ' ' . $this->getData(['user', $article['userId'], 'lastname']); ?>
 						le <?php echo date('d/m/Y H:i', $article['publishedOn']); ?>
 						<div class="blogComment">
-							<a href="<?php echo helper::baseUrl() . $this->getUrl() . '/' . $articleId; ?>#comment">
+							<a href="<?php echo helper::baseUrl() . $this->getUrl(0) . '/' . $articleId; ?>#comment">
 								<?php echo count($article['comment']); ?>
 							</a>
 							<?php echo template::ico('comment', 'left'); ?>
 						</div>
 					</h4>
-					<a href="<?php echo helper::baseUrl() . $this->getUrl() . '/' . $articleId; ?>" class="blogPicture">
+					<a href="<?php echo helper::baseUrl() . $this->getUrl(0) . '/' . $articleId; ?>" class="blogPicture">
 						<img src="<?php echo helper::baseUrl(false) . 'site/file/thumb/' . $article['picture']; ?>">
 					</a>
 					<h2>
-						<a href="<?php echo helper::baseUrl() . $this->getUrl() . '/' . $articleId; ?>">
+						<a href="<?php echo helper::baseUrl() . $this->getUrl(0) . '/' . $articleId; ?>">
 							<?php echo $article['title']; ?>
 						</a>
 					</h2>
 					<p class="blogContent">
 						<?php echo helper::subword(strip_tags($article['content']), 0, 150); ?>...
-						<a href="<?php echo helper::baseUrl() . $this->getUrl() . '/' . $articleId; ?>">Lire la suite</a>
+						<a href="<?php echo helper::baseUrl() . $this->getUrl(0) . '/' . $articleId; ?>">Lire la suite</a>
 					</p>
 				</div>
 			<?php endforeach; ?>

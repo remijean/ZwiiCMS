@@ -2,6 +2,7 @@ Zwii 8 Changelog
 ================
 
 ## 8.2.6
+* Correction : articles après la première page du module blog non accessibles
 * Correction : non suppression des données du module rattaché à une page lors de sa suppression
 
 ## 8.2.5
