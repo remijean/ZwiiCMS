@@ -1614,9 +1614,9 @@ class helper {
 		$attributes = [];
 		foreach($array as $key => $value) {
 			if(($value OR $value === 0) AND in_array($key, $exclude) === false) {
-				// Champs à traduire
-				if(in_array($key, ['placeholder'])) {
-					$attributes[] = sprintf('%s="%s"', $key, $value);
+				// Désactive le message de modifications non enregistrées pour le champ
+				if($key === 'noDirty') {
+					$attributes[] = 'data-no-dirty';
 				}
 				// Disabled
 				// Readonly
@@ -2121,6 +2121,7 @@ class template {
 			'before' => true,
 			'class' => '',
 			'classWrapper' => '',
+			'noDirty' => false,
 			'disabled' => false,
 			'help' => '',
 			'id' => $nameId,
@@ -2177,6 +2178,7 @@ class template {
 			'before' => true,
 			'class' => '',
 			'classWrapper' => '',
+			'noDirty' => false,
 			'disabled' => false,
 			'extensions' => '',
 			'help' => '',
@@ -2293,6 +2295,7 @@ class template {
 		$attributes = array_merge([
 			'before' => true,
 			'class' => '',
+			'noDirty' => false,
 			'id' => $nameId,
 			'maxlength' => '500',
 			'name' => $nameId,
@@ -2359,6 +2362,7 @@ class template {
 			'before' => true,
 			'class' => '',
 			'classWrapper' => '',
+			'noDirty' => false,
 			'disabled' => false,
 			'help' => '',
 			'id' => $nameId,
@@ -2421,6 +2425,7 @@ class template {
 			'autocomplete' => 'on',
 			'class' => '',
 			'classWrapper' => '',
+			'noDirty' => false,
 			'disabled' => false,
 			'help' => '',
 			'id' => $nameId,
@@ -2469,6 +2474,7 @@ class template {
 			'before' => true,
 			'class' => '',
 			'classWrapper' => '',
+			'noDirty' => false,
 			'disabled' => false,
 			'help' => '',
 			'id' => $nameId,
@@ -2617,6 +2623,7 @@ class template {
 			'before' => true,
 			'class' => '',
 			'classWrapper' => '',
+			'noDirty' => false,
 			'disabled' => false,
 			'help' => '',
 			'id' => $nameId,
@@ -2670,6 +2677,7 @@ class template {
 			'class' => '', // editorWysiwyg et editorCss possible pour utiliser le éditeurs (il faut également instancier les librairies)
 			'classWrapper' => '',
 			'disabled' => false,
+			'noDirty' => false,
 			'help' => '',
 			'id' => $nameId,
 			'label' => '',

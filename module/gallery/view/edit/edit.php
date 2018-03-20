@@ -25,10 +25,12 @@
 					</div>
 					<div class="col6">
 						<?php echo template::hidden('galleryEditDirectoryOld', [
-							'value' => $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'config', 'directory'])
+							'value' => $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'config', 'directory']),
+							'noDirty' => true // Désactivé à cause des modifications en ajax
 						]); ?>
 						<?php echo template::select('galleryEditDirectory', [], [
-							'label' => 'Dossier cible'
+							'label' => 'Dossier cible',
+							'noDirty' => true // Désactivé à cause des modifications en ajax
 						]); ?>
 					</div>
 				</div>

@@ -121,7 +121,10 @@ core.end = function() {
 	 * Modifications non enregistrées du formulaire
 	 */
 	var formDOM = $("form");
-	var inputsDOM = formDOM.find("input, select, textarea:not(.editorWysiwyg)"); // Ignore TinyMCE car il gère lui même le message
+	// Ignore :
+	// - TinyMCE car il gère lui même le message
+	// - Les champs avec data-no-dirty
+	var inputsDOM = formDOM.find("input:not([data-no-dirty]), select:not([data-no-dirty]), textarea:not(.editorWysiwyg):not([data-no-dirty])");
 	var inputSerialize = inputsDOM.serialize();
 	$(window).on("beforeunload", function() {
 		if(inputsDOM.serialize() !== inputSerialize) {

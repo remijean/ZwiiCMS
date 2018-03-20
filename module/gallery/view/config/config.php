@@ -20,9 +20,12 @@
 						]); ?>
 					</div>
 					<div class="col5">
-						<?php echo template::hidden('galleryConfigDirectoryOld'); ?>
+						<?php echo template::hidden('galleryConfigDirectoryOld', [
+							'noDirty' => true // Désactivé à cause des modifications en ajax
+						]); ?>
 						<?php echo template::select('galleryConfigDirectory', [], [
-							'label' => 'Dossier cible'
+							'label' => 'Dossier cible',
+							'noDirty' => true // Désactivé à cause des modifications en ajax
 						]); ?>
 					</div>
 					<div class="col1 verticalAlignBottom">
