@@ -2,6 +2,7 @@ Zwii 8 Changelog
 ================
 
 ## 8.2.6
+* Correction : champ de sélection de date non fonctionnel
 * Correction : images non triées par ordre alphabétique dans le module galerie
 * Correction : articles après la première page du module blog non accessibles
 * Correction : non suppression des données du module rattaché à une page lors de sa suppression
