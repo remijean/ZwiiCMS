@@ -2,6 +2,7 @@ Zwii 8 Changelog
 ================
 
 ## 8.2.6
+* Correction : mauvaise lightbox de confirmation de suppression d'un utilisateur
 * Correction : message de modifications non enregistrées lors de la navigation dans le module galerie
 * Correction : aperçu incorrect de certaines polices dans la personnalisation du thème
 * Correction : légende toujours visible dans le module galerie même lorsqu'elle est vide

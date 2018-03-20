@@ -14,5 +14,8 @@
  * Confirmation de suppression
  */
 $(".userDelete").on("click", function() {
-	return confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?");
+	var _this = $(this);
+	return core.confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?", function() {
+		$(location).attr("href", _this.attr("href"));
+	});
 });
