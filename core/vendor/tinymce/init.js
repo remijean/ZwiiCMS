@@ -7,7 +7,7 @@ tinymce.init({
 	// Langue
 	language: "fr_FR",
 	// Plugins
-	plugins: "advlist anchor autolink autoresize autosave code colorpicker contextmenu fullscreen hr image imagetools link lists media paste searchreplace stickytoolbar tabfocus table template textcolor",
+	plugins: "advlist anchor autolink autoresize autosave code codesample colorpicker contextmenu fullscreen hr image imagetools link lists media paste searchreplace stickytoolbar tabfocus table template textcolor",
 	// Contenu de la barre d'outils
 	toolbar: "restoredraft | undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | insert | code fullscreen",
 	// Contenu du menu contextuel
@@ -48,7 +48,7 @@ tinymce.init({
 		theme: "mobile"
 	},
 	// Contenu du bouton insérer
-	insert_button_items: "image link media template inserttable | hr | anchor",
+	insert_button_items: "image link media template codesample inserttable | hr | anchor",
 	// Contenu du bouton formats
 	style_formats: [
 		{title: "Headers", items: [

@@ -2,6 +2,7 @@ Zwii 8 Changelog
 ================
 
 ## 8.2.6
+* Ajout : module codesample dans TinyMCE
 * Correction : mauvaise lightbox de confirmation de suppression d'un utilisateur
 * Correction : message de modifications non enregistrées lors de la navigation dans le module galerie
 * Correction : aperçu incorrect de certaines polices dans la personnalisation du thème
@@ -11,6 +12,7 @@ Zwii 8 Changelog
 * Correction : images non triées par ordre alphabétique dans le module galerie
 * Correction : articles après la première page du module blog non accessibles
 * Correction : non suppression des données du module rattaché à une page lors de sa suppression
+* Mise à jour : TinyMCE en 4.7.9
 
 ## 8.2.5
 * Ajout : message de confirmation avant la mise à jour
