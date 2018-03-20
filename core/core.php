@@ -863,10 +863,7 @@ class core extends common {
 				if(
 					$fileInfos->isFile()
 					AND $fileInfos->getBasename() !== '.htaccess'
-					AND (
-						strtotime($fileInfos->getBasename('.json')) + (86400 * 30) < time()
-						OR strtotime($fileInfos->getBasename('-backup.json')) + (86400 * 30) < time()
-					)
+					AND $fileInfos->getMTime() + (86400 * 30) < time()
 				) {
 					@unlink($fileInfos->getPathname());
 				}
