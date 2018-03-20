@@ -32,9 +32,9 @@ $("input, select").on("change", function() {
 	css += "a{color:" + colors.normal + "}";
 	css += "a:hover{color:" + colors.darken + "}";
 	// Couleur, polices, épaisseur et capitalisation de caractères des titres
-	css += "h1,h2,h3,h4,h5,h6{color:" + $("#themeTitleTextColor").val() + ";font-family:'" + titleFont.replace("+", " ") + "',sans-serif;font-weight:" + $("#themeTitleFontWeight").val() + ";text-transform:" + $("#themeTitleTextTransform").val() + "}";
+	css += "h1,h2,h3,h4,h5,h6{color:" + $("#themeTitleTextColor").val() + ";font-family:'" + titleFont.replace(/\+/g, " ") + "',sans-serif;font-weight:" + $("#themeTitleFontWeight").val() + ";text-transform:" + $("#themeTitleTextTransform").val() + "}";
 	// Police de caractères
-	css += "body{font-family:'" + textFont.replace("+", " ") + "',sans-serif}";
+	css += "body{font-family:'" + textFont.replace(/\+/g, " ") + "',sans-serif}";
 	// Taille du texte
 	css += "body,.row > div{font-size:" + $("#themeTextFontSize").val() + "}";
 	// Couleur du texte
