@@ -171,7 +171,7 @@ class gallery extends common {
 				$iterator = new DirectoryIterator($directory);
 				foreach($iterator as $fileInfos) {
 					if($fileInfos->isDot() === false AND $fileInfos->isFile() AND @getimagesize($fileInfos->getPathname())) {
-						self::$pictures[] = [
+						self::$pictures[$fileInfos->getFilename()] = [
 							$fileInfos->getFilename(),
 							template::text('legend[' . $fileInfos->getFilename() . ']', [
 								'value' => $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'legend', $fileInfos->getFilename()])
@@ -179,6 +179,8 @@ class gallery extends common {
 						];
 					}
 				}
+				// Tri des images par ordre alphabétique
+				ksort(self::$pictures);
 			}
 			// Valeurs en sortie
 			$this->addOutput([
@@ -212,6 +214,8 @@ class gallery extends common {
 							self::$pictures[$directory . '/' . $fileInfos->getFilename()] = $this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'legend', $fileInfos->getFilename()]);
 						}
 					}
+					// Tri des images par ordre alphabétique
+					ksort(self::$pictures);
 				}
 				// Affichage du template
 				if(self::$pictures) {
