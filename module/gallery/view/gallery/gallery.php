@@ -21,7 +21,9 @@
 				style="background-image:url('<?php echo helper::baseUrl(false) . $picture; ?>')"
 				data-caption="<?php echo $legend; ?>"
 			>
-				<div class="galleryGalleryName"><?php echo $legend; ?></div>
+				<?php if($legend): ?>
+					<div class="galleryGalleryName"><?php echo $legend; ?></div>
+				<?php endif; ?>
 			</a>
 		</div>
 	<?php if($i % 4 === 0 OR $i === $picturesNb): ?>

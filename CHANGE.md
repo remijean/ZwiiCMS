@@ -2,6 +2,7 @@ Zwii 8 Changelog
 ================
 
 ## 8.2.6
+* Correction : légende toujours visible dans le module galerie même lorsqu'elle est vide
 * Correction : impossible de modifier un lien ou un tableau dans TinyMCE
 * Correction : champ de sélection de date non fonctionnel
 * Correction : images non triées par ordre alphabétique dans le module galerie
