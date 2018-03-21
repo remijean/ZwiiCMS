@@ -615,11 +615,16 @@ class common {
 			$firstKey = explode('[', $key)[0];
 			$secondKey = $secondKey[1];
 			foreach($this->input as $type => $values) {
-				if(array_key_exists($firstKey, $values)) {
-					// Champ obligatoire
-					if($required) {
-						$this->addRequiredInputNotices($key);
-					}
+				// Champ obligatoire
+				if($required) {
+					$this->addRequiredInputNotices($key);
+				}
+				// Check de l'existence
+				// Également utile pour les checkboxs qui ne retournent rien lorsqu'elles ne sont pas cochées
+				if(
+					array_key_exists($firstKey, $values)
+					AND array_key_exists($secondKey, $values[$firstKey])
+				) {
 					// Retourne la valeur filtrée
 					if($filter) {
 						return helper::filter($this->input[$type][$firstKey][$secondKey], $filter);
@@ -634,11 +639,13 @@ class common {
 		// La clef est une chaine
 		else {
 			foreach($this->input as $type => $values) {
+				// Champ obligatoire
+				if($required) {
+					$this->addRequiredInputNotices($key);
+				}
+				// Check de l'existence
+				// Également utile pour les checkboxs qui ne retournent rien lorsqu'elles ne sont pas cochées
 				if(array_key_exists($key, $values)) {
-					// Champ obligatoire
-					if($required) {
-						$this->addRequiredInputNotices($key);
-					}
 					// Retourne la valeur filtrée
 					if($filter) {
 						return helper::filter($this->input[$type][$key], $filter);

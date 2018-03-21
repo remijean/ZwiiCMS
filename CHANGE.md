@@ -3,6 +3,7 @@ Zwii 8 Changelog
 
 ## 8.2.6
 * Ajout : module codesample dans TinyMCE
+* Correction : erreur pendant de la récupération des données lorsque plusieurs cases à cocher ne sont pas cochées
 * Correction : désactivation automatique de la réécriture d'URL lors de l'enregistrement de la configuration du site
 * Correction : iframes et vidéos responsives
 * Correction : lien de réinitialisation du mot de passe incorrect
