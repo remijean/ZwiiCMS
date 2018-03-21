@@ -3,6 +3,7 @@ Zwii 8 Changelog
 
 ## 8.2.6
 * Ajout : module codesample dans TinyMCE
+* Correction : lien de réinitialisation du mot de passe incorrect
 * Correction : backup automatique non fonctionnel
 * Correction : mauvaise lightbox de confirmation de suppression d'un utilisateur
 * Correction : message de modifications non enregistrées lors de la navigation dans le module galerie

@@ -396,7 +396,7 @@ class user extends common {
 					// Valeurs en sortie
 					$this->addOutput([
 						'notification' => 'Nouveau mot de passe enregistré',
-						'redirect' => helper::baseUrl() . 'user/login' . str_replace('/', '_', $this->getUrl()),
+						'redirect' => helper::baseUrl() . 'user/login/' . str_replace('/', '_', $this->getUrl()),
 						'state' => true
 					]);
 				}
