@@ -189,8 +189,9 @@ class config extends common {
 			]);
 			if(self::$inputNotices === []) {
 				// Active la réécriture d'URL
+				$rewrite = $this->getInput('rewrite', helper::FILTER_BOOLEAN);
 				if(
-					$this->getInput('rewrite', helper::FILTER_BOOLEAN)
+					$rewrite
 					AND helper::checkRewrite() === false
 				) {
 					// Ajout des lignes dans le .htaccess
@@ -210,7 +211,10 @@ class config extends common {
 					helper::$rewriteStatus = true;
 				}
 				// Désactive la réécriture d'URL
-				elseif(helper::checkRewrite()) {
+				elseif(
+					$rewrite === false
+					AND helper::checkRewrite()
+				) {
 					// Suppression des lignes dans le .htaccess
 					$htaccess = explode('# URL rewriting', file_get_contents('.htaccess'));
 					file_put_contents('.htaccess', $htaccess[0] . '# URL rewriting');
