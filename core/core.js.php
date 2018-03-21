@@ -306,6 +306,27 @@ core.start = function() {
 			core.noticeAdd(_this.attr("id"), "Format incorrect");
 		}
 	});
+	/**
+	 * Iframes et vidéos responsives
+	 */
+	var elementDOM = $("iframe, video, embed");
+	// Calcul du ratio et suppression de la hauteur / largeur des iframes
+	elementDOM.each(function() {
+		var _this = $(this);
+		_this
+			.data("ratio", _this.height() / _this.width())
+			.removeAttr("width height");
+	});
+	// Prend la largeur du parent et détermine la hauteur à l'aide du ratio lors du resize de la fenêtre
+	$(window).on("resize", function() {
+		elementDOM.each(function() {
+			var _this = $(this);
+			var width = _this.parent().first().width();
+			_this
+				.width(width)
+				.height(width * _this.data("ratio"));
+		});
+	}).trigger("resize");
 };
 core.start();
 

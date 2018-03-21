@@ -354,7 +354,6 @@ class common {
 			'jquery',
 			'normalize',
 			'lity',
-			'fitvids',
 			'filemanager',
 			// 'flatpickr', Désactivé par défaut
 			// 'tinycolorpicker', Désactivé par défaut
