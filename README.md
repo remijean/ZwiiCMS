@@ -1,5 +1,7 @@
 # Zwii 8
 
+**Développement repris par Frédéric Tempez et la communauté de Zwii, [nouveau dépôt](https://github.com/fredtempez/ZwiiCMS/).**
+
 Zwii est un CMS sans base de données (Flat-File) qui permet à ses utilisateurs de créer et gérer facilement un site web sans aucune connaissance en programmation.
 
 [Site](http://zwiicms.com/) - [Forum](http://forum.zwiicms.com/) - [GitHub](https://github.com/remijean/ZwiiCMS/)
